@@ -14,4 +14,5 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2.7-alpine3.9
 WORKDIR /app
 COPY --from=build-env /app/out .
-ENTRYPOINT ["dotnet", "Server.dll"]
+COPY appsettings.json .
+CMD ["dotnet", "Server.dll"]

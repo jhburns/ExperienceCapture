@@ -1,13 +1,19 @@
-﻿using System;
-using Nancy;
-
-namespace Server
+﻿namespace Nancy.Demo.Hosting.Kestrel
 {
-    class Program : Nancy.NancyModule
+    using System.IO;
+    using Microsoft.AspNetCore.Hosting;
+
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var host = new WebHostBuilder()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseKestrel()
+                .UseStartup<Startup>()
+                .Build();
+
+            host.Run();
         }
     }
 }
