@@ -7,6 +7,7 @@ using Saver;
 using System.Linq;
 
 using Newtonsoft.Json;
+using UnityEngine.Networking;
 
 public class Exporter : MonoBehaviour
 {
@@ -55,7 +56,26 @@ public class Exporter : MonoBehaviour
     {
         foreach (ISaveable a in allSaveable)
         {
-            Debug.Log(JsonConvert.SerializeObject(a.getSave()));
+            string save = JsonConvert.SerializeObject(a.getSave());
+            StartCoroutine(sendSave(save));
+        }
+    }
+
+    private IEnumerator sendSave(string data)
+    {
+        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
+        formData.Add(new MultipartFormDataSection(data));
+
+        UnityWebRequest www = UnityWebRequest.Post(url + path, formData);
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            Debug.Log("Sent Save");
         }
     }
 
