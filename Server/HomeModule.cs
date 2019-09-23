@@ -20,6 +20,13 @@ namespace Nancy.App.Hosting.Kestrel
 
                 return person;
             });
+
+            Post("/save", args =>
+            {
+                Console.WriteLine(args);
+
+                return "got";
+            });
         }
     }
 }

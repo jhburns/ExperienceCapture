@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
-
-// UnityWebRequest.Get example
-
-// Access a website and use UnityWebRequest.Get to download a page.
-// Also try to download a non-existing page. Display the error.
+using UnityEngine.SceneManagement;
 
 public class ExporterSetup : MonoBehaviour
 {
@@ -50,7 +46,9 @@ public class ExporterSetup : MonoBehaviour
 
     private void CreateExporter(string url)
     {
-        Instantiate(ex);
+        Exporter newExporter = Instantiate(ex);
+        newExporter.setUrl(url);
+        SceneManager.LoadScene("Game");
     }
 
 }
