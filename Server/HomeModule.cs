@@ -1,25 +1,13 @@
-namespace Nancy.Demo.Hosting.Kestrel
+namespace Nancy.App.Hosting.Kestrel
 {
     using ModelBinding;
+    using System;
 
     public class HomeModule : NancyModule
     {
         public HomeModule(IAppConfiguration appConfig)
         {
-            Get("/", args => "Hello from Nancy running on CoreCLR");
-
-            Get("/conneg/{name}", args => new Person() { Name = args.name });
-
-            Get("/smtp", args =>
-            {
-                return new
-                {
-                    appConfig.Smtp.Server,
-                    appConfig.Smtp.User,
-                    appConfig.Smtp.Pass,
-                    appConfig.Smtp.Port
-                };
-            });
+            Get("/", args => "Server is running.");
 
             Post("/", args =>
             {

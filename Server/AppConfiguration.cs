@@ -1,9 +1,8 @@
-namespace Nancy.Demo.Hosting.Kestrel
+namespace Nancy.App.Hosting.Kestrel
 {
     public class AppConfiguration : IAppConfiguration
     {
         public Logging Logging { get; set; }
-        public Smtp Smtp { get; set; }
     }
 
     public class LogLevel
@@ -17,13 +16,5 @@ namespace Nancy.Demo.Hosting.Kestrel
     {
         public bool IncludeScopes { get; set; }
         public LogLevel LogLevel { get; set; }
-    }
-
-    public class Smtp
-    {
-        public string Server { get; set; }
-        public string User { get; set; }
-        public string Pass { get; set; }
-        public string Port { get; set; }
     }
 }

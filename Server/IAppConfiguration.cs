@@ -1,8 +1,7 @@
-namespace Nancy.Demo.Hosting.Kestrel
+namespace Nancy.App.Hosting.Kestrel
 {
     public interface IAppConfiguration
     {
         Logging Logging { get; }
-        Smtp Smtp { get; }
     }
 }

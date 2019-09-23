@@ -1,4 +1,4 @@
-﻿namespace Nancy.Demo.Hosting.Kestrel
+﻿namespace Nancy.App.Hosting.Kestrel
 {
     using System.IO;
     using Microsoft.AspNetCore.Hosting;
