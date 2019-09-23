@@ -1,8 +1,9 @@
 ﻿using System;
+using Nancy;
 
 namespace Server
 {
-    class Program
+    class Program : Nancy.NancyModule
     {
         static void Main(string[] args)
         {
