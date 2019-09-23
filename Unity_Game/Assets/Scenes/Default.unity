@@ -231,7 +231,7 @@ GameObject:
   - component: {fileID: 446862747}
   - component: {fileID: 446862748}
   m_Layer: 0
-  m_Name: DataExporter
+  m_Name: ExportSetup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -260,9 +260,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 446862746}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e5280647826d23488b5fd2ed30affab, type: 3}
+  m_Script: {fileID: 11500000, guid: c469688ebe6b1d548bb10736510f6c50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ex: {fileID: 6221522255909927710, guid: de1ac8a70f455954485a0ab6742bba5c, type: 3}
 --- !u!1 &498415343
 GameObject:
   m_ObjectHideFlags: 0

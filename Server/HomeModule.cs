@@ -7,7 +7,7 @@ namespace Nancy.App.Hosting.Kestrel
     {
         public HomeModule(IAppConfiguration appConfig)
         {
-            Get("/", args => "Server is running.");
+            Get("/", args => "OK");
 
             Post("/", args =>
             {

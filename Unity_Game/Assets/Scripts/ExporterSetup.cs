@@ -7,15 +7,27 @@ using System.Collections;
 // Access a website and use UnityWebRequest.Get to download a page.
 // Also try to download a non-existing page. Display the error.
 
-public class DataExporter : MonoBehaviour
+public class ExporterSetup : MonoBehaviour
 {
-    public void export(string url)
+    public Exporter ex;
+
+    public void checkStatus(string url)
     {
-        StartCoroutine(GetRequest(url));
+        StartCoroutine(GetRequest(url, (data) =>
+            {
+                if (data != "OK")
+                {
+                    Debug.Log("Error, server responded with error of: " + data);
+                }
+                else
+                {
+                    CreateExporter(url);
+                }
+            })
+        );
     }
 
-
-    IEnumerator GetRequest(string uri)
+    IEnumerator GetRequest(string uri, System.Action<string> callback)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
@@ -31,8 +43,14 @@ public class DataExporter : MonoBehaviour
             }
             else
             {
-                Debug.Log(pages[page] + ":\nReceived: " + webRequest.downloadHandler.text);
+                callback(webRequest.downloadHandler.text);
             }
         }
     }
+
+    private void CreateExporter(string url)
+    {
+        Instantiate(ex);
+    }
+
 }

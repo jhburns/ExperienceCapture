@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class InputHandler : MonoBehaviour
 {
     public InputField urlInput;
-    public DataExporter exporter;
+    public ExporterSetup exporter;
 
     void Start()
     {
@@ -15,6 +15,6 @@ public class InputHandler : MonoBehaviour
 
     public void getUrl()
     {
-        exporter.export(urlInput.text);
+        exporter.checkStatus(urlInput.text);
     }
 }
