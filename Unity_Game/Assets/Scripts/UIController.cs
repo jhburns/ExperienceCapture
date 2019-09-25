@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 using Saver;
 
-[System.Serializable]
 public class UIController : MonoBehaviour, ISaveable
 {
     public Button again;
