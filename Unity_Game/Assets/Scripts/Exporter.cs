@@ -8,13 +8,19 @@ using System.Linq;
 
 using Newtonsoft.Json;
 using UnityEngine.Networking;
+using Newtonsoft.Json.Linq;
 
 public class Exporter : MonoBehaviour
 {
     private string url;
     public string path;
 
+    public string username;
+
     private List<ISaveable> allSaveable;
+
+    public int captureRate;
+    private int frameCount;
 
     void Awake()
     {
@@ -23,7 +29,8 @@ public class Exporter : MonoBehaviour
 
     void Start()
     {
-        
+        Debug.Log(url);
+        frameCount = 0;
     }
 
     void Update()
@@ -34,6 +41,15 @@ public class Exporter : MonoBehaviour
     public void setUrl(string u)
     {
         url = u;
+    }
+
+    public void setUsername(string n)
+    {
+        username = n;
+    }
+
+    public void setRate(int c) {
+        captureRate = c;
     }
 
     void OnEnable()
@@ -54,10 +70,21 @@ public class Exporter : MonoBehaviour
 
     private void CollectSaves()
     {
-        foreach (ISaveable a in allSaveable)
-        {
-            string save = JsonConvert.SerializeObject(a.getSave());
-            StartCoroutine(sendSave(save));
+        frameCount++;
+        frameCount %= captureRate;
+
+        if (frameCount == 0) {
+            Debug.Log("Ok");
+            foreach (ISaveable a in allSaveable)
+            {
+                string save = JsonConvert.SerializeObject(a.getSave());
+                JObject withTime = JObject.Parse(save);
+                float timestamp = Time.timeSinceLevelLoad;
+                withTime.Add("timeSinceSceneLoad", timestamp);
+                withTime.Add("username", username);
+                string json = withTime.ToString();
+                StartCoroutine(sendSave(json));
+            }
         }
     }
 
@@ -75,7 +102,7 @@ public class Exporter : MonoBehaviour
         }
         else
         {
-            Debug.Log("Sent Save");
+            //Debug.Log("Sent Save");
         }
     }
 

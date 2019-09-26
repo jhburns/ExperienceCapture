@@ -2,11 +2,6 @@
 {
     public interface ISaveable
     {
-        ICustomStorable getSave();
-    }
-
-    public interface ICustomStorable
-    {
-        // Only use for identification 
+        object getSave();
     }
 }

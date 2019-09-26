@@ -2,10 +2,14 @@
 using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class ExporterSetup : MonoBehaviour
 {
     public Exporter ex;
+    public InputField nameInput;
+
+    public int captureRate;
 
     public void checkStatus(string url)
     {
@@ -48,6 +52,8 @@ public class ExporterSetup : MonoBehaviour
     {
         Exporter newExporter = Instantiate(ex);
         newExporter.setUrl(url);
+        newExporter.setUsername(nameInput.text);
+        newExporter.setRate(captureRate);
         SceneManager.LoadScene("Game");
     }
 

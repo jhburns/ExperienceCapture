@@ -86,59 +86,20 @@ public class UIController : MonoBehaviour, ISaveable
         SceneManager.LoadScene("Cleanup");
     }
 
-    public ICustomStorable getSave()
+    public object getSave()
     {
-        return new SaveUI(
-                            again.IsActive(),
-                            done.IsActive(),
-                            prompt.IsActive(),
-                            getReady.IsActive(),
-                            timeDisplay.IsActive(),
-                            countdown,
-                            responceTime,
-                            waiting,
-                            responding
-                         );
-    }
-}
+        return new
+        {
+            againButtonIsActive = again.IsActive(),
+            doneButtonIsActive = done.IsActive(),
+            promptTextIsActive = prompt.IsActive(),
+            getReadyTextIsActive = getReady.IsActive(),
+            timeTextIsActive = timeDisplay.IsActive(),
 
-[System.Serializable]
-public class SaveUI: ICustomStorable
-{
-    public bool isAgainActive { get; private set; }
-    public bool isDoneActive { get; private set; }
-    public bool isPrompting { get; private set; }
-    public bool isReady { get; private set; }
-    public bool timeDisplayText { get; private set; }
-
-    public float countdown { get; private set; }
-    public float responceTime { get; private set; }
-
-    public bool waiting { get; private set; }
-    public bool responding { get; private set; }
-
-    public SaveUI(
-                    bool again,
-                    bool done,
-                    bool prompt,
-                    bool ready,
-                    bool timeDis,
-                    float down,
-                    float responce,
-                    bool wait,
-                    bool resp
-                 )
-    {
-        isAgainActive = again;
-        isDoneActive = done;
-        isPrompting = prompt;
-        isReady = ready;
-        timeDisplayText = timeDis;
-
-        countdown = down;
-        responceTime = responce;
-
-        waiting = wait;
-        responding = resp;
+            countdown = countdown,
+            responceTime = responceTime,
+            isWaiting = waiting,
+            isResponding = responding
+        };
     }
 }
