@@ -10,8 +10,16 @@ public class ExporterSetup : MonoBehaviour
 
     public int captureRate;
 
+    public bool sendToConsole;
+
     public void checkStatus(string url, string username)
     {
+        if (sendToConsole)
+        {
+            CreateExporter(url, username);
+            return;
+        }
+
         StartCoroutine(GetRequest(url, (data) =>
             {
                 if (data != "OK")
@@ -53,6 +61,7 @@ public class ExporterSetup : MonoBehaviour
         newExporter.setUrl(url);
         newExporter.setUsername(username);
         newExporter.setRate(captureRate);
+        newExporter.setToConsole(sendToConsole);
         SceneManager.LoadScene("Game");
     }
 

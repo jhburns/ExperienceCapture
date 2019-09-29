@@ -22,6 +22,8 @@ public class Exporter : MonoBehaviour
     public int captureRate;
     private int frameCount;
 
+    private bool sendToConsole;
+
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -50,6 +52,11 @@ public class Exporter : MonoBehaviour
 
     public void setRate(int c) {
         captureRate = c;
+    }
+
+    public void setToConsole(bool c)
+    {
+        sendToConsole = c;
     }
 
     void OnEnable()
@@ -83,12 +90,24 @@ public class Exporter : MonoBehaviour
                 withTime.Add("timeSinceSceneLoad", timestamp);
                 withTime.Add("username", username);
                 string json = withTime.ToString();
-                StartCoroutine(sendSave(json));
+                sendSaves(json);
             }
         }
     }
 
-    private IEnumerator sendSave(string data)
+    private void sendSaves(string data)
+    {
+        if (sendToConsole)
+        {
+            Debug.Log(data);
+        }
+        else
+        {
+            StartCoroutine(postSaves(data));
+        }
+    }
+
+    private IEnumerator postSaves(string data)
     {
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
         formData.Add(new MultipartFormDataSection(data));
