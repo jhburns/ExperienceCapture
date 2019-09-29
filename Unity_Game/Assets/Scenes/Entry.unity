@@ -404,7 +404,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ex: {fileID: 6221522255909927710, guid: de1ac8a70f455954485a0ab6742bba5c, type: 3}
-  nameInput: {fileID: 331164266}
   captureRate: 10
 --- !u!1 &498415343
 GameObject:
@@ -941,7 +940,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   urlInput: {fileID: 868742428}
+  nameInput: {fileID: 331164266}
   exporter: {fileID: 446862748}
+  useWindowsDefault: 0
 --- !u!4 &961624796
 Transform:
   m_ObjectHideFlags: 0

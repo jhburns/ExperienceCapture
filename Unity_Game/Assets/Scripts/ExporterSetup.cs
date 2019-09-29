@@ -7,11 +7,10 @@ using UnityEngine.UI;
 public class ExporterSetup : MonoBehaviour
 {
     public Exporter ex;
-    public InputField nameInput;
 
     public int captureRate;
 
-    public void checkStatus(string url)
+    public void checkStatus(string url, string username)
     {
         StartCoroutine(GetRequest(url, (data) =>
             {
@@ -21,7 +20,7 @@ public class ExporterSetup : MonoBehaviour
                 }
                 else
                 {
-                    CreateExporter(url);
+                    CreateExporter(url, username);
                 }
             })
         );
@@ -48,11 +47,11 @@ public class ExporterSetup : MonoBehaviour
         }
     }
 
-    private void CreateExporter(string url)
+    private void CreateExporter(string url, string username)
     {
         Exporter newExporter = Instantiate(ex);
         newExporter.setUrl(url);
-        newExporter.setUsername(nameInput.text);
+        newExporter.setUsername(username);
         newExporter.setRate(captureRate);
         SceneManager.LoadScene("Game");
     }

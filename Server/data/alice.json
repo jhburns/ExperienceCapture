@@ -1,0 +1,362 @@
+{
+
+--BUaq3c76HhTEgpkXkaYpOgs6C9BsrIG7574qaugc
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": false,
+  "getReadyTextIsActive": true,
+  "timeTextIsActive": false,
+  "countdown": 0.673554063,
+  "responceTime": 0.0,
+  "isWaiting": true,
+  "isResponding": false,
+  "timeSinceSceneLoad": 0.138299868,
+  "username": "Alice"
+}
+--BUaq3c76HhTEgpkXkaYpOgs6C9BsrIG7574qaugc--
+
+--lSj0jdzlz1Jqh4dIa5ATCLUeP3Ocrs4UM3avuyRO
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": false,
+  "getReadyTextIsActive": true,
+  "timeTextIsActive": false,
+  "countdown": 0.3493271,
+  "responceTime": 0.0,
+  "isWaiting": true,
+  "isResponding": false,
+  "timeSinceSceneLoad": 0.463005662,
+  "username": "Alice"
+}
+--lSj0jdzlz1Jqh4dIa5ATCLUeP3Ocrs4UM3avuyRO--
+
+--qexUXxwfBMdHMPbXEjbUILaCudLEfox8KOnMwWQa
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": false,
+  "getReadyTextIsActive": true,
+  "timeTextIsActive": false,
+  "countdown": 0.1807611,
+  "responceTime": 0.0,
+  "isWaiting": true,
+  "isResponding": false,
+  "timeSinceSceneLoad": 0.631788969,
+  "username": "Alice"
+}
+--qexUXxwfBMdHMPbXEjbUILaCudLEfox8KOnMwWQa--
+
+--IjDOVbUEUitOsdcNHYdFUB9FITzGIMjwkjz5QPzr
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": false,
+  "getReadyTextIsActive": true,
+  "timeTextIsActive": false,
+  "countdown": 0.0129011013,
+  "responceTime": 0.0,
+  "isWaiting": true,
+  "isResponding": false,
+  "timeSinceSceneLoad": 0.79895246,
+  "username": "Alice"
+}
+--IjDOVbUEUitOsdcNHYdFUB9FITzGIMjwkjz5QPzr--
+
+--NCWsKGCpIjZRAZpTKywjgnsMuc5QexqRSuFAI11o
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 0.150793672,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 0.96641314,
+  "username": "Alice"
+}
+--NCWsKGCpIjZRAZpTKywjgnsMuc5QexqRSuFAI11o--
+
+--LY61h4j3VU8yN1uIm8yfBo7ciyZdCii3P24Pf6lX
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 0.3179393,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 1.13533616,
+  "username": "Alice"
+}
+--LY61h4j3VU8yN1uIm8yfBo7ciyZdCii3P24Pf6lX--
+
+--EwXLOMkNNwd3BlAzfYFsitsNMXf7BRQfGEGFVXfF
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 0.490598381,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 1.30621779,
+  "username": "Alice"
+}
+--EwXLOMkNNwd3BlAzfYFsitsNMXf7BRQfGEGFVXfF--
+
+--VFQMfxDVLO9ERk8LqdyNXg8uibZJcBAqYM8C0ZRK
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 0.6578647,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 1.47348416,
+  "username": "Alice"
+}
+--VFQMfxDVLO9ERk8LqdyNXg8uibZJcBAqYM8C0ZRK--
+
+--iW6n0Va6OazufSuzt383KPSXz5W6ydqvghCtCyEe
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 0.8257771,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 1.64139664,
+  "username": "Alice"
+}
+--iW6n0Va6OazufSuzt383KPSXz5W6ydqvghCtCyEe--
+
+--Geq3UnOCqoumo1vsK5rjYznogxP16ZDOPiK0vbZ5
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 0.993924141,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 1.81002283,
+  "username": "Alice"
+}
+--Geq3UnOCqoumo1vsK5rjYznogxP16ZDOPiK0vbZ5--
+
+--9yqC7RbsNwSrH1IBmwZbxinh0of8V0N4fi7f2uGQ
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 1.16179883,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 1.9774183,
+  "username": "Alice"
+}
+--9yqC7RbsNwSrH1IBmwZbxinh0of8V0N4fi7f2uGQ--
+
+--vqqM9gpMB20YWDUG3BSGI9AvWdxWbTa1pimF644p
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 1.33039653,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 2.146016,
+  "username": "Alice"
+}
+--vqqM9gpMB20YWDUG3BSGI9AvWdxWbTa1pimF644p--
+
+--ESX4tEIFE6ZbosHPUwHjCXr7WBPeqaxKjKXN9wJl
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 1.49742,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 2.31303573,
+  "username": "Alice"
+}
+--ESX4tEIFE6ZbosHPUwHjCXr7WBPeqaxKjKXN9wJl--
+
+--mkheGhzSSUhbUZYsvtSDkRwXpWx6boddYEw0KcHW
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 1.66408491,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 2.479704,
+  "username": "Alice"
+}
+--mkheGhzSSUhbUZYsvtSDkRwXpWx6boddYEw0KcHW--
+
+--5Z1s86wkFHFG5aNnqn5dD6DYB2zu1RnkQdcNiGWZ
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 1.83156669,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 2.647187,
+  "username": "Alice"
+}
+--5Z1s86wkFHFG5aNnqn5dD6DYB2zu1RnkQdcNiGWZ--
+
+--eJHyLyj9wbRA8jm3bmatNyRk4rtfdYGW3eEE7mm5
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 1.9995091,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 2.81512856,
+  "username": "Alice"
+}
+--eJHyLyj9wbRA8jm3bmatNyRk4rtfdYGW3eEE7mm5--
+
+--QSfYSnm9nrhpYWUwK19ubbt5vGQJXeKhBYESXlwS
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 2.1675055,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 2.9837563,
+  "username": "Alice"
+}
+--QSfYSnm9nrhpYWUwK19ubbt5vGQJXeKhBYESXlwS--
+
+--DdBi5oT2acmN9oZ6VDrdJp8ug5gLfZFI8NjB4jnU
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 2.33541,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 3.15119386,
+  "username": "Alice"
+}
+--DdBi5oT2acmN9oZ6VDrdJp8ug5gLfZFI8NjB4jnU--
+
+--QYvpOkIeojhYrhVF9GtYwYvrxnYqNdnyHdHSnNE6
+Content-Disposition: form-data
+Content-Type: text/plain; encoding=utf-8
+
+{
+  "againButtonIsActive": false,
+  "doneButtonIsActive": false,
+  "promptTextIsActive": true,
+  "getReadyTextIsActive": false,
+  "timeTextIsActive": false,
+  "countdown": -0.00376590528,
+  "responceTime": 2.503635,
+  "isWaiting": false,
+  "isResponding": true,
+  "timeSinceSceneLoad": 3.31925559,
+  "username": "Alice"
+}
+--QYvpOkIeojhYrhVF9GtYwYvrxnYqNdnyHdHSnNE6--
