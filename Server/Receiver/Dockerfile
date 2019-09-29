@@ -15,4 +15,4 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:2.2.7-alpine3.9
 WORKDIR /app
 COPY --from=build-env /app/out .
 COPY appsettings.json .
-CMD ["dotnet", "Server.dll"]
+CMD ["dotnet", "Receiver.dll"]

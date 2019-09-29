@@ -405,7 +405,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ex: {fileID: 6221522255909927710, guid: de1ac8a70f455954485a0ab6742bba5c, type: 3}
   captureRate: 1
-  sendToConsole: 1
+  sendToConsole: 0
+  newSessionPath: /session/
 --- !u!1 &498415343
 GameObject:
   m_ObjectHideFlags: 0
@@ -943,7 +944,7 @@ MonoBehaviour:
   urlInput: {fileID: 868742428}
   nameInput: {fileID: 331164266}
   exporter: {fileID: 446862748}
-  useWindowsDefault: 0
+  useWindowsDefault: 1
 --- !u!4 &961624796
 Transform:
   m_ObjectHideFlags: 0

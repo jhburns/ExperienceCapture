@@ -13,7 +13,7 @@ using Newtonsoft.Json.Linq;
 public class Exporter : MonoBehaviour
 {
     private string url;
-    public string path;
+    public string sessionPath;
 
     public string username;
 
@@ -24,6 +24,8 @@ public class Exporter : MonoBehaviour
 
     private bool sendToConsole;
 
+    private string id;
+
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -31,12 +33,12 @@ public class Exporter : MonoBehaviour
 
     void Start()
     {
-        Debug.Log(url);
         frameCount = 0;
     }
 
     void Update()
     {
+        Debug.Log(id);
         collectCaptures();
     }
 
@@ -92,7 +94,7 @@ public class Exporter : MonoBehaviour
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
         formData.Add(new MultipartFormDataSection(data));
 
-        UnityWebRequest www = UnityWebRequest.Post(url + path, formData);
+        UnityWebRequest www = UnityWebRequest.Post(url + sessionPath, formData);
         yield return www.SendWebRequest();
 
         if (www.isNetworkError || www.isHttpError)
@@ -101,7 +103,7 @@ public class Exporter : MonoBehaviour
         }
         else
         {
-            //Debug.Log("Posted capture to serve");
+            //Debug.Log("Posted capture to server");
         }
     }
 
@@ -114,6 +116,11 @@ public class Exporter : MonoBehaviour
     public void setUrl(string u)
     {
         url = u;
+    }
+
+    public void setID(string i)
+    {
+        id = i;
     }
 
     public void setUsername(string n)

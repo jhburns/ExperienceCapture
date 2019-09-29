@@ -7,23 +7,41 @@ namespace Nancy.App.Hosting.Kestrel
     using System.IO;
     using System.Text;
 
+    using Newtonsoft.Json;
 
     public class HomeModule : NancyModule
     {
         public HomeModule(IAppConfiguration appConfig)
         {
-            Get("/", args => "OK");
+            Get("/", args => "The receiving server is running.");
 
-            Post("/", args =>
+            Get("/session", args =>
             {
-                var person = this.BindAndValidate<Person>();
+                string uniqueID = "4321";
 
-                if (!this.ModelValidationResult.IsValid)
+                var newSession = new
                 {
-                    return 422;
+                    status = "OK",
+                    id = uniqueID,
+                };
+
+                string seperator = Path.DirectorySeparatorChar.ToString();
+                string path = $".{seperator}data{seperator}{uniqueID}";
+
+                try
+                {
+                    using (StreamWriter sw = File.CreateText(path))
+                    {
+                        sw.WriteLine("{");
+                    }
+                } 
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error while creating file: {0}", e);
+                    return 500;
                 }
 
-                return person;
+                return JsonConvert.SerializeObject(newSession);
             });
 
             Post("/save", args =>
@@ -37,26 +55,15 @@ namespace Nancy.App.Hosting.Kestrel
 
                 try
                 {
-                    // Create a file first it doesn't exist 
-                    if (!File.Exists(path))
+                    using (StreamWriter sw = File.AppendText(path))
                     {
-                        using (StreamWriter sw = File.CreateText(path))
-                        {
-                            sw.WriteLine("{");
-                            sw.Write(saveData);
-                        }
-                    }
-                    else
-                    {
-                        using (StreamWriter sw = File.AppendText(path))
-                        {
-                            sw.Write(saveData);
-                        }
+                        sw.Write(saveData);
                     }
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Error while writing to file: {0}", e);
+                    return 500;
                 }
           
 

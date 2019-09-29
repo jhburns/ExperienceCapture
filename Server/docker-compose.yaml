@@ -1,6 +1,6 @@
 version: '3'
 services:
-  server:
+  receiver:
     build: ./Receiver
     ports:
     - "4321:80"
