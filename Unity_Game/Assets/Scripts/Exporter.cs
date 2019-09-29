@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-using Saver;
+using Capture;
 using System.Linq;
 
 using Newtonsoft.Json;
@@ -17,7 +17,7 @@ public class Exporter : MonoBehaviour
 
     public string username;
 
-    private List<ISaveable> allSaveable;
+    private List<ICapturable> allCapturable;
 
     public int captureRate;
     private int frameCount;
@@ -37,26 +37,7 @@ public class Exporter : MonoBehaviour
 
     void Update()
     {
-        CollectSaves();
-    }
-
-    public void setUrl(string u)
-    {
-        url = u;
-    }
-
-    public void setUsername(string n)
-    {
-        username = n;
-    }
-
-    public void setRate(int c) {
-        captureRate = c;
-    }
-
-    public void setToConsole(bool c)
-    {
-        sendToConsole = c;
+        collectCaptures();
     }
 
     void OnEnable()
@@ -72,30 +53,29 @@ public class Exporter : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Debug.Log("Scene Loaded");
-        findSaveable();
+        findCapturable();
     }
 
-    private void CollectSaves()
+    private void collectCaptures()
     {
         frameCount++;
         frameCount %= captureRate;
 
         if (frameCount == 0) {
-            Debug.Log("Ok");
-            foreach (ISaveable a in allSaveable)
+            foreach (ICapturable cap in allCapturable)
             {
-                string save = JsonConvert.SerializeObject(a.getSave());
-                JObject withTime = JObject.Parse(save);
+                string capture = JsonConvert.SerializeObject(cap.getCapture());
+                JObject withTime = JObject.Parse(capture);
                 float timestamp = Time.timeSinceLevelLoad;
                 withTime.Add("timeSinceSceneLoad", timestamp);
                 withTime.Add("username", username);
                 string json = withTime.ToString();
-                sendSaves(json);
+                sendCaptures(json);
             }
         }
     }
 
-    private void sendSaves(string data)
+    private void sendCaptures(string data)
     {
         if (sendToConsole)
         {
@@ -103,11 +83,11 @@ public class Exporter : MonoBehaviour
         }
         else
         {
-            StartCoroutine(postSaves(data));
+            StartCoroutine(postCaptures(data));
         }
     }
 
-    private IEnumerator postSaves(string data)
+    private IEnumerator postCaptures(string data)
     {
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
         formData.Add(new MultipartFormDataSection(data));
@@ -121,13 +101,33 @@ public class Exporter : MonoBehaviour
         }
         else
         {
-            //Debug.Log("Sent Save");
+            //Debug.Log("Posted capture to serve");
         }
     }
 
-    private void findSaveable()
+    private void findCapturable()
     {
-        var saveableQuery = FindObjectsOfType<MonoBehaviour>().OfType<ISaveable>();
-        allSaveable = saveableQuery.Cast<ISaveable>().ToList();
+        var capturableQuery = FindObjectsOfType<MonoBehaviour>().OfType<ICapturable>();
+        allCapturable = capturableQuery.Cast<ICapturable>().ToList();
+    }
+
+    public void setUrl(string u)
+    {
+        url = u;
+    }
+
+    public void setUsername(string n)
+    {
+        username = n;
+    }
+
+    public void setRate(int c)
+    {
+        captureRate = c;
+    }
+
+    public void setToConsole(bool c)
+    {
+        sendToConsole = c;
     }
 }

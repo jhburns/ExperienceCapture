@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-using Saver;
+using Capture;
 
-public class UIController : MonoBehaviour, ISaveable
+public class UIController : MonoBehaviour, ICapturable
 {
     public Button again;
     public Button done;
@@ -85,7 +85,7 @@ public class UIController : MonoBehaviour, ISaveable
         SceneManager.LoadScene("Cleanup");
     }
 
-    public object getSave()
+    public object getCapture()
     {
         return new
         {
