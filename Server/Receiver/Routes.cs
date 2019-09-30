@@ -68,8 +68,6 @@ namespace Nancy.App.Hosting.Kestrel
                     return 400;
                 }
 
-                Console.WriteLine(chunk);
-
                 string seperator = Path.DirectorySeparatorChar.ToString();
                 string path = $".{seperator}data{seperator}{args.id}.json";
 
@@ -77,7 +75,8 @@ namespace Nancy.App.Hosting.Kestrel
                 {
                     using (StreamWriter sw = File.AppendText(path))
                     {
-                        sw.Write(chunk + ",\n"); // Comma used to string object together
+                        string chunkWithComma = chunk + ",\n";
+                        sw.Write(chunkWithComma); // Comma used to string object together
                     }
                 }
                 catch (Exception e)
@@ -108,6 +107,12 @@ namespace Nancy.App.Hosting.Kestrel
                 {
                     using (StreamWriter sw = File.AppendText(path))
                     {
+                        var endMessage = new
+                        {
+                            phase = "Session closed by client.",
+                        };
+
+                        sw.WriteLine(JsonConvert.SerializeObject(endMessage));
                         sw.WriteLine("]"); // Close array
                     }
                 }

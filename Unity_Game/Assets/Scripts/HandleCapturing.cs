@@ -27,7 +27,7 @@ public class HandleCapturing : MonoBehaviour
     private int openRequests;
     private bool isCapturing;
 
-    private bool isFirst;
+    //private bool isFirst;
 
     void Awake()
     {
@@ -39,7 +39,7 @@ public class HandleCapturing : MonoBehaviour
         frameCount = 0;
         openRequests = 0;
         setCapturability(true);
-        isFirst = true;
+        //isFirst = true;
     }
 
     void Update()
@@ -124,8 +124,6 @@ public class HandleCapturing : MonoBehaviour
 
     private IEnumerator postCaptures(string data)
     {
-        Debug.Log(data);
-
         using (UnityWebRequest request = UnityWebRequest.Put(url + sessionPath + id, data))
         {
             request.method = UnityWebRequest.kHttpVerbPOST;
@@ -155,20 +153,16 @@ public class HandleCapturing : MonoBehaviour
 
     private void sendInitialMessage()
     {
-        /*
-        if (isFirst)
+        //isFirst = false;
+
+        object firstInfo = new
         {
-            isFirst = false;
+            user = username,
+            timestamp = -1,
+            taken = System.DateTime.Now.ToString("yyyy.MM.dd-hh:mm:ss")
+        };
 
-            object firstInfo = new
-            {
-                user = username,
-                timestamp = Time.timeSinceLevelLoad
-            };
-
-            sendCaptures(JsonConvert.SerializeObject(firstInfo));
-        }
-        */
+        sendCaptures(JsonConvert.SerializeObject(firstInfo));
     }
 
     private IEnumerator sendDelete()
