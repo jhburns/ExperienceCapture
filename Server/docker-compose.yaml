@@ -8,8 +8,15 @@ services:
       - ./data:/app/data
 
   processor:
-    build: ./processor
+    build: ./Processor
     volumes:
       - ./data:/app/data 
     environment:
       - filename=example_captured_data.json
+
+  analyzer:
+    build: ./ExampleAnalyzer
+    volumes:
+      - ./data:/usr/src/app/data
+    environment:
+      - filename=processed.example_captured_data.json

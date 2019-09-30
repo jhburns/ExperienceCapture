@@ -61,6 +61,8 @@ namespace Processor
             string outPath = $".{seperator}data{seperator}processed{seperator}processed.{filename}";
 
             System.IO.File.WriteAllText(outPath, JsonConvert.SerializeObject(sorted, Formatting.Indented));
+
+            Console.WriteLine("Done processing file.");
         }
 
     }
