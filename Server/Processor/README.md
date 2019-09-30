@@ -1,3 +1,3 @@
-# Server
+# Processor 
 
-run with `docker compose up`
+Written using .NET Core (C#) with JSON.Net.
