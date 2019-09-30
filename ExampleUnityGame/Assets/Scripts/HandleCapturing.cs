@@ -69,6 +69,10 @@ public class HandleCapturing : MonoBehaviour
                 Debug.Log("Cleaning up...");
                 StartCoroutine(sendDelete());
             }
+            else
+            {
+                quit();
+            }
         }
         else
         {
@@ -195,8 +199,18 @@ public class HandleCapturing : MonoBehaviour
             else
             {
                 Debug.Log("Finished cleanup, exiting");
+                quit();
             }
         }
+    }
+
+    private void quit()
+    {
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #else
+              Application.Quit();
+        #endif
     }
 
     public void setUrl(string u)
