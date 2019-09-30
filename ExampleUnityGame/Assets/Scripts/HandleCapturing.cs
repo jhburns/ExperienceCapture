@@ -158,8 +158,11 @@ public class HandleCapturing : MonoBehaviour
         object firstInfo = new
         {
             user = username,
-            timestamp = -1,
-            taken = System.DateTime.Now.ToString("yyyy.MM.dd-hh:mm:ss")
+            taken = System.DateTime.Now.ToString("yyyy.MM.dd-hh:mm:ss"),
+            info = new {
+                timestamp = -1,
+
+            }
         };
 
         sendCaptures(JsonConvert.SerializeObject(firstInfo));

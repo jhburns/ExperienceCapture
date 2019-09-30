@@ -1,5 +1,5 @@
 [
-{"user":"Alice","timestamp":-1,"taken":"2019.09.29-10:48:46"},
+{"user":"Alice","taken":"2019.09.29-10:48:46","info":{"timestamp":-1}},
 {"UI controller":{"againButtonIsActive":false,"doneButtonIsActive":false,"promptTextIsActive":false,"getReadyTextIsActive":true,"timeTextIsActive":false,"countdown":7.20118237,"responceTime":0.0,"isWaiting":true,"isResponding":false},"info":{"timestamp":0.0}},
 {"UI controller":{"againButtonIsActive":false,"doneButtonIsActive":false,"promptTextIsActive":false,"getReadyTextIsActive":true,"timeTextIsActive":false,"countdown":7.184516,"responceTime":0.0,"isWaiting":true,"isResponding":false},"info":{"timestamp":0.0}},
 {"UI controller":{"againButtonIsActive":false,"doneButtonIsActive":false,"promptTextIsActive":false,"getReadyTextIsActive":true,"timeTextIsActive":false,"countdown":7.16784954,"responceTime":0.0,"isWaiting":true,"isResponding":false},"info":{"timestamp":0.02}},

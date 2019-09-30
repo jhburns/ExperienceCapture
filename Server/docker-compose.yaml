@@ -7,4 +7,9 @@ services:
     volumes:
       - ./data:/app/data
 
- 
+  processor:
+    build: ./processor
+    volumes:
+      - ./data:/app/data 
+    environment:
+      - filename=example_captured_data.json

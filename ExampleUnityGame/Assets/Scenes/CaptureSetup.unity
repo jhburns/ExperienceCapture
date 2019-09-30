@@ -405,7 +405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ex: {fileID: 6221522255909927710, guid: de1ac8a70f455954485a0ab6742bba5c, type: 3}
   captureRate: 1
-  sendToConsole: 0
+  sendToConsole: 1
   newSessionPath: session/
 --- !u!1 &498415343
 GameObject:
