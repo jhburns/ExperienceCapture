@@ -23,8 +23,11 @@ public class HandleCapturing : MonoBehaviour
     private int frameCount;
 
     private bool sendToConsole;
-
     private string id;
+    private int openRequests;
+    private bool isCapturing;
+
+    private bool isFirst;
 
     void Awake()
     {
@@ -34,6 +37,9 @@ public class HandleCapturing : MonoBehaviour
     void Start()
     {
         frameCount = 0;
+        openRequests = 0;
+        setCapturability(true);
+        isFirst = true;
     }
 
     void Update()
@@ -53,26 +59,55 @@ public class HandleCapturing : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        findCapturable();
+        if (scene.name == "Cleanup")
+        {
+            setCapturability(false);
+            allCapturable = null;
+
+            if (!sendToConsole)
+            {
+                Debug.Log("Cleaning up...");
+                StartCoroutine(sendDelete());
+            }
+        }
+        else
+        {
+            setCapturability(true);
+            findCapturable();
+            sendInitialMessage();
+        }
     }
 
     private void collectCaptures()
     {
+        if (!isCapturing)
+        {
+            return;
+        }
+
         frameCount++;
         frameCount %= captureRate;
 
-        if (frameCount == 0) {
-            foreach (ICapturable cap in allCapturable)
-            {
-                string capture = JsonConvert.SerializeObject(cap.getCapture());
-                JObject withTime = JObject.Parse(capture);
-                float timestamp = Time.timeSinceLevelLoad;
-                withTime.Add("timeSinceSceneLoad", timestamp);
-                withTime.Add("username", username);
-                string json = withTime.ToString();
-                sendCaptures(json);
-            }
+        if (frameCount != 0)
+        {
+            return;
         }
+
+        Dictionary<string, object> captureCollection = new Dictionary<string, object>();
+
+        foreach (ICapturable c in allCapturable)
+        {
+            MonoBehaviour monoCapture = (MonoBehaviour) c; // Needs to fixed and become a safe conversion
+            captureCollection.Add(monoCapture.name, c.getCapture());
+        }
+
+        object info = new
+        {
+            timestamp = Time.timeSinceLevelLoad,
+        };
+
+        captureCollection.Add("info", info);
+        sendCaptures(JsonConvert.SerializeObject(captureCollection));
     }
 
     private void sendCaptures(string data)
@@ -89,12 +124,17 @@ public class HandleCapturing : MonoBehaviour
 
     private IEnumerator postCaptures(string data)
     {
+        Debug.Log(data);
+
         using (UnityWebRequest request = UnityWebRequest.Put(url + sessionPath + id, data))
         {
             request.method = UnityWebRequest.kHttpVerbPOST;
             request.SetRequestHeader("Content-Type", "application/json");
             request.SetRequestHeader("Accept", "application/json");
+
+            openRequests++;
             yield return request.SendWebRequest();
+            openRequests--;
 
             if (request.isNetworkError || request.isHttpError)
             {
@@ -111,6 +151,55 @@ public class HandleCapturing : MonoBehaviour
     {
         var capturableQuery = FindObjectsOfType<MonoBehaviour>().OfType<ICapturable>();
         allCapturable = capturableQuery.Cast<ICapturable>().ToList();
+    }
+
+    private void sendInitialMessage()
+    {
+        /*
+        if (isFirst)
+        {
+            isFirst = false;
+
+            object firstInfo = new
+            {
+                user = username,
+                timestamp = Time.timeSinceLevelLoad
+            };
+
+            sendCaptures(JsonConvert.SerializeObject(firstInfo));
+        }
+        */
+    }
+
+    private IEnumerator sendDelete()
+    {
+        if (openRequests > 0)
+        {
+            yield return null;
+        }
+
+        StartCoroutine(deleteSession());
+    }
+
+    private IEnumerator deleteSession()
+    {
+        using (UnityWebRequest request = UnityWebRequest.Delete(url + sessionPath + id))
+        {
+            request.method = UnityWebRequest.kHttpVerbDELETE;
+            request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Accept", "application/json");
+
+            yield return request.SendWebRequest();
+
+            if (request.isNetworkError || request.isHttpError)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                Debug.Log("Finished cleanup, exiting");
+            }
+        }
     }
 
     public void setUrl(string u)
@@ -136,5 +225,10 @@ public class HandleCapturing : MonoBehaviour
     public void setToConsole(bool c)
     {
         sendToConsole = c;
+    }
+
+    public void setCapturability(bool c)
+    {
+        isCapturing = c;
     }
 }
