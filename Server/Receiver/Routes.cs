@@ -73,11 +73,7 @@ namespace Nancy.App.Hosting.Kestrel
 
                 try
                 {
-                    using (StreamWriter sw = File.AppendText(path))
-                    {
-                        string chunkWithComma = chunk + ",\n";
-                        sw.Write(chunkWithComma); // Comma used to string object together
-                    }
+                    File.AppendAllText(path, chunk + "," + Environment.NewLine);
                 }
                 catch (Exception e)
                 {
