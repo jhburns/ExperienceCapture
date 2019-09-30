@@ -43,4 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05e1521d99163c849b1b584a8240d9a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: save
+  sessionPath: session/
+  username: 
+  captureRate: 0

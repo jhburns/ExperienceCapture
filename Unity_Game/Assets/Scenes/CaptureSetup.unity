@@ -371,7 +371,7 @@ GameObject:
   - component: {fileID: 446862747}
   - component: {fileID: 446862748}
   m_Layer: 0
-  m_Name: ExportSetup
+  m_Name: CaptureSetup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -406,7 +406,7 @@ MonoBehaviour:
   ex: {fileID: 6221522255909927710, guid: de1ac8a70f455954485a0ab6742bba5c, type: 3}
   captureRate: 1
   sendToConsole: 0
-  newSessionPath: /session/
+  newSessionPath: session/
 --- !u!1 &498415343
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,7 +796,7 @@ GameObject:
   - component: {fileID: 924672143}
   - component: {fileID: 924672142}
   m_Layer: 5
-  m_Name: Get
+  m_Name: Connect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1104,7 +1104,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Submit
+  m_Text: Connect
 --- !u!222 &1288721881
 CanvasRenderer:
   m_ObjectHideFlags: 0

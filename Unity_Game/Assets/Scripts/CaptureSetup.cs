@@ -7,9 +7,9 @@ using System;
 
 using Newtonsoft.Json;
 
-public class ExporterSetup : MonoBehaviour
+public class CaptureSetup : MonoBehaviour
 {
-    public Exporter ex;
+    public HandleCapturing ex;
 
     public int captureRate;
 
@@ -25,7 +25,7 @@ public class ExporterSetup : MonoBehaviour
             return;
         }
 
-        StartCoroutine(GetRequest(url + newSessionPath, (data) =>
+        StartCoroutine(getRequest(url + newSessionPath, (data) =>
             {
                 try
                 {
@@ -37,6 +37,7 @@ public class ExporterSetup : MonoBehaviour
                     }
                     else
                     {
+                        Debug.Log("Session id is: " + responce.id);
                         createExporter(url, responce.id, username);
                     }
                 }
@@ -48,7 +49,7 @@ public class ExporterSetup : MonoBehaviour
         );
     }
 
-    IEnumerator GetRequest(string uri, System.Action<string> callback)
+    private IEnumerator getRequest(string uri, System.Action<string> callback)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
@@ -71,12 +72,14 @@ public class ExporterSetup : MonoBehaviour
 
     private void createExporter(string url, string id, string username)
     {
-        Exporter newExporter = Instantiate(ex);
+        HandleCapturing newExporter = Instantiate(ex);
+
         newExporter.setUrl(url);
         newExporter.setUsername(username);
         newExporter.setID(id);
         newExporter.setRate(captureRate);
         newExporter.setToConsole(sendToConsole);
+
         SceneManager.LoadScene("Game");
     }
 

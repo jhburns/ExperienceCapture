@@ -7,7 +7,7 @@ public class InputHandler : MonoBehaviour
 {
     public InputField urlInput;
     public InputField nameInput;
-    public ExporterSetup exporter;
+    public CaptureSetup exporter;
 
     public bool useWindowsDefault;
 

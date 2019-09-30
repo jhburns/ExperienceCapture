@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using UnityEngine.Networking;
 using Newtonsoft.Json.Linq;
 
-public class Exporter : MonoBehaviour
+public class HandleCapturing : MonoBehaviour
 {
     private string url;
     public string sessionPath;
@@ -38,7 +38,6 @@ public class Exporter : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(id);
         collectCaptures();
     }
 
@@ -54,7 +53,6 @@ public class Exporter : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("Scene Loaded");
         findCapturable();
     }
 
@@ -94,7 +92,7 @@ public class Exporter : MonoBehaviour
         List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
         formData.Add(new MultipartFormDataSection(data));
 
-        UnityWebRequest www = UnityWebRequest.Post(url + sessionPath, formData);
+        UnityWebRequest www = UnityWebRequest.Post(url + sessionPath + id, formData);
         yield return www.SendWebRequest();
 
         if (www.isNetworkError || www.isHttpError)

@@ -66,7 +66,7 @@ public class UIController : MonoBehaviour, ICapturable
 
     public void SetupRound()
     {
-        countdown = Random.Range(0f, 10.0f);
+        countdown = Random.Range(2f, 8.0f);
         responceTime = 0f;
         waiting = true;
         responding = false;

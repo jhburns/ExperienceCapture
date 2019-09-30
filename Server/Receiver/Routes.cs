@@ -1,23 +1,29 @@
 namespace Nancy.App.Hosting.Kestrel
 {
     using ModelBinding;
-    using System;
     using Nancy.Extensions;
 
+    using System;
     using System.IO;
     using System.Text;
+    using System.Collections.Generic;
 
     using Newtonsoft.Json;
 
-    public class HomeModule : NancyModule
+    using Nancy.App.Random;
+    using Nancy.App.Session;
+
+    public class Routes : NancyModule
     {
-        public HomeModule(IAppConfiguration appConfig)
+        public Routes(IAppConfiguration appConfig)
         {
             Get("/", args => "The receiving server is running.");
 
+            Get("/health", args => "OK");
+
             Get("/session", args =>
             {
-                string uniqueID = "4321";
+                string uniqueID = Generate.RandomString(8);
 
                 var newSession = new
                 {
@@ -26,7 +32,7 @@ namespace Nancy.App.Hosting.Kestrel
                 };
 
                 string seperator = Path.DirectorySeparatorChar.ToString();
-                string path = $".{seperator}data{seperator}{uniqueID}";
+                string path = $".{seperator}data{seperator}{uniqueID}.json";
 
                 try
                 {
@@ -41,23 +47,32 @@ namespace Nancy.App.Hosting.Kestrel
                     return 500;
                 }
 
+                List<string> ids = StoreSession.getSessions();
+                ids.Add(uniqueID);
+                StoreSession.saveSessions(ids);
+
+                Console.WriteLine(ids.Count);
+
                 return JsonConvert.SerializeObject(newSession);
             });
 
-            Post("/save", args =>
+            Post("/session/{id}", args =>
             {
-                string saveData = Request.Body.AsString();
+                if (!StoreSession.getSessions().Contains(args.id))
+                {
+                    return 404;
+                }
+
+                string chunk = Request.Body.AsString();
 
                 string seperator = Path.DirectorySeparatorChar.ToString();
-                string path = $".{seperator}data{seperator}alice.json";
-
-                Console.WriteLine("got");
+                string path = $".{seperator}data{seperator}{args.id}.json";
 
                 try
                 {
                     using (StreamWriter sw = File.AppendText(path))
                     {
-                        sw.Write(saveData);
+                        sw.Write(chunk);
                     }
                 }
                 catch (Exception e)
