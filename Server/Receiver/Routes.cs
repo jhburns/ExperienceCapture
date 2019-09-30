@@ -38,7 +38,7 @@ namespace Nancy.App.Hosting.Kestrel
                 {
                     using (StreamWriter sw = File.CreateText(path))
                     {
-                        sw.WriteLine("{");
+                        sw.WriteLine("[");
                     }
                 } 
                 catch (Exception e)
@@ -50,8 +50,6 @@ namespace Nancy.App.Hosting.Kestrel
                 List<string> ids = StoreSession.getSessions();
                 ids.Add(uniqueID);
                 StoreSession.saveSessions(ids);
-
-                Console.WriteLine(ids.Count);
 
                 return JsonConvert.SerializeObject(newSession);
             });
@@ -72,7 +70,7 @@ namespace Nancy.App.Hosting.Kestrel
                 {
                     using (StreamWriter sw = File.AppendText(path))
                     {
-                        sw.Write(chunk);
+                        sw.Write(chunk + ","); // Comma used to string object together
                     }
                 }
                 catch (Exception e)

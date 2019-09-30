@@ -89,19 +89,21 @@ public class HandleCapturing : MonoBehaviour
 
     private IEnumerator postCaptures(string data)
     {
-        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
-        formData.Add(new MultipartFormDataSection(data));
-
-        UnityWebRequest www = UnityWebRequest.Post(url + sessionPath + id, formData);
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError || www.isHttpError)
+        using (UnityWebRequest request = UnityWebRequest.Put(url + sessionPath + id, data))
         {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            //Debug.Log("Posted capture to server");
+            request.method = UnityWebRequest.kHttpVerbPOST;
+            request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Accept", "application/json");
+            yield return request.SendWebRequest();
+
+            if (request.isNetworkError || request.isHttpError)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                //Debug.Log("Posted capture to server");
+            }
         }
     }
 
