@@ -62,8 +62,6 @@ public class UIController : MonoBehaviour, ICapturable
         {
             responceTime += Time.deltaTime;
 
-            Debug.Log(keyMappings[promptIndex]);
-
             if (Input.GetKeyDown(keyMappings[promptIndex]))
             {
                 responding = false;
