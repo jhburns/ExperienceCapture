@@ -7,7 +7,7 @@ public class InputHandler : MonoBehaviour
 {
     public InputField urlInput;
     public InputField nameInput;
-    public CaptureSetup exporter;
+    public CaptureSetup capture;
 
     public bool useWindowsDefault;
 
@@ -27,6 +27,6 @@ public class InputHandler : MonoBehaviour
 
     public void getUrl()
     {
-        exporter.checkStatus(urlInput.text, nameInput.text);
+        capture.checkStatus(urlInput.text, nameInput.text);
     }
 }

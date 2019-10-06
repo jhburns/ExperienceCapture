@@ -17,6 +17,8 @@ public class CaptureSetup : MonoBehaviour
 
     public string newSessionPath; 
 
+    public string sceneToLoad;
+
     public void checkStatus(string url, string username)
     {
         if (sendToConsole)
@@ -80,7 +82,7 @@ public class CaptureSetup : MonoBehaviour
         newExporter.setRate(captureRate);
         newExporter.setToConsole(sendToConsole);
 
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene(sceneToLoad);
     }
 
 }

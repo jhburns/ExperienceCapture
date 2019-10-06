@@ -2,9 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spinner : MonoBehaviour {
+using Capture;
+
+public class Spinner : MonoBehaviour, ICapturable
+{
 	
 	void Update () {
 		transform.Rotate (Vector3.forward * -3);
 	}
+
+    public object getCapture() {
+        return new 
+        {
+            rotation = transform.eulerAngles.z
+        };
+    }
+
 }
