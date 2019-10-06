@@ -115,7 +115,14 @@ public class UIController : MonoBehaviour, ICapturable
         {
             againButtonIsActive = again.IsActive(),
             doneButtonIsActive = done.IsActive(),
-            //promptTextIsActive = prompt.IsActive(),
+            promptIndex = promptIndex,
+
+            // Wanted to see if you can do this, not that you should do it
+            promptIsActive = (prompts[0].IsActive() 
+                              || prompts[1].IsActive() 
+                              || prompts[2].IsActive() 
+                              || prompts[3].IsActive()),
+
             getReadyTextIsActive = getReady.IsActive(),
             timeTextIsActive = timeDisplay.IsActive(),
 
