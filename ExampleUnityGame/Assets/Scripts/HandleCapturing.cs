@@ -15,11 +15,11 @@ public class HandleCapturing : MonoBehaviour
     private string url;
     public string sessionPath;
 
-    public string username;
+    private string username;
 
     private List<ICapturable> allCapturable;
 
-    public int captureRate;
+    private int captureRate;
     private int frameCount;
 
     private bool sendToConsole;
