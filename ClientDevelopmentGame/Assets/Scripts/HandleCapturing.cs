@@ -29,6 +29,8 @@ public class HandleCapturing : MonoBehaviour
 
     private bool isFirst;
 
+    private bool isVerbose;
+
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -45,6 +47,8 @@ public class HandleCapturing : MonoBehaviour
     void Update()
     {
         collectCaptures();
+
+        printExtraInfo();
     }
 
     void OnEnable()
@@ -126,6 +130,20 @@ public class HandleCapturing : MonoBehaviour
         else
         {
             StartCoroutine(postCaptures(data));
+        }
+    }
+
+    private void printExtraInfo()
+    {
+        if (isVerbose)
+        {
+            string extra = "Extra info about the frame.\n";
+            if (allCapturable != null)
+            {
+                extra += "Capturable objects: " + allCapturable.Count + "\n";
+            }
+
+            Debug.Log(extra);
         }
     }
 
@@ -248,5 +266,10 @@ public class HandleCapturing : MonoBehaviour
     public void setCapturability(bool c)
     {
         isCapturing = c;
+    }
+
+    public void setVerbose(bool v)
+    {
+        isVerbose = v;
     }
 }
