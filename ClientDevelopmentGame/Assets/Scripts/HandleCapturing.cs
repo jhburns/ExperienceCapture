@@ -32,6 +32,8 @@ public class HandleCapturing : MonoBehaviour
     private bool isVerbose;
     private bool isSilent;
 
+    private List<string> capturableNames;
+
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -81,10 +83,9 @@ public class HandleCapturing : MonoBehaviour
 
         if (allCapturable != null)
             {
-                foreach (ICapturable c in allCapturable)
+                for (int i = 0; i < allCapturable.Count; i++)
                 {
-                    MonoBehaviour monoCapture = (MonoBehaviour) c; // All found objects are also MonoBenavior type
-                    captureCollection.Add(monoCapture.name, c.getCapture());
+                    captureCollection.Add(capturableNames[i], allCapturable[i].getCapture());
                 }
         }
 
@@ -173,6 +174,47 @@ public class HandleCapturing : MonoBehaviour
     {
         var capturableQuery = FindObjectsOfType<MonoBehaviour>().OfType<ICapturable>();
         allCapturable = capturableQuery.Cast<ICapturable>().ToList();
+
+        sanitizeNames();
+    }
+
+    private void sanitizeNames()
+    {
+        capturableNames = new List<string>();
+        List<MonoBehaviour> monoCaptures = new List<MonoBehaviour>();
+        foreach (ICapturable c in allCapturable)
+        {
+            MonoBehaviour monoCapture = (MonoBehaviour)c; // All found objects are also MonoBenavior type
+            capturableNames.Add(monoCapture.name);
+            monoCaptures.Add(monoCapture);
+        }
+
+        bool[] repeatNames = new bool[capturableNames.Count];
+        for (int i = 0; i < capturableNames.Count; i++)
+        {
+            for (int j = i + 1; j < capturableNames.Count; j++)
+            {
+                if (!repeatNames[i] && capturableNames[i] == capturableNames[j])
+                {
+                    repeatNames[i] = true;
+                    repeatNames[j] = true;
+                }
+            }
+        }
+
+
+        for (int i = 0; i < capturableNames.Count; i++) 
+        {
+            if (repeatNames[i]) {
+                MonoBehaviour monoCapture = monoCaptures[i];
+                capturableNames[i] = monoCapture.name + "-" + monoCapture.GetInstanceID();
+            }
+        }
+
+        foreach (string s in capturableNames) {
+            Debug.Log(s);
+        }
+
     }
 
     private void sendInitialMessage()

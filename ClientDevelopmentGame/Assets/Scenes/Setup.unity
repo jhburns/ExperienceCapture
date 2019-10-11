@@ -388,8 +388,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   captureRate: 1
   sceneToLoad: SampleScene
-  printAdditionalCaptureInfo: 1
+  printAdditionalCaptureInfo: 0
   findCapturableEachFrame: 0
+  doNotPrintToConsole: 0
   handler: {fileID: 114267529510773096, guid: 16284608f5e17b9419c1b59da5a4e2e2, type: 2}
 --- !u!1 &1806182291
 GameObject:
