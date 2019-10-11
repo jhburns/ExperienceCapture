@@ -9,7 +9,7 @@ public class Tester : MonoBehaviour, ICapturable
 
     string dummyText;
 
-    private void setText(string t)
+    public void setText(string t)
     {
         dummyText = t;
     }
