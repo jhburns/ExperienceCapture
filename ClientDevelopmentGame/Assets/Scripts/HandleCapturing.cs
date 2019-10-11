@@ -30,6 +30,7 @@ public class HandleCapturing : MonoBehaviour
     private bool isFirst;
 
     private bool isVerbose;
+    private bool isSilent;
 
     void Awake()
     {
@@ -40,7 +41,7 @@ public class HandleCapturing : MonoBehaviour
     {
         frameCount = 0;
         openRequests = 0;
-        setCapturability(true);
+        isCapturing = false;
         isFirst = true;
     }
 
@@ -59,31 +60,6 @@ public class HandleCapturing : MonoBehaviour
     void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name == "Cleanup")
-        {
-            setCapturability(false);
-            allCapturable = null;
-
-            if (!sendToConsole)
-            {
-                Debug.Log("Cleaning up...");
-                StartCoroutine(sendDelete());
-            }
-            else
-            {
-                quit();
-            }
-        }
-        else
-        {
-            isCapturing = true;
-            findCapturable();
-            sendInitialMessage();
-        }
     }
 
     private void collectCaptures()
@@ -107,7 +83,7 @@ public class HandleCapturing : MonoBehaviour
             {
                 foreach (ICapturable c in allCapturable)
                 {
-                    MonoBehaviour monoCapture = (MonoBehaviour)c; // Needs to fixed and become a safe conversion
+                    MonoBehaviour monoCapture = (MonoBehaviour) c; // All found objects are also MonoBenavior type
                     captureCollection.Add(monoCapture.name, c.getCapture());
                 }
         }
@@ -123,27 +99,15 @@ public class HandleCapturing : MonoBehaviour
 
     private void sendCaptures(string data)
     {
-        if (sendToConsole)
+        if (sendToConsole && !isSilent)
         {
             Debug.Log(data);
         }
-        else
+        
+
+        if (!sendToConsole)
         {
             StartCoroutine(postCaptures(data));
-        }
-    }
-
-    private void printExtraInfo()
-    {
-        if (isVerbose)
-        {
-            string extra = "Extra info about the frame.\n";
-            if (allCapturable != null)
-            {
-                extra += "Capturable objects: " + allCapturable.Count + "\n";
-            }
-
-            Debug.Log(extra);
         }
     }
 
@@ -163,9 +127,44 @@ public class HandleCapturing : MonoBehaviour
             {
                 Debug.Log(request.error);
             }
+        }
+    }
+
+    private void printExtraInfo()
+    {
+        if (isVerbose && !isSilent)
+        {
+            string extra = "Extra info about the frame.\n";
+            if (allCapturable != null)
+            {
+                extra += "Capturable objects: " + allCapturable.Count + "\n";
+            }
+
+            Debug.Log(extra);
+        }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name != "Cleanup")
+        {
+            isCapturing = true;
+            findCapturable();
+            sendInitialMessage();
+        }
+        else
+        {
+            isCapturing = false;
+            allCapturable = null;
+
+            if (!sendToConsole)
+            {
+                Debug.Log("Cleaning up...");
+                StartCoroutine(sendDelete());
+            }
             else
             {
-                //Debug.Log("Posted capture to server");
+                quit();
             }
         }
     }
@@ -271,5 +270,10 @@ public class HandleCapturing : MonoBehaviour
     public void setVerbose(bool v)
     {
         isVerbose = v;
+    }
+
+    public void setSilence(bool s)
+    {
+        isSilent = s;
     }
 }

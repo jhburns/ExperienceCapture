@@ -11,6 +11,7 @@ public class CaptureSetup : MonoBehaviour
 
     public bool printAdditionalCaptureInfo;
     public bool findCapturableEachFrame;
+    public bool doNotPrintToConsole;
 
     public HandleCapturing handler;
 
@@ -30,6 +31,7 @@ public class CaptureSetup : MonoBehaviour
         newHandler.setToConsole(true);
         newHandler.setCapturability(false);
         newHandler.setVerbose(printAdditionalCaptureInfo);
+        newHandler.setSilence(doNotPrintToConsole);
 
         SceneManager.LoadScene(sceneToLoad);
     }
