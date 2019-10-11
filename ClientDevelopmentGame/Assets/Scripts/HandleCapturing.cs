@@ -95,7 +95,7 @@ public class HandleCapturing : MonoBehaviour
         };
 
         captureCollection.Add("info", info);
-        sendCaptures(JsonConvert.SerializeObject(captureCollection));
+        sendCaptures(JsonConvert.SerializeObject(captureCollection, Formatting.Indented));
     }
 
     private void sendCaptures(string data)
@@ -210,11 +210,6 @@ public class HandleCapturing : MonoBehaviour
                 capturableNames[i] = monoCapture.name + "-" + monoCapture.GetInstanceID();
             }
         }
-
-        foreach (string s in capturableNames) {
-            Debug.Log(s);
-        }
-
     }
 
     private void sendInitialMessage()
@@ -234,7 +229,7 @@ public class HandleCapturing : MonoBehaviour
                 }
             };
 
-            sendCaptures(JsonConvert.SerializeObject(firstInfo));
+            sendCaptures(JsonConvert.SerializeObject(firstInfo, Formatting.Indented));
         }
     }
 
