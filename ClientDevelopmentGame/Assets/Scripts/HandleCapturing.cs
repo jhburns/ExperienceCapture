@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,6 +27,7 @@ public class HandleCapturing : MonoBehaviour
     private string id;
     private int openRequests;
     private bool isCapturing;
+    private bool findEveryFrame;
 
     private bool isFirst;
 
@@ -77,6 +79,19 @@ public class HandleCapturing : MonoBehaviour
         if (frameCount != 0)
         {
             return;
+        }
+
+        if (findEveryFrame)
+        {
+            for (int i = 0; i < allCapturable.Count; i++)
+            {
+                if (!System.Object.ReferenceEquals(allCapturable[i], null))
+                {
+                    allCapturable.RemoveAt(i);
+                }
+            }
+
+            findCapturable();
         }
 
         Dictionary<string, object> captureCollection = new Dictionary<string, object>();
@@ -312,5 +327,10 @@ public class HandleCapturing : MonoBehaviour
     public void setSilence(bool s)
     {
         isSilent = s;
+    }
+
+    public void setFindEveryFrame(bool f)
+    {
+        findEveryFrame = f;
     }
 }

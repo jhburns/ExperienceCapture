@@ -15,6 +15,12 @@ public class TestSetup : MonoBehaviour {
     public int fillerLength;
     private string filler;
 
+    public int initialSpawn;
+    public int scaleUp;
+    public int varience;
+    private List<Tester> testers;
+    public Tester t;
+
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -33,6 +39,34 @@ public class TestSetup : MonoBehaviour {
         filler = repeated.Substring(0, fillerLength);
     }
 
+    void Update()
+    {
+        if (scaleUp > 0)
+        {
+            createTesters(1, "scale");
+
+            scaleUp--;
+        }
+        else if (varience > 0)
+        {
+            int change = UnityEngine.Random.Range(-varience + 1, varience);
+            Debug.Log(change);
+            
+            if (change > 0)
+            {
+                createTesters(change, "variant");
+            }
+            else if (change < 0)
+            {
+                for (int i = testers.Count + change; i < testers.Count; i++)
+                {
+                    Destroy(testers[i]);
+                    testers.RemoveAt(i);
+                }
+            }
+        }
+    }
+
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -45,7 +79,7 @@ public class TestSetup : MonoBehaviour {
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        List<Tester> testers = FindTesters();
+        testers = FindTesters();
 
         if (testers.Count > 0)
         {
@@ -54,11 +88,24 @@ public class TestSetup : MonoBehaviour {
                 t.setText(filler);
             }
         }
+
+        createTesters(initialSpawn, "init");
     }
 
     private List<Tester> FindTesters()
     {
         var testers = FindObjectsOfType<Tester>();
         return testers.Cast<Tester>().ToList();
+    }
+
+    private void createTesters(int count, string type)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Tester test = Instantiate(t);
+            testers.Add(test);
+            test.setText(filler);
+            test.name = test.name + "-" + type + "-" + (testers.Count - 1);
+        }
     }
 }

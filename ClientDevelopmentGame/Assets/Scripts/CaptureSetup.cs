@@ -5,12 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class CaptureSetup : MonoBehaviour
 {
+    [Tooltip("How faster data is collect, in frames. For example 60 = every 1 second @60fps.")]
     public int captureRate;
 
+    [Tooltip("First scene to load.")]
     public string sceneToLoad;
 
+    [Tooltip("Extra debugging data.")]
     public bool printAdditionalCaptureInfo;
-    public bool findCapturableEachFrame;
+    [Tooltip("Handles game objects being instantiated and destroyed.")]
+    public bool findObjectsInEachFrame;
+    [Tooltip("Still capture data, but don't print it.")]
     public bool doNotPrintToConsole;
 
     public HandleCapturing handler;
@@ -27,9 +32,12 @@ public class CaptureSetup : MonoBehaviour
         newHandler.setUrl(url);
         newHandler.setUsername(username);
         newHandler.setID(id);
+
         newHandler.setRate(captureRate);
         newHandler.setToConsole(true);
         newHandler.setCapturability(false);
+        newHandler.setFindEveryFrame(findObjectsInEachFrame);
+
         newHandler.setVerbose(printAdditionalCaptureInfo);
         newHandler.setSilence(doNotPrintToConsole);
 
