@@ -85,7 +85,11 @@ public class UIController : MonoBehaviour, ICapturable
         prompt.gameObject.SetActive(false);
     }
 
-    public void NextScene()
+    public void resetScene() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    
+    public void nextScene()
     {
         SceneManager.LoadScene("Cleanup");
     }

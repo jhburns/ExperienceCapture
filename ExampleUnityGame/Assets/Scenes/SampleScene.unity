@@ -409,7 +409,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1058648272}
-        m_MethodName: NextScene
+        m_MethodName: nextScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1045,7 +1045,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1058648272}
-        m_MethodName: SetupRound
+        m_MethodName: resetScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
