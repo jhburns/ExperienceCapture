@@ -15,9 +15,8 @@ public class UIController : MonoBehaviour, ICapturable
     public Image spinner;
     public string initialTimeDisplay;
 
-    public Image[] prompts;
+    public Text prompt;
     private string[] keyMappings;
-    private int promptIndex;
 
     private float countdown;
     private float responceTime;
@@ -27,19 +26,7 @@ public class UIController : MonoBehaviour, ICapturable
 
     void Start()
     {
-        initMapping();
         SetupRound();
-    }
-
-    private void initMapping()
-    {
-        keyMappings = new string[]
-        {
-            "space",
-            "b",
-            "n",
-            "v"
-        };
     }
 
     void Update()
@@ -53,7 +40,7 @@ public class UIController : MonoBehaviour, ICapturable
                 waiting = false;
                 responding = true;
 
-                prompts[promptIndex].gameObject.SetActive(true);
+                prompt.gameObject.SetActive(true);
                 getReady.gameObject.SetActive(false);
                 spinner.gameObject.SetActive(false);
             }
@@ -62,16 +49,16 @@ public class UIController : MonoBehaviour, ICapturable
         {
             responceTime += Time.deltaTime;
 
-            if (Input.GetKeyDown(keyMappings[promptIndex]))
+            if (Input.GetKeyDown("space"))
             {
                 responding = false;
 
                 UpdateText(responceTime);
 
+                prompt.gameObject.SetActive(false);
                 again.gameObject.SetActive(true);
                 done.gameObject.SetActive(true);
                 timeDisplay.gameObject.SetActive(true);
-
             }
         }
     }
@@ -95,13 +82,7 @@ public class UIController : MonoBehaviour, ICapturable
         getReady.gameObject.SetActive(true);
         timeDisplay.gameObject.SetActive(false);
         spinner.gameObject.SetActive(true);
-
-        foreach (Image p in prompts)
-        {
-            p.gameObject.SetActive(false);
-        }
-
-        promptIndex = Random.Range(0, prompts.Length);
+        prompt.gameObject.SetActive(false);
     }
 
     public void NextScene()
@@ -115,13 +96,7 @@ public class UIController : MonoBehaviour, ICapturable
         {
             againButtonIsActive = again.IsActive(),
             doneButtonIsActive = done.IsActive(),
-            promptIndex = promptIndex,
-
-            // Wanted to see if you can do this, not that you should do it
-            promptIsActive = (prompts[0].IsActive() 
-                              || prompts[1].IsActive() 
-                              || prompts[2].IsActive() 
-                              || prompts[3].IsActive()),
+            promptIsActive = prompt.IsActive(),
 
             getReadyTextIsActive = getReady.IsActive(),
             timeTextIsActive = timeDisplay.IsActive(),
