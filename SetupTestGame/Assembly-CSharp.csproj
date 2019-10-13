@@ -10,7 +10,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace>
     </RootNamespace>
-    <ProjectGuid>{22594882-2D5B-F187-4AED-DA3ED7DB7E67}</ProjectGuid>
+    <ProjectGuid>{3B4F6E21-277C-4908-274F-EA5628A7FEEF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -61,24 +61,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\ClientAssets\Capture.cs" />
-    <Compile Include="Assets\ClientAssets\CaptureSetup.cs" />
-    <Compile Include="Assets\ClientAssets\HandleCapturing.cs" />
-    <Compile Include="Assets\Scripts\Scenery.cs" />
-    <Compile Include="Assets\Scripts\Tester.cs" />
-    <Compile Include="Assets\Scripts\TestSetup.cs" />
-    <None Include="Assets\ClientAssets\JsonDotNet\link.xml" />
+    <Compile Include="Assets\Scripts\InputHandler.cs" />
+    <Compile Include="Assets\Scripts\Spinner.cs" />
+    <Compile Include="Assets\Scripts\UIController.cs" />
     <Reference Include="UnityEditor.StandardEvents">
-      <HintPath>C:/Users/Hat/source/repos/jhburns/ExperienceCapture/ClientDevelopmentGame/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+      <HintPath>C:/Users/Hat/source/repos/jhburns/ExperienceCapture/SetupTestGame/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/Hat/source/repos/jhburns/ExperienceCapture/ClientDevelopmentGame/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/Hat/source/repos/jhburns/ExperienceCapture/SetupTestGame/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>C:/Users/Hat/source/repos/jhburns/ExperienceCapture/ClientDevelopmentGame/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+      <HintPath>C:/Users/Hat/source/repos/jhburns/ExperienceCapture/SetupTestGame/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/Hat/source/repos/jhburns/ExperienceCapture/ClientDevelopmentGame/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/Hat/source/repos/jhburns/ExperienceCapture/SetupTestGame/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.11f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -277,9 +273,6 @@
     </Reference>
     <Reference Include="UnityEngine.SpatialTracking">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.11f1/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>C:/Users/Hat/source/repos/jhburns/ExperienceCapture/ClientDevelopmentGame/Assets/ClientAssets/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Analytics">
       <HintPath>C:/Users/Hat/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/UnityEngine.Analytics.dll</HintPath>
