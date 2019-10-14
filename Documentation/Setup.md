@@ -58,4 +58,4 @@ the Cleanup scene will do that for you automatically when loaded.
 
 ## Next Part
 
-If all the checks are fine, everything should be setup. [Next Section: Doing coding.](Coding.md)
+If all the checks are fine, everything should be setup. Next Section: [Coding the data capture.](Coding.md)
