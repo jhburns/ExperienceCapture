@@ -1,4 +1,4 @@
-# Documentation 
+# Documentation (Client v1)
 
 This documentation is only a tutorial for how to setup the 
 client for now. It's broken up into sections, covering how
