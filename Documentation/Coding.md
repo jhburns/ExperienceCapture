@@ -41,7 +41,7 @@ public class Example : MonoBehaviour, ICapturable
 }
 ```
 
-**Check: ** There shouldn't be any compile or runtime errors.
+**Check:** There shouldn't be any compile or runtime errors.
 
 ## Add properties 
 
