@@ -4,8 +4,8 @@ This documentation is only a tutorial for how to setup the
 client for now. It's broken up into sections, covering how
 to setup the assets, and adding data capturing code. 
 
-1. Download and setup the client asset package. 
-2. Learn how to add data capturing code to the Unity game.
+1. [Download and setup the client asset package.](Setup.md)
+2. [Learn how to add data capturing code to the Unity game.](Coding.md)
 
 ## Compatibility 
 
