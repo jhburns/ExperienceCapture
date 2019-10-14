@@ -13,4 +13,4 @@ Click on the first link 'ExperienceCaptureClient.unitypackage' to download it, n
 
 ### Import Into Unity Game
 
-![Opening asset menu](/images/import_package.png) 
+![Opening asset menu](images/import_package.png)
