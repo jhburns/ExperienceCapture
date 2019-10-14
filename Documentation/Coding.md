@@ -19,6 +19,7 @@ public class Example : MonoBehaviour, ICapturable
 {
 	// Class stuff
 }
+```
 
 2. Add the getCapture() function to satisfy the ICapturable [interface](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/interface).
 
@@ -70,7 +71,7 @@ for transmition.
 
 Here are some ways to extract commonly wanted data from an object:
 
-| Types  | |Value |
+| Types  | Value |
 | ------------- | ------------- |
 | If Game Object is active  | objectName.IsActive()  |
 | rotation | transform.eulerAngles.z |
