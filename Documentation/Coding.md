@@ -67,11 +67,11 @@ Notice how the key only has one property, 'positionX' with some value.
 The way Expereince Captures works is by translating the key and value to a JSON string 
 for transmition. 
 
-## Common Data Table
+## Common Data Table (WIP)
 
 Here are some ways to extract commonly wanted data from an object:
 
 | Types  | Value |
 | ------------- | ------------- |
-| If Game Object is active  | objectName.IsActive()  |
+| if game object is active  | objectName.IsActive()  |
 | rotation | transform.eulerAngles.z |
