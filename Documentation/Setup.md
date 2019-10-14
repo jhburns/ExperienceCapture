@@ -14,3 +14,17 @@ Click on the first link 'ExperienceCaptureClient.unitypackage' to download it, n
 ### Import Into Unity Game
 
 ![Opening asset menu](images/import_package.png)
+
+In the Unity Editor, go to Assets -> Import Package -> Custom Package... and select it.
+
+That will open a file-browser so you can navigate to where 'ExperienceCaptureClient.unitypackage'
+is downloaded and open it. 
+
+![Importing package](images/import_menu.png)
+
+You should now have a pop-up with all of the assets selected by default, click on 
+'Import' to add the package. (This may take a while)
+
+**Check:** If everything worked, there should be a new folder called *ExperienceCapture/* in your assets folder.
+
+### Create Setup Scene
