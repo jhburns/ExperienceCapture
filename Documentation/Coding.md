@@ -63,6 +63,10 @@ Now run the Setup scene, and you should see a [JSON](https://www.newtonsoft.com/
 being printed to console. It should have an info key, and a key called the same name as the
 object this script is attached too. 
 
+![Example console](images/console.png)
+
+##### Example of console output, although with different names and values. 
+
 Notice how the key only has one property, 'positionX' with some value. 
 The way Expereince Captures works is by translating the key and value to a JSON string 
 for transmition. 
