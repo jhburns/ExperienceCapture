@@ -283,9 +283,9 @@ public class HandleCapturing : MonoBehaviour
     private void quit()
     {
         #if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
+            UnityEditor.EditorApplication.isPlaying = false;
         #else
-              Application.Quit();
+            Application.Quit();
         #endif
     }
 

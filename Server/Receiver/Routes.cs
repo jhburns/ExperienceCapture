@@ -23,7 +23,7 @@ namespace Nancy.App.Hosting.Kestrel
 
             Get("/session", args =>
             {
-                string uniqueID = Generate.RandomString(8);
+                string uniqueID = Generate.RandomString(4);
 
                 var newSession = new
                 {
