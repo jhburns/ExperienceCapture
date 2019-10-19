@@ -65,6 +65,12 @@ object this script is attached too.
 
 ![Example console](images/console.png)
 
+##### Example of console output, although with different names and values. 
+
+Notice how the key only has one property, 'positionX' with some value. 
+The way Experience Captures works is by translating the key and value to a JSON string 
+for transmission. 
+
 ## How Does It Capture Data?
 
 Experience Capture works by running the 'getCapture()' function on each `ICapturable`
@@ -73,12 +79,6 @@ as wanted through the prefab, and is based on frame-rate. Additional information
 about the frame is also included automatically, like timestamps. This can be called 
 an 'eventless' data capture system, which is designed to be easier to use than
 an event based one like Unity Analytics. 
-
-##### Example of console output, although with different names and values. 
-
-Notice how the key only has one property, 'positionX' with some value. 
-The way Experience Captures works is by translating the key and value to a JSON string 
-for transmission. 
 
 ## Common Data Table (WIP)
 
