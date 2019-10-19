@@ -14,7 +14,7 @@ public class Spinner : MonoBehaviour, ICapturable
     public object getCapture() {
         return new 
         {
-            rotation = transform.eulerAngles.z
+            rotation = transform.eulerAngles.z,
         };
     }
 

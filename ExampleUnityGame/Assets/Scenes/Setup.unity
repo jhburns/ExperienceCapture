@@ -873,7 +873,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ex: {fileID: 114267529510773096, guid: 16284608f5e17b9419c1b59da5a4e2e2, type: 2}
-  captureRate: 1
+  captureRate: 60
   sendToConsole: 1
   newSessionPath: session/
   sceneToLoad: SampleScene
