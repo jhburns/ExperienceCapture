@@ -96,13 +96,14 @@ public class HandleCapturing : MonoBehaviour
             findCapturable();
         }
 
-        Dictionary<string, object> captureCollection = new Dictionary<string, object>();
+        Dictionary<string, object> captureData = new Dictionary<string, object>();
+        Dictionary<string, object> gameObjects = new Dictionary<string, object>();
 
         if (allCapturable != null)
             {
                 for (int i = 0; i < allCapturable.Count; i++)
                 {
-                    captureCollection.Add(capturableNames[i], allCapturable[i].getCapture());
+                    gameObjects.Add(capturableNames[i], allCapturable[i].getCapture());
                 }
         }
 
@@ -113,8 +114,9 @@ public class HandleCapturing : MonoBehaviour
             timeSinceLevelLoad = Time.timeSinceLevelLoad,
         };
 
-        captureCollection.Add("info", info);
-        sendCaptures(JsonConvert.SerializeObject(captureCollection, Formatting.Indented));
+        captureData.Add("gameObjects", gameObjects);
+        captureData.Add("info", info);
+        sendCaptures(JsonConvert.SerializeObject(captureData, Formatting.Indented));
     }
 
     private void sendCaptures(string data)
