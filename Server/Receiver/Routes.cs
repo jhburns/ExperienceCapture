@@ -21,7 +21,7 @@ namespace Nancy.App.Hosting.Kestrel
 
             Get("/health", args => "OK");
 
-            Get("/session", args =>
+            Post("/sessions", args =>
             {
                 string uniqueID = Generate.RandomString(4);
 
@@ -54,7 +54,7 @@ namespace Nancy.App.Hosting.Kestrel
                 return JsonConvert.SerializeObject(newSession);
             });
 
-            Post("/session/{id}", args =>
+            Post("/sessions/{id}", args =>
             {
                 if (!StoreSession.getSessions().Contains(args.id))
                 {
@@ -85,7 +85,7 @@ namespace Nancy.App.Hosting.Kestrel
                 return "OK";
             });
 
-            Delete("/session/{id}", args =>
+            Delete("/sessions/{id}", args =>
             {
                 if (!StoreSession.getSessions().Contains(args.id))
                 {

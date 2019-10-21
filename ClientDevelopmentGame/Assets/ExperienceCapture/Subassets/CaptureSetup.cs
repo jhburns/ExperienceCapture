@@ -7,6 +7,7 @@ using System;
 using UnityEngine.UI;
 
 using Newtonsoft.Json;
+using Network;
 
 public class CaptureSetup : MonoBehaviour
 {
@@ -43,6 +44,7 @@ public class CaptureSetup : MonoBehaviour
     public InputField urlInput;
 
     public Text sessionInfo;
+    private string sessionInfoSave;
     public Image sessionBackground;
     public Button newSession;
     public Button start;
@@ -80,6 +82,7 @@ public class CaptureSetup : MonoBehaviour
         nameInput.text = "Boyd";
 
         sessionInfo.gameObject.SetActive(false);
+        sessionInfoSave = sessionInfo.text;
         sessionBackground.gameObject.SetActive(false);
 
         newSession.onClick.AddListener(delegate () { onNewSessionClick(); });
@@ -93,8 +96,7 @@ public class CaptureSetup : MonoBehaviour
     {
         newSession.gameObject.SetActive(false);
 
-
-        StartCoroutine(get(urlInput.text + "session/", (data) =>
+        StartCoroutine(HTTPHelpers.post(urlInput.text + "sessions/", "{}", (data) =>
         {
             sessionInfo.gameObject.SetActive(true);
             sessionBackground.gameObject.SetActive(true);
@@ -105,11 +107,12 @@ public class CaptureSetup : MonoBehaviour
 
                 if (responce.status != "OK")
                 {
-                    sessionInfo.text = "Error getting new session: " + responce.status;
+                    sessionInfo.text = "Error creating new session: " + responce.status;
+                    newSession.gameObject.SetActive(true);
                 }
                 else
                 {
-                    sessionInfo.text = sessionInfo.text + responce.id;
+                    sessionInfo.text = sessionInfoSave + responce.id;
                     url = urlInput.text;
                     sessionID = responce.id;
 
@@ -118,36 +121,22 @@ public class CaptureSetup : MonoBehaviour
             }
             catch (Exception e)
             {
-                sessionInfo.text = "Error with deserializing, from JSON response.";
+                sessionInfo.text = "Error deserializing JSON response.";
                 Debug.Log(e);
+                newSession.gameObject.SetActive(true);
             }
-        })
-);
-    }
-
-    private IEnumerator get(string uri, System.Action<string> callback)
-    {
-        using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
+        }, 
+        (error) =>
         {
-            // Request and wait for the desired page.
-            yield return webRequest.SendWebRequest();
+            newSession.gameObject.SetActive(true);
 
-            string[] pages = uri.Split('/');
-            int page = pages.Length - 1;
+            sessionInfo.text = "Error creating new session: " + error;
+            sessionInfo.gameObject.SetActive(true);
+            sessionBackground.gameObject.SetActive(true);
 
-            if (webRequest.isNetworkError)
-            {
-                Debug.Log(pages[page] + ": Error: " + webRequest.error);
-
-                sessionInfo.gameObject.SetActive(true);
-                sessionBackground.gameObject.SetActive(true);
-                sessionInfo.text = "Error with networking: " + webRequest.error;
-            }
-            else
-            {
-                callback(webRequest.downloadHandler.text);
-            }
-        }
+            Debug.Log(error);
+        })
+        );
     }
 
     private void onStartClick()

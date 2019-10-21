@@ -10,6 +10,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine.Networking;
 using Newtonsoft.Json.Linq;
+using Network;
 
 public class HandleCapturing : MonoBehaviour
 {
@@ -129,26 +130,17 @@ public class HandleCapturing : MonoBehaviour
 
         if (!sendToConsole)
         {
-            StartCoroutine(postCaptures(data));
-        }
-    }
-
-    private IEnumerator postCaptures(string data)
-    {
-        using (UnityWebRequest request = UnityWebRequest.Put(url + sessionPath + id, data))
-        {
-            request.method = UnityWebRequest.kHttpVerbPOST;
-            request.SetRequestHeader("Content-Type", "application/json");
-            request.SetRequestHeader("Accept", "application/json");
-
             openRequests++;
-            yield return request.SendWebRequest();
-            openRequests--;
-
-            if (request.isNetworkError || request.isHttpError)
+            StartCoroutine(HTTPHelpers.post(url + sessionPath + id, data, 
+            (responceData) => 
             {
-                Debug.Log(request.error);
-            }
+                openRequests--;
+            }, 
+            (error) =>
+            {
+                Debug.Log(error);
+            })
+            );
         }
     }
 
