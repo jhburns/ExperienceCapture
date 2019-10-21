@@ -36,6 +36,8 @@ public class HandleCapturing : MonoBehaviour
 
     private List<string> capturableNames;
 
+    private object extraInfo;
+
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -240,8 +242,8 @@ public class HandleCapturing : MonoBehaviour
                 info = new
                 {
                     timestamp = -1,
-
-                }
+                },
+                extraInfo
             };
 
             sendCaptures(JsonConvert.SerializeObject(firstInfo, Formatting.Indented));
@@ -332,5 +334,10 @@ public class HandleCapturing : MonoBehaviour
     public void setFindEveryFrame(bool f)
     {
         findEveryFrame = f;
+    }
+
+    public void setExtraInfo(object e)
+    {
+        extraInfo = e;
     }
 }

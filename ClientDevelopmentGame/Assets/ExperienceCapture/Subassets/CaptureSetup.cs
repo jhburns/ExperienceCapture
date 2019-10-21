@@ -16,6 +16,12 @@ public class CaptureSetup : MonoBehaviour
     [Tooltip("First scene to load.")]
     public string sceneToLoad;
 
+    [Tooltip("Label the game version before releasing.")]
+    public string gameVersion;
+    public const string clientVersionLocked = "1.1.0";
+    [Tooltip("Don't edit, is readonly and only informational.")]
+    public string clientVersion;
+
     [Tooltip("If checked, print data to console and don't attempt to connect to a server.")]
     public bool offlineMode;
 
@@ -79,6 +85,8 @@ public class CaptureSetup : MonoBehaviour
         newSession.onClick.AddListener(delegate () { onNewSessionClick(); });
 
         start.onClick.AddListener(delegate () { onStartClick(); });
+
+        clientVersion = clientVersionLocked;
     }
 
     private void onNewSessionClick()
@@ -169,6 +177,12 @@ public class CaptureSetup : MonoBehaviour
 
         newHandler.setVerbose(printAdditionalCaptureInfo);
         newHandler.setSilence(doNotPrintToConsole);
+
+        newHandler.setExtraInfo(new
+        {
+            gameVersion = gameVersion,
+            clientVersion = clientVersionLocked
+        });
 
         SceneManager.LoadScene(sceneToLoad);
     }
