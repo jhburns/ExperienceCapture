@@ -1195,9 +1195,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e43c1733827ed1b44a121c3850109244, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  captureRate: 30
+  captureRate: 1
   sceneToLoad: SampleScene
-  offlineMode: 0
+  gameVersion: 
+  clientVersion: 
+  offlineMode: 1
   printAdditionalCaptureInfo: 0
   findObjectsInEachFrame: 1
   doNotPrintToConsole: 0
@@ -1771,8 +1773,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fillerLength: 30
-  initialSpawn: 30
-  scaleUp: 3
+  initialSpawn: 3
+  scaleUp: 0
   varience: 0
   t: {fileID: 114652173187609828, guid: 3a22c922b7e792147a17b42d16244694, type: 2}
 --- !u!4 &2042555077

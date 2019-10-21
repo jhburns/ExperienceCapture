@@ -108,7 +108,9 @@ public class HandleCapturing : MonoBehaviour
 
         object info = new
         {
-            timestamp = Time.timeSinceLevelLoad,
+            unscaledDeltaTime = Time.unscaledDeltaTime,
+            realtimeSinceStartup = Time.realtimeSinceStartup,
+            timeSinceLevelLoad = Time.timeSinceLevelLoad,
         };
 
         captureCollection.Add("info", info);
