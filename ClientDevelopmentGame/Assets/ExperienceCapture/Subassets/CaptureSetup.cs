@@ -7,6 +7,9 @@ using System;
 using UnityEngine.UI;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
+using System.IO;
+
 using Network;
 
 public class CaptureSetup : MonoBehaviour
@@ -95,6 +98,18 @@ public class CaptureSetup : MonoBehaviour
     private void onNewSessionClick()
     {
         newSession.gameObject.SetActive(false);
+
+        object parameters = new
+        {
+            create = 1
+        };
+
+        MemoryStream mem = new MemoryStream();
+        using (BsonWriter writer = new BsonWriter(mem))
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.Serialize(writer, parameters);
+        }
 
         StartCoroutine(HTTPHelpers.post(urlInput.text + "sessions/", "{}", (data) =>
         {
