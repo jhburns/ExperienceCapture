@@ -18,7 +18,7 @@ public class Tester : MonoBehaviour, ICapturable
     {
         return new
         {
-            text = dummyText
+            dummyText
         };
     }
 }

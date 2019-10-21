@@ -87,7 +87,7 @@ public class HandleCapturing : MonoBehaviour
         {
             for (int i = 0; i < allCapturable.Count; i++)
             {
-                if (!System.Object.ReferenceEquals(allCapturable[i], null))
+                if (!ReferenceEquals(allCapturable[i], null))
                 {
                     allCapturable.RemoveAt(i);
                 }
@@ -109,13 +109,13 @@ public class HandleCapturing : MonoBehaviour
 
         object info = new
         {
-            unscaledDeltaTime = Time.unscaledDeltaTime,
-            realtimeSinceStartup = Time.realtimeSinceStartup,
-            timeSinceLevelLoad = Time.timeSinceLevelLoad,
+            Time.unscaledDeltaTime,
+            Time.realtimeSinceStartup,
+            Time.timeSinceLevelLoad,
         };
 
         captureData.Add("gameObjects", gameObjects);
-        captureData.Add("info", info);
+        captureData.Add("frameInfo", info);
         sendCaptures(JsonConvert.SerializeObject(captureData, Formatting.Indented));
     }
 
@@ -173,6 +173,7 @@ public class HandleCapturing : MonoBehaviour
             isCapturing = true;
             findCapturable();
             sendInitialMessage();
+            sendSceneLoadMessage(scene);
         }
         else
         {
@@ -241,17 +242,37 @@ public class HandleCapturing : MonoBehaviour
 
             object firstInfo = new
             {
-                user = username,
-                taken = System.DateTime.Now.ToString("yyyy.MM.dd-hh:mm:ss"),
-                info = new
+                dateTime = DateTime.Now.ToString("yyyy.MM.dd-hh:mm:ss"),
+                description = "Session Started",
+                extraInfo,
+                frameInfo = new
                 {
-                    timestamp = -1,
+                    unscaledDeltaTime = -1,
+                    realtimeSinceStartup = -1,
+                    timeSinceLevelLoad = -1,
                 },
-                extraInfo
+                username
             };
 
             sendCaptures(JsonConvert.SerializeObject(firstInfo, Formatting.Indented));
         }
+    }
+
+    private void sendSceneLoadMessage(Scene scene)
+    {
+        object sceneLoadInfo = new
+        {
+            description = "Scene Loaded",
+            frameInfo = new
+            {
+                Time.unscaledDeltaTime,
+                Time.realtimeSinceStartup,
+                Time.timeSinceLevelLoad,
+            },
+            sceneName = scene.name
+        };
+
+        sendCaptures(JsonConvert.SerializeObject(sceneLoadInfo, Formatting.Indented));
     }
 
     private IEnumerator sendDelete()
