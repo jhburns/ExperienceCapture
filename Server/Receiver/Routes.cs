@@ -85,6 +85,11 @@ namespace Nancy.App.Hosting.Kestrel
                 return "OK";
             });
 
+            Get("/sessions/{id}", args =>
+            {
+                return "OK";
+            });
+
             Delete("/sessions/{id}", args =>
             {
                 if (!StoreSession.getSessions().Contains(args.id))

@@ -1199,7 +1199,7 @@ MonoBehaviour:
   sceneToLoad: SampleScene
   gameVersion: 
   clientVersion: 
-  offlineMode: 0
+  offlineMode: 1
   printAdditionalCaptureInfo: 0
   findObjectsInEachFrame: 1
   doNotPrintToConsole: 0

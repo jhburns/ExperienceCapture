@@ -117,21 +117,23 @@ public class HandleCapturing : MonoBehaviour
 
         captureData.Add("gameObjects", gameObjects);
         captureData.Add("frameInfo", info);
-        sendCaptures(JsonConvert.SerializeObject(captureData, Formatting.Indented));
+        sendCaptures(captureData);
     }
 
-    private void sendCaptures(string data)
+    private void sendCaptures(object data)
     {
         if (sendToConsole && !isSilent)
         {
-            Debug.Log(data);
+            Debug.Log(JsonConvert.SerializeObject(data, Formatting.Indented));
         }
         
 
         if (!sendToConsole)
         {
+            byte[] bson = Serializer.toBSON(data);
+
             openRequests++;
-            StartCoroutine(HTTPHelpers.post(url + sessionPath + id, data, 
+            StartCoroutine(HTTPHelpers.post(url + sessionPath + id, bson, 
             (responceData) => 
             {
                 openRequests--;
@@ -246,7 +248,7 @@ public class HandleCapturing : MonoBehaviour
                 username
             };
 
-            sendCaptures(JsonConvert.SerializeObject(firstInfo, Formatting.Indented));
+            sendCaptures(firstInfo);
         }
     }
 
@@ -264,7 +266,7 @@ public class HandleCapturing : MonoBehaviour
             sceneName = scene.name
         };
 
-        sendCaptures(JsonConvert.SerializeObject(sceneLoadInfo, Formatting.Indented));
+        sendCaptures(sceneLoadInfo);
     }
 
     private IEnumerator sendDelete()
@@ -282,8 +284,6 @@ public class HandleCapturing : MonoBehaviour
         using (UnityWebRequest request = UnityWebRequest.Delete(url + sessionPath + id))
         {
             request.method = UnityWebRequest.kHttpVerbDELETE;
-            request.SetRequestHeader("Content-Type", "application/json");
-            request.SetRequestHeader("Accept", "application/json");
 
             yield return request.SendWebRequest();
 
