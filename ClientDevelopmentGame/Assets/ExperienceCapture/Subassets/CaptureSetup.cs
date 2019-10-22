@@ -99,7 +99,7 @@ public class CaptureSetup : MonoBehaviour
     {
         newSession.gameObject.SetActive(false);
 
-        byte[] bson = Serializer.toBSON(new
+        byte[] bson = Serial.toBSON(new
         {
             create = 1
         });
@@ -111,7 +111,8 @@ public class CaptureSetup : MonoBehaviour
 
             try
             {
-                SessionData responce = JsonConvert.DeserializeObject<SessionData>(data);
+                MemoryStream memStream = new MemoryStream(data);
+                SessionData responce = Serial.fromBSON<SessionData>(memStream);
 
                 if (responce.status != "OK")
                 {

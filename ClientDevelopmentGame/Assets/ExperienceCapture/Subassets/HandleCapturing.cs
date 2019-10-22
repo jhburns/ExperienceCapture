@@ -130,7 +130,7 @@ public class HandleCapturing : MonoBehaviour
 
         if (!sendToConsole)
         {
-            byte[] bson = Serializer.toBSON(data);
+            byte[] bson = Serial.toBSON(data);
 
             openRequests++;
             StartCoroutine(HTTPHelpers.post(url + sessionPath + id, bson, 
