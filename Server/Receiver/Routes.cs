@@ -38,7 +38,7 @@ namespace Nancy.App.Hosting.Kestrel
                 {
                     using (StreamWriter sw = File.CreateText(path))
                     {
-                        sw.WriteLine("[");
+                        sw.WriteLine("["); // Open JSON array
                     }
                 } 
                 catch (Exception e)
@@ -114,7 +114,7 @@ namespace Nancy.App.Hosting.Kestrel
                         };
 
                         sw.WriteLine(JsonConvert.SerializeObject(endMessage));
-                        sw.WriteLine("]"); // Close array
+                        sw.WriteLine("]"); // Close JSON array
                     }
                 }
                 catch (Exception e)
