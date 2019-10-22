@@ -130,7 +130,7 @@ public class CaptureSetup : MonoBehaviour
             }
             catch (Exception e)
             {
-                sessionInfo.text = "Error deserializing JSON response.";
+                sessionInfo.text = "Error deserializing JSON response: " + e;
                 Debug.Log(e);
                 newSession.gameObject.SetActive(true);
             }

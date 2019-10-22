@@ -1,0 +1,12 @@
+# Ignore all
+*
+
+# Except
+!.gitignore
+
+!BSASVYE6.json
+!example_captured_data.json
+!/processed
+!/processed/processed.BSASVYE6.json
+!/processed/processed.example_captured_data.json
+
