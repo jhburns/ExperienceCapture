@@ -51,7 +51,7 @@ public class CaptureSetup : MonoBehaviour
         );
     }
 
-    private IEnumerator postCaptures(string location)
+    private IEnumerator postCaptures(string location, System.Action<string> onSuccess)
     {
         using (UnityWebRequest request = UnityWebRequest.Put(location, "{}"))
         {
@@ -67,7 +67,7 @@ public class CaptureSetup : MonoBehaviour
             }
             else
             {
-
+                onSuccess(request.downloadHandler.text);
             }
         }
     }

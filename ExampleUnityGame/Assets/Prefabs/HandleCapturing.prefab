@@ -51,4 +51,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ac4d79942552df4a8e97ae2bb540401, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sessionPath: session/
+  sessionPath: sessions/
