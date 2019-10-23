@@ -1,0 +1,48 @@
+version: '3.7'
+services:
+  web:
+    build: ./Receiver
+    ports:
+    - "4321:80"
+    depends_on:
+    - db
+    volumes:
+      - ./data:/app/data
+    networks:
+     - ec-network
+    healthcheck:
+       test: wget --quiet --tries=1 -O /dev/null http://localhost/health/ || exit 1
+       interval: 1m30s
+       timeout: 10s
+       retries: 3
+
+  processor:
+    build: ./Processor
+    volumes:
+      - ./data:/app/data 
+    environment:
+      - filename=example_captured_data.json
+    networks:
+      - ec-network
+
+  analyzer:
+    build: ./ExampleAnalyzer
+    volumes:
+      - ./data:/usr/src/app/data
+    environment:
+      - filename=processed.example_captured_data.json
+
+  db:
+    image: mongo:3.6.14
+    ports:
+    - "27017:27017"
+    volumes:
+    - ec-data-volume:/data/db
+    networks:
+    - ec-network
+
+volumes:
+  ec-data-volume:
+
+networks:
+  ec-network:
