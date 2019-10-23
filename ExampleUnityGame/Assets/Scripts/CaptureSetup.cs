@@ -27,7 +27,7 @@ public class CaptureSetup : MonoBehaviour
             return;
         }
 
-        StartCoroutine(getRequest(url + newSessionPath, (data) =>
+        StartCoroutine(postCaptures(url + newSessionPath, (data) =>
             {
                 try
                 {
@@ -51,7 +51,26 @@ public class CaptureSetup : MonoBehaviour
         );
     }
 
+    private IEnumerator postCaptures(string location)
+    {
+        using (UnityWebRequest request = UnityWebRequest.Put(location, "{}"))
+        {
+            request.method = UnityWebRequest.kHttpVerbPOST;
+            request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Accept", "application/json");
 
+            yield return request.SendWebRequest();
+
+            if (request.isNetworkError || request.isHttpError)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+
+            }
+        }
+    }
 
     private void createExporter(string url, string id, string username)
     {
