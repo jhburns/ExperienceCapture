@@ -34,13 +34,6 @@ services:
        timeout: 10s
        retries: 3
 
-volumes:
-  ec-data-volume:
-
-networks:
-  ec-network:
-
-
 ##### Legacy beyond here
 
   processor:
@@ -58,3 +51,9 @@ networks:
       - ./data:/usr/src/app/data
     environment:
       - filename=processed.example_captured_data.json
+
+volumes:
+  ec-data-volume:
+
+networks:
+  ec-network:
