@@ -23,7 +23,10 @@ namespace Nancy.App.Hosting.Kestrel
             base.ConfigureApplicationContainer(container);
 
             MongoClient client = new MongoClient(@"mongodb://db:27017");
+            IMongoDatabase db = client.GetDatabase("ec");
+
             container.Register<MongoClient>(client);
+            container.Register<IMongoDatabase>(db);
 
             container.Register<IAppConfiguration>(appConfig);
         }

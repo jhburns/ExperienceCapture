@@ -13,9 +13,11 @@ namespace Nancy.App.Hosting.Kestrel
     using Nancy.App.Random;
     using Nancy.App.Session;
 
+    using MongoDB.Driver;
+
     public class Sessions : NancyModule
     {
-        public Sessions(IAppConfiguration appConfig) : base("/sessions/")
+        public Sessions(IMongoDatabase db) : base("/sessions/")
         {
             Post("/", args =>
             {
