@@ -12,6 +12,10 @@ RUN dotnet publish -c Release -o out
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2.7-alpine3.9
+
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.6.0/wait /wait
+RUN chmod +x /wait
+
 WORKDIR /app
 COPY --from=build-env /app/out .
 COPY appsettings.json .

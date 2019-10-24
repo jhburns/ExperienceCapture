@@ -2,10 +2,13 @@ version: '3.7'
 services:
   web:
     build: ./Receiver
+    command: sh -c "/wait && dotnet Receiver.dll"
     ports:
     - "4321:80"
     depends_on:
     - db
+    environment:
+      WAIT_HOSTS: db:27017
     volumes:
       - ./data:/app/data
     networks:
@@ -15,6 +18,30 @@ services:
        interval: 1m30s
        timeout: 10s
        retries: 3
+
+  db:
+    image: mongo:3.6.14
+    hostname: db
+    ports:
+    - "27017:27017"
+    volumes:
+    - ec-data-volume:/data/db
+    networks:
+    - ec-network
+    healthcheck:
+       test: mongo --quiet --eval "db.adminCommand('ping')"
+       interval: 1m30s
+       timeout: 10s
+       retries: 3
+
+volumes:
+  ec-data-volume:
+
+networks:
+  ec-network:
+
+
+##### Legacy beyond here
 
   processor:
     build: ./Processor
@@ -31,18 +58,3 @@ services:
       - ./data:/usr/src/app/data
     environment:
       - filename=processed.example_captured_data.json
-
-  db:
-    image: mongo:3.6.14
-    ports:
-    - "27017:27017"
-    volumes:
-    - ec-data-volume:/data/db
-    networks:
-    - ec-network
-
-volumes:
-  ec-data-volume:
-
-networks:
-  ec-network:
