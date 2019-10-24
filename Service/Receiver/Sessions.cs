@@ -13,15 +13,11 @@ namespace Nancy.App.Hosting.Kestrel
     using Nancy.App.Random;
     using Nancy.App.Session;
 
-    public class Routes : NancyModule
+    public class Sessions : NancyModule
     {
-        public Routes(IAppConfiguration appConfig)
+        public Sessions(IAppConfiguration appConfig) : base("/sessions/")
         {
-            Get("/", args => "The receiving server is running.");
-
-            Get("/health", args => "OK");
-
-            Post("/sessions", args =>
+            Post("/", args =>
             {
                 string uniqueID = Generate.RandomString(4);
 
@@ -54,7 +50,7 @@ namespace Nancy.App.Hosting.Kestrel
                 return JsonConvert.SerializeObject(newSession);
             });
 
-            Post("/sessions/{id}", args =>
+            Post("/{id}", args =>
             {
                 if (!StoreSession.getSessions().Contains(args.id))
                 {
@@ -85,12 +81,12 @@ namespace Nancy.App.Hosting.Kestrel
                 return "OK";
             });
 
-            Get("/sessions/{id}", args =>
+            Get("/{id}", args =>
             {
                 return "OK";
             });
 
-            Delete("/sessions/{id}", args =>
+            Delete("/{id}", args =>
             {
                 if (!StoreSession.getSessions().Contains(args.id))
                 {
