@@ -3,15 +3,17 @@ namespace Nancy.App.Hosting.Kestrel
     using Nancy;
     using Nancy.TinyIoc;
 
-    public class DemoBootstrapper : DefaultNancyBootstrapper
+    using MongoDB.Driver;
+
+    public class Bootstrapper : DefaultNancyBootstrapper
     {
         private readonly IAppConfiguration appConfig;
 
-        public DemoBootstrapper()
+        public Bootstrapper()
         {
         }
 
-        public DemoBootstrapper(IAppConfiguration appConfig)
+        public Bootstrapper(IAppConfiguration appConfig)
         {
             this.appConfig = appConfig;
         }
@@ -19,6 +21,9 @@ namespace Nancy.App.Hosting.Kestrel
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             base.ConfigureApplicationContainer(container);
+
+            MongoClient client = new MongoClient(@"mongodb://db:27017");
+            container.Register<MongoClient>(client);
 
             container.Register<IAppConfiguration>(appConfig);
         }

@@ -23,7 +23,7 @@ namespace Nancy.App.Hosting.Kestrel
             var appConfig = new AppConfiguration();
             ConfigurationBinder.Bind(config, appConfig);
 
-            app.UseOwin(x => x.UseNancy(opt => opt.Bootstrapper = new DemoBootstrapper(appConfig)));
+            app.UseOwin(x => x.UseNancy(opt => opt.Bootstrapper = new Bootstrapper(appConfig)));
         }
     }
 }
