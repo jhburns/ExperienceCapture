@@ -16,7 +16,6 @@ public class UIController : MonoBehaviour, ICapturable
     public string initialTimeDisplay;
 
     public Text prompt;
-    private string[] keyMappings;
 
     private float countdown;
     private float responceTime;
