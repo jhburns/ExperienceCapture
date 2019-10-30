@@ -1,6 +1,5 @@
 namespace Nancy.App.Hosting.Kestrel
 {
-    using ModelBinding;
     using Nancy.Extensions;
 
     using System;

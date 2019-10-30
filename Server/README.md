@@ -10,7 +10,11 @@ Then run `docker-compose build`, and thats it.
 
 To run each of the following parts:
 
-- Receiver: `docker-compose up` starts the server, and `Ctrl-C` stops it.
+- Receiver: `docker-compose up web` starts the server, and `Ctrl-C` stops it.
+- Database: should be started alongside Reveiver, but `docker-compose down` also stops it.
+
+
+#### Legacy 
 - Processor: `docker-compose run -e filename="[CHANGE THIS]" processor` with the file you want to process.
 - ExampleAnalyzer: `docker-compose run -e filename="[CHANGE THIS]" analyzer` with the file you want to analyze.
 
