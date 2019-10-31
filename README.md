@@ -4,10 +4,10 @@ The project aims to simplify and empower data collection from interactive techno
 
 It uses a client-server model to do so, and is broken down into these folders:
 
-- *ExampleUnityGame/* which is an example game using the client.
-- *ClientDevelopmentGame/* which is a game used to develop the client. 
-- *SetupTestGame/* which is game for testing how easy/possible it is to integrate into the asset into a new game. 
-- *Server/* which is backend service for collection and analyzing data. 
+- *ExampleUnityGame/* is an example game using the client.
+- *ClientDevelopmentGame/* is a game used to develop the client. 
+- *SetupTestGame/* is a game for testing how easy/possible it is to integrate into the asset into a new game. 
+- *Server/* is a backend service for collection and analyzing data. 
 
 ## Setup
 
