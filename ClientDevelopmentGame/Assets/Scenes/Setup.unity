@@ -1203,7 +1203,7 @@ MonoBehaviour:
   printAdditionalCaptureInfo: 0
   findObjectsInEachFrame: 1
   doNotPrintToConsole: 0
-  useWindowsDefault: 1
+  useWindowsDefault: 0
   handler: {fileID: 114421317242070260, guid: 16284608f5e17b9419c1b59da5a4e2e2, type: 2}
   nameInput: {fileID: 206423026}
   urlTitle: {fileID: 2007813174}
