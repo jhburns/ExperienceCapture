@@ -4,7 +4,7 @@ on:
   pull_request:
     branches:    
       - master
-    path-ignore:
+    paths-ignore:
     - 'Server/Receiver/**'
     - '.github/workflows/receiver-integration.yml'
 
