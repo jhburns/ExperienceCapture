@@ -1,7 +1,9 @@
 name: Receiver Integration
 
 on:
-  push:
+  pull_request:
+    branches:    
+      - master
     paths:
     - 'Server/Receiver/**'
     - '.github/workflows/receiver-integration.yml'
