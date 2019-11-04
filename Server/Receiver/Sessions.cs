@@ -13,6 +13,7 @@ namespace Nancy.App.Hosting.Kestrel
     using Nancy.App.Session;
 
     using MongoDB.Driver;
+    using MongoDB.Bson;
 
     public class Sessions : NancyModule
     {
@@ -53,12 +54,18 @@ namespace Nancy.App.Hosting.Kestrel
 
             Post("/{id}", args =>
             {
+                var session = db.GetCollection<BsonDocument>("tempSession");
+                string chunk = Request.Body.AsString();
+                MongoDB.Bson.BsonDocument document
+                = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(chunk);
+                session.InsertOneAsync(document);
+                
                 if (!StoreSession.getSessions().Contains(args.id))
                 {
                     return 404;
                 }
 
-                string chunk = Request.Body.AsString();
+                //string chunk = Request.Body.AsString();
 
                 if (chunk == "")
                 {
