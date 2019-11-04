@@ -14,3 +14,4 @@ It uses a client-server model to do so, and is broken down into these folders:
 All of the games only need Unity 2018.2.11f, link: https://unity3d.com/unity/whatsnew/unity-2018.2.11.
 
 See the *Server/* README for setup info about that.
+ 
