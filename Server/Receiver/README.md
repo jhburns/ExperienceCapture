@@ -1,3 +1,5 @@
+![https://github.com/jhburns/ExperienceCapture/workflows/Receiver%20Integration/badge.svg]
+
 # Receiver
 
 Written in .Net Core (C#) and the following packages:
