@@ -1,4 +1,4 @@
-![https://github.com/jhburns/ExperienceCapture/workflows/Receiver%20Integration/badge.svg]
+![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Receiver%20Integration/badge.svg)
 
 # Receiver
 
