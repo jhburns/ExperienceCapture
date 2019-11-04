@@ -4,9 +4,9 @@ namespace Nancy.App.Hosting.Kestrel
     {
         public Health(IAppConfiguration appConfig)
         {
-            Get("/", args => "The receiving server is running.");
+            this.Get("/", args => "The receiving server is running.");
 
-            Get("/health", args => "OK");
+            this.Get("/health", args => "OK");
         }
     }
 }

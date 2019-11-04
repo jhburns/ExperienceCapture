@@ -15,13 +15,13 @@ namespace Nancy.App.Hosting.Kestrel
                               .AddJsonFile("appsettings.json")
                               .SetBasePath(env.ContentRootPath);
 
-            config = builder.Build();
+            this.config = builder.Build();
         }
 
         public void Configure(IApplicationBuilder app)
         {
             var appConfig = new AppConfiguration();
-            ConfigurationBinder.Bind(config, appConfig);
+            ConfigurationBinder.Bind(this.config, appConfig);
 
             app.UseOwin(x => x.UseNancy(opt => opt.Bootstrapper = new Bootstrapper(appConfig)));
         }
