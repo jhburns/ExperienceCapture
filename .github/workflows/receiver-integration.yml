@@ -16,4 +16,4 @@ jobs:
         uses: ./Server/Receiver/
         with:
           who-to-greet: 'Mona the Octocat'
-        id: hello
+        id: hello 
