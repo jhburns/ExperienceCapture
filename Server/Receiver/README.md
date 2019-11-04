@@ -1,3 +1,5 @@
+[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Receiver%20Integration/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Receiver+Integration%22)
+
 # Receiver
 
 Written in .Net Core (C#) and the following packages:
