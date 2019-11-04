@@ -4,7 +4,7 @@ on:
   push:
     paths:
     - 'Server/Receiver/**'
-	- '.github/workflows/receiver-integration.yaml'
+    - '.github/workflows/receiver-integration.yaml'
 
 jobs:
   build:
