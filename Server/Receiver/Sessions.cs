@@ -15,6 +15,8 @@ namespace Nancy.App.Hosting.Kestrel
     using MongoDB.Driver;
     using MongoDB.Bson;
 
+    using Network;
+
     public class Sessions : NancyModule
     {
         public Sessions(IMongoDatabase db) : base("/sessions/")
@@ -38,7 +40,7 @@ namespace Nancy.App.Hosting.Kestrel
                     {
                         sw.WriteLine("["); // Open JSON array
                     }
-                } 
+                }
                 catch (Exception e)
                 {
                     Console.WriteLine("Error while creating file: {0}", e);
@@ -49,7 +51,9 @@ namespace Nancy.App.Hosting.Kestrel
                 ids.Add(uniqueID);
                 StoreSession.saveSessions(ids);
 
-                return JsonConvert.SerializeObject(newSession);
+                byte[] response = Serial.toBSON(newSession);
+
+                return Response.FromByteArray(response, "application/bson");
             });
 
             Post("/{id}", args =>
@@ -59,7 +63,7 @@ namespace Nancy.App.Hosting.Kestrel
                 MongoDB.Bson.BsonDocument document
                 = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(chunk);
                 session.InsertOneAsync(document);
-                
+
                 if (!StoreSession.getSessions().Contains(args.id))
                 {
                     return 404;
@@ -84,7 +88,7 @@ namespace Nancy.App.Hosting.Kestrel
                     Console.WriteLine("Error while writing to file: {0}", e);
                     return 500;
                 }
-          
+
 
                 return "OK";
             });
