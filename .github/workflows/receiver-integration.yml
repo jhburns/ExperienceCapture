@@ -13,7 +13,7 @@ jobs:
     name: Check Build
     runs-on: ubuntu-18.04
     env:
-      GHA_BUILD: 'True'
+      Ghabuild: 'True'
     steps:
       - uses: actions/checkout@v1
       - name: Run Docker
