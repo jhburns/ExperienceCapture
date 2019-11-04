@@ -6,4 +6,3 @@ Written in .Net Core (C#) and the following packages:
 - [JSON.Net](https://www.newtonsoft.com/json)
 - [Mongo c# driver](http://mongodb.github.io/mongo-csharp-driver/)
 - [StyleCop.Analyzers](https://medium.com/@michaelparkerdev/linting-c-in-2019-stylecop-sonar-resharper-and-roslyn-73e88af57ebd)
-
