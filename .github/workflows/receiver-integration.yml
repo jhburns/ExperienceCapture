@@ -21,5 +21,4 @@ jobs:
           password: "${{ secrets.DOCKER_PASSWORD }}"
           image_name: jhburns/ec-receiver-cache
           context: ./Server/Receiver
-          dockerfile: dockerfile.integrate
-      - run: echo "$GHA_BUILD"
+          dockerfile: Dockerfile.integrate
