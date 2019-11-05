@@ -23,3 +23,4 @@ jobs:
           context: ./Server/Receiver
         env:
           GHA_BUILD: 'True'
+        run: echo "$GHA_BUILD"
