@@ -8,6 +8,10 @@
   <PropertyGroup>
     <CodeAnalysisRuleSet>./StyleCop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(GHA_Build)' == 'True' ">
+                 <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.0" />
