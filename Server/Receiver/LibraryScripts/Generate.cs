@@ -1,9 +1,11 @@
-namespace Nancy.App.Random {
+namespace Nancy.App.Random
+{
     using System;
     using System.Collections;
     using System.Linq;
 
-    public class Generate {
+    public class Generate
+    {
         private static Random random = new Random();
 
         public static string RandomString(int length)

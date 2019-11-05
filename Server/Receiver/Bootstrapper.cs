@@ -1,9 +1,9 @@
 namespace Nancy.App.Hosting.Kestrel
 {
+    using MongoDB.Driver;
+
     using Nancy;
     using Nancy.TinyIoc;
-
-    using MongoDB.Driver;
 
     public class Bootstrapper : DefaultNancyBootstrapper
     {
@@ -28,7 +28,7 @@ namespace Nancy.App.Hosting.Kestrel
             container.Register<MongoClient>(client);
             container.Register<IMongoDatabase>(db);
 
-            container.Register<IAppConfiguration>(appConfig);
+            container.Register<IAppConfiguration>(this.appConfig);
         }
     }
 }

@@ -9,3 +9,4 @@ Written in .Net Core (C#) and the following packages:
 - [Mongo c# driver](http://mongodb.github.io/mongo-csharp-driver/)
 - [StyleCop.Analyzers](https://medium.com/@michaelparkerdev/linting-c-in-2019-stylecop-sonar-resharper-and-roslyn-73e88af57ebd)
 
+ 

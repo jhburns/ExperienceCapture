@@ -2,16 +2,16 @@ namespace Nancy.App.Session
 {
     using System.Collections.Generic;
 
-    public class StoreSession {
+    public class StoreSession
+    {
+        private static List<string> ids = new List<string>();
 
-        public static List<string> ids = new List<string>();
-
-        public static List<string> getSessions()
+        public static List<string> GetSessions()
         {
             return ids;
         }
 
-        public static void saveSessions(List<string> sessions)
+        public static void SaveSessions(List<string> sessions)
         {
             ids = sessions;
         }

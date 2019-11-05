@@ -1,27 +1,27 @@
 namespace Nancy.App.Hosting.Kestrel
 {
-    using Nancy.Extensions;
-
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Text;
-    using System.Collections.Generic;
 
-    using Newtonsoft.Json;
+    using MongoDB.Bson;
+    using MongoDB.Driver;
 
     using Nancy.App.Random;
     using Nancy.App.Session;
-
-    using MongoDB.Driver;
-    using MongoDB.Bson;
+    using Nancy.Extensions;
 
     using Network;
 
+    using Newtonsoft.Json;
+
     public class Sessions : NancyModule
     {
-        public Sessions(IMongoDatabase db) : base("/sessions/")
+        public Sessions(IMongoDatabase db)
+            : base("/sessions/")
         {
-            Post("/", args =>
+            this.Post("/", args =>
             {
                 string uniqueID = Generate.RandomString(4);
 
@@ -47,31 +47,30 @@ namespace Nancy.App.Hosting.Kestrel
                     return 500;
                 }
 
-                List<string> ids = StoreSession.getSessions();
+                List<string> ids = StoreSession.GetSessions();
                 ids.Add(uniqueID);
-                StoreSession.saveSessions(ids);
+                StoreSession.SaveSessions(ids);
 
-                byte[] response = Serial.toBSON(newSession);
+                byte[] response = Serial.ToBSON(newSession);
 
-                return Response.FromByteArray(response, "application/bson");
+                return this.Response.FromByteArray(response, "application/bson");
             });
 
-            Post("/{id}", args =>
+            this.Post("/{id}", args =>
             {
                 var session = db.GetCollection<BsonDocument>("tempSession");
-                string chunk = Request.Body.AsString();
+                string chunk = this.Request.Body.AsString();
                 MongoDB.Bson.BsonDocument document
                 = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(chunk);
                 session.InsertOneAsync(document);
 
-                if (!StoreSession.getSessions().Contains(args.id))
+                if (!StoreSession.GetSessions().Contains(args.id))
                 {
                     return 404;
                 }
 
-                //string chunk = Request.Body.AsString();
-
-                if (chunk == "")
+                // string chunk = Request.Body.AsString();
+                if (chunk == string.Empty)
                 {
                     return 400;
                 }
@@ -89,25 +88,24 @@ namespace Nancy.App.Hosting.Kestrel
                     return 500;
                 }
 
-
                 return "OK";
             });
 
-            Get("/{id}", args =>
+            this.Get("/{id}", args =>
             {
                 return "OK";
             });
 
-            Delete("/{id}", args =>
+            this.Delete("/{id}", args =>
             {
-                if (!StoreSession.getSessions().Contains(args.id))
+                if (!StoreSession.GetSessions().Contains(args.id))
                 {
                     return 404;
                 }
 
-                List<string> ids = StoreSession.getSessions();
+                List<string> ids = StoreSession.GetSessions();
                 ids.Remove(args.id);
-                StoreSession.saveSessions(ids);
+                StoreSession.SaveSessions(ids);
 
                 string seperator = Path.DirectorySeparatorChar.ToString();
                 string path = $".{seperator}data{seperator}{args.id}.json";
