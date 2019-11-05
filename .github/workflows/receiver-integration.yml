@@ -12,10 +12,10 @@ jobs:
   build:
     name: Check Build
     runs-on: ubuntu-18.04
+	env:
+      GHA_BUILD: 'True'
     steps:
       - uses: actions/checkout@v1
-      - env:
-          GHA_BUILD: 'True'
       - name: Run Docker
         uses: whoan/docker-build-with-cache-action@v1
         with:
