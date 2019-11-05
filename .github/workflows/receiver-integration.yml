@@ -22,4 +22,4 @@ jobs:
           image_name: jhburns/ec-receiver-cache
           context: ./Server/Receiver
         env:
-          GHA_BUILD: True
+          GHA_BUILD: 'True'
