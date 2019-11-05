@@ -16,6 +16,7 @@ namespace Nancy.App.Hosting.Kestrel
 
     using Newtonsoft.Json;
 
+
     public class Sessions : NancyModule
     {
         public Sessions(IMongoDatabase db)

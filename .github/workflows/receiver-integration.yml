@@ -21,3 +21,5 @@ jobs:
           password: "${{ secrets.DOCKER_PASSWORD }}"
           image_name: jhburns/ec-receiver-cache
           context: ./Server/Receiver
+        env:
+          GHA_BUILD: True
