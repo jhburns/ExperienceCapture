@@ -53,6 +53,12 @@ namespace Nancy.App.Hosting.Kestrel
 
                 byte[] response = Serial.ToBSON(newSession);
 
+                var coll = db.GetCollection<BsonDocument>("sessions");
+
+                var doc = new BsonDocument(uniqueID, "open");
+
+                coll.InsertOneAsync(doc);
+
                 return this.Response.FromByteArray(response, "application/bson");
             });
 
