@@ -31,26 +31,6 @@ namespace Nancy.App.Hosting.Kestrel
                     id = uniqueID,
                 };
 
-                string seperator = Path.DirectorySeparatorChar.ToString();
-                string path = $".{seperator}data{seperator}{uniqueID}.json";
-
-                try
-                {
-                    using (StreamWriter sw = File.CreateText(path))
-                    {
-                        sw.WriteLine("["); // Open JSON array
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Error while creating file: {0}", e);
-                    return 500;
-                }
-
-                List<string> ids = StoreSession.GetSessions();
-                ids.Add(uniqueID);
-                StoreSession.SaveSessions(ids);
-
                 byte[] response = Serial.ToBSON(newSession);
 
                 var coll = db.GetCollection<BsonDocument>("sessions");
