@@ -15,12 +15,16 @@ namespace Nancy.App.Hosting.Kestrel
     using MongoDB.Driver;
     using MongoDB.Bson;
 
+    using Network;
+
     public class Sessions : NancyModule
     {
         public Sessions(IMongoDatabase db) : base("/sessions/")
         {
             Post("/", args =>
             {
+                var session = db.GetCollection<BsonDocument>("sessions");
+
                 string uniqueID = Generate.RandomString(4);
 
                 var newSession = new
@@ -29,27 +33,16 @@ namespace Nancy.App.Hosting.Kestrel
                     id = uniqueID,
                 };
 
-                string seperator = Path.DirectorySeparatorChar.ToString();
-                string path = $".{seperator}data{seperator}{uniqueID}.json";
-
-                try
+                var sessionDocument = new BsonDocument
                 {
-                    using (StreamWriter sw = File.CreateText(path))
-                    {
-                        sw.WriteLine("["); // Open JSON array
-                    }
-                } 
-                catch (Exception e)
-                {
-                    Console.WriteLine("Error while creating file: {0}", e);
-                    return 500;
-                }
+                    { "id", uniqueID },
+                    { "isOpen", true }
+                };
 
-                List<string> ids = StoreSession.getSessions();
-                ids.Add(uniqueID);
-                StoreSession.saveSessions(ids);
+                session.InsertOneAsync(sessionDocument);
 
-                return JsonConvert.SerializeObject(newSession);
+                byte[] bson = Serial.toBSON(newSession);
+                return Response.FromByteArray(bson, "application/bson");
             });
 
             Post("/{id}", args =>
