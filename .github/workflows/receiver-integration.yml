@@ -12,8 +12,6 @@ jobs:
   build:
     name: Check Build
     runs-on: ubuntu-18.04
-    env:
-      Ghabuild: 'True'
     steps:
       - uses: actions/checkout@v1
       - name: Run Docker
@@ -23,4 +21,5 @@ jobs:
           password: "${{ secrets.DOCKER_PASSWORD }}"
           image_name: jhburns/ec-receiver-cache
           context: ./Server/Receiver
+		  dockerfile: dockerfile.integrate
       - run: echo "$GHA_BUILD"

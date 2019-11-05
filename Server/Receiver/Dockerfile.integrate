@@ -8,7 +8,7 @@ RUN dotnet restore
 # Copy everything else and build
 COPY . ./
 RUN echo "$GHA_BUILD"
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release -o out -p:GHA_BUILD=True;
 
 
 # Build runtime image
