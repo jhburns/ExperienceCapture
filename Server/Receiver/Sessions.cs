@@ -14,8 +14,9 @@ namespace Nancy.App.Hosting.Kestrel
 
     using MongoDB.Driver;
     using MongoDB.Bson;
+    using MongoDB.Bson.Serialization;
 
-    using Network;
+    using Network; //
 
     public class Sessions : NancyModule
     {
@@ -48,11 +49,9 @@ namespace Nancy.App.Hosting.Kestrel
             Post("/{id}", args =>
             {
                 var session = db.GetCollection<BsonDocument>("tempSession");
-                string chunk = Request.Body.AsString();
-                MongoDB.Bson.BsonDocument document
-                = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(chunk);
+                var document = BsonSerializer.Deserialize<BsonDocument>(Request.Body);
                 session.InsertOneAsync(document);
-                
+                /*
                 if (!StoreSession.getSessions().Contains(args.id))
                 {
                     return 404;
@@ -77,7 +76,7 @@ namespace Nancy.App.Hosting.Kestrel
                     Console.WriteLine("Error while writing to file: {0}", e);
                     return 500;
                 }
-          
+                */
 
                 return "OK";
             });
