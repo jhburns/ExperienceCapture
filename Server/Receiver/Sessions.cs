@@ -55,7 +55,7 @@ namespace Nancy.App.Hosting.Kestrel
 
                 var coll = db.GetCollection<BsonDocument>("sessions");
 
-                var doc = new BsonDocument(uniqueID,"open");
+                var doc = new BsonDocument(uniqueID, "open");
 
                 coll.InsertOneAsync(doc);
 
