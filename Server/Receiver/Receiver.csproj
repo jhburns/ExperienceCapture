@@ -9,7 +9,7 @@
     <CodeAnalysisRuleSet>./StyleCop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(GHA_BUILD)' == 'True' ">
+  <PropertyGroup>
                  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   
