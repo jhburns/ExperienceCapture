@@ -1,3 +1,12 @@
+/*
+- Name: Jonathan Hirokazu Burns
+- ID: 2288851
+- email: jburns@chapman.edu
+- Course: 353-01
+- Assignment: Submission #1
+- Purpose: Implements the session resource of the API
+*/
+
 namespace Nancy.App.Hosting.Kestrel
 {
     using System;
@@ -11,8 +20,17 @@ namespace Nancy.App.Hosting.Kestrel
 
     using Network;
 
+    /*
+     * Sessions
+     * Implements session resource API
+     */
     public class Sessions : NancyModule
     {
+        /*
+         * Sessions
+         * Params:
+         * - db: the 'ec' database connection
+         */
         public Sessions(IMongoDatabase db)
             : base("/sessions/")
         {
