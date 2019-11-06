@@ -2,7 +2,7 @@
 #- ID: 2288851
 #- email: jburns@chapman.edu
 #- Course: 353-01
-#- Assignment: Submission #1
+#- Assignment: Submission #2
 #- Purpose: Builds Receiver environment
 
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2.402-alpine3.9 AS build-env

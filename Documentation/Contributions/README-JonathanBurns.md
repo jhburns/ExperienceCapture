@@ -1,6 +1,6 @@
 # Jonathan Burn's Contributions 
 
-## Sumbission #1 Planned Features
+## Sumbission #2 Planned Features
 - Added MongoDB to Docker-compose.
 - Added Mongo Driver to Receiver Service.
 - Receiver connects to database on startup.
