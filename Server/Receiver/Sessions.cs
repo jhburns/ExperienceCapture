@@ -1,20 +1,12 @@
 namespace Nancy.App.Hosting.Kestrel
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
-
     using MongoDB.Bson;
+    using MongoDB.Bson.Serialization;
     using MongoDB.Driver;
 
     using Nancy.App.Random;
-    using Nancy.App.Session;
-    using Nancy.Extensions;
 
     using Network;
-
-    using Newtonsoft.Json;
 
     public class Sessions : NancyModule
     {
@@ -23,6 +15,8 @@ namespace Nancy.App.Hosting.Kestrel
         {
             this.Post("/", args =>
             {
+                var session = db.GetCollection<BsonDocument>("sessions");
+
                 string uniqueID = Generate.RandomString(4);
 
                 var newSession = new
@@ -31,89 +25,81 @@ namespace Nancy.App.Hosting.Kestrel
                     id = uniqueID,
                 };
 
-                byte[] response = Serial.ToBSON(newSession);
+                var sessionDocument = new BsonDocument
+                {
+                    { "id", uniqueID },
+                    { "isOpen", true },
+                };
 
-                var coll = db.GetCollection<BsonDocument>("sessions");
+                session.InsertOneAsync(sessionDocument);
 
-                var doc = new BsonDocument(uniqueID, "open");
-
-                coll.InsertOneAsync(doc);
-
-                return this.Response.FromByteArray(response, "application/bson");
+                byte[] bson = Serial.ToBSON(newSession);
+                return this.Response.FromByteArray(bson, "application/bson");
             });
 
             this.Post("/{id}", args =>
             {
-                var session = db.GetCollection<BsonDocument>("tempSession");
-                string chunk = this.Request.Body.AsString();
-                MongoDB.Bson.BsonDocument document
-                = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<BsonDocument>(chunk);
-                session.InsertOneAsync(document);
+                var sessions = db.GetCollection<BsonDocument>("sessions");
 
-                if (!StoreSession.GetSessions().Contains(args.id))
+                string uniqueID = (string)args.id;
+                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+                var sessionDoc = sessions.Find(filter).FirstOrDefault();
+
+                if (sessionDoc == null)
                 {
                     return 404;
                 }
 
-                // string chunk = Request.Body.AsString();
-                if (chunk == string.Empty)
+                if (sessionDoc["isOpen"] == false)
                 {
                     return 400;
                 }
 
-                string seperator = Path.DirectorySeparatorChar.ToString();
-                string path = $".{seperator}data{seperator}{args.id}.json";
-
-                try
-                {
-                    File.AppendAllText(path, chunk + "," + Environment.NewLine);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Error while writing to file: {0}", e);
-                    return 500;
-                }
+                string collectionName = $"sessions.{uniqueID}";
+                var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
+                var document = BsonSerializer.Deserialize<BsonDocument>(this.Request.Body);
+                sessionCollection.InsertOneAsync(document);
 
                 return "OK";
             });
 
             this.Get("/{id}", args =>
             {
-                return "OK";
-            });
+                var sessions = db.GetCollection<BsonDocument>("sessions");
 
-            this.Delete("/{id}", args =>
-            {
-                if (!StoreSession.GetSessions().Contains(args.id))
+                string uniqueID = (string)args.id;
+                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+                var sessionDoc = sessions.Find(filter).FirstOrDefault();
+
+                if (sessionDoc == null)
                 {
                     return 404;
                 }
 
-                List<string> ids = StoreSession.GetSessions();
-                ids.Remove(args.id);
-                StoreSession.SaveSessions(ids);
-
-                string seperator = Path.DirectorySeparatorChar.ToString();
-                string path = $".{seperator}data{seperator}{args.id}.json";
-
-                try
+                if (((bool)this.Request.Query["json"]) == true)
                 {
-                    using (StreamWriter sw = File.AppendText(path))
-                    {
-                        var endMessage = new
-                        {
-                            phase = "Session closed by client.",
-                        };
+                    return sessionDoc.ToJson();
+                }
 
-                        sw.WriteLine(JsonConvert.SerializeObject(endMessage));
-                        sw.WriteLine("]"); // Close JSON array
-                    }
-                }
-                catch (Exception e)
+                byte[] bson = sessionDoc.ToBson();
+                return this.Response.FromByteArray(bson, "application/bson");
+            });
+
+            this.Delete("/{id}", args =>
+            {
+                var sessions = db.GetCollection<BsonDocument>("sessions");
+
+                string uniqueID = (string)args.id;
+                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+                var update = Builders<BsonDocument>.Update.Set("isOpen", false);
+                var sessionDoc = sessions.Find(filter).FirstOrDefault();
+
+                if (sessionDoc == null)
                 {
-                    Console.WriteLine("Error while writing to file: {0}", e);
-                    return 500;
+                    return 404;
                 }
+
+                sessions.UpdateOne(filter, update);
 
                 return "OK";
             });
