@@ -1,3 +1,12 @@
+/*
+- Name: Jonathan Hirokazu Burns
+- ID: 2288851
+- email: jburns@chapman.edu
+- Course: 353-01
+- Assignment: Submission #1
+- Purpose: To be a general purpose networking library
+*/
+
 namespace Network
 {
     using System.Collections;
@@ -10,18 +19,38 @@ namespace Network
     using Newtonsoft.Json;
     using Newtonsoft.Json.Bson;
 
-    // some code for FromByteArray from here:
-    // https://stackoverflow.com/questions/14473510/how-to-make-an-image-handler-in-nancyfx/28623873
+    /*
+     * Extensions
+     * See Nancy documentation
+     */
     public static class Extensions
     {
+        /*
+         * FromByteArray
+         * Params:
+         * - formatter: see Nancy documentation
+         * - body: the content of the responce
+         * - contentType: the HTTP content type flag
+         * Returns: a Response object, see Nancy documentation
+         */
         public static Response FromByteArray(this IResponseFormatter formatter, byte[] body, string contentType = null)
         {
             return new ByteArrayResponse(body, contentType);
         }
     }
 
+    /*
+     * ByteArrayResponse
+     * Custom response type
+     */
     public class ByteArrayResponse : Response
     {
+        /*
+         * FromByteArray
+         * Params:
+         * - body: the content of the responce
+         * - contentType: the HTTP content type flag
+         */
         public ByteArrayResponse(byte[] body, string contentType = null)
         {
             this.ContentType = contentType ?? "application/octet-stream";
@@ -36,9 +65,18 @@ namespace Network
         }
     }
 
-    // ^end
+    /*
+     * Serial
+     * Catch-all for serialization needs 
+     */
     public class Serial
     {
+        /*
+         * ToBSON
+         * Params:
+         * - obj: the object to serialize
+         * Returns: byte array of the serialize object
+         */
         public static byte[] ToBSON(object obj)
         {
             MemoryStream memStream = new MemoryStream();
@@ -51,6 +89,12 @@ namespace Network
             return memStream.ToArray();
         }
 
+        /*
+         * FromBSON
+         * Params:
+         * - memStream: data to be deserialized
+         * Returns: Type T of resulting object
+         */
         public static T FromBSON<T>(MemoryStream memStream)
         {
             T obj;
@@ -65,3 +109,4 @@ namespace Network
         }
     }
 }
+ 
