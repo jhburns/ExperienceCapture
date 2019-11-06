@@ -48,35 +48,26 @@ namespace Nancy.App.Hosting.Kestrel
 
             Post("/{id}", args =>
             {
-                var session = db.GetCollection<BsonDocument>("tempSession");
-                var document = BsonSerializer.Deserialize<BsonDocument>(Request.Body);
-                session.InsertOneAsync(document);
-                /*
-                if (!StoreSession.getSessions().Contains(args.id))
+                var sessions = db.GetCollection<BsonDocument>("sessions");
+
+                string uniqueID = (string) args.id;
+                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+                var sessionDoc = collection.Find(filter).FirstOrDefault();
+
+                if (sessionDoc == null)
                 {
                     return 404;
                 }
 
-                //string chunk = Request.Body.AsString();
-
-                if (chunk == "")
+                if (sessionDoc["isOpen"] == false)
                 {
                     return 400;
                 }
 
-                string seperator = Path.DirectorySeparatorChar.ToString();
-                string path = $".{seperator}data{seperator}{args.id}.json";
-
-                try
-                {
-                    File.AppendAllText(path, chunk + "," + Environment.NewLine);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Error while writing to file: {0}", e);
-                    return 500;
-                }
-                */
+                string collectionName = $"sessions.{uniqueID}";
+                var sessionCollection = db.GetCollection<BsonDocument>("tempSession");
+                var document = BsonSerializer.Deserialize<BsonDocument>(Request.Body);
+                session.InsertOneAsync(document);
 
                 return "OK";
             });
