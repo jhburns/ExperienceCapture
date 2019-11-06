@@ -18,7 +18,7 @@ namespace Nancy.App.Hosting.Kestrel
         {
             this.Post("/", args =>
             {
-                var session = db.GetCollection<BsonDocument>("sessions");
+                var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string uniqueID = Generate.RandomString(4);
                 var filter = Builders<BsonDocument>.Filter.Gt("id", uniqueID);
@@ -34,7 +34,7 @@ namespace Nancy.App.Hosting.Kestrel
                 };
 
                 byte[] bson = sessionDoc.ToBson();
-                session.InsertOneAsync(sessionDoc);
+                sessions.InsertOneAsync(sessionDoc);
 
                 var clientDoc = new BsonDocument(sessionDoc);
                 clientDoc.Remove("_id");
