@@ -17,7 +17,7 @@ namespace Network
                 request.method = UnityWebRequest.kHttpVerbPOST;
                 request.SetRequestHeader("Content-Type", "application/bson");
                 request.SetRequestHeader("Accept", "application/bson");
-                request.timeout = 2;
+                request.timeout = 3;
 
                 yield return request.SendWebRequest();
 

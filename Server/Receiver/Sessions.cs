@@ -31,6 +31,8 @@ namespace Nancy.App.Hosting.Kestrel
                     id = uniqueID,
                 };
 
+                byte[] response = Serial.ToBSON(newSession);
+
                 var coll = db.GetCollection<BsonDocument>("sessions");
 
                 var doc = new BsonDocument(uniqueID, "open");
