@@ -1,28 +1,19 @@
 namespace Nancy.App.Hosting.Kestrel
 {
-    using Nancy.Extensions;
-
-    using System;
-    using System.IO;
-    using System.Text;
-    using System.Collections.Generic;
-
-    using Newtonsoft.Json;
-
-    using Nancy.App.Random;
-    using Nancy.App.Session;
-
-    using MongoDB.Driver;
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization;
+    using MongoDB.Driver;
 
-    using Network; //
+    using Nancy.App.Random;
+
+    using Network;
 
     public class Sessions : NancyModule
     {
-        public Sessions(IMongoDatabase db) : base("/sessions/")
+        public Sessions(IMongoDatabase db)
+            : base("/sessions/")
         {
-            Post("/", args =>
+            this.Post("/", args =>
             {
                 var session = db.GetCollection<BsonDocument>("sessions");
 
@@ -37,22 +28,22 @@ namespace Nancy.App.Hosting.Kestrel
                 var sessionDocument = new BsonDocument
                 {
                     { "id", uniqueID },
-                    { "isOpen", true }
+                    { "isOpen", true },
                 };
 
                 session.InsertOneAsync(sessionDocument);
 
-                byte[] bson = Serial.toBSON(newSession);
-                return Response.FromByteArray(bson, "application/bson");
+                byte[] bson = Serial.ToBSON(newSession);
+                return this.Response.FromByteArray(bson, "application/bson");
             });
 
-            Post("/{id}", args =>
+            this.Post("/{id}", args =>
             {
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
-                string uniqueID = (string) args.id;
+                string uniqueID = (string)args.id;
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
-                var sessionDoc = collection.Find(filter).FirstOrDefault();
+                var sessionDoc = sessions.Find(filter).FirstOrDefault();
 
                 if (sessionDoc == null)
                 {
@@ -65,50 +56,50 @@ namespace Nancy.App.Hosting.Kestrel
                 }
 
                 string collectionName = $"sessions.{uniqueID}";
-                var sessionCollection = db.GetCollection<BsonDocument>("tempSession");
-                var document = BsonSerializer.Deserialize<BsonDocument>(Request.Body);
-                session.InsertOneAsync(document);
+                var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
+                var document = BsonSerializer.Deserialize<BsonDocument>(this.Request.Body);
+                sessionCollection.InsertOneAsync(document);
 
                 return "OK";
             });
 
-            Get("/{id}", args =>
+            this.Get("/{id}", args =>
             {
-                return "OK";
-            });
+                var sessions = db.GetCollection<BsonDocument>("sessions");
 
-            Delete("/{id}", args =>
-            {
-                if (!StoreSession.getSessions().Contains(args.id))
+                string uniqueID = (string)args.id;
+                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+                var sessionDoc = sessions.Find(filter).FirstOrDefault();
+
+                if (sessionDoc == null)
                 {
                     return 404;
                 }
 
-                List<string> ids = StoreSession.getSessions();
-                ids.Remove(args.id);
-                StoreSession.saveSessions(ids);
-
-                string seperator = Path.DirectorySeparatorChar.ToString();
-                string path = $".{seperator}data{seperator}{args.id}.json";
-
-                try
+                if (((bool)this.Request.Query["json"]) == true)
                 {
-                    using (StreamWriter sw = File.AppendText(path))
-                    {
-                        var endMessage = new
-                        {
-                            phase = "Session closed by client.",
-                        };
+                    return sessionDoc.ToJson();
+                }
 
-                        sw.WriteLine(JsonConvert.SerializeObject(endMessage));
-                        sw.WriteLine("]"); // Close JSON array
-                    }
-                }
-                catch (Exception e)
+                byte[] bson = sessionDoc.ToBson();
+                return this.Response.FromByteArray(bson, "application/bson");
+            });
+
+            this.Delete("/{id}", args =>
+            {
+                var sessions = db.GetCollection<BsonDocument>("sessions");
+
+                string uniqueID = (string)args.id;
+                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+                var update = Builders<BsonDocument>.Update.Set("isOpen", false);
+                var sessionDoc = sessions.Find(filter).FirstOrDefault();
+
+                if (sessionDoc == null)
                 {
-                    Console.WriteLine("Error while writing to file: {0}", e);
-                    return 500;
+                    return 404;
                 }
+
+                sessions.UpdateOne(filter, update);
 
                 return "OK";
             });
