@@ -64,48 +64,4 @@ namespace Network
             };
         }
     }
-
-    /*
-     * Serial
-     * Catch-all for serialization needs
-     */
-    public class Serial
-    {
-        /*
-         * ToBSON
-         * Params:
-         * - obj: the object to serialize
-         * Returns: byte array of the serialize object
-         */
-        public static byte[] ToBSON(object obj)
-        {
-            MemoryStream memStream = new MemoryStream();
-            using (BsonDataWriter writer = new BsonDataWriter(memStream))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(writer, obj);
-            }
-
-            return memStream.ToArray();
-        }
-
-        /*
-         * FromBSON
-         * Params:
-         * - memStream: data to be deserialized
-         * Returns: Type T of resulting object
-         */
-        public static T FromBSON<T>(MemoryStream memStream)
-        {
-            T obj;
-            using (BsonDataReader reader = new BsonDataReader(memStream))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-
-                obj = serializer.Deserialize<T>(reader);
-            }
-
-            return obj;
-        }
-    }
 }
