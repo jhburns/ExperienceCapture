@@ -67,7 +67,7 @@ namespace Network
 
     /*
      * Serial
-     * Catch-all for serialization needs 
+     * Catch-all for serialization needs
      */
     public class Serial
     {
@@ -109,4 +109,3 @@ namespace Network
         }
     }
 }
- 

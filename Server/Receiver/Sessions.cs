@@ -4,7 +4,7 @@
 - email: jburns@chapman.edu
 - Course: 353-01
 - Assignment: Submission #1
-- Purpose: Implements the session resource of the API 
+- Purpose: Implements the session resource of the API
 */
 
 namespace Nancy.App.Hosting.Kestrel

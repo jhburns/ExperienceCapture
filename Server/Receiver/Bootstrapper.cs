@@ -32,7 +32,7 @@ namespace Nancy.App.Hosting.Kestrel
 
         /*
          * Bootstrapper
-         * Constructor with configuration 
+         * Constructor with configuration
          */
         public Bootstrapper(IAppConfiguration appConfig)
         {
