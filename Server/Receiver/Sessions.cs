@@ -1,6 +1,7 @@
 namespace Nancy.App.Hosting.Kestrel
 {
     using MongoDB.Bson;
+    using MongoDB.Bson.IO;
     using MongoDB.Bson.Serialization;
     using MongoDB.Driver;
 
@@ -78,7 +79,18 @@ namespace Nancy.App.Hosting.Kestrel
 
                 if (((bool)this.Request.Query["json"]) == true)
                 {
-                    return sessionDoc.ToJson();
+                    string json;
+
+                    if (((bool)this.Request.Query["ugly"]) == true)
+                    {
+                        json = sessionDoc.ToJson();
+                    }
+                    else
+                    {
+                        json = sessionDoc.ToJson(new JsonWriterSettings { Indent = true });
+                    }
+
+                    return json;
                 }
 
                 byte[] bson = sessionDoc.ToBson();
