@@ -10,7 +10,7 @@ namespace Network
     using Newtonsoft.Json;
     using Newtonsoft.Json.Bson;
 
-    // code for FromByteArray from here:
+    // some code for FromByteArray from here:
     // https://stackoverflow.com/questions/14473510/how-to-make-an-image-handler-in-nancyfx/28623873
     public static class Extensions
     {
