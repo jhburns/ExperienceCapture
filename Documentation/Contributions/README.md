@@ -4,13 +4,13 @@
 - ID: 2288851
 - email: jburns@chapman.edu
 - Course: 353-01
-- Assignment: Submission #1
+- Assignment: Submission #2
 
 ## Files
 
 Due to this project being started before if being
 apart of the Networking class (there are a huge number of files), only relevant files
-to this submission's (#1) goal's are included:
+to this submission's (#2) goal's are included:
 
 - /Server/Receiver/LibraryScripts/Network.cs
 - /Server/Receiver/Sessions.cs

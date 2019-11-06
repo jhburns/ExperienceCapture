@@ -3,7 +3,7 @@
 - ID: 2288851
 - email: jburns@chapman.edu
 - Course: 353-01
-- Assignment: Submission #1
+- Assignment: Submission #2
 - Purpose: Implements the session resource of the API
 */
 
