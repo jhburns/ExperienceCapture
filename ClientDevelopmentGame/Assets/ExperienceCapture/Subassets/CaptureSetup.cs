@@ -114,19 +114,11 @@ public class CaptureSetup : MonoBehaviour
                 MemoryStream memStream = new MemoryStream(data);
                 SessionData responce = Serial.fromBSON<SessionData>(memStream);
 
-                if (responce.status != "OK")
-                {
-                    sessionInfo.text = "Error creating new session: " + responce.status;
-                    newSession.gameObject.SetActive(true);
-                }
-                else
-                {
-                    sessionInfo.text = sessionInfoSave + responce.id;
-                    url = urlInput.text;
-                    sessionID = responce.id;
+                sessionInfo.text = sessionInfoSave + responce.id;
+                url = urlInput.text;
+                sessionID = responce.id;
 
-                    start.gameObject.SetActive(true);
-                }
+                start.gameObject.SetActive(true);
             }
             catch (Exception e)
             {
@@ -190,11 +182,11 @@ public class CaptureSetup : MonoBehaviour
 internal class SessionData
 {
     public string id;
-    public string status;
+    public bool isOpen;
 
-    public SessionData(string i, string stat)
+    public SessionData(string i, bool o)
     {
         id = i;
-        status = stat;
+        isOpen = o;
     }
 }

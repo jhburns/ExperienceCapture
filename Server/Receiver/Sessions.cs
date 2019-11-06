@@ -1,5 +1,7 @@
 namespace Nancy.App.Hosting.Kestrel
 {
+    using System;
+
     using MongoDB.Bson;
     using MongoDB.Bson.IO;
     using MongoDB.Bson.Serialization;
@@ -16,26 +18,29 @@ namespace Nancy.App.Hosting.Kestrel
         {
             this.Post("/", args =>
             {
-                var session = db.GetCollection<BsonDocument>("sessions");
+                var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string uniqueID = Generate.RandomString(4);
-
-                var newSession = new
+                var filter = Builders<BsonDocument>.Filter.Gt("id", uniqueID);
+                while (sessions.Find(filter).FirstOrDefault() != null)
                 {
-                    status = "OK",
-                    id = uniqueID,
-                };
+                    uniqueID = Generate.RandomString(4);
+                }
 
-                var sessionDocument = new BsonDocument
+                var sessionDoc = new BsonDocument
                 {
                     { "id", uniqueID },
                     { "isOpen", true },
                 };
 
-                session.InsertOneAsync(sessionDocument);
+                byte[] bson = sessionDoc.ToBson();
+                sessions.InsertOneAsync(sessionDoc);
 
-                byte[] bson = Serial.ToBSON(newSession);
-                return this.Response.FromByteArray(bson, "application/bson");
+                var clientDoc = new BsonDocument(sessionDoc);
+                clientDoc.Remove("_id");
+                byte[] clientBson = clientDoc.ToBson();
+
+                return this.Response.FromByteArray(clientBson, "application/bson");
             });
 
             this.Post("/{id}", args =>
