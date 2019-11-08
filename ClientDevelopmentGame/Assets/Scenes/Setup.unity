@@ -214,6 +214,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114618764093682178, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: offlineMode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68aaa89a57e29194da9ce770ee766ab0, type: 2}
   m_IsPrefabAsset: 0
@@ -246,7 +251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fillerLength: 30
   initialSpawn: 3
-  scaleUp: 0
+  scaleUp: 10
   varience: 0
   t: {fileID: 114652173187609828, guid: 3a22c922b7e792147a17b42d16244694, type: 2}
 --- !u!4 &2042555077
