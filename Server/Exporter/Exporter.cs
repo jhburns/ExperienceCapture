@@ -17,8 +17,6 @@ namespace Export.App.Main
             db = client.GetDatabase("ec");
 
             Console.WriteLine("Hello ");
-
-            SearchSession("YXN7");
         }
 
         private static void PromptOption()
