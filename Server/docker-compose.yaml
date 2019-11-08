@@ -47,7 +47,6 @@ services:
     depends_on:
       - db
     environment:
-      - filename=example_captured_data.json
       - WAIT_HOSTS=db:27017
     networks:
       - ec-network
