@@ -1,4 +1,4 @@
-name: Receiver Integration
+name: Exporter Integration
 
 on:
   pull_request:
