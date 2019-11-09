@@ -7,6 +7,9 @@ on:
     paths-ignore:
     - 'Server/Receiver/**'
     - '.github/workflows/receiver-integration.yml'
+    - 'Server/Exporter/**'
+    - '.github/workflows/exporter-integration.yml'
+
 
 jobs:
   build:
