@@ -2,6 +2,7 @@ namespace Export.App.Main
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Threading.Tasks;
 
     using MongoDB.Bson;
@@ -57,7 +58,7 @@ namespace Export.App.Main
                     PrintAllSessions();
                     break;
                 case 2:
-                    Console.WriteLine("Case 2");
+                    ExportSessions();
                     break;
                 case 3:
                     Console.WriteLine("Closing...");
@@ -86,7 +87,35 @@ namespace Export.App.Main
             }
         }
 
-        private static async Task<List<BsonDocument>> SearchSession(string id)
+        private static void ExportSessions()
+        {
+            Console.WriteLine("Enter Session IDs, separated by a comma:");
+            string ids = Console.ReadLine();
+            List<string> idList = new List<string>(ids.Split(','));
+
+            idList.ForEach(delegate(string id)
+            {
+                id.Trim();
+            });
+
+            idList.RemoveAll(delegate(string id)
+            {
+                if (!CheckSession(id))
+                {
+                    Console.WriteLine($"Error: {id} session doesn't exist or is still open.");
+                    return true;
+                }
+
+                return false;
+            });
+
+            foreach (string id in idList)
+            {
+                SortSession(id);
+            }
+        }
+
+        private static async void SortSession(string id)
         {
             var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{id}");
             List<BsonDocument> docs = await sessionCollection
@@ -94,7 +123,17 @@ namespace Export.App.Main
                 .SortByDescending(d => d["info"]["realtimeSinceStartup"])
                 .ToListAsync();
 
-            return docs;
+            string docsTotal = "[";
+            foreach (BsonDocument d in docs)
+            {
+                d.Remove("_id");
+                docsTotal += d.ToJson() + ",";
+            }
+
+            docsTotal = docsTotal.Substring(0, docsTotal.Length - 1);
+            docsTotal += "]";
+
+            OutputToFile(docsTotal, id);
         }
 
         private static bool CheckSession(string sessionId)
@@ -109,7 +148,7 @@ namespace Export.App.Main
                 return false;
             }
 
-            if (sessionDoc["isOpen"] == false)
+            if (sessionDoc["isOpen"] == true)
             {
                 return false;
             }
@@ -119,6 +158,12 @@ namespace Export.App.Main
 
         private static void OutputToFile(string content, string id)
         {
+            string seperator = Path.DirectorySeparatorChar.ToString();
+            string path = $".{seperator}data{seperator}exported{seperator}{id}.sorted.json";
+
+            Console.WriteLine("Outputting to file: " + path);
+
+            System.IO.File.WriteAllText(path, content);
         }
     }
 }
