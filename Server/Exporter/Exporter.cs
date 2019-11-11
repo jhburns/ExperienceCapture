@@ -54,7 +54,7 @@ namespace Export.App.Main
             switch (commandValue)
             {
                 case 1:
-                    FindAllSessions();
+                    PrintAllSessions();
                     break;
                 case 2:
                     Console.WriteLine("Case 2");
@@ -70,7 +70,7 @@ namespace Export.App.Main
             }
         }
 
-        private static void FindAllSessions()
+        private static void PrintAllSessions()
         {
             var sessionCollection = db.GetCollection<BsonDocument>("sessions");
             var filter = Builders<BsonDocument>.Filter.Eq("isOpen", false);
