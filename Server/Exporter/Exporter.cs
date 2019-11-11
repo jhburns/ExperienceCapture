@@ -16,15 +16,20 @@ namespace Export.App.Main
             MongoClient client = new MongoClient(@"mongodb://db:27017");
             db = client.GetDatabase("ec");
 
-            PromptOptions();
+            Console.WriteLine("Welcome to the Exporter. (v1.1.0)");
+            while (true)
+            {
+                MatchCommand(PromptOptions());
+            }
         }
 
         private static int PromptOptions()
         {
-            Console.WriteLine("Welcome to the Exporter, please input an option:");
-            Console.WriteLine("1. List all sessions.");
-            Console.WriteLine("2. Download files of sessions.");
-            Console.WriteLine("3. Close.");
+            Console.WriteLine("--------------------------------------------------------");
+            Console.WriteLine("Please select an option.");
+            Console.WriteLine("\t1. List all closed sessions.");
+            Console.WriteLine("\t2. Download files of closed sessions.");
+            Console.WriteLine("\t3. Close this.");
             Console.WriteLine("Option (1-3):");
 
             int commandValue;
@@ -42,10 +47,49 @@ namespace Export.App.Main
             return commandValue;
         }
 
+        private static void MatchCommand(int commandValue)
+        {
+            Console.WriteLine(string.Empty);
+
+            switch (commandValue)
+            {
+                case 1:
+                    FindAllSessions();
+                    break;
+                case 2:
+                    Console.WriteLine("Case 2");
+                    break;
+                case 3:
+                    Console.WriteLine("Closing...");
+                    Environment.Exit(0);
+                    break;
+                default:
+                    Console.WriteLine("Please input a number in range 1-3.");
+                    MatchCommand(PromptOptions());
+                    break;
+            }
+        }
+
+        private static void FindAllSessions()
+        {
+            var sessionCollection = db.GetCollection<BsonDocument>("sessions");
+            var filter = Builders<BsonDocument>.Filter.Eq("isOpen", false);
+
+            List<BsonDocument> allSessions = sessionCollection
+                .Find(filter)
+                .ToList();
+
+            Console.WriteLine("Session IDs");
+            foreach (BsonDocument session in allSessions)
+            {
+                Console.WriteLine(session["id"]);
+            }
+        }
+
         private static async Task<List<BsonDocument>> SearchSession(string id)
         {
-            var sessionDocs = db.GetCollection<BsonDocument>($"sessions.{id}");
-            List<BsonDocument> docs = await sessionDocs
+            var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{id}");
+            List<BsonDocument> docs = await sessionCollection
                 .Find(Builders<BsonDocument>.Filter.Empty)
                 .SortByDescending(d => d["info"]["realtimeSinceStartup"])
                 .ToListAsync();
