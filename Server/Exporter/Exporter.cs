@@ -130,7 +130,7 @@ namespace Export.App.Main
                 docsTotal += d.ToJson() + ",";
             }
 
-            docsTotal = docsTotal.Substring(0, (docsTotal.Length - 1));
+            docsTotal = docsTotal.Substring(0, docsTotal.Length - 1);
             docsTotal += "]";
 
             OutputToFile(docsTotal, id);
@@ -159,7 +159,7 @@ namespace Export.App.Main
         private static void OutputToFile(string content, string id)
         {
             string seperator = Path.DirectorySeparatorChar.ToString();
-            string path = $".{seperator}data{seperator}exported{seperator}{id}.raw.json";
+            string path = $".{seperator}data{seperator}exported{seperator}{id}.sorted.json";
 
             Console.WriteLine("Outputting to file: " + path);
 
