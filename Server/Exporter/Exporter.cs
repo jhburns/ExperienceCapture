@@ -35,7 +35,7 @@ namespace Export.App.Main
             catch
             {
                 Console.WriteLine("Please only enter an number");
-                Console.WriteLine("");
+                Console.WriteLine(string.Empty);
                 return PromptOptions();
             }
 
