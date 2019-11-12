@@ -9,6 +9,8 @@
 
 namespace Nancy.App.Hosting.Kestrel
 {
+    using System;
+
     using MongoDB.Bson;
     using MongoDB.Bson.IO;
     using MongoDB.Bson.Serialization;
@@ -37,11 +39,12 @@ namespace Nancy.App.Hosting.Kestrel
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string uniqueID = Generate.RandomString(4);
-                var filter = Builders<BsonDocument>.Filter.Gt("id", uniqueID);
+                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
                 while (sessions.Find(filter).FirstOrDefault() != null)
                 {
+                    Console.WriteLine();
                     uniqueID = Generate.RandomString(4);
-                    filter = Builders<BsonDocument>.Filter.Gt("id", uniqueID);
+                    filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
                 }
 
                 var sessionDoc = new BsonDocument
