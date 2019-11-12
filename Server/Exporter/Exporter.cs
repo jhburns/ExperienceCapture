@@ -16,12 +16,17 @@ namespace Export.App.Main
             MongoClient client = new MongoClient(@"mongodb://db:27017");
             db = client.GetDatabase("ec");
 
-            MatchCommand(PromptOptions());
+            Console.WriteLine("Welcome to the Exporter. (v1.1.0)");
+            while (true)
+            {
+                MatchCommand(PromptOptions());
+            }
         }
 
         private static int PromptOptions()
         {
-            Console.WriteLine("Welcome to the Exporter, please input an option:");
+            Console.WriteLine("---------------------------------");
+            Console.WriteLine("Please select an option.");
             Console.WriteLine("1. List all sessions.");
             Console.WriteLine("2. Download files of sessions.");
             Console.WriteLine("3. Close.");
