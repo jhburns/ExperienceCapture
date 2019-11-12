@@ -16,11 +16,30 @@ namespace Export.App.Main
             MongoClient client = new MongoClient(@"mongodb://db:27017");
             db = client.GetDatabase("ec");
 
-            Console.WriteLine("Hello ");
+            PromptOptions();
         }
 
-        private static void PromptOption()
+        private static int PromptOptions()
         {
+            Console.WriteLine("Welcome to the Exporter, please input an option:");
+            Console.WriteLine("1. List all sessions.");
+            Console.WriteLine("2. Download files of sessions.");
+            Console.WriteLine("3. Close.");
+            Console.WriteLine("Option (1-3):");
+
+            int commandValue;
+            try
+            {
+                commandValue = Convert.ToInt32(Console.ReadLine());
+            }
+            catch
+            {
+                Console.WriteLine("Please only enter an number");
+                Console.WriteLine("");
+                return PromptOptions();
+            }
+
+            return commandValue;
         }
 
         private static async Task<List<BsonDocument>> SearchSession(string id)
