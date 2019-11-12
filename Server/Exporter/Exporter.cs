@@ -16,7 +16,7 @@ namespace Export.App.Main
             MongoClient client = new MongoClient(@"mongodb://db:27017");
             db = client.GetDatabase("ec");
 
-            PromptOptions();
+            MatchCommand(PromptOptions());
         }
 
         private static int PromptOptions()
@@ -40,6 +40,29 @@ namespace Export.App.Main
             }
 
             return commandValue;
+        }
+
+        private static void MatchCommand(int commandValue)
+        {
+            Console.WriteLine(string.Empty);
+
+            switch (commandValue)
+            {
+                case 1:
+                    Console.WriteLine("Case 1");
+                    break;
+                case 2:
+                    Console.WriteLine("Case 2");
+                    break;
+                case 3:
+                    Console.WriteLine("Closing...");
+                    Environment.Exit(0);
+                    break;
+                default:
+                    Console.WriteLine("Please input a number in range 1-3.");
+                    MatchCommand(PromptOptions());
+                    break;
+            }
         }
 
         private static async Task<List<BsonDocument>> SearchSession(string id)
