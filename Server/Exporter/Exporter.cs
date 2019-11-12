@@ -25,11 +25,11 @@ namespace Export.App.Main
 
         private static int PromptOptions()
         {
-            Console.WriteLine("---------------------------------");
+            Console.WriteLine("--------------------------------------------------------");
             Console.WriteLine("Please select an option.");
-            Console.WriteLine("1. List all closed sessions.");
-            Console.WriteLine("2. Download files of closed sessions.");
-            Console.WriteLine("3. Close this.");
+            Console.WriteLine("\t1. List all closed sessions.");
+            Console.WriteLine("\t2. Download files of closed sessions.");
+            Console.WriteLine("\t3. Close this.");
             Console.WriteLine("Option (1-3):");
 
             int commandValue;
