@@ -11,7 +11,7 @@ public class Spinner : MonoBehaviour, ICapturable
 		transform.Rotate (Vector3.forward * -3);
 	}
 
-    public object getCapture() {
+    public object GetCapture() {
         return new 
         {
             rotation = transform.eulerAngles.z,
