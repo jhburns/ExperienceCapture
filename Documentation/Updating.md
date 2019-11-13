@@ -9,7 +9,7 @@ the same folder as the docs if in Google Drive.
 
 Click on the first link 'ExperienceCaptureClient.unitypackage' to download it, no extraction needed.
 
-## Import Into Unity Game
+## Reimport Into Unity Game
 
 First, Delete the old 'ExperienceCaputure' folder.
 
@@ -27,14 +27,13 @@ You should now have a pop-up with all of the assets selected by default, click o
 
 **Check:** If everything worked, there should be a new folder called *ExperienceCapture/* in your assets folder.
 
-## Create Setup Scene
+## Update Setup Scene
 
 Remove the old 'CaptureSetup' prefab from the Setup scene.
 
 ![Dragging in prefab](images/prefab.png)
 
 Drag the new 'CaptureSetup' prefab in the root of the *ExperienceCapture/* folder into the Setup scene.
-(Fix the Camera on the prefab by selecting 'Solid Color' if that matters)
 
 Change the 'Scene To Load' variable on the prefab to be the name of the first scene in your 
 game. 
