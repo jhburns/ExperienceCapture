@@ -104,7 +104,7 @@ public class HandleCapturing : MonoBehaviour
             {
                 for (int i = 0; i < allCapturable.Count; i++)
                 {
-                    gameObjects.Add(capturableNames[i], allCapturable[i].getCapture());
+                    gameObjects.Add(capturableNames[i], allCapturable[i].GetCapture());
                 }
         }
 
@@ -154,6 +154,12 @@ public class HandleCapturing : MonoBehaviour
             if (allCapturable != null)
             {
                 extra += "Capturable objects: " + allCapturable.Count + "\n";
+                extra += "Open requests: " + openRequests + "\n";
+            }
+            else
+            {
+                extra += "Still setting up capture.";
+                extra += "Session ID: " + id;
             }
 
             Debug.Log(extra);

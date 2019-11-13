@@ -14,7 +14,7 @@ public class Tester : MonoBehaviour, ICapturable
         dummyText = t;
     }
 
-    public object getCapture()
+    public object GetCapture()
     {
         return new
         {
