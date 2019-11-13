@@ -51,6 +51,7 @@ public class CaptureSetup : MonoBehaviour
     public Image sessionBackground;
     public Button newSession;
     public Button start;
+    public GameObject eventSystem;
 
     private string sessionID;
     private string url;
@@ -62,6 +63,12 @@ public class CaptureSetup : MonoBehaviour
 
     private void setupDefaults()
     {
+        // In case it doesn't exist in client
+        if (GameObject.Find("EventSystem") == null)
+        {
+            Instantiate(eventSystem);
+        }
+
         if (offlineMode)
         {
             urlTitle.gameObject.SetActive(false);
