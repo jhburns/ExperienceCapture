@@ -83,7 +83,7 @@ an event based one like Unity Analytics.
 
 ## Common Data Examples
 
-Here is how to capture various common propoerties.
+Here is how to capture various common properties.
 
 #### If a GameObject is active
 
