@@ -21,7 +21,7 @@ public class Example : MonoBehaviour, ICapturable
 }
 ```
 
-2. Add the getCapture() function to satisfy the ICapturable [interface](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/interface).
+2. Add the GetCapture() function to satisfy the ICapturable [interface](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/interface).
 
 ```csharp
 using Capture;
@@ -31,7 +31,7 @@ public class Example : MonoBehaviour, ICapturable
 
 	// Class stuff
 	
-    public object getCapture() {
+    public object GetCapture() {
         return new 
         {
             
@@ -48,7 +48,7 @@ public class Example : MonoBehaviour, ICapturable
 With everything setup, data to be captured can now be added. The basic format is:
 
 ```csharp
-    public object getCapture()
+    public object GetCapture()
     {
         return new
         {
@@ -74,7 +74,7 @@ for transmission.
 
 ## How Does It Capture Data?
 
-Experience Capture works by running the 'getCapture()' function on each `ICapturable`
+Experience Capture works by running the 'GetCapture()' function on each `ICapturable`
 game object over specific intervals. The capture rate can be set as often or little 
 as wanted through the prefab, and is based on frame-rate. Additional information 
 about the frame is also included automatically, like timestamps. This can be called 
@@ -88,7 +88,7 @@ Here is how to capture various common properties.
 #### If a GameObject is active
 
 ```csharp
-    public object getCapture()
+    public object GetCapture()
     {
         return new
         {
@@ -101,7 +101,7 @@ Here is how to capture various common properties.
 
 
 ```csharp
-    public object getCapture()
+    public object GetCapture()
     {
         return new
         {
@@ -116,7 +116,7 @@ Vector3s, like position in this example can't be directly serialized to JSON.
 Instead, use a nested anonymous typed object to store each value clearly like below.  
 
 ```csharp
-    public object getCapture()
+    public object GetCapture()
     {
         return new
         {
