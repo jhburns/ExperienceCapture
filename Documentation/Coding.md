@@ -29,9 +29,10 @@ using Capture;
 public class Example : MonoBehaviour, ICapturable
 {
 
-	// Class stuff
+    // Class stuff
 	
-    public object GetCapture() {
+    public object GetCapture() 
+    {
         return new 
         {
             
@@ -50,11 +51,11 @@ With everything setup, data to be captured can now be added. The basic format is
 ```csharp
     public object GetCapture()
     {
-		return new
-		{
-			positionX = transform.position.x, // <- separate properties with a comma 
-			propertyName = gameObject.value
-		};
+        return new
+        {
+            positionX = transform.position.x, // <- separate properties with a comma 
+            propertyName = gameObject.value
+        };
     }
 ```
 This is using an [Anonymous type](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/anonymous-types).
@@ -103,7 +104,7 @@ Here is how to capture various common properties.
 ```csharp
     public object GetCapture()
     {
-        return new
+    return new
         {
             rotation = transform.eulerAngles.z
         };
@@ -116,16 +117,16 @@ Vector3s, like position in this example can't be directly serialized to JSON.
 Instead, use a nested anonymous typed object to store each value clearly like below.  
 
 ```csharp
-	public object GetCapture()
-	{
-		return new
-		{
+    public object GetCapture()
+    {
+        return new
+        {
             position = new
-			{
-				transform.position.x,
-				transform.position.y,
-				transform.position.z,
-			}
-		};
-	}
+            {
+                transform.position.x,
+                transform.position.y,
+                transform.position.z,
+            }
+        };
+    }
 ```
