@@ -104,8 +104,8 @@ public class UIController : MonoBehaviour, ICapturable
             getReadyTextIsActive = getReady.IsActive(),
             timeTextIsActive = timeDisplay.IsActive(),
 
-            countdown = countdown,
-            responceTime = responceTime,
+            countdown,
+            responceTime,
             isWaiting = waiting,
             isResponding = responding
         };
