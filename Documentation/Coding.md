@@ -45,7 +45,7 @@ public class Example : MonoBehaviour, ICapturable
 
 ## Add properties 
 
-With eveything setup, data to be captured can now be added. The basic format is:
+With everything setup, data to be captured can now be added. The basic format is:
 
 ```csharp
     public object getCapture()
@@ -80,11 +80,51 @@ about the frame is also included automatically, like timestamps. This can be cal
 an 'eventless' data capture system, which is designed to be easier to use than
 an event based one like Unity Analytics. 
 
-## Common Data Table (WIP)
+## Common Data Examples
 
-Here are some ways to extract commonly wanted data from an object:
+Here is how to capture various common propoerties.
 
-| Types  | Value |
-| ------------- | ------------- |
-| if game object is active  | objectName.IsActive()  |
-| rotation | transform.eulerAngles.z |
+#### If a GameObject is active
+
+```csharp
+    public object getCapture()
+    {
+        return new
+        {
+            objectIsActive = objectName.IsActive()
+        };
+    }
+```
+
+#### Rotation
+
+
+```csharp
+    public object getCapture()
+    {
+        return new
+        {
+            rotation = transform.eulerAngles.z
+        };
+    }
+```
+
+#### Any Vector3
+
+Vector3s, like position in this example can't be directly serialized to JSON.
+Instead, use a nested anonymous typed object to store each value clearly like below.  
+
+```csharp
+    public object getCapture()
+    {
+        return new
+        {
+            position = new
+			{
+				transform.position.x,
+				transform.position.y,
+				transform.position.z,
+			}
+        };
+    }
+```
