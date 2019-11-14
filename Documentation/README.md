@@ -6,6 +6,7 @@ to setup the assets, and adding data capturing code.
 
 1. [Download and setup the client asset package.](Setup.md)
 1. [Learn how to add data capturing code to the Unity game.](Coding.md)
+1. [How your data is captured.](AboutCapture.md)
 1. [Updating the client from 1.0.0 => 1.1.0](Updating.md)
 1. Additionally see the [FAQ](FAQ.md).
 

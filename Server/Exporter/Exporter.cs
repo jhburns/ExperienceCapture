@@ -118,6 +118,7 @@ namespace Export.App.Main
         private static async void SortSession(string id)
         {
             var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{id}");
+
             List<BsonDocument> docs = await sessionCollection
                 .Find(Builders<BsonDocument>.Filter.Empty)
                 .SortByDescending(d => d["info"]["realtimeSinceStartup"])
@@ -161,7 +162,7 @@ namespace Export.App.Main
             string seperator = Path.DirectorySeparatorChar.ToString();
             string path = $".{seperator}data{seperator}exported{seperator}{id}.sorted.json";
 
-            Console.WriteLine("Outputting to file: " + path);
+            Console.WriteLine("Outputted to file: " + path);
 
             System.IO.File.WriteAllText(path, content);
         }

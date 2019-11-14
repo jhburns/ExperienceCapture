@@ -152,6 +152,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: offlineMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: printAdditionalCaptureInfo
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68aaa89a57e29194da9ce770ee766ab0, type: 2}
   m_IsPrefabAsset: 0
@@ -224,9 +234,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54cff440ccd872442aa4d52fb46f72a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fillerLength: 30
-  initialSpawn: 3
-  scaleUp: 10
+  fillerLength: 1000
+  initialSpawn: 0
+  scaleUp: 0
   varience: 0
   t: {fileID: 114652173187609828, guid: 3a22c922b7e792147a17b42d16244694, type: 2}
 --- !u!4 &2042555077
