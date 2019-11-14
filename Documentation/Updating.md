@@ -4,8 +4,7 @@ Instructions for going from 1.0.0 client to 1.1.0.
 
 ## Download Asset Package
 
-Get the client [here](https://github.com/jhburns/ExperienceCapture/releases/tag/client.1.1.0) or in
-the same folder as the docs if in Google Drive. 
+Get the client [here](https://github.com/jhburns/ExperienceCapture/releases/tag/client.1.1.0).
 
 Click on the first link 'ExperienceCaptureClient.unitypackage' to download it, no extraction needed.
 
