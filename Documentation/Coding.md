@@ -50,11 +50,11 @@ With everything setup, data to be captured can now be added. The basic format is
 ```csharp
     public object GetCapture()
     {
-        return new
-        {
+		return new
+		{
 			positionX = transform.position.x, // <- separate properties with a comma 
 			propertyName = gameObject.value
-        };
+		};
     }
 ```
 This is using an [Anonymous type](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/anonymous-types).
@@ -62,7 +62,7 @@ It lets you define implictly (meaning without having to declare `int`, `string`,
 
 Now run the Setup scene, and you should see a [JSON](https://www.newtonsoft.com/json) object
 being printed to console. It should have an info key, and a key called the same name as the
-object this script is attached too. 
+object this script is attached too.
 
 ![Example console](images/console.png)
 
@@ -116,16 +116,16 @@ Vector3s, like position in this example can't be directly serialized to JSON.
 Instead, use a nested anonymous typed object to store each value clearly like below.  
 
 ```csharp
-    public object GetCapture()
-    {
-        return new
-        {
+	public object GetCapture()
+	{
+		return new
+		{
             position = new
 			{
 				transform.position.x,
 				transform.position.y,
 				transform.position.z,
 			}
-        };
-    }
+		};
+	}
 ```
