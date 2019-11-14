@@ -104,7 +104,7 @@ Here is how to capture various common properties.
 ```csharp
     public object GetCapture()
     {
-    return new
+        return new
         {
             rotation = transform.eulerAngles.z
         };
