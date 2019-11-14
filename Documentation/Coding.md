@@ -52,7 +52,8 @@ With everything setup, data to be captured can now be added. The basic format is
     {
         return new
         {
-            positionX = transform.position.x
+            positionX = transform.position.x, // <- separate properties with a comma 
+			propertyName = gameObject.value
         };
     }
 ```
