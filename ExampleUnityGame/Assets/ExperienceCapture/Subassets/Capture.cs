@@ -2,6 +2,6 @@
 {
     public interface ICapturable
     {
-        object getCapture();
+        object GetCapture();
     }
 }

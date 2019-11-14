@@ -93,7 +93,7 @@ public class UIController : MonoBehaviour, ICapturable
         SceneManager.LoadScene("Cleanup");
     }
 
-    public object getCapture()
+    public object GetCapture()
     {
         return new
         {
