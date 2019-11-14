@@ -34,13 +34,13 @@ namespace Nancy.App.Hosting.Kestrel
         public Sessions(IMongoDatabase db)
             : base("/sessions/")
         {
-            this.Post("/", args =>
+            this.Post("/", async (args) =>
             {
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string uniqueID = Generate.RandomString(4);
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
-                while (sessions.Find(filter).FirstOrDefault() != null)
+                while ((await sessions.Find(filter).FirstOrDefaultAsync()) != null)
                 {
                     Console.WriteLine();
                     uniqueID = Generate.RandomString(4);
@@ -54,7 +54,7 @@ namespace Nancy.App.Hosting.Kestrel
                 };
 
                 byte[] bson = sessionDoc.ToBson();
-                sessions.InsertOneAsync(sessionDoc);
+                _ = sessions.InsertOneAsync(sessionDoc);
 
                 var clientDoc = new BsonDocument(sessionDoc);
                 clientDoc.Remove("_id");
@@ -63,13 +63,13 @@ namespace Nancy.App.Hosting.Kestrel
                 return this.Response.FromByteArray(clientBson, "application/bson");
             });
 
-            this.Post("/{id}", args =>
+            this.Post("/{id}", async (args) =>
             {
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string uniqueID = (string)args.id;
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
-                var sessionDoc = sessions.Find(filter).FirstOrDefault();
+                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
@@ -84,18 +84,18 @@ namespace Nancy.App.Hosting.Kestrel
                 string collectionName = $"sessions.{uniqueID}";
                 var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
                 var document = BsonSerializer.Deserialize<BsonDocument>(this.Request.Body);
-                sessionCollection.InsertOneAsync(document);
+                _ = sessionCollection.InsertOneAsync(document);
 
                 return "OK";
             });
 
-            this.Get("/{id}", args =>
+            this.Get("/{id}", async (args) =>
             {
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string uniqueID = (string)args.id;
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
-                var sessionDoc = sessions.Find(filter).FirstOrDefault();
+                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
@@ -122,21 +122,21 @@ namespace Nancy.App.Hosting.Kestrel
                 return this.Response.FromByteArray(bson, "application/bson");
             });
 
-            this.Delete("/{id}", args =>
+            this.Delete("/{id}", async (args) =>
             {
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string uniqueID = (string)args.id;
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
                 var update = Builders<BsonDocument>.Update.Set("isOpen", false);
-                var sessionDoc = sessions.Find(filter).FirstOrDefault();
+                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
                     return 404;
                 }
 
-                sessions.UpdateOne(filter, update);
+                _ = sessions.UpdateOneAsync(filter, update);
 
                 return "OK";
             });
