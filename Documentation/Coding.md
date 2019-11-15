@@ -130,3 +130,7 @@ Instead, use a nested anonymous typed object to store each value clearly like be
         };
     }
 ```
+
+## Next Part
+
+If all the checks are fine, everything should be setup. Next Section: [How Your Data is Captured.](AboutCapture.md)
