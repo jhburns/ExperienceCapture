@@ -16,7 +16,7 @@ using Capture;
 public class Player : MonoBehaviour, ICapturable
 {
 
-	// PLayer functionality 
+	// Player functionality 
 	
     public object GetCapture() {
         return new 
@@ -56,7 +56,7 @@ This would produce a capture of an example frame like so [comments added]:
     "PlayerObject": {
 		"positionX": 3.0777777
     },
-      "BallObject": {
+    "BallObject": {
         "positionX": 6.0,
         "isActive": true
     }
@@ -111,10 +111,10 @@ Which produces
 ```json
 {
   "gameObjects": {
-     "PlayerObject": {
+    "PlayerObject": {
 		"positionX": 3.0777777
     },
-      "BallObject": { //Created
+    "BallObject": { //Created
 		"positionX": 6.0,
 		"isActive": true
     }
