@@ -104,7 +104,6 @@ Which produces
     "timeSinceLevelLoad": 0.6394293
   }
 }
-}
 ```
 
 2.
