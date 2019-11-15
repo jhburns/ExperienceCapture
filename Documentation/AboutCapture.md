@@ -54,11 +54,11 @@ This would produce a capture of an example frame like so [comments added]:
 {
   "gameObjects": {
     "PlayerObject": {
-		"positionX": 3.0777777
+      "positionX": 3.0777777
     },
     "BallObject": {
-        "positionX": 6.0,
-        "isActive": true
+      "positionX": 6.0,
+       "isActive": true
     }
   },
   "frameInfo": {
@@ -95,7 +95,7 @@ Which produces
 {
   "gameObjects": {
     "PlayerObject": {
-		"positionX": 3.0777777
+	  "positionX": 2.6666666
     }
   },
   "frameInfo": {
@@ -112,11 +112,11 @@ Which produces
 {
   "gameObjects": {
     "PlayerObject": {
-		"positionX": 3.0777777
+	  "positionX": 3.0777777
     },
     "BallObject": { //Created
-		"positionX": 6.0,
-		"isActive": true
+      "positionX": 6.0,
+	  "isActive": true
     }
   },
   "frameInfo": { 
@@ -132,7 +132,7 @@ Which produces
 {
   "gameObjects": {
     "PlayerObject": {
-		"positionX": 3.0777777
+	  "positionX": 6.0777777
     } // Ball no longer exists
   },
   "frameInfo": {
