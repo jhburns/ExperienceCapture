@@ -10,7 +10,7 @@ services:
   api:
     build: 
       context: ./API
-    command: sh -c "/wait && dotnet Receiver.dll"
+    command: sh -c "/wait && dotnet API.dll"
     ports:
     - "4321:80"
     depends_on:
@@ -52,6 +52,18 @@ services:
       - WAIT_HOSTS=db:27017
     networks:
       - ec-network
+
+  web:
+    build:
+      context: ./WebUI
+    ports:
+    - "3003:3000"
+    volumes:
+      - ./WebUI/:/app/
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
 
 volumes:
   ec-data-volume:

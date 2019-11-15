@@ -1,0 +1,17 @@
+FROM node:12.2.0-alpine as build
+WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
+COPY package.json /app/package.json
+RUN npm install --silent
+COPY . /app
+
+RUN npm run lint
+RUN npm run build
+
+# production environment
+FROM abiosoft/caddy:1.0.3
+WORKDIR /app/build
+COPY --from=build /app/build /app/build
+
+ENTRYPOINT []
+CMD ["caddy"]

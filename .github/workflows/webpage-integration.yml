@@ -1,0 +1,24 @@
+name: WebUI Integration
+
+on:
+  pull_request:
+    branches:    
+      - master
+    paths:
+    - 'Server/WebUI/**'
+    - '.github/workflows/webpage-integration.yml'
+
+jobs:
+  build:
+    name: Check Build
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Run Docker
+        uses: whoan/docker-build-with-cache-action@v1
+        with:
+          username: "${{ secrets.DOCKER_USERNAME }}"
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+          image_name: jhburns/ec-webpage-cache
+          context: ./Server/WebUI
+          dockerfile: Dockerfile.production

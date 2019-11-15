@@ -160,7 +160,7 @@ Prefab:
     - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
         type: 2}
       propertyPath: printAdditionalCaptureInfo
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68aaa89a57e29194da9ce770ee766ab0, type: 2}
@@ -234,7 +234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54cff440ccd872442aa4d52fb46f72a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fillerLength: 1000
+  fillerLength: 100
   initialSpawn: 0
   scaleUp: 0
   varience: 0
