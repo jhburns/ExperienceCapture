@@ -61,6 +61,9 @@ services:
     volumes:
       - ./WebUI/:/app/
       - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
 
 volumes:
   ec-data-volume:
