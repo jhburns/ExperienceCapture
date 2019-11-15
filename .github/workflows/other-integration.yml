@@ -9,6 +9,8 @@ on:
     - '.github/workflows/api-integration.yml'
     - 'Server/Exporter/**'
     - '.github/workflows/exporter-integration.yml'
+    - 'Server/WebUI/**'
+    - '.github/workflows/webpage-integration.yml'
 
 
 jobs:
