@@ -53,6 +53,15 @@ services:
     networks:
       - ec-network
 
+  web:
+    build:
+      context: ./WebUI
+    ports:
+    - "3003:3000"
+    volumes:
+      - ./WebUI/:/app/
+      - /app/node_modules
+
 volumes:
   ec-data-volume:
 
