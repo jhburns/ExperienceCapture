@@ -7,9 +7,9 @@
 
 version: '3.7'
 services:
-  web:
+  api:
     build: 
-      context: ./Receiver
+      context: ./API
     command: sh -c "/wait && dotnet Receiver.dll"
     ports:
     - "4321:80"

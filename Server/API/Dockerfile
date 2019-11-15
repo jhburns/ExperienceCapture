@@ -26,4 +26,4 @@ RUN chmod +x /wait
 WORKDIR /app
 COPY --from=build-env /app/out .
 COPY appsettings.json .
-CMD ["dotnet", "Receiver.dll"]
+CMD ["dotnet", "API.dll"]
