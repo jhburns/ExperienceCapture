@@ -41,7 +41,7 @@ public class Ball : MonoBehaviour, ICapturable
         return new 
         {
             positionX = transform.position.x,
-			isActive = this.IsActive()
+            isActive = this.IsActive()
         };
     }
 }
@@ -56,9 +56,9 @@ This would produce a capture of an example frame like so [comments added]:
     "PlayerObject": {
 		"positionX": 3.0777777
     },
-	"BallObject": {
-		"positionX": 6.0,
-		"isActive": true
+      "BallObject": {
+        "positionX": 6.0,
+        "isActive": true
     }
   },
   "frameInfo": {
