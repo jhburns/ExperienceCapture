@@ -24,7 +24,9 @@ public class Player : MonoBehaviour, ICapturable
             positionX = transform.position.x;
         };
     }
+
 }
+```
 
 and the 'BallObject' Unity GameObject has the following script attached to it:
 ```csharp
@@ -59,10 +61,10 @@ This would produce a capture of an example frame like so [comments added]:
 		"isActive": true
     }
   },
-  "frameInfo": { // All of the timestamps are normal [Unity Time](https://docs.unity3d.com/2018.2/Documentation/ScriptReference/Time.html) variables
+  "frameInfo": {
     "unscaledDeltaTime": 0.0171986,
     "realtimeSinceStartup": 4.075656,
-    "timeSinceLevelLoad": 0.6566279 // <- most important timestamp for analytics
+    "timeSinceLevelLoad": 0.6566279
   }
 }
 ```
@@ -73,6 +75,7 @@ Here are a couple important points to notice:
 This allows multiple scripts to use the same key name, which is recommenced for simplicity.
 - The keys (`positionX`, `isActive`) for each value are determined by the left side of the returned
 object.
+- All of the timestamps are normal [Unity Time](https://docs.unity3d.com/2018.2/Documentation/ScriptReference/Time.html) variables
 
 ## Static GameObject Capturing
 
@@ -95,21 +98,23 @@ Which produces
 		"positionX": 3.0777777
     }
   },
-  "frameInfo": { 
-    "realtimeSinceStartup": 4.075656,
-    "timeSinceLevelLoad": 0.6566279
+  "frameInfo": {
+    "unscaledDeltaTime": 0.0173622,
+    "realtimeSinceStartup": 4.058367,
+    "timeSinceLevelLoad": 0.6394293
   }
+}
 }
 ```
 
-1.
+2.
 ```json
 {
   "gameObjects": {
-    "PlayerObject": {
+     "PlayerObject": {
 		"positionX": 3.0777777
     },
-	"BallObject": { //Created
+      "BallObject": { //Created
 		"positionX": 6.0,
 		"isActive": true
     }
@@ -122,7 +127,7 @@ Which produces
 }
 ```
 
-1.
+3.
 ```json
 {
   "gameObjects": {
@@ -130,10 +135,10 @@ Which produces
 		"positionX": 3.0777777
     } // Ball no longer exists
   },
-  "frameInfo": { 
-    "unscaledDeltaTime": 0.0171986,
-    "realtimeSinceStartup": 4.075656,
-    "timeSinceLevelLoad": 0.6566279 
+  "frameInfo": {
+    "unscaledDeltaTime": 0.0175118,
+    "realtimeSinceStartup": 4.09290743,
+    "timeSinceLevelLoad": 0.6741397
   }
 }
 ```
