@@ -5,8 +5,8 @@ on:
     branches:    
       - master
     paths:
-    - 'Server/Receiver/**'
-    - '.github/workflows/receiver-integration.yml'
+    - 'Server/API/**'
+    - '.github/workflows/api-integration.yml'
 
 jobs:
   build:
@@ -20,5 +20,5 @@ jobs:
           username: "${{ secrets.DOCKER_USERNAME }}"
           password: "${{ secrets.DOCKER_PASSWORD }}"
           image_name: jhburns/ec-receiver-cache
-          context: ./Server/Receiver
+          context: ./Server/API
           dockerfile: Dockerfile.integrate
