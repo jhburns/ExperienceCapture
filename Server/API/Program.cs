@@ -3,7 +3,7 @@
     using System.IO;
     using Microsoft.AspNetCore.Hosting;
 
-    public class Program
+    public class API
     {
         public static void Main(string[] args)
         {

@@ -5,8 +5,8 @@ on:
     branches:    
       - master
     paths-ignore:
-    - 'Server/Receiver/**'
-    - '.github/workflows/receiver-integration.yml'
+    - 'Server/API/**'
+    - '.github/workflows/api-integration.yml'
     - 'Server/Exporter/**'
     - '.github/workflows/exporter-integration.yml'
 
