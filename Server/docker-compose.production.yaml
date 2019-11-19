@@ -23,3 +23,11 @@ services:
       interval: 1m30s
       timeout: 10s
       retries: 3
+
+  caddy:
+    image: abiosoft/caddy:1.0.3
+    ports:
+    - "80:80"
+    - "443:443"
+    volumes:
+    - ./Caddy/Caddyfile.production:/etc/Caddyfile

@@ -40,6 +40,17 @@ services:
        timeout: 10s
        retries: 3
   
+  rp:
+    image: abiosoft/caddy:1.0.3
+    command: ["--conf", "/etc/Caddyfile"]
+    ports:
+    - "8090:2015"
+    depends_on:
+    - api
+    - web
+    volumes:
+    - ./Caddy/Caddyfile:/etc/Caddyfile
+
   exporter:
     build: 
       context: ./Exporter

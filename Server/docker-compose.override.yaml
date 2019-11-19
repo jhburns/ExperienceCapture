@@ -10,3 +10,9 @@ services:
       - CHOKIDAR_USEPOLLING=true
     ports:
     - "3003:3000"
+
+  rp:
+    ports:
+    - "8090:2015"
+    volumes:
+    - ./Caddy/Caddyfile:/etc/Caddyfile
