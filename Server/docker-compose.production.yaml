@@ -1,11 +1,5 @@
-#- Name: Jonathan Hirokazu Burns
-#- ID: 2288851
-#- email: jburns@chapman.edu
-#- Course: 353-01
-#- Assignment: Submission #2
-#- Purpose: Builds, defines and starts the backend
+version: '3.5'
 
-version: '3.7'
 services:
   api:
     image: jhburns/ec-receiver-cache
@@ -25,7 +19,15 @@ services:
     ports:
     - "2015:2015"
     healthcheck:
-      test: wget --quiet --tries=1 -O /dev/null http://localhost:2015/ || exit 1
+      test: wget --quiet --tries=1 -O /dev/null http://localhost:2015/ || exit 1ff
       interval: 1m30s
       timeout: 10s
       retries: 3
+
+  rp:
+    command: ["--conf", "/etc/Caddyfile", "--log", "stdout", "--agree"]
+    ports:
+    - "80:80"
+    - "443:443"
+    volumes:
+    - ./Caddy/Caddyfile.production:/etc/Caddyfile

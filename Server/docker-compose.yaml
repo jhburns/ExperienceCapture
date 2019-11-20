@@ -2,10 +2,10 @@
 #- ID: 2288851
 #- email: jburns@chapman.edu
 #- Course: 353-01
-#- Assignment: Submission #2
+#- Assignment: Submission #2/3
 #- Purpose: Builds, defines and starts the backend
 
-version: '3.7'
+version: '3.5'
 services:
   api:
     build: 
@@ -39,6 +39,15 @@ services:
        interval: 1m30s
        timeout: 10s
        retries: 3
+  
+  rp:
+    image: abiosoft/caddy:1.0.3
+    command: ["--conf", "/etc/Caddyfile"]
+    ports:
+    - "8090:2015"
+    depends_on:
+    - api
+    - web
 
   exporter:
     build: 

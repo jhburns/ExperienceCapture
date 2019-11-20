@@ -4,7 +4,7 @@
 - ID: 2288851
 - email: jburns@chapman.edu
 - Course: 353-01
-- Assignment: Submission #2
+- Assignment: Submission #3
 
 ## Files
 
@@ -12,13 +12,18 @@ Due to this project being started before if being
 apart of the Networking class (there are a huge number of files), only relevant files
 to this submission's (#2) goal's are included:
 
-- /Server/Receiver/LibraryScripts/Network.cs
-- /Server/Receiver/Sessions.cs
-- /Server/Receiver/Bootstrapper.cs
-- /Server/Receiver/Dockerfile
+- /Server/API/LibraryScripts/Network.cs
+- /Server/API/Sessions.cs
+- /Server/API/Bootstrapper.cs
+- /Server/API/Dockerfile
 - /Server/docker-compose.yaml
 
-(I counted, there are 3811 files in the repo rn)
+New relevant files for submission #3:
+
+- /Server/Exporter/Exporter.cs
+- /Server/Exporter/Dockerfile
+
+(I counted, there were 3811 files in the repo)
 
 ## References
 
@@ -28,7 +33,6 @@ to this submission's (#2) goal's are included:
 - https://github.com/NancyFx/Nancy/wiki/Documentation
 - https://docs.mongodb.com/
 - https://docs.docker.com/compose/ 
-- Karolina Michalewska & Brenda Escoto 
 - https://docs.docker.com/compose/
 - https://docs.docker.com/
 - https://stackoverflow.com/questions/14473510/how-to-make-an-image-handler-in-nancyfx/28623873
@@ -42,7 +46,8 @@ to this submission's (#2) goal's are included:
 
 ## Compile or Runtime Errors 
 - "Timeout error": Client can sometimes not connect to the server when it was recently started. Wait and reconnect.
-- Various HTTP errors can occur if the client/server drops a message. 
+- Various HTTP errors can occur if the client or server drops a message. 
+- Normal http errors can occur if trying to improperly access the api, for example 404. These are on purpose.
 
 ## Running
 
@@ -53,9 +58,9 @@ Download relevant standalone to avoid setting up client:
 - Mac: https://drive.google.com/open?id=18k-mjayT6e6ZwdGbQUfNxrg6MIhB1AVK
 
 Then extract, and double-click the exe on Windows. Install game on Mac. Use
-windowed mode for convenience o startup. 
+windowed mode for convenience on startup. 
 
-See root README for manual setup (requires Unity). 
+See root https://github.com/jhburns/ExperienceCapture#experience-capture for manual setup (requires Unity). 
 
 ### Server
 
