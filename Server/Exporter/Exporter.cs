@@ -146,11 +146,10 @@ namespace Export.App.Main
             }
         }
 
-
         /*
          * SortSession
          * Params:
-         * - id: session's unique identifier 
+         * - id: session's unique identifier
          */
         private static async void SortSession(string id)
         {
@@ -177,7 +176,7 @@ namespace Export.App.Main
         /*
          * CheckSession
          * Params:
-         * - sessionId: session's unique identifier 
+         * - sessionId: session's unique identifier
          * Returns: whether the session can be exported or not
          */
         private static bool CheckSession(string sessionId)
@@ -200,12 +199,11 @@ namespace Export.App.Main
             return true;
         }
 
-
         /*
          * OutputToFile
          * Params:
          * - content: data to be written
-         * - id: session's unique identifier 
+         * - id: session's unique identifier
          */
         private static void OutputToFile(string content, string id)
         {
