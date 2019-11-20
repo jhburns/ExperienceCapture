@@ -18,3 +18,21 @@
 - Docker-compose health-checks.
 - Minor documentation refactoring.
 - Added linting to Receiver.
+
+## Subission #3 Planned Features
+- Added Mongo Driver to Exporter.
+- Exporter connects to database on startup.
+- Docker-compose waits for database to be available before starting Exporter.
+- Exporter prompts user for command, and loops through dialog until quit.
+- Exporter sorts session data of user supplied session ids.
+- Exporter outputs proccessed session data to file.
+- Exporter checks if session exists and is closed before exporting.
+- Exporter parses user input when getting session ids from user.
+
+### Additional Unplanned Features
+- React app setup to be used as the fronted.
+- Caddy reverse-proxy used to connect to the various backend services.
+- Docker-compose files seperated based on production and local development.
+- Added linting/CI with GitHub Actions to Exporter.
+- WebUI production deploy version also added, using Caddy too.
+- Linting support added to WebUI, along with CI.

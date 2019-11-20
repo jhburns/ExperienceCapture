@@ -10,9 +10,11 @@ Then run `docker-compose build`, and thats it.
 
 To run each of the following parts:
 
-- Receiver: `docker-compose up web` starts the server, and `Ctrl-C` stops it.
-- Database: should be started alongside Receiver, but `docker-compose down` also stops it.
-- Exporter: `docker-compose run exporter` which starts it interactively on the command line. 
+- API: `docker-compose up api` starts the api server, and `Ctrl-C` stops it.
+- Database: should be started alongside api, but `docker-compose down` also stops it.
+- Exporter: `docker-compose run exporter` which starts it interactively on the command line.
+- WebUI: `docker-compose up web` starts the frontend in development mode, meaning with hot reload.
+- Reverse-Proxy (Caddy): `docker-compose up rp` with start the reverse proxy, and almost all of the rest of the stack.
 
 #### Legacy 
 - ExampleAnalyzer: `docker-compose run -e filename="[CHANGE THIS]" analyzer` with the file you want to analyze.
