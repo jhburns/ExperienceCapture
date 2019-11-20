@@ -48,8 +48,6 @@ services:
     depends_on:
     - api
     - web
-    volumes:
-    - ./Caddy/Caddyfile:/etc/Caddyfile
 
   exporter:
     build: 

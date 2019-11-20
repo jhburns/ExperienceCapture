@@ -19,13 +19,13 @@ services:
     ports:
     - "2015:2015"
     healthcheck:
-      test: wget --quiet --tries=1 -O /dev/null http://localhost:2015/ || exit 1
+      test: wget --quiet --tries=1 -O /dev/null http://localhost:2015/ || exit 1ff
       interval: 1m30s
       timeout: 10s
       retries: 3
 
-  caddy:
-    image: abiosoft/caddy:1.0.3
+  rp:
+    command: ["--conf", "/etc/Caddyfile", "--log", "stdout", "--agree"]
     ports:
     - "80:80"
     - "443:443"
