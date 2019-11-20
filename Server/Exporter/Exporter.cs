@@ -1,3 +1,10 @@
+// Name: Jonathan Hirokazu Burns
+// ID: 2288851
+// email: jburns@chapman.edu
+// Course: 353-01
+// Assignment: Submission #3
+// Purpose: Enables the user to export session data
+
 namespace Export.App.Main
 {
     using System;
@@ -8,10 +15,19 @@ namespace Export.App.Main
     using MongoDB.Bson;
     using MongoDB.Driver;
 
+    /*
+     * Export
+     * Static class for getting/processing data
+     */
     public class Export
     {
         private static IMongoDatabase db;
 
+        /*
+         * Main
+         * Params:
+         * - args: command like values
+         */
         public static void Main(string[] args)
         {
             MongoClient client = new MongoClient(@"mongodb://db:27017");
@@ -24,6 +40,10 @@ namespace Export.App.Main
             }
         }
 
+        /*
+         * PromptOptions
+         * Returns: value chosen by user
+         */
         private static int PromptOptions()
         {
             Console.WriteLine("--------------------------------------------------------");
@@ -48,6 +68,11 @@ namespace Export.App.Main
             return commandValue;
         }
 
+        /*
+         * MatchCommand
+         * Params:
+         * - commandValue: value chosen by user
+         */
         private static void MatchCommand(int commandValue)
         {
             Console.WriteLine(string.Empty);
@@ -71,6 +96,9 @@ namespace Export.App.Main
             }
         }
 
+        /*
+         * PrintAllSessions
+         */
         private static void PrintAllSessions()
         {
             var sessionCollection = db.GetCollection<BsonDocument>("sessions");
@@ -87,6 +115,9 @@ namespace Export.App.Main
             }
         }
 
+        /*
+         * ExportSessions
+         */
         private static void ExportSessions()
         {
             Console.WriteLine("Enter Session IDs, separated by a comma:");
@@ -115,6 +146,12 @@ namespace Export.App.Main
             }
         }
 
+
+        /*
+         * SortSession
+         * Params:
+         * - id: session's unique identifier 
+         */
         private static async void SortSession(string id)
         {
             var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{id}");
@@ -137,6 +174,12 @@ namespace Export.App.Main
             OutputToFile(docsTotal, id);
         }
 
+        /*
+         * CheckSession
+         * Params:
+         * - sessionId: session's unique identifier 
+         * Returns: whether the session can be exported or not
+         */
         private static bool CheckSession(string sessionId)
         {
             var sessions = db.GetCollection<BsonDocument>("sessions");
@@ -157,6 +200,13 @@ namespace Export.App.Main
             return true;
         }
 
+
+        /*
+         * OutputToFile
+         * Params:
+         * - content: data to be written
+         * - id: session's unique identifier 
+         */
         private static void OutputToFile(string content, string id)
         {
             string seperator = Path.DirectorySeparatorChar.ToString();
