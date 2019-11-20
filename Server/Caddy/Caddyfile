@@ -10,4 +10,6 @@ proxy /api/v1 192.168.99.100:4321 {
 	without /api/v1
 }
 
-proxy / 192.168.99.100:3003
+proxy / 192.168.99.100:3003 {
+	websocket
+}
