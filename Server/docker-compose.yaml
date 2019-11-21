@@ -6,6 +6,7 @@
 #- Purpose: Builds, defines and starts the backend
 
 version: '3.5'
+
 services:
   api:
     build: 
@@ -48,6 +49,8 @@ services:
     depends_on:
     - api
     - web
+    networks:
+      - ec-network
 
   exporter:
     build: 
