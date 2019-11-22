@@ -8,7 +8,8 @@ services:
       - ec-deploy-network
     volumes:
       - ./build.json:/build.json
-
+    env_file:
+      - .env
 
 
 networks:
