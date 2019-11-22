@@ -1,4 +1,4 @@
-name: Receiver Integration
+name: API Integration
 
 on:
   pull_request:
