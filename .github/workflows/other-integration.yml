@@ -11,6 +11,8 @@ on:
     - '.github/workflows/exporter-integration.yml'
     - 'Server/WebUI/**'
     - '.github/workflows/webpage-integration.yml'
+    - 'Deploy/Packer/**'
+    - '.github/workflows/packer-integration.yml'
 
 
 jobs:

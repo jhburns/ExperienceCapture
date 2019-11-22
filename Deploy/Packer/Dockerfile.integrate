@@ -1,0 +1,4 @@
+FROM hashicorp/packer:1.4.5
+
+COPY build.json .
+RUN packer validate build.json
