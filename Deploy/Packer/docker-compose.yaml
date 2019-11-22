@@ -10,7 +10,7 @@ services:
       - ./build.json:/build.json
     env_file:
       - .env
-
+      - info.env
 
 networks:
   ec-deploy-network:
