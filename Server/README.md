@@ -16,11 +16,8 @@ To run each of the following parts:
 - WebUI: `docker-compose up web` starts the frontend in development mode, meaning with hot reload.
 - Reverse-Proxy (Caddy): `docker-compose up rp` with start the reverse proxy, and almost all of the rest of the stack.
 
-#### Legacy 
-- ExampleAnalyzer: `docker-compose run -e filename="[CHANGE THIS]" analyzer` with the file you want to analyze.
 
 ##### Data
 
-The *data/* folder hold all output from each service. The base of the folder holds raw output, while
-the *processed/* folder is where Processor outputs. Keep in mind that data after being processed
-have a filename like *processed.GHTY78QW.json*. 
+The *data/exported* folder hold all output from the Exporter. Each file has the name *{session id}.sorted.json*
+and is a sort JSON array.
