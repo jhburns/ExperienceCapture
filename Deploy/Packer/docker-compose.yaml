@@ -3,7 +3,7 @@ version: '3.5'
 services:
   packer:
     image: hashicorp/packer:1.4.5
-    command: ["build", "-debug", "build.json"]
+    command: ["build", "build.json"]
     networks:
       - ec-deploy-network
     volumes:
