@@ -1,11 +1,13 @@
 {
   "variables": {
     "aws_access_key": "{{env `aws_access_key_id`}}",
-    "aws_secret_key": "{{env `aws_secret_access_key`}}"
+    "aws_secret_key": "{{env `aws_secret_access_key`}}",
+	"aws_region": "{{env `aws_region_name`}}",
+	"aws_prefix": "{{env `aws_ami_name_prefix`}}"
   },
   "builders": [{
-    "profile": "packman",
-    "region": "us-west-1",
+    "profile": "Packman",
+    "region": "{{user `aws_region`}}",
     "type": "amazon-ebs",
 	"access_key": "{{user `aws_access_key`}}",
     "secret_key": "{{user `aws_secret_key`}}",
@@ -18,8 +20,8 @@
       "owners": ["099720109477"],
       "most_recent": true
     },
-    "instance_type": "t2.micro",
+    "instance_type": "t2.small",
     "ssh_username": "ubuntu",
-    "ami_name": "packer-example {{timestamp}}"
+    "ami_name": "{{user `aws_prefix`}}-{{isotime \"2006.01.02-15..04..05\"}}"
   }]
 }
