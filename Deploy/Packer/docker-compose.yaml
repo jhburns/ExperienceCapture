@@ -2,15 +2,15 @@ version: '3.5'
 
 services:
   packer:
-    image: hashicorp/packer:1.4.5
-    command: ["build", "build.json"]
+    build:
+      context: .
     networks:
       - ec-deploy-network
-    volumes:
-      - ./build.json:/build.json
     env_file:
       - .env
       - info.env
+    environment:
+      - ANSIBLE_PYTHON_INTERPRETER=/usr/bin/python3
 
 networks:
   ec-deploy-network:

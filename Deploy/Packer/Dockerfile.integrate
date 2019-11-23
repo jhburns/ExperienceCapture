@@ -1,4 +1,10 @@
-FROM hashicorp/packer:1.4.5
+FROM hashicorp/packer:1.4.5 as builder
+
+RUN apk update && apk add --no-cache ansible=2.7.14-r0 && rm -rf /tmp/* && rm -rf /var/cache/apk/*
 
 COPY build.json .
+COPY playbook.yaml .
+
+CMD ["build", "build.json"]
+
 RUN packer validate build.json
