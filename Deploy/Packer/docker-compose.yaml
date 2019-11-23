@@ -9,8 +9,6 @@ services:
     env_file:
       - .env
       - info.env
-    environment:
-      - ANSIBLE_PYTHON_INTERPRETER=/usr/bin/python3
 
 networks:
   ec-deploy-network:

@@ -11,4 +11,4 @@
     become: true
   - name: Change hostname to ansible host
     hostname:
-      name: "bob"
+      name: "test"
