@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: yes
+  gather_facts: no
+  tasks:
+  - name: symlink /usr/bin/python -> /usr/bin/python3
+    raw: |
+      if [ -f /usr/bin/python3 ] && [ ! -f /usr/bin/python ]; then
+        ln --symbolic /usr/bin/python3 /usr/bin/python; 
+      fi
+    become: true
+  - name: Change hostname to ansible host
+    hostname:
+      name: "test"

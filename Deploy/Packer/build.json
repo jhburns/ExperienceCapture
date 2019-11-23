@@ -23,5 +23,10 @@
     "instance_type": "t2.small",
     "ssh_username": "ubuntu",
     "ami_name": "{{user `aws_prefix`}}-{{isotime \"2006.01.02-15..04..05\"}}"
-  }]
+  }],
+  "provisioners": [{
+    "type": "ansible",
+	"user": "ubuntu",
+    "playbook_file": "./playbook.yaml"
+   }]
 }
