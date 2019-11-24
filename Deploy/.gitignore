@@ -1,1 +1,6 @@
 .env
+
+# So keys aren't leaked
+.secrets/*
+.secrets/**
+!.secrets/.gitinclude

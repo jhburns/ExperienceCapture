@@ -1,0 +1,27 @@
+version: '3.5'
+
+services:
+  packer:
+    build:
+      context: ./Packer
+    volumes:
+    - ./.secrets/id_rsa.pub:/deploy/id_rsa.pub
+    - ../Server:/deploy/Server
+    networks:
+      - ec-deploy-network
+    env_file:
+      - .env
+      - info.env
+
+  key_setup:
+    build:
+      context: ./KeySetup
+    volumes:
+      - ./.secrets/:/keys/
+    networks:
+      - ec-key-network
+
+
+networks:
+  ec-deploy-network:
+  ec-key-network:
