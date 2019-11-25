@@ -46,6 +46,16 @@
     pip:
       name: docker==4.1.0
 
+  - name: Downloads docker-compose
+    shell: curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    args:
+      warn: no
+
+  - name: Change file ownership, group and permissions
+    file:
+      path: /usr/local/bin/docker-compose
+      mode: u=rwx,g=rx,o=rx
+
   - name: Add the user 'ec-debug' as part of the 'docker' group
     user:
       name: ec-debug
@@ -73,6 +83,17 @@
         - docker
         - swarm
         - init
+
+  - name: Rebuilds Docker images for production
+    command:
+      argv:
+        - docker-compose
+        - -f
+        - docker-compose.yaml
+        - -f
+        - docker-compose.production.yaml
+        - build
+      chdir: /srv/
 
   - name: Creates Docker Swarm services
     command:
