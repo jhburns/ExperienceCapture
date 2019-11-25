@@ -1,6 +1,6 @@
-[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/API%20Integration)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Caddy+Integration%22)
+[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/API%20Integration/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22API+Integration%22)
 
-# Receiver
+# API
 
 Written in .Net Core (C#) and the following packages:
 - [Nancyfx](http://nancyfx.org/)
