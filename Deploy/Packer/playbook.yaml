@@ -9,7 +9,6 @@
          if [ -f /usr/bin/python3 ] && [ ! -f /usr/bin/python ]; then
            ln --symbolic /usr/bin/python3 /usr/bin/python;
          fi
-    become: true
 
   - name: Add 'fish' repository
     apt_repository:
