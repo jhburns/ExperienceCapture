@@ -1,6 +1,14 @@
 version: '3.5'
 
 services:
+  ssh_setup:
+    build:
+      context: ./SshSetup
+    volumes:
+      - ./.secrets/:/keys/
+    networks:
+      - ec-setup-network
+
   packer:
     build:
       context: ./Packer
@@ -13,15 +21,18 @@ services:
       - .env
       - info.env
 
-  key_setup:
+  ssh_connect:
     build:
-      context: ./KeySetup
+      context: ./SshConnect
     volumes:
-      - ./.secrets/:/keys/
+    - ./.secrets/id_rsa:/keys/id_rsa
     networks:
-      - ec-key-network
-
+    - ec-connect-network
+    env_file:
+      - info.env
+  
 
 networks:
   ec-deploy-network:
-  ec-key-network:
+  ec-setup-network:
+  ec-connect-network:

@@ -9,6 +9,25 @@
            ln --symbolic /usr/bin/python3 /usr/bin/python;
          fi
     become: true
-  - name: Change hostname to ansible host
-    hostname:
-      name: "test"
+
+  - name: Add 'fish' repository
+    apt_repository:
+      repo: ppa:fish-shell/release-3
+
+  - name: Install the package 'fish'
+    apt:
+      name: fish=3.0.2-1~bionic
+
+  - name: Add the user 'ec-debug' as part of the 'docker' group
+    user:
+      name: ec-debug
+      comment: Default user for debugging in production.
+      #group: docker
+      shell: /usr/bin/fish
+      password_lock: yes
+
+  - name: Set authorized key
+    authorized_key:
+      user: ec-debug
+      state: present
+      key: "{{ lookup('file', './id_rsa.pub') }}"
