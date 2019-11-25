@@ -1,0 +1,6 @@
+FROM abiosoft/caddy:1.0.3
+
+COPY Caddyfile Caddyfile.production ./
+
+RUN caddy -validate -conf Caddyfile
+RUN caddy -validate -conf Caddyfile.production
