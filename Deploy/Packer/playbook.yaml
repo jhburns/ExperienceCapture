@@ -3,12 +3,16 @@
   become: yes
   gather_facts: no
   tasks:
+  # Needed because the Ubuntu AMI does not come with python2
   - name: symlink /usr/bin/python -> /usr/bin/python3
     raw: |
          if [ -f /usr/bin/python3 ] && [ ! -f /usr/bin/python ]; then
            ln --symbolic /usr/bin/python3 /usr/bin/python;
          fi
-    become: true
+
+  - name: Add 'fish' repository
+    apt_repository:
+      repo: ppa:fish-shell/release-3
 
   - name: Install required system packages for Docker
     apt:
@@ -22,6 +26,8 @@
        - 'python3-pip=9.0.1-2.3~ubuntu1.18.04.1'
        - 'virtualenv=15.1.0+ds-1.1'
        - 'python3-setuptools=39.0.1-2'
+       - 'rsync=3.1.2-2.1ubuntu1'
+       - 'fish=3.0.2-1~bionic'
 
   - name: Add Docker GPG apt Key
     apt_key:
@@ -40,14 +46,6 @@
     pip:
       name: docker==4.1.0
 
-  - name: Add 'fish' repository
-    apt_repository:
-      repo: ppa:fish-shell/release-3
-
-  - name: Install the package 'fish'
-    apt:
-      name: fish=3.0.2-1~bionic
-
   - name: Add the user 'ec-debug' as part of the 'docker' group
     user:
       name: ec-debug
@@ -56,8 +54,35 @@
       shell: /usr/bin/fish
       password_lock: yes
 
+  - name: Copy Server files over
+    synchronize:
+      src: /deploy/Server/
+      dest: /srv
+      rsync_opts:
+        - "--chmod=F444"
+
   - name: Set authorized key
     authorized_key:
       user: ec-debug
       state: present
       key: "{{ lookup('file', './id_rsa.pub') }}"
+
+  - name: Starts Docker Swarm
+    command:
+      argv:
+        - docker
+        - swarm
+        - init
+
+  - name: Creates Docker Swarm services
+    command:
+      argv:
+        - docker
+        - stack
+        - deploy
+        - -c
+        - docker-compose.yaml
+        - -c
+        - docker-compose.production.yaml
+        - ec
+      chdir: /srv/
