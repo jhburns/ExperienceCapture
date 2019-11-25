@@ -12,7 +12,7 @@ services:
   web:
     build:
       context: ./WebUI
-      dockerfile: Dockerfile.production
+      dockerfile: Dockerfile.integrate
     command: "caddy"
     image: jhburns/ec-webpage-cache
     restart: always

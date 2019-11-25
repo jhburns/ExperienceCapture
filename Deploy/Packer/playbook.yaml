@@ -9,15 +9,19 @@
          if [ -f /usr/bin/python3 ] && [ ! -f /usr/bin/python ]; then
            ln --symbolic /usr/bin/python3 /usr/bin/python;
          fi
+    become: true
 
   - name: Add 'fish' repository
     apt_repository:
       repo: ppa:fish-shell/release-3
 
+  - name: Update cache before installing packages
+    apt:
+      update_cache: yes
+
   - name: Install required system packages for Docker
     apt:
       name: "{{ item }}"
-      update_cache: yes
     loop:
        - 'apt-transport-https=1.6.6ubuntu0.1'
        - 'ca-certificates=20180409'
