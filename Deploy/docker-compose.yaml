@@ -46,7 +46,7 @@ services:
   pulumi_destroy:
     build:
       context: ./Pulumi
-    command: ["pulumi", "destroy"]
+    command: ["sh", "-c", "pulumi login && pulumi destroy"]
     volumes:
     - ./credentials:/app/.aws/credentials
     networks:

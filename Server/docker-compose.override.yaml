@@ -20,7 +20,7 @@ services:
   exporter:
     build: 
       context: ./Exporter
-    command: sh -c "/wait && dotnet Exporter.dll"
+    command: ["sh", "-c", "/wait && dotnet Exporter.dll"]
     depends_on:
       - db
     volumes:
