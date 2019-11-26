@@ -1,3 +1,5 @@
+[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/WebUI%20Integration)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22WebUI+Integration%22)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
