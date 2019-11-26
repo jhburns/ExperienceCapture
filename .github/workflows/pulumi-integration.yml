@@ -1,0 +1,24 @@
+name: Pulumi Integration
+
+on:
+  pull_request:
+    branches:    
+      - master
+    paths:
+    - 'Deploy/Pulumi/**'
+    - '.github/workflows/pulumi-integration.yml'
+
+jobs:
+  build:
+    name: Check Build
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: Run Docker
+        uses: whoan/docker-build-with-cache-action@v1
+        with:
+          username: "${{ secrets.DOCKER_USERNAME }}"
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+          image_name: jhburns/ec-pulumi-cache
+          context: ./Deploy/Pulumi
+          dockerfile: Dockerfile.integrate

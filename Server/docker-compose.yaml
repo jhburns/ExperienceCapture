@@ -11,7 +11,7 @@ services:
   api:
     build: 
       context: ./API
-    command: sh -c "/wait && dotnet API.dll"
+    command: ["sh", "-c", "/wait && dotnet API.dll"]
     ports:
     - "4321:80"
     depends_on:

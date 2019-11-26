@@ -1,4 +1,3 @@
-
 # Download Pulumi and extract from zip
 FROM alpine:3.9.4 as pulumi-download
 
@@ -20,4 +19,4 @@ RUN dotnet restore
 # Copy everything else
 COPY . ./
 
-CMD ["sh", "-c", "pulumi login && pulumi up"]
+RUN dotnet build -nologo . -p:GHA_BUILD=True
