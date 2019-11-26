@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 using Pulumi;
 using Pulumi.Aws.S3;
 
-class Program
+internal class Program
 {
-    static Task<int> Main()
+    private static Task<int> Main()
     {
-        return Deployment.RunAsync(() => {
-
+        return Deployment.RunAsync(() =>
+        {
             // Create an AWS resource (S3 Bucket)
             var bucket = new Bucket("my-bucket");
 
