@@ -13,6 +13,8 @@ on:
     - '.github/workflows/webpage-integration.yml'
     - 'Deploy/Packer/**'
     - '.github/workflows/packer-integration.yml'
+    - 'Server/Caddy/**'
+    - '.github/workflows/caddy-integration.yml'
 
 
 jobs:
@@ -20,6 +22,6 @@ jobs:
     name: Check Build
     runs-on: ubuntu-18.04
     steps:
-      - name: Notify
-        run: echo "Hello, this only so CI can pass for the rest of paths"
+      - name: Explain Purpose
+        run: echo "Hello, this is only so CI can pass for paths without integration checks."
 
