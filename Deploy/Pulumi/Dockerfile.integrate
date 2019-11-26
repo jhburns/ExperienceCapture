@@ -19,4 +19,4 @@ RUN dotnet restore
 # Copy everything else
 COPY . ./
 
-RUN dotnet build -nologo . -p:GHA_BUILD=True
+RUN dotnet build -nologo . -p:GHA_BUILD=True 
