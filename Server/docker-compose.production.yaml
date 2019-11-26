@@ -5,10 +5,6 @@ services:
     image: jhburns/ec-receiver-cache
     restart: always
 
-  exporter:
-    image: jhburns/ec-exporter-cache
-    restart: always
-
   web:
     build:
       context: ./WebUI
@@ -26,10 +22,15 @@ services:
 
   rp:
     command: ["--conf", "/etc/Caddyfile", "--log", "stdout", "--agree"]
+    restart: always
     ports:
     - "80:80"
     - "443:443"
     volumes:
     - ./Caddy/Caddyfile.production:/etc/Caddyfile
+    - ec-rp-volume:/etc/caddycerts
     env_file:
     - host.info.env
+
+volumes:
+  ec-rp-volume:

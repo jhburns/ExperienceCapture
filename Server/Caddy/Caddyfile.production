@@ -1,6 +1,6 @@
 # TODO: double check ssl
 
-https://example.com {
+https://{$aws_domain_name} {
 
 }
 
