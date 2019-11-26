@@ -3,7 +3,8 @@ version: '3.5'
 services:
   ssh_setup:
     build:
-      context: ./SshSetup
+      context: ./SshClient
+    command: ["ssh-keygen", "-b", "2048", "-q", "-t", "rsa", "-N", "", "-f", "./id_rsa"]
     volumes:
       - ./.secrets/:/keys/
     networks:
@@ -23,16 +24,39 @@ services:
 
   ssh_connect:
     build:
-      context: ./SshConnect
+      context: ./SshClient
+    command: ["sh", "-c", "ssh -o StrictHostKeyChecking=no -i id_rsa -l ec-debug $$aws_host_location"]
     volumes:
     - ./.secrets/id_rsa:/keys/id_rsa
     networks:
     - ec-connect-network
     env_file:
       - info.env
-  
+
+  pulumi_up:
+    build:
+      context: ./Pulumi
+    volumes:
+    - ./credentials:/app/.aws/credentials
+    networks:
+    - ec-pulumi-network
+    env_file:
+      - .env
+
+  pulumi_destroy:
+    build:
+      context: ./Pulumi
+    command: ["pulumi", "destroy"]
+    volumes:
+    - ./credentials:/app/.aws/credentials
+    networks:
+    - ec-pulumi-network
+    env_file:
+      - .env
+
 
 networks:
   ec-deploy-network:
   ec-setup-network:
   ec-connect-network:
+  ec-pulumi-network:
