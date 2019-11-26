@@ -1,4 +1,4 @@
-[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/API%20Integration/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Receiver+Integration%22)
+[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Caddy%20Integration/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Caddy+Integration%22)
 
 # Caddy
 
