@@ -1,4 +1,5 @@
 .env
+info.env
 credentials
 
 # So keys aren't leaked
