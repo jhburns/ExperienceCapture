@@ -71,14 +71,14 @@
   - name: Opens up tcp ports needed by server and cluster to function
     command:
       argv:
-        - ufw 
+        - ufw
         - allow
         - 80,443,2377,7946/tcp
 
   - name: Opens up udp ports needed by server and cluster to function
     command:
       argv:
-        - ufw 
+        - ufw
         - allow
         - 7946,4789/udp
 

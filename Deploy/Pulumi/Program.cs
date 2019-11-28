@@ -97,7 +97,7 @@ echo ""Hello, World!"" > index.html
                 AssociatePublicIpAddress = false,
             });
 
-            var elasticIP = new EipAssociation("experience-capture-ip",new EipAssociationArgs
+            var elasticIP = new EipAssociation("experience-capture-ip", new EipAssociationArgs
             {
                 AllocationId = ipId,
                 InstanceId = server.Id,
@@ -105,7 +105,7 @@ echo ""Hello, World!"" > index.html
 
             return new Dictionary<string, object>
             {
-                { "publicDns",  server.PublicDns }
+                { "publicDns", server.PublicDns }
             };
         });
     }
