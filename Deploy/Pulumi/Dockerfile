@@ -12,7 +12,7 @@ WORKDIR /app
 
 # TODO: make this step more efficient, by only copying over needed files
 COPY --from=pulumi-download /download/pulumi /usr/local/bin
-RUN pulumi plugin install resource aws v1.8.0 --exact
+RUN pulumi plugin install resource aws v1.11.0 --exact
 
 # Copy csproj and restore as distinct layers
 COPY *.csproj ./
