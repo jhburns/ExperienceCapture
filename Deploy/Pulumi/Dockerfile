@@ -12,7 +12,7 @@ WORKDIR /app
 
 # TODO: make this step more efficient, by only copying over needed files
 COPY --from=pulumi-download /download/pulumi /usr/local/bin
-RUN pulumi plugin install resource aws v1.11.0 --exact
+RUN pulumi plugin install resource aws v1.10.0 --exact
 
 # Copy csproj and restore as distinct layers
 COPY *.csproj ./
@@ -20,5 +20,8 @@ RUN dotnet restore
 
 # Copy everything else
 COPY . ./
+
+# Pre-building so it doesn't happen everytime at runtime
+RUN dotnet build -nologo .
 
 CMD ["sh", "-c", "pulumi login && pulumi up"]
