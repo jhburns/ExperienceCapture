@@ -49,7 +49,7 @@ services:
       context: ./Pulumi
     command: ["sh", "-c", "pulumi login && pulumi destroy"]
     volumes:
-    - ./credentials:/app/.aws/credentials
+    - ./credentials:/root/.aws/credentials
     networks:
     - ec-pulumi-network
     env_file:

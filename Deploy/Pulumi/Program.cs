@@ -15,7 +15,7 @@ using Pulumi.Aws.Inputs;
 internal class Program
 {
     // Not using the free tier
-    private const string Ec2Size = "t3.medium";
+    private const string Ec2Size = "t2.medium";
 
     private static Task<int> Main()
     {
@@ -53,19 +53,27 @@ internal class Program
                     ToPort = 80,
                     CidrBlocks = { "0.0.0.0/0" },
                 },
+                new SecurityGroupIngressArgs
+                {
+                    Protocol = "tcp",
+                    FromPort = 22,
+                    ToPort = 22,
+                    CidrBlocks = { "0.0.0.0/0" },
+                },
+                new SecurityGroupIngressArgs
+                {
+                    Protocol = "tcp",
+                    FromPort = 443,
+                    ToPort = 443,
+                    CidrBlocks = { "0.0.0.0/0" },
+                },
             },
             });
 
-            var userData = @"
-#!/bin/bash
-echo ""Hello, World!"" > index.html
-";
-
-            var server = new Instance("web-server-www", new InstanceArgs
+            var server = new Instance("experience-capture-cloud", new InstanceArgs
             {
                 InstanceType = Ec2Size,
                 SecurityGroups = { group.Name },
-                UserData = userData,
                 Ami = ami.Id,
             });
 
