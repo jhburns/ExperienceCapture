@@ -27,6 +27,9 @@ internal class Program
             string amiName = Environment.GetEnvironmentVariable("aws_deploy_ami_name")
                 ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ami_name");
 
+            string ipId = Environment.GetEnvironmentVariable("aws_deploy_ip_allocation_id")
+                ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ip_allocation_id");
+
             var ami = await Pulumi.Aws.Invokes.GetAmi(new GetAmiArgs
             {
                 MostRecent = true,
@@ -41,7 +44,7 @@ internal class Program
                 },
             });
 
-            var group = new SecurityGroup("web-secgrp", new SecurityGroupArgs
+            var group = new SecurityGroup("experience-capture-security-group", new SecurityGroupArgs
             {
                 Description = "Enable HTTP access",
                 Ingress =
@@ -68,6 +71,16 @@ internal class Program
                     CidrBlocks = { "0.0.0.0/0" },
                 },
             },
+                Egress =
+            {
+                new SecurityGroupEgressArgs
+                {
+                    Protocol = "-1",
+                    FromPort = 0,
+                    ToPort = 0,
+                    CidrBlocks = { "0.0.0.0/0" },
+                },
+            },
             });
 
             var server = new Instance("experience-capture-cloud", new InstanceArgs
@@ -75,12 +88,18 @@ internal class Program
                 InstanceType = Ec2Size,
                 SecurityGroups = { group.Name },
                 Ami = ami.Id,
+                AssociatePublicIpAddress = false,
+            });
+
+            var elasticIP = new EipAssociation("experience-capture-ip", new EipAssociationArgs
+            {
+                AllocationId = ipId,
+                InstanceId = server.Id,
             });
 
             return new Dictionary<string, object>
             {
-                { "publicIp",  server.PublicIp },
-                { "publicDns",  server.PublicDns },
+                { "publicDns", server.PublicDns },
             };
         });
     }
