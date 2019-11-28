@@ -54,7 +54,6 @@ internal class Program
             var userData = @"
 #!/bin/bash
 echo ""Hello, World!"" > index.html
-nohup python -m SimpleHTTPServer 80 &
 ";
 
             var server = new Instance("web-server-www", new InstanceArgs
