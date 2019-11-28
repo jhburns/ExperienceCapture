@@ -37,7 +37,7 @@ services:
     build:
       context: ./Pulumi
     volumes:
-    - ./credentials:/app/.aws/credentials
+    - ./credentials:/root/.aws/credentials
     networks:
     - ec-pulumi-network
     env_file:

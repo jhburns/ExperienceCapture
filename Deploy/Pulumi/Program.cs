@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Deploy.App.CustomExceptions;
+
 using Pulumi;
 using Pulumi.Aws;
 using Pulumi.Aws.Ec2;
@@ -19,8 +21,11 @@ internal class Program
     {
         return Deployment.RunAsync(async () =>
         {
-            string awsId = Environment.GetEnvironmentVariable("aws_account_id") ?? "(not specified)";
-            string amiName = Environment.GetEnvironmentVariable("aws_deploy_ami_name") ?? "(not specified)";
+            string awsId = Environment.GetEnvironmentVariable("aws_account_id")
+                ?? throw new EnviromentVarNotSet("The following is unset", "aws_account_id");
+
+            string amiName = Environment.GetEnvironmentVariable("aws_deploy_ami_name")
+                ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ami_name");
 
             var ami = await Pulumi.Aws.Invokes.GetAmi(new GetAmiArgs
             {

@@ -10,7 +10,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.0.101-bionic
 WORKDIR /app
 
 COPY --from=pulumi-download /download/pulumi /usr/local/bin
-RUN pulumi plugin install resource aws v1.12.0 --exact
+RUN pulumi plugin install resource aws v1.10.0 --exact
 
 # Copy csproj and restore as distinct layers
 COPY *.csproj ./
