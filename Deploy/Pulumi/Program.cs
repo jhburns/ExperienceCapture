@@ -44,7 +44,7 @@ internal class Program
                 },
             });
 
-            var group = new SecurityGroup("web-secgrp", new SecurityGroupArgs
+            var group = new SecurityGroup("experience-capture-security-group", new SecurityGroupArgs
             {
                 Description = "Enable HTTP access",
                 Ingress =
@@ -105,8 +105,7 @@ echo ""Hello, World!"" > index.html
 
             return new Dictionary<string, object>
             {
-                { "publicElasticIp",  elasticIP.PublicIp },
-                { "publicDns",  server.PublicDns },
+                { "publicDns",  server.PublicDns }
             };
         });
     }
