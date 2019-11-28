@@ -83,16 +83,10 @@ internal class Program
             },
             });
 
-            var userData = @"
-#!/bin/bash
-echo ""Hello, World!"" > index.html
-";
-
             var server = new Instance("experience-capture-cloud", new InstanceArgs
             {
                 InstanceType = Ec2Size,
                 SecurityGroups = { group.Name },
-                UserData = userData,
                 Ami = ami.Id,
                 AssociatePublicIpAddress = false,
             });
@@ -105,7 +99,7 @@ echo ""Hello, World!"" > index.html
 
             return new Dictionary<string, object>
             {
-                { "publicDns", server.PublicDns }
+                { "publicDns", server.PublicDns },
             };
         });
     }
