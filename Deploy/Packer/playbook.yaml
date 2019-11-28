@@ -109,5 +109,5 @@
         - docker-compose.yaml
         - -c
         - docker-compose.production.yaml
-        - ec
+        - rp
       chdir: /srv/

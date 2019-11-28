@@ -68,6 +68,16 @@ internal class Program
                     CidrBlocks = { "0.0.0.0/0" },
                 },
             },
+                Egress =
+            {
+                new SecurityGroupEgressArgs
+                {
+                    Protocol = "-1",
+                    FromPort = 0,
+                    ToPort = 0,
+                    CidrBlocks = { "0.0.0.0/0" },
+                },
+            },
             });
 
             var server = new Instance("experience-capture-cloud", new InstanceArgs
