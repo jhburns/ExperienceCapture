@@ -68,6 +68,20 @@
       shell: /usr/bin/fish
       password_lock: yes
 
+  - name: Opens up tcp ports needed by server and cluster to function
+    command:
+      argv:
+        - ufw 
+        - allow
+        - 80,443,2377,7946/tcp
+
+  - name: Opens up udp ports needed by server and cluster to function
+    command:
+      argv:
+        - ufw 
+        - allow
+        - 7946,4789/udp
+
   - name: Copy Server files over
     synchronize:
       src: /deploy/Server/

@@ -31,6 +31,7 @@ Pulumi's role needs the following actions:
                 "ec2:DescribeVolumes",
                 "ec2:DescribeVpcs",
                 "ec2:DetachVolume",
+                "ec2:DisassociateAddress",
                 "ec2:RevokeSecurityGroupEgress",
                 "ec2:RevokeSecurityGroupIngress",
                 "ec2:RunInstances",

@@ -27,6 +27,9 @@ internal class Program
             string amiName = Environment.GetEnvironmentVariable("aws_deploy_ami_name")
                 ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ami_name");
 
+            string ipId = Environment.GetEnvironmentVariable("aws_deploy_ip_allocation_id")
+                ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ip_allocation_id");
+
             var ami = await Pulumi.Aws.Invokes.GetAmi(new GetAmiArgs
             {
                 MostRecent = true,
@@ -80,16 +83,29 @@ internal class Program
             },
             });
 
+            var userData = @"
+#!/bin/bash
+echo ""Hello, World!"" > index.html
+";
+
             var server = new Instance("experience-capture-cloud", new InstanceArgs
             {
                 InstanceType = Ec2Size,
                 SecurityGroups = { group.Name },
+                UserData = userData,
                 Ami = ami.Id,
+                AssociatePublicIpAddress = false,
+            });
+
+            var elasticIP = new EipAssociation("experience-capture-ip",new EipAssociationArgs
+            {
+                AllocationId = ipId,
+                InstanceId = server.Id,
             });
 
             return new Dictionary<string, object>
             {
-                { "publicIp",  server.PublicIp },
+                { "publicElasticIp",  elasticIP.PublicIp },
                 { "publicDns",  server.PublicDns },
             };
         });

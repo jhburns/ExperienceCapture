@@ -39,3 +39,8 @@ services:
 
 volumes:
   ec-rp-volume:
+
+networks:
+  ec-network:
+    driver: overlay
+    attachable: true
