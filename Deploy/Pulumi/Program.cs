@@ -35,8 +35,8 @@ internal class Program
                 {
                     new GetAmiFiltersArgs
                     {
-                        Name = amiName,
-                        Values = { "amzn-ami-hvm-*" },
+                        Name = "name",
+                        Values = { amiName },
                     },
                 },
             });
