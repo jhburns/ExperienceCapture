@@ -3,7 +3,7 @@
 FROM alpine:3.9.4 as pulumi-download
 
 WORKDIR /download
-RUN wget -O  pulumi.tar.gz https://get.pulumi.com/releases/sdk/pulumi-v1.6.1-linux-x64.tar.gz
+RUN wget -O  pulumi.tar.gz https://get.pulumi.com/releases/sdk/pulumi-v1.6.0-linux-x64.tar.gz
 RUN tar -zxvf pulumi.tar.gz
 
 # Copy over project files
@@ -12,7 +12,7 @@ WORKDIR /app
 
 # TODO: make this step more efficient, by only copying over needed files
 COPY --from=pulumi-download /download/pulumi /usr/local/bin
-RUN pulumi plugin install resource aws v1.11.0 --exact
+RUN pulumi plugin install resource aws v1.12.0 --exact
 
 # Copy csproj and restore as distinct layers
 COPY *.csproj ./
