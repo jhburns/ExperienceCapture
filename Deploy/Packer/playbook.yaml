@@ -113,6 +113,17 @@
         - build
       chdir: /srv/
 
+  - name: Prunes non-production Docker images so the AMI uses less space
+    command:
+      argv:
+        - docker
+        - system
+        - prune
+        - --all
+        - --force
+        - --filter
+        - "label!=xyz.expcap.isproduction"
+
   - name: Creates Docker Swarm services
     command:
       argv:
