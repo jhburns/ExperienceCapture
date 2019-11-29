@@ -2,6 +2,9 @@ version: '3.5'
 
 services:
   api:
+    build:
+      labels:
+        - "xyz.expcap.isproduction"
     image: jhburns/ec-receiver-cache
     restart: always
 
@@ -9,6 +12,8 @@ services:
     build:
       context: ./WebUI
       dockerfile: Dockerfile.integrate
+      labels:
+        - "xyz.expcap.isproduction"
     command: "caddy"
     image: jhburns/ec-webpage-cache
     restart: always
