@@ -91,7 +91,7 @@ internal class Program
                 AssociatePublicIpAddress = false,
             });
 
-            var elasticIP = new EipAssociation("experience-capture-ip", new EipAssociationArgs
+            var elasticIp = new EipAssociation("experience-capture-ip", new EipAssociationArgs
             {
                 AllocationId = ipId,
                 InstanceId = server.Id,
@@ -99,6 +99,7 @@ internal class Program
 
             return new Dictionary<string, object>
             {
+                { "publicIp", elasticIp.PublicIp  },
                 { "publicDns", server.PublicDns },
             };
         });
