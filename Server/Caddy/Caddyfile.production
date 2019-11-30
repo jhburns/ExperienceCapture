@@ -1,16 +1,10 @@
 # TODO: fix ACME SSL
 
-#https://{$aws_domain_name} {
-#
-#}
-
-0.0.0.0:80
+https://{$aws_domain_name}
 
 log stdout
 
 errors stdout
-
-tls off
 
 proxy /api/v1 api:80 {
 	without /api/v1
