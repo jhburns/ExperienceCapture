@@ -20,4 +20,4 @@ COPY Caddyfile .
 RUN caddy -validate -conf Caddyfile
 
 ENTRYPOINT []
-CMD [""]
+CMD ["caddy", "-conf", "Caddyfile"]

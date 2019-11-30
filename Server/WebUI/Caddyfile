@@ -6,4 +6,6 @@ errors stdout
 
 tls off
 
-rewrite .* /
+rewrite {
+	to {path} {path}/ /
+}
