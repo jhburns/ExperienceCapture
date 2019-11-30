@@ -5,7 +5,9 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json package-lock.json /app/
 RUN npm install --silent
 
-COPY . /app
+COPY public ./public
+COPY src ./src
+
 RUN npm run lint
 RUN npm run build
 
@@ -14,5 +16,7 @@ FROM abiosoft/caddy:1.0.3
 WORKDIR /app/build
 COPY --from=build /app/build /app/build
 
+COPY Caddyfile .
+
 ENTRYPOINT []
-CMD ["caddy"]
+CMD []

@@ -31,10 +31,10 @@ services:
   rp:
     #command: ["--conf", "/etc/Caddyfile"]
     command: ["--conf", "/etc/Caddyfile", "--log", "stdout", "--agree", "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
-    #deploy:
-    #  restart_policy:
-    #    condition: on-failure
-    #    max_attempts: 1
+    deploy:
+      restart_policy:
+        condition: on-failure
+        max_attempts: 1
     ports:
     - "80:80"
     - "443:443"
@@ -54,5 +54,5 @@ volumes:
 
 networks:
   ec-network:
-    #driver: overlay
-    #attachable: true
+    driver: overlay
+    attachable: true
