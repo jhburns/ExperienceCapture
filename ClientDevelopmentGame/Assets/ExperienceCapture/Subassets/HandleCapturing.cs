@@ -26,7 +26,6 @@ public class HandleCapturing : MonoBehaviour
 
     private bool sendToConsole;
     private string id;
-    private int openRequests;
     private bool isCapturing;
     private bool findEveryFrame;
 
@@ -38,6 +37,10 @@ public class HandleCapturing : MonoBehaviour
     private List<string> capturableNames;
 
     private object extraInfo;
+    private int openRequests;
+    private float averageResponceTime;
+    private int responceCount;
+
 
     void Awake()
     {
@@ -50,6 +53,8 @@ public class HandleCapturing : MonoBehaviour
         openRequests = 0;
         isCapturing = false;
         isFirst = true;
+        responceCount = 0;
+        averageResponceTime = 1;
     }
 
     void Update()
@@ -133,10 +138,16 @@ public class HandleCapturing : MonoBehaviour
             byte[] bson = Serial.toBSON(data);
 
             openRequests++;
+            float start = Time.realtimeSinceStartup;
+
             StartCoroutine(HTTPHelpers.post(url + sessionPath + id, bson, 
             (responceData) => 
             {
                 openRequests--;
+                responceCount++;
+
+                float responceTime = Time.realtimeSinceStartup - start;
+                averageResponceTime = (averageResponceTime * responceCount + responceTime) / (responceCount + 1);
             }, 
             (error) =>
             {
@@ -151,15 +162,17 @@ public class HandleCapturing : MonoBehaviour
         if (isVerbose && !isSilent)
         {
             string extra = "Extra info about the frame.\n";
+            extra += "Session ID: " + id + "\n";
+
             if (allCapturable != null)
             {
                 extra += "Capturable objects: " + allCapturable.Count + "\n";
                 extra += "Open requests: " + openRequests + "\n";
+                extra += "Average request response time: " + averageResponceTime + "\n";
             }
             else
             {
-                extra += "Still setting up capture.";
-                extra += "Session ID: " + id;
+                extra += "Still setting up capture." + "\n";
             }
 
             Debug.Log(extra);

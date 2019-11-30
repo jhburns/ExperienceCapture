@@ -1,15 +1,22 @@
-# TODO: double check ssl
+# TODO: fix ACME SSL
 
-https://{$aws_domain_name} {
+#https://{$aws_domain_name} {
+#
+#}
 
-}
+0.0.0.0:80
+
+log stdout
 
 errors stdout
 
-proxy /api/v1 localhost:4321 {
+tls off
+
+proxy /api/v1 api:80 {
 	without /api/v1
+	transparent
 }
 
-proxy / localhost:2015 {
-	websocket
+proxy / web:2015 {
+	transparent
 }

@@ -26,18 +26,19 @@ services:
       retries: 3
 
   rp:
-    command: ["--conf", "/etc/Caddyfile", "--log", "stdout", "--agree", "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
+    command: ["--conf", "/etc/Caddyfile"]
+    #command: ["--conf", "/etc/Caddyfile", "--log", "stdout", "--agree", "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
     restart: always
     ports:
     - "80:80"
     - "443:443"
     volumes:
     - ./Caddy/Caddyfile.production:/etc/Caddyfile
-    - ec-rp-volume:/etc/caddycerts
+    #- ec-rp-volume:/etc/caddycerts
     env_file:
     - host.info.env
     healthcheck:
-      test: wget --quiet --tries=1 -O /dev/null http://localhost:/api/v1/ || exit 1
+      test: wget --quiet --tries=1 -O /dev/null http://web:2015/ || exit 1
       interval: 1m30s
       timeout: 10s
       retries: 3
