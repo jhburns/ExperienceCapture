@@ -25,7 +25,7 @@ services:
   ssh_connect:
     build:
       context: ./SshClient
-    command: ["sh", "-c", "ssh -o StrictHostKeyChecking=no -i id_rsa -l ec-debug $$aws_host_location"]
+    command: ["sh", "-c", "ssh -o StrictHostKeyChecking=no -i id_rsa -l ec-debug $$aws_host_ssh_address"]
     volumes:
     - ./.secrets/id_rsa:/keys/id_rsa
     networks:

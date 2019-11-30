@@ -12,6 +12,7 @@ services:
     build: 
       context: ./API
     command: ["sh", "-c", "/wait && dotnet API.dll"]
+    hostname: api
     ports:
     - "4321:80"
     depends_on:
@@ -55,6 +56,9 @@ services:
   web:
     build:
       context: ./WebUI
+    hostname: web
+    networks:
+      - ec-network
 
 volumes:
   ec-data-volume:

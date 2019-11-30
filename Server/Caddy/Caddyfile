@@ -8,8 +8,10 @@ tls off
 
 proxy /api/v1 192.168.99.100:4321 {
 	without /api/v1
+	transparent
 }
 
 proxy / 192.168.99.100:3003 {
 	websocket
+	transparent
 }
