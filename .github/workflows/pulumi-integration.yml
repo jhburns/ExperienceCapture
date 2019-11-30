@@ -21,4 +21,4 @@ jobs:
           password: "${{ secrets.DOCKER_PASSWORD }}"
           image_name: jhburns/ec-pulumi-cache
           context: ./Deploy/Pulumi
-          dockerfile: Dockerfile.integrate
+          dockerfile: Dockerfile.integration

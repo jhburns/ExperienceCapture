@@ -12,7 +12,7 @@ services:
   web:
     build:
       context: ./WebUI
-      dockerfile: Dockerfile.integrate
+      dockerfile: Dockerfile.integration
       labels:
         - "xyz.expcap.isproduction"
     command: "caddy"

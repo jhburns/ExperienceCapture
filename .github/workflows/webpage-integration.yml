@@ -21,4 +21,4 @@ jobs:
           password: "${{ secrets.DOCKER_PASSWORD }}"
           image_name: jhburns/ec-webpage-cache
           context: ./Server/WebUI
-          dockerfile: Dockerfile.integrate
+          dockerfile: Dockerfile.integration

@@ -3,7 +3,6 @@
 https://{$aws_domain_name}
 
 log stdout
-
 errors stdout
 
 proxy /api/v1 api:80 {
