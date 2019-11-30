@@ -99,7 +99,7 @@ internal class Program
 
             return new Dictionary<string, object>
             {
-                { "publicIp", elasticIp.PublicIp  },
+                { "publicIp", elasticIp.PublicIp },
                 { "publicDns", server.PublicDns },
             };
         });
