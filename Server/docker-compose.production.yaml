@@ -6,8 +6,9 @@ services:
       labels:
         - "xyz.expcap.isproduction"
     image: jhburns/ec-receiver-cache
-    restart: always
-
+    deploy:
+      restart_policy:
+        condition: any
   web:
     build:
       context: ./WebUI
@@ -16,7 +17,9 @@ services:
         - "xyz.expcap.isproduction"
     command: "caddy"
     image: jhburns/ec-webpage-cache
-    restart: always
+    deploy:
+      restart_policy:
+        condition: any
     ports:
     - "2015:2015"
     healthcheck:
@@ -26,15 +29,17 @@ services:
       retries: 3
 
   rp:
-    command: ["--conf", "/etc/Caddyfile"]
-    #command: ["--conf", "/etc/Caddyfile", "--log", "stdout", "--agree", "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
-    restart: always
+    #command: ["--conf", "/etc/Caddyfile"]
+    command: ["--conf", "/etc/Caddyfile", "--log", "stdout", "--agree", "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
+    deploy:
+      restart_policy:
+        condition: none
     ports:
     - "80:80"
     - "443:443"
     volumes:
     - ./Caddy/Caddyfile.production:/etc/Caddyfile
-    #- ec-rp-volume:/etc/caddycerts
+    - ec-rp-volume:/etc/caddycerts
     env_file:
     - host.info.env
     healthcheck:
