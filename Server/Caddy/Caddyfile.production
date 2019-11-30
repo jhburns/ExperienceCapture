@@ -4,16 +4,6 @@
 #
 #}
 
-#errors stdout
-
-#proxy /api/v1 localhost:4321 {
-#	without /api/v1
-#}
-
-#proxy / localhost:2015 {
-#	
-#}
-
 0.0.0.0:80
 
 log stdout
