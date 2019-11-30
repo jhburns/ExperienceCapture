@@ -17,6 +17,7 @@ WORKDIR /app/build
 COPY --from=build /app/build /app/build
 
 COPY Caddyfile .
+RUN caddy -validate -conf Caddyfile
 
 ENTRYPOINT []
-CMD []
+CMD [""]
