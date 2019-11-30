@@ -162,7 +162,7 @@ public class HandleCapturing : MonoBehaviour
         if (isVerbose && !isSilent)
         {
             string extra = "Extra info about the frame.\n";
-            extra += "Session ID: " + id;
+            extra += "Session ID: " + id + "\n";
 
             if (allCapturable != null)
             {
@@ -172,7 +172,7 @@ public class HandleCapturing : MonoBehaviour
             }
             else
             {
-                extra += "Still setting up capture.";
+                extra += "Still setting up capture." + "\n";
             }
 
             Debug.Log(extra);
