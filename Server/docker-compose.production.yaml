@@ -42,11 +42,6 @@ services:
     - ec-rp-volume:/etc/caddycerts
     env_file:
     - host.info.env
-    healthcheck:
-      test: wget --quiet --tries=1 -O /dev/null http://web:2015/ || exit 1
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
 
 volumes:
   ec-rp-volume:
