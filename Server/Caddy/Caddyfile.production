@@ -1,5 +1,3 @@
-# TODO: fix ACME SSL
-
 http://{$aws_domain_name} {
 	redir https://{host}{uri}
 }
