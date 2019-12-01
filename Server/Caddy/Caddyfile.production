@@ -17,9 +17,3 @@ https://{$aws_domain_name} {
 		transparent
 	}
 }
-
-# Healthcheck
-
-:8080 {
-    status 200 /
-}

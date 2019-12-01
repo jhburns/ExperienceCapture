@@ -32,8 +32,7 @@ services:
     command: ["--log", "stdout", "--agree", "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
     deploy:
       restart_policy:
-        condition: on-failure
-        max_attempts: 1
+        condition: any
     ports:
     - "80:80"
     - "443:443"
