@@ -14,6 +14,7 @@
   - name: Add 'fish' repository
     apt_repository:
       repo: ppa:fish-shell/release-3
+      validate_certs: false
 
   - name: Update cache before installing packages
     apt:
