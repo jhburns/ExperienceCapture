@@ -32,8 +32,7 @@ services:
     command: ["--log", "stdout", "--agree", "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
     deploy:
       restart_policy:
-        condition: on-failure
-        max_attempts: 1
+        condition: any
     ports:
     - "80:80"
     - "443:443"
@@ -42,11 +41,6 @@ services:
     - ec-rp-volume:/etc/caddycerts
     env_file:
     - host.info.env
-    healthcheck:
-      test: wget --quiet --tries=1 -O /dev/null http://web:2015/ || exit 1
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
 
 volumes:
   ec-rp-volume:
