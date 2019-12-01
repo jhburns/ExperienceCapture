@@ -29,8 +29,7 @@ services:
       retries: 3
 
   rp:
-    #command: ["--conf", "/etc/Caddyfile"]
-    command: ["--conf", "/etc/Caddyfile", "--log", "stdout", "--agree", "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
+    command: ["--log", "stdout", "--agree", "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
     deploy:
       restart_policy:
         condition: on-failure

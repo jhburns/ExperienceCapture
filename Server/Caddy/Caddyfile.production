@@ -1,15 +1,19 @@
 # TODO: fix ACME SSL
 
-https://{$aws_domain_name}
-
-log stdout
-errors stdout
-
-proxy /api/v1 api:80 {
-	without /api/v1
-	transparent
+http://{$aws_domain_name} {
+	redir https://{host}{uri}
 }
 
-proxy / web:2015 {
-	transparent
+https://{$aws_domain_name} {
+	log stdout
+	errors stdout
+
+	proxy /api/v1 api:80 {
+		without /api/v1
+		transparent
+	}
+
+	proxy / web:2015 {
+		transparent
+	}
 }
