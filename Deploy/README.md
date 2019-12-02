@@ -14,8 +14,10 @@ Change the variables in *info.env*, for example `aws_region_name` can be set to 
 
 ## Usage
 
-- Build [AMI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html): `docker-compose up packer` builds a new AMI using [Packer](https://www.packer.io/ and [Ansible](https://www.ansible.com/).
+- Build [AMI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html): `docker-compose up packer` builds a new AMI using [Packer](https://www.packer.io/) and [Ansible](https://www.ansible.com/).
+- `docker-compose run pulumi_up` and follow the prompts to deploy the application.
 - Connect to Instance: `docker-compose up ssh_connect` starts a terminal session to the Server. Change `aws_host_location` in *info.env* to specify the IP/Hostname this is to be connected to.
+- `docker-compose run pulumi_destroy` and follow the prompts to destroy the application.
 
 ## Security Concerns
 
@@ -26,3 +28,6 @@ really has access to Docker, keep in mind it is still very privileged access.
 
 Revoking a key can be done by re-running `docker-compose run ssh_setup`, selecting 'y' and then
 rebaking/deploying the full application. 
+
+Additionally, do not share/publish any of the variables found in the *.env* file because they 
+allow access to various cloud services. 
