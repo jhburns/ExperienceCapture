@@ -93,8 +93,7 @@
       src: /deploy/Server/
       dest: /srv
       rsync_opts:
-        #- "--chmod=F444"
-        - "--chmod=F666"
+        - "--chmod=F444"
 
   - name: Set authorized key
     authorized_key:
