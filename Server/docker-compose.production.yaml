@@ -9,6 +9,7 @@ services:
     deploy:
       restart_policy:
         condition: any
+      replicas: 3
       update_config:
         parallelism: 0
         delay: 30s
@@ -24,6 +25,7 @@ services:
     deploy:
       restart_policy:
         condition: any
+      replicas: 3
       update_config:
         parallelism: 0
         delay: 30s
