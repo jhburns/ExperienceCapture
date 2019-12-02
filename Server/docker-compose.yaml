@@ -60,8 +60,5 @@ services:
     networks:
       - ec-network
 
-volumes:
-  ec-data-volume:
-
 networks:
   ec-network:

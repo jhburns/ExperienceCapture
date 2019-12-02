@@ -29,3 +29,6 @@ services:
       - WAIT_HOSTS=db:27017
     networks:
       - ec-network
+
+volumes:
+  ec-data-volume:
