@@ -45,6 +45,7 @@ services:
   rp:
     image: abiosoft/caddy:1.0.3
     command: ["--conf", "/etc/Caddyfile"]
+    hostname: web
     ports:
     - "8090:2015"
     depends_on:
