@@ -1,3 +1,21 @@
+# Cloud Deploy
+
+Hopefully this is enough steps to successfully deploy the service. 
+
+**Important**: This tutorial requires you own and have control over a Top Level Domain.
+
+## Requirements
+
+- A Top Level Domain.
+- An Amazon Web Services account.
+- A Google Account.
+- A Pulumi Account. https://www.pulumi.com/
+- Docker installed on this computer.
+
+## Create Roles
+
+Create each users in AWS with the following roles.
+
 Pulumi's role needs the following actions:
 
 ```json
