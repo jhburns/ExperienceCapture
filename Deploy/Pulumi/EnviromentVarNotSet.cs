@@ -1,9 +1,9 @@
-//- Name: Jonathan Hirokazu Burns
-//- ID: 2288851
-//- email: jburns@chapman.edu
-//- Course: 353-01
-//- Assignment: Submission #4
-//- Purpose: Thrown when an env var that is needed is unset
+// - Name: Jonathan Hirokazu Burns
+// - ID: 2288851
+// - email: jburns@chapman.edu
+// - Course: 353-01
+// - Assignment: Submission #4
+// - Purpose: Thrown when an env var that is needed is unset
 
 namespace Deploy.App.CustomExceptions
 {
@@ -19,7 +19,7 @@ namespace Deploy.App.CustomExceptions
         }
 
         //EnviromentVarNotSet
-          // Constructor with message 
+          // Constructor with message
         public EnviromentVarNotSet(string message)
             : base(message)
         {
