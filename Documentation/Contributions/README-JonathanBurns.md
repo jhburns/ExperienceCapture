@@ -36,3 +36,23 @@
 - Added linting/CI with GitHub Actions to Exporter.
 - WebUI production deploy version also added, using Caddy too.
 - Linting support added to WebUI, along with CI.
+
+## Sumbission #3 Planned Features
+- Packer builds and configures an AMI using Ansible.
+- Pulumi can create and tear down the cloud stack.
+- Docker Swarm is ran on the cloud server.
+- Caddy setup as reverse proxy for all services.
+- Both local and cloud is supported through docker-compose.
+- Acquired two domain names, `expcap.xyz` and `expcap2.xyz` for cloud usage.
+- SSL for all parts of the cloud service.
+- Login page started, although borked rn.
+- API methods for the user auth outlined.
+
+## Unplanned Features
+- Rexray to manage container stateful data.
+- SSL tested in Unity game.
+- Wrote Cloud Deploy tutorial.
+- Fish shell added to AMI for better Developer Experience.
+- SSH keys and login for deploy.
+- Minor client improvements, such as info about how long each request takes.
+- A whole lot of refactoring.
