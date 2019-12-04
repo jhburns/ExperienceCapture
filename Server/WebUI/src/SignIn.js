@@ -39,8 +39,11 @@ class SignIn extends Component {
   }
 
   onInvalidRequest(err) {
+    console.log("Site is running locally, using mock data");
+
   	this.setState({
-	    isMock: true
+	  isSignedIn: true,
+	  isMock: true
 	})
   }
 
@@ -56,22 +59,23 @@ class SignIn extends Component {
 
 	  this.auth2.then(() => {}, invalidCallback);
 
-      window.gapi.load('signin2', function() {
-        // render a sign in button
-        // using this method will show Signed In if the user is already signed in
-        var opts = {
-          width: 200,
-          height: 50,
-          onSuccess: successCallback,
-		  onFailure: failureCallback
-        }
-        gapi.signin2.render('loginButton', opts)
-      });
+	  if (!this.state.isMock) {
+        window.gapi.load('signin2', function() {
+          // render a sign in button
+          // using this method will show Signed In if the user is already signed in
+          var opts = {
+            width: 200,
+            height: 50,
+            onSuccess: successCallback,
+		    onFailure: failureCallback
+          }
+          gapi.signin2.render('loginButton', opts)
+        });
+	  }
     })
   }
 
   render() {
-
     return (
 	  <div className="SignIn">
 		{this.getContent()}
