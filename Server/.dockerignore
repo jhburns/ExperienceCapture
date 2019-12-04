@@ -1,0 +1,16 @@
+# WebUI
+
+**/node_modules
+
+**/.dockerignore
+**/Dockerfile
+**/Dockerfile.integrate
+
+# Exporter
+
+bin\
+obj\
+
+# All
+
+**/README.md

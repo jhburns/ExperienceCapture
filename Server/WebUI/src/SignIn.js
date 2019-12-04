@@ -1,8 +1,7 @@
 //From https://codeburst.io/adding-google-sign-in-to-your-webapp-a-react-example-dcec8c73cb9f
 
-/* global gapi */
-
 import React, { Component } from 'react';
+import { gapi } from 'gapi-script';
 
 class SignIn extends Component {
   constructor(props) {
