@@ -2,10 +2,7 @@ version: '3.5'
 
 services:
   api:
-    build:
-      labels:
-        - "xyz.expcap.isproduction"
-    image: jhburns/ec-receiver-cache:latest
+    image: localhost:5000/ec-api:latest
     deploy:
       restart_policy:
         condition: any
@@ -18,10 +15,8 @@ services:
     build:
       context: ./WebUI
       dockerfile: Dockerfile.integration
-      labels:
-        - "xyz.expcap.isproduction"
     command: "caddy"
-    image: jhburns/ec-webpage-cache:latest
+    image: localhost:5000/ec-web:latest
     deploy:
       restart_policy:
         condition: any

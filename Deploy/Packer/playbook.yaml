@@ -108,6 +108,20 @@
         - swarm
         - init
 
+  - name: Start local Docker registry
+    command:
+      argv:
+        - docker
+        - service
+        - create
+        - --name
+        - registry
+        - --publish
+        - published=5000,target=5000
+        - --restart-condition
+        - any
+        - registry:2.7.1
+
   - name: Rebuild Docker images for production
     command:
       argv:
@@ -117,6 +131,26 @@
         - -f
         - docker-compose.production.yaml
         - build
+      chdir: /srv/
+
+  - name: Wait for Docker registry to become available
+    uri:
+      url: "http://localhost:5000/"
+      status_code: 200
+    register: _result
+    until: _result.status == 200
+    retries: 60
+    delay: 3
+
+  - name: Pushes Docker images for to registry
+    command:
+      argv:
+        - docker-compose
+        - -f
+        - docker-compose.yaml
+        - -f
+        - docker-compose.production.yaml
+        - push
       chdir: /srv/
 
   - name: Prune non-production Docker images so the AMI uses less space
