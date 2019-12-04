@@ -13,11 +13,10 @@ namespace Nancy.App.Hosting.Kestrel
 
     public class Users : NancyModule
     {
-
         public Users(IMongoDatabase db)
             : base("/users/")
         {
-            this.Post("/", async (args) =>
+            this.Post("/", (args) =>
             {
                 var sessions = db.GetCollection<BsonDocument>("users");
 
@@ -25,11 +24,10 @@ namespace Nancy.App.Hosting.Kestrel
                 // If not, return 401
 
                 // Else return OK
-                
                 return "OK";
             });
 
-            this.Post("/{id}", async (args) =>
+            this.Post("/{id}", (args) =>
             {
                 var sessions = db.GetCollection<BsonDocument>("users");
 
@@ -37,10 +35,8 @@ namespace Nancy.App.Hosting.Kestrel
                 // If not, return 401
 
                 // Else return new API token
-
                 return "TOKEN";
             });
-
         }
     }
 }
