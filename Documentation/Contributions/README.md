@@ -83,6 +83,9 @@ It is only recommended to run the reverse-proxy on Docker Toolbox for Windows.
 
 Also see 
 
+Since this is a in progress repo, check out https://github.com/jhburns/ExperienceCapture/releases
+to try different server releases to see if they work better.
+
 ### Usage
 
 Basic usage works like such: 

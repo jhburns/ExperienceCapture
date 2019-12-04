@@ -6,7 +6,6 @@
 // - Course: 353-01
 // - Assignment: Submission #4
 // - Purpose: Manages Cloud State
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
