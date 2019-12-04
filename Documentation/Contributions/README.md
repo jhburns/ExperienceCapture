@@ -4,7 +4,7 @@
 - ID: 2288851
 - email: jburns@chapman.edu
 - Course: 353-01
-- Assignment: Submission #3
+- Assignment: Submission #4
 
 ## Files
 
@@ -17,11 +17,16 @@ to this submission's (#2) goal's are included:
 - /Server/API/Bootstrapper.cs
 - /Server/API/Dockerfile
 - /Server/docker-compose.yaml
-
-New relevant files for submission #3:
-
 - /Server/Exporter/Exporter.cs
 - /Server/Exporter/Dockerfile
+
+New relevant files for submission #4:
+
+- /Deploy/Packer/playbook.yaml
+- /Deploy/Packer/build.json (No comments in JSON)
+- /Deploy/Pulumi/Program.cs
+- /Deploy/Pulumi/EnviromentVarNotSet.cs
+
 
 (I counted, there were 3811 files in the repo)
 
@@ -33,7 +38,6 @@ New relevant files for submission #3:
 - https://github.com/NancyFx/Nancy/wiki/Documentation
 - https://docs.mongodb.com/
 - https://docs.docker.com/compose/ 
-- https://docs.docker.com/compose/
 - https://docs.docker.com/
 - https://stackoverflow.com/questions/14473510/how-to-make-an-image-handler-in-nancyfx/28623873
 - https://stackoverflow.com/questions/14473510/how-to-make-an-image-handler-in-nancyfx
@@ -43,11 +47,20 @@ New relevant files for submission #3:
 - https://stackoverflow.com/questions/24189172/get-url-parameters-in-nancyfx
 - https://stackoverflow.com/questions/1344221/how-can-i-generate-random-alphanumeric-strings
 - https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated
+- https://codeburst.io/adding-google-sign-in-to-your-webapp-a-react-example-dcec8c73cb9f
+- https://docs.ansible.com/
+- https://www.packer.io/docs/
+- https://www.pulumi.com/docs/
+- https://create-react-app.dev/docs/getting-started/
+- https://caddyserver.com/v1/docs
+- https://docs.aws.amazon.com/
+- https://github.com/pulumi/examples/blob/master/aws-cs-webserver/Program.cs
 
 ## Compile or Runtime Errors 
 - "Timeout error": Client can sometimes not connect to the server when it was recently started. Wait and reconnect.
 - Various HTTP errors can occur if the client or server drops a message. 
 - Normal http errors can occur if trying to improperly access the api, for example 404. These are on purpose.
+- Front-end client not working, always assumes there is mock-data.
 
 ## Running
 
@@ -65,4 +78,21 @@ See root https://github.com/jhburns/ExperienceCapture#experience-capture for man
 ### Server
 
 See Server README: https://github.com/jhburns/ExperienceCapture/tree/master/Server#server
+
+It is only recommended to run the reverse-proxy on Docker Toolbox for Windows. 
+
+Also see 
+
+Since this is a in progress repo, check out https://github.com/jhburns/ExperienceCapture/releases
+to try different server releases to see if they work better.
+
+### Usage
+
+Basic usage works like such: 
+1. Start the server
+1. Play the Client game, starting from the Setup Scene.
+1. End the game by pressing `done`.
+1. Stop the api part of the server.
+1. Run the exporter and export the session's data based on it's ID.
+1. Do whatever you want the analyze the data, (Not provided).
 
