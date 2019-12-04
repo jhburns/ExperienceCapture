@@ -83,3 +83,13 @@ It is only recommended to run the reverse-proxy on Docker Toolbox for Windows.
 
 Also see 
 
+### Usage
+
+Basic usage works like such: 
+1. Start the server
+1. Play the Client game, starting from the Setup Scene.
+1. End the game by pressing `done`.
+1. Stop the api part of the server.
+1. Run the exporter and export the session's data based on it's ID.
+1. Do whatever you want the analyze the data, (Not provided).
+

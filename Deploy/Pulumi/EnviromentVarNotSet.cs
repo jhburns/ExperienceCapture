@@ -12,27 +12,27 @@ namespace Deploy.App.CustomExceptions
     // EnviromentVarNotSet class is an exception
     public class EnviromentVarNotSet : Exception
     {
-        //EnviromentVarNotSet
+        // EnviromentVarNotSet
           // Default constructor
         public EnviromentVarNotSet()
         {
         }
 
-        //EnviromentVarNotSet
+        // EnviromentVarNotSet
           // Constructor with message
         public EnviromentVarNotSet(string message)
             : base(message)
         {
         }
 
-        //EnviromentVarNotSet
+        // EnviromentVarNotSet
           // Constructor two messages
         public EnviromentVarNotSet(string message, string varName)
             : base(string.Format("{0}: environment variable {1}", message, varName))
         {
         }
 
-        //EnviromentVarNotSet
+        // EnviromentVarNotSet
           // Constructor with message and inner exception
         public EnviromentVarNotSet(string message, Exception inner)
             : base(message, inner)
