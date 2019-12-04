@@ -81,7 +81,8 @@ See Server README: https://github.com/jhburns/ExperienceCapture/tree/master/Serv
 
 It is only recommended to run the reverse-proxy on Docker Toolbox for Windows. 
 
-Also see 
+Also see https://github.com/jhburns/ExperienceCapture/blob/master/Documentation/Cloud-Deploy.md#cloud-deploy
+for how to do a cloud deployment. 
 
 Since this is a in progress repo, check out https://github.com/jhburns/ExperienceCapture/releases
 to try different server releases to see if they work better.
