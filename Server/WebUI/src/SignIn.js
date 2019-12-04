@@ -60,7 +60,7 @@ class SignIn extends Component {
 	  this.auth2.then(() => {}, invalidCallback);
 
 	  if (!this.state.isMock) {
-        window.gapi.load('signin2', function() {
+        window.gapi.load('signin2', () => {
           // render a sign in button
           // using this method will show Signed In if the user is already signed in
           var opts = {

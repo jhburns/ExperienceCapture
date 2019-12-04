@@ -5,7 +5,7 @@ services:
     build:
       labels:
         - "xyz.expcap.isproduction"
-    image: jhburns/ec-receiver-cache
+    image: jhburns/ec-receiver-cache:latest
     deploy:
       restart_policy:
         condition: any
@@ -21,7 +21,7 @@ services:
       labels:
         - "xyz.expcap.isproduction"
     command: "caddy"
-    image: jhburns/ec-webpage-cache
+    image: jhburns/ec-webpage-cache:latest
     deploy:
       restart_policy:
         condition: any

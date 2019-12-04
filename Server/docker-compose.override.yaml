@@ -1,6 +1,10 @@
 version: '3.5'
 
 services:
+  api:
+    env:
+	 - accept_any_id_token=true
+
   web:
     volumes:
       - ./WebUI/:/app/
