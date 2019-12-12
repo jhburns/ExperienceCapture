@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:    
       - master
+      - temp-master
     paths:
     - 'Server/Exporter/**'
     - '.github/workflows/exporter-integration.yml'

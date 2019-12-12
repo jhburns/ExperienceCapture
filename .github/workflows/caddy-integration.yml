@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:    
       - master
+      - temp-master
     paths:
     - 'Server/Caddy/**'
     - '.github/workflows/caddy-integration.yml'

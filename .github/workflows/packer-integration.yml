@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:    
       - master
+      - temp-master
     paths:
     - 'Deploy/Packer/**'
     - '.github/workflows/packer-integration.yml'
