@@ -3,8 +3,8 @@
 FROM alpine:3.9.4 as pulumi-download
 
 WORKDIR /download
-RUN wget -O  pulumi.tar.gz https://get.pulumi.com/releases/sdk/pulumi-v1.6.1-linux-x64.tar.gz
-RUN tar -zxvf pulumi.tar.gz
+RUN wget -O  pulumi.tar.gz https://get.pulumi.com/releases/sdk/pulumi-v1.7.0-linux-x64.tar.gz
+RUN tar -zxf pulumi.tar.gz
 
 # Copy over project files
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0.101-bionic

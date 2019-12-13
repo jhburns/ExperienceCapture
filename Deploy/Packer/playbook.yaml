@@ -9,24 +9,25 @@
     aws_region_name: "{{ lookup('env','aws_region_name') }}"
 
   tasks:
+
   # Needed because the Ubuntu AMI does not come with python2
   - name: symlink /usr/bin/python -> /usr/bin/python3
     raw: |
          if [ -f /usr/bin/python3 ] && [ ! -f /usr/bin/python ]; then
            ln --symbolic /usr/bin/python3 /usr/bin/python;
          fi
-    become: true
-
-  - name: Add 'fish' repository
-    apt_repository:
-      repo: ppa:fish-shell/release-3
 
   - name: Update cache before installing packages
     apt:
       update_cache: yes
 
+  - name: Add 'fish' repository
+    apt_repository:
+      repo: ppa:fish-shell/release-3
+
   - name: Install required system packages for Docker
     apt:
+      update_cache: yes
       name: "{{ item }}"
     loop:
        - 'apt-transport-https=1.6.6ubuntu0.1'
@@ -68,25 +69,24 @@
       password_lock: yes
 
   - name: Download the REX-Ray plugin
-    command: "docker plugin install rexray/ebs:0.11.4 \
-               --grant-all-permissions \
-              EBS_ACCESSKEY={{ rexray_access_id }} \
-              EBS_SECRETKEY={{ rexray_secret_key }} \
+    command: "docker plugin install rexray/ebs:0.11.4   \
+               --grant-all-permissions                  \
+              EBS_ACCESSKEY={{ rexray_access_id }}      \
+              EBS_SECRETKEY={{ rexray_secret_key }}     \
               EBS_REGION={{ aws_region_name }}"
 
-  - name: Open up tcp ports needed by server and cluster to function
-    command:
-      argv:
-        - ufw
-        - allow
-        - 80,443,2377,7946/tcp
-
-  - name: Open up udp ports needed by server and cluster to function
-    command:
-      argv:
-        - ufw
-        - allow
-        - 7946,4789/udp
+  - name: Allow all access from RFC1918 networks to this host
+    ufw:
+      rule: allow
+      port: "{{ item.port }}"
+      proto: "{{ item.protocol }}"
+    with_items:
+      - { port: "80", protocol: "tcp" }
+      - { port: "443", protocol: "tcp" }
+      - { port: "2377", protocol: "tcp" }
+      - { port: "7946", protocol: "tcp" }
+      - { port: "7946", protocol: "udp" }
+      - { port: "4789", protocol: "udp" }
 
   - name: Copy Server files over
     synchronize:
@@ -102,43 +102,36 @@
       key: "{{ lookup('file', './id_rsa.pub') }}"
 
   - name: Start Docker Swarm
-    command:
-      argv:
-        - docker
-        - swarm
-        - init
+    command: docker swarm init
+
+  - name: Create Docker registry service
+    command: docker stack deploy -c docker-compose.production.infra.yaml infra
+    args:
+      chdir: /srv
 
   - name: Rebuild Docker images for production
-    command:
-      argv:
-        - docker-compose
-        - -f
-        - docker-compose.yaml
-        - -f
-        - docker-compose.production.yaml
-        - build
-      chdir: /srv/
+    command: docker-compose -f docker-compose.yaml -f docker-compose.production.yaml build --parallel
+    args:
+      chdir: /srv
+
+  - name: Waits for registry to become available
+    wait_for:
+      host: 0.0.0.0
+      port: 5000
+      delay: 1
+      timeout: 5
+
+  - name: Pushes Docker images to local registry
+    command: docker-compose -f docker-compose.yaml -f docker-compose.production.yaml push
+    args:
+      chdir: /srv
 
   - name: Prune non-production Docker images so the AMI uses less space
-    command:
-      argv:
-        - docker
-        - system
-        - prune
-        - --all
-        - --force
-        - --filter
-        - "label!=xyz.expcap.isproduction"
+    command: docker system prune --all --force
 
+  # Waits so that that services don't start before the instance is stopped 
   - name: Create Docker Swarm services
-    command:
-      argv:
-        - docker
-        - stack
-        - deploy
-        - -c
-        - docker-compose.yaml
-        - -c
-        - docker-compose.production.yaml
-        - rp
-      chdir: /srv/
+    at:
+      command: cd /srv && docker stack deploy -c docker-compose.yaml -c docker-compose.production.yaml ec
+      count: 2
+      units: minutes

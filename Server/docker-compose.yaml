@@ -57,4 +57,4 @@ services:
     - host.info.env
 
 networks:
-  ec-network:
+  ec-network: {}

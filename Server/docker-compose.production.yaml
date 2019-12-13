@@ -2,10 +2,7 @@ version: '3.5'
 
 services:
   api:
-    build:
-      labels:
-        - "xyz.expcap.isproduction"
-    image: local-deploy/ec-api:latest
+    image: 127.0.0.1:5000/ec-api
     deploy:
       restart_policy:
         condition: any
@@ -18,10 +15,8 @@ services:
     build:
       context: ./WebUI
       dockerfile: Dockerfile.integration
-      labels:
-        - "xyz.expcap.isproduction"
     command: "caddy"
-    image: local-deploy/ec-web:latest
+    image: 127.0.0.1:5000/ec-web
     deploy:
       restart_policy:
         condition: any
@@ -38,7 +33,7 @@ services:
       retries: 3
 
   rp:
-    command: ["--log", "stdout", "--agree"] #"-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
+    command: ["--log", "stdout", "--agree", "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
     deploy:
       restart_policy:
         condition: any
