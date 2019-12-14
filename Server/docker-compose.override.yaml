@@ -35,4 +35,4 @@ services:
       - ec-network
 
 volumes:
-  ec-data-volume:
+  ec-data-volume: {}
