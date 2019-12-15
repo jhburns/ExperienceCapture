@@ -1,0 +1,52 @@
+{
+  "format": "auto",
+  "lang": "en",
+  "fileExtensions": [
+    ".md"
+  ],
+  "report": [
+    "console"
+  ],
+  "dictionary": [
+    "Pulumi",
+	"Ansible",
+	"provisioner",
+	"EC2",
+	"env",
+	"AWS",
+	"GameObject",
+	"GameObject",
+	"timestamps",
+	"BallObject",
+	"ICapturable",
+	"PlayerObject",
+	"VPC",
+	"ENV",
+	"REX-ray",
+	"MonoBehavior",
+	"Vector3",
+	"GetCapture",
+	"positionX",
+	"int",
+	"CaptureSetup",
+	"v1",
+	"SetupTestGame",
+	"ExperienceCaptureClient",
+	"unitypackage",
+	"DontDestroyOnLoad",
+	"HandleCapturing",
+	"ExperienceCapture",
+	"11f",
+	"Nancyfx",
+	"MongoDB",
+	"StyleCop",
+	"Caddyfile",
+	"schemeless",
+	"front-end",
+	"Webpack",
+	"outputted",
+	"gitignore"
+  ],
+  "findRepeatWords": true,
+  "ignoreUrls": true
+}
