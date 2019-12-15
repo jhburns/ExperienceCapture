@@ -1,5 +1,5 @@
 ---
-name: Other Integration
+name: Other
 
 on:  # yamllint disable-line rule:truthy
   pull_request:

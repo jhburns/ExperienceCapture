@@ -1,4 +1,4 @@
-[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/API%20Integration/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22API+Integration%22)
+[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/API/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22API%22)
 
 # API
 

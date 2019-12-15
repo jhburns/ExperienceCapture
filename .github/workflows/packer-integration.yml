@@ -1,5 +1,5 @@
 ---
-name: Packer Integration
+name: Packer
 
 on:  # yamllint disable-line rule:truthy
   pull_request:
