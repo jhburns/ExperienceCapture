@@ -19,6 +19,9 @@ on:  # yamllint disable-line rule:truthy
       - '.github/workflows/caddy-integration.yml'
       - 'Deploy/Pulumi/**'
       - '.github/workflows/pulumi-integration.yml'
+      - '**/*Dockerfile*'
+      - '**/*.yaml'
+      - '**/*.yml'
 
 
 jobs:
