@@ -22,7 +22,7 @@ on:  # yamllint disable-line rule:truthy
       - '**/*Dockerfile*'
       - '**/*.yaml'
       - '*Dockerfile*'
-      - '*.yaml*'
+      - '*.yaml'
       - '*.yml'
       - '.github/workflows/dockerfile-and-yaml-integration.yml'
       - '**/*.md'
