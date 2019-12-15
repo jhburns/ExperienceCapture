@@ -10,7 +10,7 @@ Click on the first link 'ExperienceCaptureClient.unitypackage' to download it, n
 
 ## Reimport Into Unity Game
 
-First, Delete the old 'ExperienceCaputure' folder.
+First, Delete the old 'ExperienceCapture' folder.
 
 ![Opening asset menu](images/import_package.png)
 

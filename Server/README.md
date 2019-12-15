@@ -4,7 +4,7 @@
 
 Install [Docker](https://docs.docker.com/v17.09/engine/installation/) along with [Docker Compose](https://docs.docker.com/compose/install/).
 
-Then run `docker-compose build`, and thats it.
+Then run `docker-compose build`, and that's it.
 
 ## Using
 
@@ -13,7 +13,7 @@ To run each of the following parts:
 - API: `docker-compose up api` starts the api server, and `Ctrl-C` stops it.
 - Database: should be started alongside api, but `docker-compose down` also stops it.
 - Exporter: `docker-compose run exporter` which starts it interactively on the command line.
-- WebUI: `docker-compose up web` starts the frontend in development mode, meaning with hot reload.
+- WebUI: `docker-compose up web` starts the front-end in development mode, meaning with hot reload.
 - Reverse-Proxy (Caddy): `docker-compose up rp` with start the reverse proxy, and almost all of the rest of the stack.
 
 

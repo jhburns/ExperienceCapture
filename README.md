@@ -9,7 +9,7 @@ It uses a client-server model to do so, and is broken down into important folder
 - *ExampleUnityGame/* is an example game using the client.
 - *ClientDevelopmentGame/* is a game used to develop the client. 
 - *SetupTestGame/* is a game for testing how easy/possible it is to integrate into the asset into a new game. 
-- *Server/* is a backend service for collection and analyzing data.
+- *Server/* is a back-end service for collection and analyzing data.
 
 ## Extra Folders
 

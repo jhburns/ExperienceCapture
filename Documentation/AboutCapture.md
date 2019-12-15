@@ -144,4 +144,4 @@ Which produces
 
 So in summary, if an object doesn't exist it will be ignored by the exporter.
 As a result, it is best practice to attach a capture script to an object directly 
-instead of trying to check for existance of it from another object. 
+instead of trying to check for existence of it from another object. 

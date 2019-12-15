@@ -6,7 +6,7 @@
 1. Run `docker-compose build`. 
 1. Copy the contents of *template.env* to a new file named *.env* then fill out its content with values from [AWS](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys).
 1. Finally, run `docker-compose run ssh_setup` before any of the other commands.
-It generates ssh keys that will be used for the rest of the process.
+It generates SSH keys that will be used for the rest of the process.
 
 ### Optionally 
 
@@ -16,7 +16,7 @@ Change the variables in *info.env*, for example `aws_region_name` can be set to 
 
 - Build [AMI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html): `docker-compose up packer` builds a new AMI using [Packer](https://www.packer.io/) and [Ansible](https://www.ansible.com/).
 - `docker-compose run pulumi_up` and follow the prompts to deploy the application.
-- Connect to Instance: `docker-compose up ssh_connect` starts a terminal session to the Server. Change `aws_host_location` in *info.env* to specify the IP/Hostname this is to be connected to.
+- Connect to Instance: `docker-compose up ssh_connect` starts a terminal session to the Server. Change `aws_host_location` in *info.env* to specify the IP/hostname this is to be connected to.
 - `docker-compose run pulumi_destroy` and follow the prompts to destroy the application.
 
 ## Security Concerns
