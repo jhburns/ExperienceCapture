@@ -1,7 +1,7 @@
 ---
 - hosts: all
-  become: yes
-  gather_facts: no
+  become: true
+  gather_facts: false
 
   vars:
     rexray_access_id: "{{ lookup('env','aws_rexray_access_id') }}"
@@ -10,128 +10,128 @@
 
   tasks:
 
-  # Needed because the Ubuntu AMI does not come with python2
-  - name: symlink /usr/bin/python -> /usr/bin/python3
-    raw: |
-         if [ -f /usr/bin/python3 ] && [ ! -f /usr/bin/python ]; then
-           ln --symbolic /usr/bin/python3 /usr/bin/python;
-         fi
+    # Needed because the Ubuntu AMI does not come with python2
+    - name: symlink /usr/bin/python -> /usr/bin/python3
+      raw: |
+           if [ -f /usr/bin/python3 ] && [ ! -f /usr/bin/python ]; then
+             ln --symbolic /usr/bin/python3 /usr/bin/python;
+           fi
 
-  - name: Update cache before installing packages
-    apt:
-      update_cache: yes
+    - name: Update cache before installing packages
+      apt:
+        update_cache: true
 
-  - name: Add 'fish' repository
-    apt_repository:
-      repo: ppa:fish-shell/release-3
+    - name: Add 'fish' repository
+      apt_repository:
+        repo: ppa:fish-shell/release-3
 
-  - name: Install required system packages for Docker
-    apt:
-      update_cache: yes
-      name: "{{ item }}"
-    loop:
-       - 'apt-transport-https=1.6.6ubuntu0.1'
-       - 'ca-certificates=20180409'
-       - 'curl=7.58.0-2ubuntu3.8'
-       - 'software-properties-common=0.96.24.32.11'
-       - 'rsync=3.1.2-2.1ubuntu1'
-       - 'fish=3.0.2-1~bionic'
+    - name: Install required system packages for Docker
+      apt:
+        update_cache: true
+        name: "{{ item }}"
+      loop:
+        - 'apt-transport-https=1.6.6ubuntu0.1'
+        - 'ca-certificates=20180409'
+        - 'curl=7.58.0-2ubuntu3.8'
+        - 'software-properties-common=0.96.24.32.11'
+        - 'rsync=3.1.2-2.1ubuntu1'
+        - 'fish=3.0.2-1~bionic'
 
-  - name: Add Docker GPG apt Key
-    apt_key:
-      url: https://download.docker.com/linux/ubuntu/gpg
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
 
-  - name: Add Docker Repository
-    apt_repository:
-      repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
 
-  - name: Update apt and install docker-ce
-    apt:
-      update_cache: yes
-      name: docker-ce=5:19.03.5~3-0~ubuntu-bionic
+    - name: Update apt and install docker-ce
+      apt:
+        update_cache: true
+        name: docker-ce=5:19.03.5~3-0~ubuntu-bionic
 
-  - name: Start Docker Swarm
-    command: docker swarm init
+    - name: Start Docker Swarm
+      command: docker swarm init
 
-  - name: Create Docker registry service
-    command: docker stack deploy -c docker-compose.production.infra.yaml infra
-    args:
-      chdir: /srv
+    - name: Create Docker registry service
+      command: docker stack deploy -c docker-compose.production.infra.yaml infra
+      args:
+        chdir: /srv
 
-  - name: Download and install docker-compose
-    shell: curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    args:
-      warn: no
+    - name: Download and install docker-compose
+      shell: curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      args:
+        warn: false
 
-  - name: Change file ownership, group and permissions
-    file:
-      path: /usr/local/bin/docker-compose
-      mode: u=rwx,g=rx,o=rx
+    - name: Change file ownership, group and permissions
+      file:
+        path: /usr/local/bin/docker-compose
+        mode: u=rwx,g=rx,o=rx
 
-  - name: Add the user 'ec-debug' as part of the 'docker' group
-    user:
-      name: ec-debug
-      comment: Default user for debugging in production.
-      group: docker
-      shell: /usr/bin/fish
-      password_lock: yes
+    - name: Add the user 'ec-debug' as part of the 'docker' group
+      user:
+        name: ec-debug
+        comment: Default user for debugging in production.
+        group: docker
+        shell: /usr/bin/fish
+        password_lock: true
 
-  - name: Download the REX-Ray plugin
-    command: "docker plugin install rexray/ebs:0.11.4   \
+    - name: Download the REX-Ray plugin
+      command: "docker plugin install rexray/ebs:0.11.4   \
                --grant-all-permissions                  \
               EBS_ACCESSKEY={{ rexray_access_id }}      \
               EBS_SECRETKEY={{ rexray_secret_key }}     \
               EBS_REGION={{ aws_region_name }}"
 
-  - name: Allow all access from RFC1918 networks to this host
-    ufw:
-      rule: allow
-      port: "{{ item.port }}"
-      proto: "{{ item.protocol }}"
-    with_items:
-      - { port: "80", protocol: "tcp" }
-      - { port: "443", protocol: "tcp" }
-      - { port: "2377", protocol: "tcp" }
-      - { port: "7946", protocol: "tcp" }
-      - { port: "7946", protocol: "udp" }
-      - { port: "4789", protocol: "udp" }
+    - name: Allow all access from RFC1918 networks to this host
+      ufw:
+        rule: allow
+        port: "{{ item.port }}"
+        proto: "{{ item.protocol }}"
+      with_items:
+        - {port: "80", protocol: "tcp"}
+        - {port: "443", protocol: "tcp"}
+        - {port: "2377", protocol: "tcp"}
+        - {port: "7946", protocol: "tcp"}
+        - {port: "7946", protocol: "udp"}
+        - {port: "4789", protocol: "udp"}
 
-  - name: Copy Server files over
-    synchronize:
-      src: /deploy/Server/
-      dest: /srv
-      rsync_opts:
-        - "--chmod=F444"
+    - name: Copy Server files over
+      synchronize:
+        src: /deploy/Server/
+        dest: /srv
+        rsync_opts:
+          - "--chmod=F444"
 
-  - name: Set authorized key
-    authorized_key:
+    - name: Set authorized key
+      authorized_key:
       user: ec-debug
       state: present
       key: "{{ lookup('file', './id_rsa.pub') }}"
 
-  - name: Rebuild Docker images for production
-    command: docker-compose -f docker-compose.yaml -f docker-compose.production.yaml build --parallel
-    args:
-      chdir: /srv
+    - name: Rebuild Docker images for production
+      command: docker-compose -f docker-compose.yaml -f docker-compose.production.yaml build --parallel
+      args:
+        chdir: /srv
 
-  - name: Waits for registry to become available
-    wait_for:
-      host: 0.0.0.0
-      port: 5000
-      delay: 1
-      timeout: 5
+    - name: Waits for registry to become available
+      wait_for:
+        host: 0.0.0.0
+        port: 5000
+        delay: 1
+        timeout: 5
 
-  - name: Pushes Docker images to local registry
-    command: docker-compose -f docker-compose.yaml -f docker-compose.production.yaml push
-    args:
-      chdir: /srv
+    - name: Pushes Docker images to local registry
+      command: docker-compose -f docker-compose.yaml -f docker-compose.production.yaml push
+      args:
+        chdir: /srv
 
-  - name: Prune non-production Docker images so the AMI uses less space
-    command: docker system prune --all --force
+    - name: Prune non-production Docker images so the AMI uses less space
+      command: docker system prune --all --force
 
-  # Waits so that that services don't start before the instance is stopped 
-  - name: Create Docker Swarm services
-    at:
-      command: cd /srv && docker stack deploy -c docker-compose.yaml -c docker-compose.production.yaml ec
-      count: 2
-      units: minutes
+    # Waits so that that services don't start before the instance is stopped
+    - name: Create Docker Swarm services
+      at:
+        command: cd /srv && docker stack deploy -c docker-compose.yaml -c docker-compose.production.yaml ec
+        count: 2
+        units: minutes
