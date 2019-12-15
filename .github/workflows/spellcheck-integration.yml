@@ -9,6 +9,7 @@ on:  # yamllint disable-line rule:truthy
     paths:
       - '**/*.md'
       - '*.md'
+      - '.github/workflows/spellcheck-integration.yml'
 
 jobs:
   build:

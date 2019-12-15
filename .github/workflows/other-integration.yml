@@ -21,8 +21,13 @@ on:  # yamllint disable-line rule:truthy
       - '.github/workflows/pulumi-integration.yml'
       - '**/*Dockerfile*'
       - '**/*.yaml'
-      - '**/*.yml'
+      - '*Dockerfile*'
+      - '*.yaml*'
+      - '*.yml'
+      - '.github/workflows/dockerfile-and-yaml-integration.yml'
       - '**/*.md'
+      - '*.md'
+      - '.github/workflows/spellcheck-integration.yml'
 
 jobs:
   build:
