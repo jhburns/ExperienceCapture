@@ -22,6 +22,7 @@ on:  # yamllint disable-line rule:truthy
       - '**/*Dockerfile*'
       - '**/*.yaml'
       - '**/*.yml'
+      - '**/*.md'
 
 jobs:
   build:
@@ -29,4 +30,4 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Explain Purpose
-        run: echo "Hello, this is only so CI can pass for paths without integration checks."
+        run: echo "Hello, this is only so CI can pass for paths/Files without integration checks."

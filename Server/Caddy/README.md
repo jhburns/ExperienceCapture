@@ -2,7 +2,7 @@
 
 # Caddy
 
-The backend used [Caddy 1.0](https://caddyserver.com/v1/) as a reserve proxy for each service.
+The back-end used [Caddy 1.0](https://caddyserver.com/v1/) as a reserve proxy for each service.
 
 See: https://caddyserver.com/v1/docs for documentation. 
 
