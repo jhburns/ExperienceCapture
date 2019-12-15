@@ -15,9 +15,13 @@ Change the variables in *info.env*, for example `aws_region_name` can be set to 
 ## Usage
 
 - Build [AMI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html): `docker-compose up packer` builds a new AMI using [Packer](https://www.packer.io/) and [Ansible](https://www.ansible.com/).
-- `docker-compose run pulumi_up` and follow the prompts to deploy the application.
+- `docker-compose run pulumi up` and follow the prompts to deploy the application.
 - Connect to Instance: `docker-compose up ssh_connect` starts a terminal session to the Server. Change `aws_host_location` in *info.env* to specify the IP/hostname this is to be connected to.
-- `docker-compose run pulumi_destroy` and follow the prompts to destroy the application.
+- `docker-compose run pulumi destroy` and follow the prompts to destroy the application.
+
+### Tip
+
+Any command can be passed to Pulumi, see https://www.pulumi.com/docs/reference/cli/.
 
 ## Security Concerns
 

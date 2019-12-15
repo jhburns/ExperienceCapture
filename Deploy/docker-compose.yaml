@@ -34,21 +34,9 @@ services:
     env_file:
       - info.env
 
-  pulumi_up:
+  pulumi:
     build:
       context: ./Pulumi
-    networks:
-      - ec-pulumi-network
-    env_file:
-      - .env
-      - info.env
-
-  pulumi_destroy:
-    build:
-      context: ./Pulumi
-    command: ["sh", "-c", "pulumi login && pulumi destroy"]
-    volumes:
-      - ./credentials:/root/.aws/credentials
     networks:
       - ec-pulumi-network
     env_file:
