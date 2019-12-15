@@ -1,5 +1,5 @@
 ---
-name: Dockerfile and Yaml
+name: Dockerfile
 
 on:  # yamllint disable-line rule:truthy
   pull_request:
@@ -8,12 +8,9 @@ on:  # yamllint disable-line rule:truthy
       - temp-master
     paths:
       - '**/*Dockerfile*'
-      - '**/*.yaml'
-      - '**/*.yml'
       - '*Dockerfile*'
-      - '*.yaml'
-      - '*.yml'
-      - '.github/workflows/dockerfile-and-yaml-integration.yml'
+      - '.github/workflows/dockerfile-integration.yml'
+      - 'Dockerfile.integration'
 
 jobs:
   build:
@@ -26,6 +23,6 @@ jobs:
         with:
           username: "${{ secrets.DOCKER_USERNAME }}"
           password: "${{ secrets.DOCKER_PASSWORD }}"
-          image_name: jhburns/ec-dockerfile-and-yaml-cache
+          image_name: jhburns/ec-dockerfile-cache
           context: ./
           dockerfile: Dockerfile.integration
