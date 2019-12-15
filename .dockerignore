@@ -1,4 +1,5 @@
-.github/
+.git/
+.vs/
 ClientDevelopmentGame/
 ExampleUnityGame/
 SetupTestGame/

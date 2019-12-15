@@ -13,6 +13,7 @@ RUN pip3 install --quiet yamllint==1.19.0
 WORKDIR /app
 
 Copy Dockerfile.integration .yamllint.yaml ./
+COPY .github ./github
 COPY Deploy/ ./Deploy
 COPY Server/ ./Server
 
