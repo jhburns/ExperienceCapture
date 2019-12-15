@@ -8,6 +8,8 @@ on:  # yamllint disable-line rule:truthy
       - temp-master
     paths:
       - '**/*.md'
+      - '*.md'
+      - '.github/workflows/spellcheck-integration.yml'
 
 jobs:
   build:

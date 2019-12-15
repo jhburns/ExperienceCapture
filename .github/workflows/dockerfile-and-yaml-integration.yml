@@ -10,6 +10,10 @@ on:  # yamllint disable-line rule:truthy
       - '**/*Dockerfile*'
       - '**/*.yaml'
       - '**/*.yml'
+      - '*Dockerfile*'
+      - '*.yaml'
+      - '*.yml'
+      - '.github/workflows/dockerfile-and-yaml-integration.yml'
 
 jobs:
   build:
