@@ -21,6 +21,7 @@ on:  # yamllint disable-line rule:truthy
       - '.github/workflows/pulumi-integration.yml'
       - '**/*Dockerfile*'
       - '**/*.yaml'
+      # - '**/*.yml' commented out so it doesn't ignore itself
       - '*Dockerfile*'
       - '*.yaml'
       - '*.yml'
