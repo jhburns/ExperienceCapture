@@ -5,6 +5,7 @@ on:  # yamllint disable-line rule:truthy
   pull_request:
     branches:
       - master
+      - temp-master
     paths:
       - 'Server/Exporter/**'
       - '.github/workflows/exporter-integration.yml'
