@@ -50,6 +50,14 @@
       update_cache: yes
       name: docker-ce=5:19.03.5~3-0~ubuntu-bionic
 
+  - name: Start Docker Swarm
+    command: docker swarm init
+
+  - name: Create Docker registry service
+    command: docker stack deploy -c docker-compose.production.infra.yaml infra
+    args:
+      chdir: /srv
+
   - name: Download and install docker-compose
     shell: curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     args:
@@ -100,14 +108,6 @@
       user: ec-debug
       state: present
       key: "{{ lookup('file', './id_rsa.pub') }}"
-
-  - name: Start Docker Swarm
-    command: docker swarm init
-
-  - name: Create Docker registry service
-    command: docker stack deploy -c docker-compose.production.infra.yaml infra
-    args:
-      chdir: /srv
 
   - name: Rebuild Docker images for production
     command: docker-compose -f docker-compose.yaml -f docker-compose.production.yaml build --parallel

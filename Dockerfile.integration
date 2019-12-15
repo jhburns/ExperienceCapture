@@ -1,0 +1,10 @@
+FROM hadolint/hadolint:v1.17.3-debian
+WORKDIR /app
+
+Copy Dockerfile.integration .
+COPY Deploy/ ./Deploy
+COPY Server/ ./Server
+
+RUN find . -name "*Dockerfile*" -print | xargs --max-lines=1 hadolint
+
+CMD ["bash"]
