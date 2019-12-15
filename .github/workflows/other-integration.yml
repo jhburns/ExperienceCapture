@@ -23,7 +23,6 @@ on:  # yamllint disable-line rule:truthy
       - '**/*.yaml'
       - '**/*.yml'
 
-
 jobs:
   build:
     name: Check Build

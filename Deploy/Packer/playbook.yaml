@@ -105,9 +105,9 @@
 
     - name: Set authorized key
       authorized_key:
-      user: ec-debug
-      state: present
-      key: "{{ lookup('file', './id_rsa.pub') }}"
+        user: ec-debug
+        state: present
+        key: "{{ lookup('file', './id_rsa.pub') }}"
 
     - name: Rebuild Docker images for production
       command: docker-compose -f docker-compose.yaml -f docker-compose.production.yaml build --parallel
