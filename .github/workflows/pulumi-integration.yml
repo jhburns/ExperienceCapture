@@ -1,13 +1,14 @@
+---
 name: Pulumi Integration
 
-on:
+on:  # yamllint disable-line rule:truthy
   pull_request:
-    branches:    
+    branches:
       - master
       - temp-master
     paths:
-    - 'Deploy/Pulumi/**'
-    - '.github/workflows/pulumi-integration.yml'
+      - 'Deploy/Pulumi/**'
+      - '.github/workflows/pulumi-integration.yml'
 
 jobs:
   build:

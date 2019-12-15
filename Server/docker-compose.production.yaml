@@ -1,3 +1,4 @@
+---
 version: '3.5'
 
 services:
@@ -25,7 +26,7 @@ services:
         parallelism: 0
         delay: 30s
     ports:
-    - "2015:2015"
+      - "2015:2015"
     healthcheck:
       test: wget --quiet --tries=1 -O /dev/null http://localhost:2015/ || exit 1
       interval: 1m30s
@@ -41,13 +42,13 @@ services:
         parallelism: 0
         delay: 30s
     ports:
-    - "80:80"
-    - "443:443"
+      - "80:80"
+      - "443:443"
     volumes:
-    - ./Caddy/Caddyfile.production:/etc/Caddyfile
-    - ec-rp-volume:/etc/caddycerts
+      - ./Caddy/Caddyfile.production:/etc/Caddyfile
+      - ec-rp-volume:/etc/caddycerts
     env_file:
-    - host.info.env
+      - host.info.env
 
   db:
     deploy:
