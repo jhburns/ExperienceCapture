@@ -1,9 +1,10 @@
+---
 version: '3.5'
 
 services:
   api:
     environment:
-    - accept_any_id_token=true
+      - accept_any_id_token=true
 
   web:
     volumes:
@@ -13,16 +14,16 @@ services:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
     ports:
-    - "3003:3000"
+      - "3003:3000"
 
   rp:
     ports:
-    - "8090:2015"
+      - "8090:2015"
     volumes:
-    - ./Caddy/Caddyfile:/etc/Caddyfile
+      - ./Caddy/Caddyfile:/etc/Caddyfile
 
   exporter:
-    build: 
+    build:
       context: ./Exporter
     command: ["sh", "-c", "/wait && dotnet Exporter.dll"]
     depends_on:
@@ -35,4 +36,4 @@ services:
       - ec-network
 
 volumes:
-  ec-data-volume:
+  ec-data-volume: {}

@@ -1,12 +1,14 @@
+---
 name: WebUI Integration
 
-on:
+on:  # yamllint disable-line rule:truthy
   pull_request:
-    branches:    
+    branches:
       - master
+      - temp-master
     paths:
-    - 'Server/WebUI/**'
-    - '.github/workflows/webpage-integration.yml'
+      - 'Server/WebUI/**'
+      - '.github/workflows/webpage-integration.yml'
 
 jobs:
   build:

@@ -1,12 +1,14 @@
+---
 name: API Integration
 
-on:
+on:  # yamllint disable-line rule:truthy
   pull_request:
-    branches:    
+    branches:
       - master
+      - temp-master
     paths:
-    - 'Server/API/**'
-    - '.github/workflows/api-integration.yml'
+      - 'Server/API/**'
+      - '.github/workflows/api-integration.yml'
 
 jobs:
   build:

@@ -1,0 +1,21 @@
+---
+version: '3.5'
+
+services:
+  registry:
+    image: registry:2.7.1
+    deploy:
+      restart_policy:
+        condition: any
+    ports:
+      - 5000:5000
+    volumes:
+      - infra-registry-volume:/var/lib/registry
+    healthcheck:
+      test: wget --quiet --tries=1 -O /dev/null http://localhost:5000/v2/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  infra-registry-volume: {}

@@ -30,5 +30,5 @@
     "type": "ansible",
     "user": "ubuntu",
     "playbook_file": "./playbook.yaml"
-   }]
+  }]
 }
