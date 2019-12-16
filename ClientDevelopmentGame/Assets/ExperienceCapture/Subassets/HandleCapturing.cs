@@ -142,7 +142,7 @@ public class HandleCapturing : MonoBehaviour
                 string name = pairs[i].name;
                 string key = pairs[i].key;
                 
-                if (!gameData.ContainsKey(pairs[i].name)) 
+                if (!gameData.ContainsKey(name)) 
                 {
                     if (isIgnoringNotFound) {
                         continue;
@@ -150,7 +150,6 @@ public class HandleCapturing : MonoBehaviour
 
                     throw new SpecificPairsNotFoundException("Game object with name not found", name, key);
                 }
-                
                 object currentCapture = gameData[name];
 
                 if (currentCapture.GetType().GetProperty(key) == null) 
@@ -158,6 +157,7 @@ public class HandleCapturing : MonoBehaviour
                     if (isIgnoringNotFound) {
                         continue;
                     }
+
                     throw new SpecificPairsNotFoundException("Lacking key", name, key);
                 }
 
