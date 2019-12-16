@@ -77,10 +77,10 @@
         password_lock: true
 
     - name: Download the REX-Ray plugin
-      command: "docker plugin install rexray/ebs:0.11.4   \
-               --grant-all-permissions                  \
-              EBS_ACCESSKEY={{ rexray_access_id }}      \
-              EBS_SECRETKEY={{ rexray_secret_key }}     \
+      command: "docker plugin install rexray/ebs:0.11.4 \
+               --grant-all-permissions \
+              EBS_ACCESSKEY={{ rexray_access_id }} \
+              EBS_SECRETKEY={{ rexray_secret_key }} \
               EBS_REGION={{ aws_region_name }}"
 
     - name: Allow all access from RFC1918 networks to this host
