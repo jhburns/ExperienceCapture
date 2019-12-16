@@ -1,5 +1,5 @@
 ---
-name: Dockerfile and Yaml
+name: Yaml
 
 on:  # yamllint disable-line rule:truthy
   pull_request:
