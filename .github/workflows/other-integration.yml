@@ -29,9 +29,11 @@ on:  # yamllint disable-line rule:truthy
       - '**/*.md'
       - '*.md'
       - '.github/workflows/spellcheck-integration.yml'
+      - 'Dockerfile.spelling.integration'
       - '**/*.sh'
       - '*.sh'
       - '.github/workflows/shell-integration.yml'
+      - 'Dockerfile.shellcheck.integration'
 
 jobs:
   build:
