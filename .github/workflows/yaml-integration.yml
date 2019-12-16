@@ -7,13 +7,12 @@ on:  # yamllint disable-line rule:truthy
       - master
       - temp-master
     paths:
-      - '**/*Dockerfile*'
       - '**/*.yaml'
       - '**/*.yml'
-      - '*Dockerfile*'
       - '*.yaml'
       - '*.yml'
-      - '.github/workflows/dockerfile-and-yaml-integration.yml'
+      - '.github/workflows/yaml-integration.yml'
+      - 'Dockerfile.yaml.integration'
 
 jobs:
   build:
@@ -26,6 +25,6 @@ jobs:
         with:
           username: "${{ secrets.DOCKER_USERNAME }}"
           password: "${{ secrets.DOCKER_PASSWORD }}"
-          image_name: jhburns/ec-dockerfile-and-yaml-cache
+          image_name: jhburns/ec-yaml-cache
           context: ./
-          dockerfile: Dockerfile.integration
+          dockerfile: Dockerfile.yaml.integration

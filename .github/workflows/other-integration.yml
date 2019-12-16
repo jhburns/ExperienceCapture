@@ -19,13 +19,6 @@ on:  # yamllint disable-line rule:truthy
       - '.github/workflows/caddy-integration.yml'
       - 'Deploy/Pulumi/**'
       - '.github/workflows/pulumi-integration.yml'
-      - '**/*Dockerfile*'
-      - '**/*.yaml'
-      # - '**/*.yml' commented out so it doesn't ignore itself
-      - '*Dockerfile*'
-      - '*.yaml'
-      - '*.yml'
-      - '.github/workflows/dockerfile-and-yaml-integration.yml'
       - '**/*.md'
       - '*.md'
       - '.github/workflows/spellcheck-integration.yml'
@@ -34,6 +27,16 @@ on:  # yamllint disable-line rule:truthy
       - '*.sh'
       - '.github/workflows/shell-integration.yml'
       - 'Dockerfile.shellcheck.integration'
+      - '**/*Dockerfile*'
+      - '*Dockerfile*'
+      - '.github/workflows/dockerfile-integration.yml'
+      - 'Dockerfile.integration'
+      - '**/*.yaml'
+      # - '**/*.yml' commented out so it doesn't ignore itself
+      - '*.yaml'
+      - '*.yml'
+      - '.github/workflows/yaml-integration.yml'
+      - 'Dockerfile.yaml.integration'
 
 jobs:
   build:
