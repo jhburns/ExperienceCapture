@@ -14,33 +14,32 @@ using Network;
 
 public class HandleCapturing : MonoBehaviour
 {
-    private string url;
+    public string url { get; set; }
     public string sessionPath;
 
-    private string username;
+    public string username { get; set; }
 
     private List<ICapturable> allCapturable;
 
-    private int captureRate;
+    public int captureRate { get; set; }
     private int frameCount;
 
-    private bool sendToConsole;
-    private string id;
-    private bool isCapturing;
-    private bool findEveryFrame;
+    public bool sendToConsole { get; set; }
+    public string id { get; set; }
+    public bool isCapturing { get; set; }
+    public bool isFindingOften { get; set; }
 
     private bool isFirst;
 
-    private bool isVerbose;
-    private bool isSilent;
+    public bool isVerbose { get; set; }
+    public bool isSilent { get; set; }
 
     private List<string> capturableNames;
 
-    private object extraInfo;
+    public object extraInfo { get; set; }
     private int openRequests;
     private float averageResponceTime;
     private int responceCount;
-
 
     void Awake()
     {
@@ -89,7 +88,7 @@ public class HandleCapturing : MonoBehaviour
             return;
         }
 
-        if (findEveryFrame)
+        if (isFindingOften)
         {
             for (int i = 0; i < allCapturable.Count; i++)
             {
@@ -115,9 +114,9 @@ public class HandleCapturing : MonoBehaviour
 
         object info = new
         {
-            Time.unscaledDeltaTime,
             Time.realtimeSinceStartup,
             Time.timeSinceLevelLoad,
+            Time.unscaledDeltaTime,
         };
 
         captureData.Add("gameObjects", gameObjects);
@@ -258,13 +257,14 @@ public class HandleCapturing : MonoBehaviour
                 dateTime = DateTime.Now.ToString("yyyy.MM.dd-hh:mm:ss"),
                 description = "Session Started",
                 extraInfo,
+                special = true,
+                username,
                 frameInfo = new
                 {
                     unscaledDeltaTime = -1,
                     realtimeSinceStartup = -1,
                     timeSinceLevelLoad = -1,
                 },
-                username
             };
 
             sendCaptures(firstInfo);
@@ -276,13 +276,14 @@ public class HandleCapturing : MonoBehaviour
         object sceneLoadInfo = new
         {
             description = "Scene Loaded",
+            sceneName = scene.name,
+            special = true,
             frameInfo = new
             {
                 Time.unscaledDeltaTime,
                 Time.realtimeSinceStartup,
                 Time.timeSinceLevelLoad,
-            },
-            sceneName = scene.name
+            }
         };
 
         sendCaptures(sceneLoadInfo);
@@ -325,55 +326,5 @@ public class HandleCapturing : MonoBehaviour
         #else
             Application.Quit();
         #endif
-    }
-
-    public void setUrl(string u)
-    {
-        url = u;
-    }
-
-    public void setID(string i)
-    {
-        id = i;
-    }
-
-    public void setUsername(string n)
-    {
-        username = n;
-    }
-
-    public void setRate(int c)
-    {
-        captureRate = c;
-    }
-
-    public void setToConsole(bool c)
-    {
-        sendToConsole = c;
-    }
-
-    public void setCapturability(bool c)
-    {
-        isCapturing = c;
-    }
-
-    public void setVerbose(bool v)
-    {
-        isVerbose = v;
-    }
-
-    public void setSilence(bool s)
-    {
-        isSilent = s;
-    }
-
-    public void setFindEveryFrame(bool f)
-    {
-        findEveryFrame = f;
-    }
-
-    public void setExtraInfo(object e)
-    {
-        extraInfo = e;
     }
 }
