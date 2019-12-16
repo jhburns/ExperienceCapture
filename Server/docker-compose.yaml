@@ -14,7 +14,7 @@ services:
     environment:
       WAIT_HOSTS: db:27017
     networks:
-      s- ec-network
+      - ec-network
     healthcheck:
       test: wget --quiet --tries=1 -O /dev/null http://localhost/health/ || exit 1
       interval: 1m30s

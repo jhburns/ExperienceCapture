@@ -40,7 +40,9 @@ public class HandleCapturing : MonoBehaviour
 
     public object extraInfo { get; set; }
     private int openRequests;
+    private float minResponceTime;
     private float averageResponceTime;
+    private float maxResponceTime;
     private int responceCount;
 
     public bool isIgnoringNotFound { get; set; }
@@ -58,7 +60,10 @@ public class HandleCapturing : MonoBehaviour
         isCapturing = false;
         isFirst = true;
         responceCount = 0;
-        averageResponceTime = 1;
+
+        minResponceTime = 10000000f; //Some impossibly large value
+        averageResponceTime = 1f;
+        maxResponceTime = -1f;
     }
 
     void Update()
@@ -198,6 +203,14 @@ public class HandleCapturing : MonoBehaviour
 
             float responceTime = Time.realtimeSinceStartup - start;
             averageResponceTime = (averageResponceTime * responceCount + responceTime) / (responceCount + 1);
+
+            if (responceTime < minResponceTime) {
+                minResponceTime = responceTime;
+            }
+
+            if (responceTime > maxResponceTime) {
+                maxResponceTime = responceTime;
+            }
         }, 
         (error) =>
         {
@@ -217,7 +230,9 @@ public class HandleCapturing : MonoBehaviour
             {
                 extra += "Capturable objects: " + allCapturable.Count + "\n";
                 extra += "Open requests: " + openRequests + "\n";
-                extra += "Average request response time: " + averageResponceTime + "\n";
+                extra += "Request response time: min=" +  minResponceTime;
+                extra += " mean=" + averageResponceTime;
+                extra += " max=" + maxResponceTime + "\n";
             }
             else
             {
