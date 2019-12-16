@@ -236,7 +236,6 @@ public class HandleCapturing : MonoBehaviour
             }
         }
 
-
         for (int i = 0; i < capturableNames.Count; i++) 
         {
             if (repeatNames[i]) {
@@ -256,8 +255,10 @@ public class HandleCapturing : MonoBehaviour
             {
                 dateTime = DateTime.Now.ToString("yyyy.MM.dd-hh:mm:ss"),
                 description = "Session Started",
+                captureRate,
                 extraInfo,
                 special = true,
+                Application.targetFrameRate,
                 username,
                 frameInfo = new
                 {
