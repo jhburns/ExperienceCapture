@@ -12,6 +12,8 @@ using UnityEngine.Networking;
 using Newtonsoft.Json.Linq;
 using Network;
 
+using InputStructure;
+
 public class HandleCapturing : MonoBehaviour
 {
     public string url { get; set; }
@@ -40,6 +42,9 @@ public class HandleCapturing : MonoBehaviour
     private int openRequests;
     private float averageResponceTime;
     private int responceCount;
+
+    public bool isIgnoringNotFound { get; set; }
+    public InputStructure.SpecificPair[] pairs { get; set; }
 
     void Awake()
     {
@@ -121,39 +126,84 @@ public class HandleCapturing : MonoBehaviour
 
         captureData.Add("gameObjects", gameObjects);
         captureData.Add("frameInfo", info);
-        sendCaptures(captureData);
+        sendCaptures(captureData, gameObjects);
     }
 
-    private void sendCaptures(object data)
+    private void sendCaptures(object data) {
+        serializeCaptures(data);
+    }
+
+    private void sendCaptures(Dictionary<string, object> data, Dictionary<string, object> gameData)
     {
+        if (pairs.Length != 0) {
+            Dictionary<string, object> tempData = new Dictionary<string, object>();
+
+            for (int i = 0; i < pairs.Length; i++) {
+                string name = pairs[i].name;
+                string key = pairs[i].key;
+                
+                if (!gameData.ContainsKey(name)) 
+                {
+                    if (isIgnoringNotFound) {
+                        continue;
+                    }
+
+                    throw new SpecificPairsNotFoundException("Game object with name not found", name, key);
+                }
+                object currentCapture = gameData[name];
+
+                if (currentCapture.GetType().GetProperty(key) == null) 
+                {
+                    if (isIgnoringNotFound) {
+                        continue;
+                    }
+
+                    throw new SpecificPairsNotFoundException("Lacking key", name, key);
+                }
+
+                tempData.Add(key, currentCapture.GetType().GetProperty(key).GetValue(currentCapture, null));
+            }
+
+            data = tempData;
+        }
+
+        serializeCaptures(data);
+    }
+
+    private void serializeCaptures(object data) {
         if (sendToConsole && !isSilent)
         {
-            Debug.Log(JsonConvert.SerializeObject(data, Formatting.Indented));
+            if (pairs.Length != 0) 
+            {
+                Debug.Log(JsonConvert.SerializeObject(data));
+            }
+            else  
+            {
+                Debug.Log(JsonConvert.SerializeObject(data, Formatting.Indented));
+            }
+
+            return;
         }
         
+        byte[] bson = Serial.toBSON(data);
 
-        if (!sendToConsole)
+        openRequests++;
+        float start = Time.realtimeSinceStartup;
+
+        StartCoroutine(HTTPHelpers.post(url + sessionPath + id, bson, 
+        (responceData) => 
         {
-            byte[] bson = Serial.toBSON(data);
+            openRequests--;
+            responceCount++;
 
-            openRequests++;
-            float start = Time.realtimeSinceStartup;
-
-            StartCoroutine(HTTPHelpers.post(url + sessionPath + id, bson, 
-            (responceData) => 
-            {
-                openRequests--;
-                responceCount++;
-
-                float responceTime = Time.realtimeSinceStartup - start;
-                averageResponceTime = (averageResponceTime * responceCount + responceTime) / (responceCount + 1);
-            }, 
-            (error) =>
-            {
-                Debug.Log(error);
-            })
-            );
-        }
+            float responceTime = Time.realtimeSinceStartup - start;
+            averageResponceTime = (averageResponceTime * responceCount + responceTime) / (responceCount + 1);
+        }, 
+        (error) =>
+        {
+            Debug.Log(error);
+        })
+        );
     }
 
     private void printExtraInfo()
@@ -236,7 +286,6 @@ public class HandleCapturing : MonoBehaviour
             }
         }
 
-
         for (int i = 0; i < capturableNames.Count; i++) 
         {
             if (repeatNames[i]) {
@@ -256,8 +305,10 @@ public class HandleCapturing : MonoBehaviour
             {
                 dateTime = DateTime.Now.ToString("yyyy.MM.dd-hh:mm:ss"),
                 description = "Session Started",
+                captureRate,
                 extraInfo,
                 special = true,
+                Application.targetFrameRate,
                 username,
                 frameInfo = new
                 {
