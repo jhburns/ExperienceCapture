@@ -163,23 +163,23 @@ public class CaptureSetup : MonoBehaviour
     {
         HandleCapturing newHandler = Instantiate(handler);
 
-        newHandler.setUrl(url);
-        newHandler.setUsername(username);
-        newHandler.setID(id);
+        newHandler.url = url;
+        newHandler.username = username;
+        newHandler.id = id;
 
-        newHandler.setRate(captureRate);
-        newHandler.setToConsole(offlineMode);
-        newHandler.setCapturability(false);
-        newHandler.setFindEveryFrame(findObjectsInEachFrame);
+        newHandler.captureRate = captureRate;
+        newHandler.sendToConsole = offlineMode;
+        newHandler.isCapturing = false;
+        newHandler.isFindingOften = findObjectsInEachFrame;
 
-        newHandler.setVerbose(printAdditionalCaptureInfo);
-        newHandler.setSilence(doNotPrintToConsole);
+        newHandler.isVerbose = printAdditionalCaptureInfo;
+        newHandler.isSilent = doNotPrintToConsole;
 
-        newHandler.setExtraInfo(new
+        newHandler.extraInfo = new
         {
+            clientVersion = clientVersionLocked,
             gameVersion = gameVersion,
-            clientVersion = clientVersionLocked
-        });
+        };
 
         SceneManager.LoadScene(sceneToLoad);
     }
