@@ -29,6 +29,9 @@ on:  # yamllint disable-line rule:truthy
       - '**/*.md'
       - '*.md'
       - '.github/workflows/spellcheck-integration.yml'
+      - '**/*.sh'
+      - '*.sh'
+      - '.github/workflows/shell-integration.yml'
 
 jobs:
   build:

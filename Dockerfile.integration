@@ -12,13 +12,8 @@ RUN pip3 install --quiet yamllint==1.19.0
 
 WORKDIR /app
 
-Copy *Dockerfile* *.yaml *.yml ./
-COPY .github ./github
-COPY Deploy/ ./Deploy
-COPY Server/ ./Server
+Copy . . 
 
 # Sort used to make output discrete and eaiser to debug
 RUN find . -name "*Dockerfile*" -print0 | sort -z | xargs -0 --max-lines=1 hadolint
 RUN yamllint --strict .
-
-CMD ["bash"]

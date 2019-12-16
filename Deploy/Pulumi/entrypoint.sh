@@ -1,3 +1,3 @@
 #!/bin/dash
 
-pulumi login && pulumi $@
+pulumi login && pulumi "$@"
