@@ -35,4 +35,26 @@ namespace InputStructure
         {
         }
     }
+
+    public class SpecificPairsNotFoundException : Exception
+    {
+        public SpecificPairsNotFoundException()
+        {
+        }
+
+        public SpecificPairsNotFoundException(string message)
+            : base(message)
+        {
+        }
+
+        public SpecificPairsNotFoundException(string message, string objectName, string keyName)
+            : base(string.Format("{0}: of {1}.{2}", message, objectName, keyName))
+        {
+        }
+
+        public SpecificPairsNotFoundException(string message, Exception inner)
+            : base(message, inner)
+        {
+        }
+    }
 }

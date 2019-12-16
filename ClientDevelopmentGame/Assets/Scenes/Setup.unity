@@ -185,12 +185,17 @@ Prefab:
     - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
         type: 2}
       propertyPath: limitOutputToSpecified.Array.data[0]
-      value: hello:bob
+      value: Tester(Clone)-init-9:dummyText
       objectReference: {fileID: 0}
     - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
         type: 2}
       propertyPath: limitOutputToSpecified.Array.data[1]
-      value: 'hello:'
+      value: Tester(Clone)-init-9:waa
+      objectReference: {fileID: 0}
+    - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: doNotThrowNotFound
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68aaa89a57e29194da9ce770ee766ab0, type: 2}

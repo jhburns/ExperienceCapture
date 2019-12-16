@@ -42,6 +42,8 @@ public class CaptureSetup : MonoBehaviour
     [Tooltip("Uses Windows docker default host IP, instead of localhost.")]
     public bool useWindowsDefault;
 
+    [Tooltip("Prevents Exceptions when Specified game objects/keys aren't found. Useful when dynamically created objects.")]
+    public bool doNotThrowNotFound;
     public string[] limitOutputToSpecified;
 
     public HandleCapturing handler;
@@ -228,6 +230,9 @@ public class CaptureSetup : MonoBehaviour
             clientVersion = clientVersionLocked,
             gameVersion = gameVersion,
         };
+
+        newHandler.isIgnoringNotFound = doNotThrowNotFound;
+        newHandler.pairs = pairs;
 
         SceneManager.LoadScene(sceneToLoad);
     }
