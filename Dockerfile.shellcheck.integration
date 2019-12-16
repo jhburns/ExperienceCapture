@@ -1,5 +1,5 @@
 FROM koalaman/shellcheck-alpine:v0.7.0
-SHELL ["/bin/sh", "-o", "pipefail", "-c"]
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 WORKDIR /app
 
 COPY . .
