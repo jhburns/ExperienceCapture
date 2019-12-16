@@ -4,7 +4,8 @@
 
 **/.dockerignore
 **/Dockerfile
-**/Dockerfile.integrate
+**/Dockerfile.integration
+
 
 # Exporter
 

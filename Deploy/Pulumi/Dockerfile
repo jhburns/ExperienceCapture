@@ -24,4 +24,8 @@ COPY . ./
 # Pre-building so it doesn't happen everytime at runtime
 RUN dotnet build -nologo .
 
-CMD ["sh", "-c", "pulumi login && pulumi up"]
+# entrypoint may have windows line ending so it has to be sanitized 
+RUN chmod +x entrypoint.sh \
+ && sed -i -e 's/\r$//' entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]
