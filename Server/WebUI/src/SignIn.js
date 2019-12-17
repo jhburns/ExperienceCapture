@@ -70,8 +70,6 @@ class SignIn extends Component {
 
 	  if (!this.state.isMock) {
         window.gapi.load('signin2', () => {
-          // render a sign in button
-          // using this method will show Signed In if the user is already signed in
           var opts = {
             width: 200,
             height: 50,
