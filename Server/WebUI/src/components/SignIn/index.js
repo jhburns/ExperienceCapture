@@ -46,7 +46,11 @@ class SignIn extends Component {
 		</div>
 	  )
 	} else if (this.state.isUnableToSignIn) {
-	  return <p>Sorry, there is an issue signing in.</p>
+	  return (
+	    <div>
+		  <p>Sorry, there is an issue signing in.</p>
+		</div>
+	  )
     } else {
       return (
         <div>
