@@ -56,7 +56,7 @@
         src: /deploy/Server/
         dest: /srv
         rsync_opts:
-          - "{% if packer_debug == 'true' %}--chmod=F777{% else %}--chmod=F444{% endif %}"
+          - "{% if packer_debug == 'true' %}--chmod=F666{% else %}--chmod=F444{% endif %}"
 
     - name: Start Docker Swarm
       command: docker swarm init

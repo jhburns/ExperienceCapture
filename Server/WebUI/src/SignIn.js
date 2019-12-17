@@ -3,39 +3,46 @@
 import React, { Component } from 'react';
 import { gapi } from 'gapi-script';
 
+import { submitUser } from "./libs/userManagement";
+
 class SignIn extends Component {
   constructor(props) {
     super(props)
     this.state = {
         isSignedIn: false,
-		isMock: false
+		isMock: false,
+		isUnableToSignIn: false
     }
   }
 
   getContent() {
-    if (this.state.isSignedIn || this.state.isMock) {
-      return <p>Hello user, you're signed in </p>
+    if (this.state.isSignedIn) {
+      return <p>You're Signed In </p>
+	} else if (this.state.isUnableToSignIn) {
+	  return <p>Sorry, there is some issue signing in.</p>
     } else {
       return (
         <div>
-          <p>You are not signed in. Click here to sign in.</p>
+          <p>Please Sign In</p>
           <button id="loginButton">Login with Google</button>
         </div>
       )
     }   
   }
 
-  onSuccess() {
+  onSuccess(user) {
+	submitUser(user, undefined, this.onFailure);
+
     this.setState({
       isSignedIn: true,
-	  isMock: false
-   })
+    })
   }
 
-  onFailed(err) {
+  onFailure() {
+    console.log("Error signing user in.");
+
     this.setState({
-      isSignedIn: false,
-	  isMock: false
+	  isUnableToSignIn: true
     })
   }
 
@@ -45,13 +52,13 @@ class SignIn extends Component {
 
   	this.setState({
 	  isSignedIn: true,
-	  isMock: true
+	  isMock: true,
 	})
   }
 
   componentDidMount() {
     const successCallback = this.onSuccess.bind(this);
-	const failureCallback = this.onFailed.bind(this);
+	const failureCallback = this.onFailure.bind(this);
 	const invalidCallback = this.onInvalidRequest.bind(this);
 
     window.gapi.load('auth2', () => {
@@ -68,11 +75,13 @@ class SignIn extends Component {
           var opts = {
             width: 200,
             height: 50,
-            onSuccess: successCallback,
-		    onFailure: failureCallback
+            onsuccess: successCallback,
+		    onfailure: failureCallback
           }
           gapi.signin2.render('loginButton', opts)
         });
+	  } else {
+	    submitUser(null, true, failureCallback);
 	  }
     })
   }
