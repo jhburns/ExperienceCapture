@@ -28,17 +28,20 @@ class SignIn extends Component {
   onSuccess() {
     this.setState({
       isSignedIn: true,
+	  isMock: false
    })
   }
 
   onFailed(err) {
     this.setState({
       isSignedIn: false,
+	  isMock: false
     })
   }
 
   onInvalidRequest(err) {
     console.log("Site is running locally, using mock data");
+	console.log(err);
 
   	this.setState({
 	  isSignedIn: true,
@@ -49,7 +52,7 @@ class SignIn extends Component {
   componentDidMount() {
     const successCallback = this.onSuccess.bind(this);
 	const failureCallback = this.onFailed.bind(this);
-	const invalidCallback = this.onInvalidRequest(this);
+	const invalidCallback = this.onInvalidRequest.bind(this);
 
     window.gapi.load('auth2', () => {
       this.auth2 = gapi.auth2.init({
