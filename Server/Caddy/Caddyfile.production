@@ -3,6 +3,8 @@ http://{$aws_domain_name} {
 }
 
 https://{$aws_domain_name} {
+	gzip
+
 	log stdout
 	errors stdout
 

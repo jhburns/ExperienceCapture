@@ -10,7 +10,7 @@ services:
     ports:
       - 5000:5000
     volumes:
-      - infra-registry-volume:/var/lib/registry
+      - prod-registry-volume:/var/lib/registry
     healthcheck:
       test: wget --quiet --tries=1 -O /dev/null http://localhost:5000/v2/ || exit 1
       interval: 1m30s
@@ -18,4 +18,4 @@ services:
       retries: 3
 
 volumes:
-  infra-registry-volume: {}
+  prod-registry-volume: {}
