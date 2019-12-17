@@ -19,6 +19,7 @@ namespace Nancy.App.Hosting.Kestrel
             this.Post("/", (args) =>
             {
                 var tokens = db.GetCollection<BsonDocument>("tokens");
+
                 // Check if sign-up token is valid, and id token is valid from Google
                 // Unless in local dev mode
                 // If not, return 401
