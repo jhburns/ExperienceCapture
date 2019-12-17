@@ -10,11 +10,13 @@ services:
     volumes:
       - ./WebUI/:/app/
       - /app/node_modules
+    ports:
+      - "3003:3000"
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
-    ports:
-      - "3003:3000"
+    env_file:
+      - host.info.env
 
   rp:
     ports:

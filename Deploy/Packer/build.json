@@ -3,7 +3,6 @@
     "aws_access_id": "{{env `aws_packer_access_id`}}",
     "aws_secret_key": "{{env `aws_packer_secret_key`}}",
     "aws_region": "{{env `aws_region_name`}}",
-    "aws_prefix": "{{env `aws_ami_name_prefix`}}",
     "aws_user": "{{env `aws_account_for_packer`}}",
 	"aws_version": "{{env `aws_ami_version_number`}}"
   },
@@ -24,7 +23,7 @@
     },
     "instance_type": "t2.small",
     "ssh_username": "ubuntu",
-    "ami_name": "{{user `aws_prefix`}}-v{{user `aws_version`}}-{{isotime \"2006.01.02-15..04..05\"}}"
+    "ami_name": "build-v{{user `aws_version`}}-{{isotime \"2006.01.02-15..04..05\"}}"
   }],
   "provisioners": [{
     "type": "ansible",

@@ -1,3 +1,5 @@
+gzip
+
 http://{$aws_domain_name} {
 	redir https://{host}{uri}
 }

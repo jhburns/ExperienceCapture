@@ -7,6 +7,7 @@
     rexray_access_id: "{{ lookup('env','aws_rexray_access_id') }}"
     rexray_secret_key: "{{ lookup('env','aws_rexray_secret_key') }}"
     aws_region_name: "{{ lookup('env','aws_region_name') }}"
+    packer_debug: "{{ lookup('env','packer_debug_option') }}"
 
   tasks:
 
@@ -49,6 +50,13 @@
       apt:
         update_cache: true
         name: docker-ce=5:19.03.5~3-0~ubuntu-bionic
+
+    - name: Copy Server files over
+      synchronize:
+        src: /deploy/Server/
+        dest: /srv
+        rsync_opts:
+          - "{% if packer_debug == 'true' %}--chmod=F777{% else %}--chmod=F444{% endif %}"
 
     - name: Start Docker Swarm
       command: docker swarm init
@@ -95,13 +103,6 @@
         - {port: "7946", protocol: "tcp"}
         - {port: "7946", protocol: "udp"}
         - {port: "4789", protocol: "udp"}
-
-    - name: Copy Server files over
-      synchronize:
-        src: /deploy/Server/
-        dest: /srv
-        rsync_opts:
-          - "--chmod=F444"
 
     - name: Set authorized key
       authorized_key:

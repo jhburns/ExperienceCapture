@@ -54,8 +54,6 @@ services:
     hostname: web
     networks:
       - ec-network
-    env_file:
-      - host.info.env
 
 networks:
   ec-network: {}
