@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { gapi } from 'gapi-script';
 
-import { submitUser } from "./libs/userManagement";
+import { submitUser } from "libs/userManagement";
 
 class SignIn extends Component {
   constructor(props) {
@@ -11,13 +11,19 @@ class SignIn extends Component {
     this.state = {
         isSignedIn: false,
 		isMock: false,
-		isUnableToSignIn: false
+		isUnableToSignIn: false,
+		user: null
     }
   }
 
   getContent() {
     if (this.state.isSignedIn) {
-      return <p>You're Signed In </p>
+      return (
+		<div>
+		  <p>You're Signed In </p>
+		  <button>Sign Out</button>
+		</div>
+	  )
 	} else if (this.state.isUnableToSignIn) {
 	  return <p>Sorry, there is an issue signing in.</p>
     } else {
@@ -35,6 +41,7 @@ class SignIn extends Component {
 
     this.setState({
       isSignedIn: true,
+	  user
     })
   }
 
