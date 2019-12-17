@@ -1,10 +1,10 @@
-gzip
-
 http://{$aws_domain_name} {
 	redir https://{host}{uri}
 }
 
 https://{$aws_domain_name} {
+	gzip
+
 	log stdout
 	errors stdout
 
