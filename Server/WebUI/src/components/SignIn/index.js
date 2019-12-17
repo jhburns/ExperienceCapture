@@ -3,21 +3,48 @@
 import React, { Component } from 'react';
 import { gapi } from 'gapi-script';
 
-import { submitUser } from "./libs/userManagement";
+import { submitUser, signOutUser } from "libs/userManagement";
+
+import SignOutButton from "components/SignOutButton"
 
 class SignIn extends Component {
   constructor(props) {
     super(props)
     this.state = {
-        isSignedIn: false,
-		isMock: false,
-		isUnableToSignIn: false
+      isSignedIn: false,
+	  isSignedOut: false, 
+	  isMock: false,
+	  isUnableToSignIn: false,
+	  user: null
     }
+
+	this.onSignOut = this.onSignOut.bind(this);
+  }
+
+  onSignOut() {
+	signOutUser(this.state.user, this.state.isMock);
+
+	this.setState({
+	  isSignedIn: false,
+	  isSignedOut: true,
+	  user: null,
+	});
   }
 
   getContent() {
     if (this.state.isSignedIn) {
-      return <p>You're Signed In </p>
+      return (
+		<div>
+		  <p>You're Signed In</p>
+		  <SignOutButton onClickCallback={this.onSignOut} />
+		</div>
+	  )
+	} else if (this.state.isSignedOut) {
+	  return (
+		<div>
+		  <p>You're Signed Out</p>
+		</div>
+	  )
 	} else if (this.state.isUnableToSignIn) {
 	  return <p>Sorry, there is an issue signing in.</p>
     } else {
@@ -35,7 +62,8 @@ class SignIn extends Component {
 
     this.setState({
       isSignedIn: true,
-    })
+	  user
+    });
   }
 
   onFailure() {
@@ -43,7 +71,7 @@ class SignIn extends Component {
 
     this.setState({
 	  isUnableToSignIn: true
-    })
+    });
   }
 
   onInvalidRequest(err) {
@@ -53,7 +81,7 @@ class SignIn extends Component {
   	this.setState({
 	  isSignedIn: true,
 	  isMock: true,
-	})
+	});
   }
 
   componentDidMount() {
