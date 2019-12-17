@@ -5,6 +5,8 @@ import { gapi } from 'gapi-script';
 
 import { submitUser } from "libs/userManagement";
 
+import SignOutButton from "components/SignOutButton"
+
 class SignIn extends Component {
   constructor(props) {
     super(props)
@@ -20,8 +22,8 @@ class SignIn extends Component {
     if (this.state.isSignedIn) {
       return (
 		<div>
-		  <p>You're Signed In </p>
-		  <button>Sign Out</button>
+		  <p>You're Signed In</p>
+		  <SignOutButton />
 		</div>
 	  )
 	} else if (this.state.isUnableToSignIn) {
