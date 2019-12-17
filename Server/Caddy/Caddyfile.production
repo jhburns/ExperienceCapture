@@ -5,9 +5,6 @@ http://{$aws_domain_name} {
 https://{$aws_domain_name} {
 	gzip
 
-	log stdout
-	errors stdout
-
 	proxy /api/v1 api:80 {
 		without /api/v1
 		transparent
