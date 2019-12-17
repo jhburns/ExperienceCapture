@@ -11,4 +11,8 @@ function submitUser(user, isMock=false, onError) {
 //
 //}
 
-export { submitUser } 
+function signOutUser(user, isMock=false) {
+
+}
+
+export { submitUser, signOutUser } 
