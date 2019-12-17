@@ -59,10 +59,22 @@ namespace Nancy.App.Hosting.Kestrel
             {
                 var claims = db.GetCollection<BsonDocument>("claims");
 
+                // Check if claim exists, else return 404
+
                 // If claim unfilled, return 202
 
                 // Else return API token for claim
                 return "API TOKEN";
+            });
+
+            this.Delete("/claims/", (args) =>
+            {
+                var claims = db.GetCollection<BsonDocument>("claims");
+
+                // Check if claim exists, else return 404
+
+                // Else return ok
+                return "OK";
             });
         }
     }
