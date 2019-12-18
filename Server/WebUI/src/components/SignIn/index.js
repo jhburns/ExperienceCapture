@@ -116,7 +116,9 @@ class SignIn extends Component {
     })
   }
 
+  /* Useful for debugging
   componentDidUpdate(prevProps, prevState) {
+
     console.log("----------------");
     Object.entries(this.props).forEach(([key, val]) =>
       prevProps[key] !== val && console.log(`Prop '${key}' changed`)
@@ -127,6 +129,7 @@ class SignIn extends Component {
       );
     }
   }
+  */
 
   render() {
     return (
