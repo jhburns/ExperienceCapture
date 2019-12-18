@@ -15,38 +15,58 @@ class SignIn extends Component {
 	  isSignedOut: false, 
 	  isMock: false,
 	  isUnableToSignIn: false,
-	  user: null
     }
 
-	this.onSignOut = this.onSignOut.bind(this);
+	this.successCallback = this.onSuccess.bind(this);
+	this.failureCallback = this.onFailure.bind(this);
+	this.invalidCallback = this.onInvalidRequest.bind(this);
+	this.signOutCallback = this.onSignOut.bind(this);
+	this.renderLoginCallback = this.renderLogin.bind(this);
+  }
+
+  renderLogin() {
+    const opts = {
+      width: 220,
+      height: 50,
+	  longtitle: true,
+      onsuccess: this.successCallback,
+      onfailure: this.failureCallback
+    }
+    
+	gapi.signin2.render('loginButton', opts);
   }
 
   onSignOut() {
-	signOutUser(this.state.user, this.state.isMock);
-
-	this.setState({
-	  isSignedIn: false,
-	  isSignedOut: true,
-	  user: null,
+	signOutUser(this.state.isMock, () => {
+	  this.setState({
+	    isSignedIn: false,
+	    isSignedOut: true,
+	  }, () => window.gapi.load('signin2', this.renderLoginCallback));
 	});
   }
 
   getContent() {
-    if (this.state.isSignedIn) {
+  	if (this.state.isUnableToSignIn) {
+	  return (
+	    <div>
+		  <p>Sorry, there was an issue signing in.</p>
+		</div>
+	  )
+    } else if (this.state.isSignedIn) {
       return (
 		<div>
 		  <p>You're Signed In</p>
-		  <SignOutButton onClickCallback={this.onSignOut} />
+		  <SignOutButton onClickCallback={this.signOutCallback} />
 		</div>
 	  )
 	} else if (this.state.isSignedOut) {
 	  return (
 		<div>
 		  <p>You're Signed Out</p>
+		  <p>Sign In Again</p>
+          <button id="loginButton">Login with Google</button>
 		</div>
 	  )
-	} else if (this.state.isUnableToSignIn) {
-	  return <p>Sorry, there is an issue signing in.</p>
     } else {
       return (
         <div>
@@ -58,11 +78,10 @@ class SignIn extends Component {
   }
 
   onSuccess(user) {
-	submitUser(user, undefined, this.onFailure);
+	submitUser(undefined, this.failureCallback);
 
     this.setState({
       isSignedIn: true,
-	  user
     });
   }
 
@@ -85,32 +104,31 @@ class SignIn extends Component {
   }
 
   componentDidMount() {
-    const successCallback = this.onSuccess.bind(this);
-	const failureCallback = this.onFailure.bind(this);
-	const invalidCallback = this.onInvalidRequest.bind(this);
-
     window.gapi.load('auth2', () => {
       this.auth2 = gapi.auth2.init({
         client_id: this.props.clientId,
       });
 
-	  this.auth2.then(() => {}, invalidCallback);
+	  this.auth2.then(() => {}, this.invalidCallback);
 
-	  if (!this.state.isMock) {
-        window.gapi.load('signin2', () => {
-          var opts = {
-            width: 200,
-            height: 50,
-            onsuccess: successCallback,
-		    onfailure: failureCallback
-          }
-          gapi.signin2.render('loginButton', opts)
-        });
-	  } else {
-	    submitUser(null, true, failureCallback);
-	  }
+      window.gapi.load('signin2', this.renderLoginCallback);
     })
   }
+
+  /* Useful for debugging
+  componentDidUpdate(prevProps, prevState) {
+
+    console.log("----------------");
+    Object.entries(this.props).forEach(([key, val]) =>
+      prevProps[key] !== val && console.log(`Prop '${key}' changed`)
+    );
+    if (this.state) {
+      Object.entries(this.state).forEach(([key, val]) =>
+        prevState[key] !== val && console.log(`State '${key}' changed with val ${val}`)
+      );
+    }
+  }
+  */
 
   render() {
     return (

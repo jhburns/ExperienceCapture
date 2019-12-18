@@ -21,7 +21,7 @@ services:
       - ec-deploy-network
     env_file:
       - .env
-      - info.env
+      - deploy.info.env
 
   ssh_connect:
     build:
@@ -32,7 +32,7 @@ services:
     networks:
       - ec-connect-network
     env_file:
-      - info.env
+      - deploy.info.env
 
   pulumi:
     build:
@@ -41,7 +41,7 @@ services:
       - ec-pulumi-network
     env_file:
       - .env
-      - info.env
+      - deploy.info.env
 
 networks:
   ec-deploy-network: {}

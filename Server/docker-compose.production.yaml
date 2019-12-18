@@ -50,7 +50,7 @@ services:
       - ./Caddy/Caddyfile.production:/etc/Caddyfile
       - ec-rp-volume:/etc/caddycerts
     env_file:
-      - host.info.env
+      - server.info.env
 
   db:
     deploy:
