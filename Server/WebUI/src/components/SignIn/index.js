@@ -1,10 +1,7 @@
-//From https://codeburst.io/adding-google-sign-in-to-your-webapp-a-react-example-dcec8c73cb9f
-
 import React, { Component } from 'react';
 import { gapi } from 'gapi-script';
 
 import { submitUser, signOutUser } from "libs/userManagement";
-
 import SignOutButton from "components/SignOutButton"
 
 class SignIn extends Component {
@@ -71,7 +68,7 @@ class SignIn extends Component {
       return (
         <div>
           <p>Please Sign In</p>
-          <button id="loginButton">Login with Google</button>
+          <button id="loginButton">Sign In With Google</button>
         </div>
       )
     }   
@@ -112,23 +109,8 @@ class SignIn extends Component {
 	  this.auth2.then(() => {}, this.invalidCallback);
 
       window.gapi.load('signin2', this.renderLoginCallback);
-    })
+    });
   }
-
-  /* Useful for debugging
-  componentDidUpdate(prevProps, prevState) {
-
-    console.log("----------------");
-    Object.entries(this.props).forEach(([key, val]) =>
-      prevProps[key] !== val && console.log(`Prop '${key}' changed`)
-    );
-    if (this.state) {
-      Object.entries(this.state).forEach(([key, val]) =>
-        prevState[key] !== val && console.log(`State '${key}' changed with val ${val}`)
-      );
-    }
-  }
-  */
 
   render() {
     return (
