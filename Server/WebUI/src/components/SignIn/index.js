@@ -37,11 +37,12 @@ class SignIn extends Component {
   }
 
   onSignOut() {
-	signOutUser(this.state.isMock);
-
-	this.setState({
-	  isSignedIn: false,
-	  isSignedOut: true,
+	signOutUser(this.state.isMock, () => {
+	  console.log("snek");
+	  this.setState({
+	    isSignedIn: false,
+	    isSignedOut: true,
+	  }, () => window.gapi.load('signin2', this.renderLoginCallback));
 	});
   }
 
@@ -111,18 +112,20 @@ class SignIn extends Component {
 
 	  this.auth2.then(() => {}, this.invalidCallback);
 
-	  if (!this.state.isMock) { // Initial login button rendering
-        window.gapi.load('signin2', this.renderLoginCallback);
-	  } else {
-	    submitUser(null, true, this.failureCallback);
-	  }
+      window.gapi.load('signin2', this.renderLoginCallback);
     })
   }
 
-  componentDidUpdate(prevProps, prevState,) {
-    if (this.state.isSignedOut !== prevState.isSignedOut) {
-	  window.gapi.load('signin2', this.renderLoginCallback);
-	}
+  componentDidUpdate(prevProps, prevState) {
+    console.log("----------------");
+    Object.entries(this.props).forEach(([key, val]) =>
+      prevProps[key] !== val && console.log(`Prop '${key}' changed`)
+    );
+    if (this.state) {
+      Object.entries(this.state).forEach(([key, val]) =>
+        prevState[key] !== val && console.log(`State '${key}' changed with val ${val}`)
+      );
+    }
   }
 
   render() {
