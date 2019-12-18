@@ -26,8 +26,9 @@ class SignIn extends Component {
 
   renderLogin() {
     const opts = {
-      width: 200,
+      width: 220,
       height: 50,
+	  longtitle: true,
       onsuccess: this.successCallback,
       onfailure: this.failureCallback
     }
@@ -110,7 +111,7 @@ class SignIn extends Component {
 
 	  this.auth2.then(() => {}, this.invalidCallback);
 
-	  if (!this.state.isMock) {
+	  if (!this.state.isMock) { // Initial login button rendering
         window.gapi.load('signin2', this.renderLoginCallback);
 	  } else {
 	    submitUser(null, true, this.failureCallback);
