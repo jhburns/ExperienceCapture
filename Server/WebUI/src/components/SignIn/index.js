@@ -46,7 +46,13 @@ class SignIn extends Component {
   }
 
   getContent() {
-    if (this.state.isSignedIn) {
+  	if (this.state.isUnableToSignIn) {
+	  return (
+	    <div>
+		  <p>Sorry, there was an issue signing in.</p>
+		</div>
+	  )
+    } else if (this.state.isSignedIn) {
       return (
 		<div>
 		  <p>You're Signed In</p>
@@ -59,12 +65,6 @@ class SignIn extends Component {
 		  <p>You're Signed Out</p>
 		  <p>Sign In Again</p>
           <button id="loginButton">Login with Google</button>
-		</div>
-	  )
-	} else if (this.state.isUnableToSignIn) {
-	  return (
-	    <div>
-		  <p>Sorry, there was an issue signing in.</p>
 		</div>
 	  )
     } else {
@@ -120,7 +120,7 @@ class SignIn extends Component {
   }
 
   componentDidUpdate(prevProps, prevState,) {
-    if (this.isSignedOut !== prevState.isSignedOut) {
+    if (this.state.isSignedOut !== prevState.isSignedOut) {
 	  window.gapi.load('signin2', this.renderLoginCallback);
 	}
   }
