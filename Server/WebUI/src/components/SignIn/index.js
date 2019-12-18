@@ -68,7 +68,7 @@ class SignIn extends Component {
       return (
         <div>
           <p>Please Sign In</p>
-          <button id="loginButton">Login with Google</button>
+          <button id="loginButton">Sign In With Google</button>
         </div>
       )
     }   
@@ -109,7 +109,7 @@ class SignIn extends Component {
 	  this.auth2.then(() => {}, this.invalidCallback);
 
       window.gapi.load('signin2', this.renderLoginCallback);
-    })
+    });
   }
 
   render() {
