@@ -38,7 +38,6 @@ class SignIn extends Component {
 
   onSignOut() {
 	signOutUser(this.state.isMock, () => {
-	  console.log("snek");
 	  this.setState({
 	    isSignedIn: false,
 	    isSignedOut: true,
