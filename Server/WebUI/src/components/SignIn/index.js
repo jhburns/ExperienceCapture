@@ -21,6 +21,18 @@ class SignIn extends Component {
 	this.failureCallback = this.onFailure.bind(this);
 	this.invalidCallback = this.onInvalidRequest.bind(this);
 	this.signOutCallback = this.onSignOut.bind(this);
+	this.renderLoginCallback = this.renderLogin.bind(this);
+  }
+
+  renderLogin() {
+    const opts = {
+      width: 200,
+      height: 50,
+      onsuccess: this.successCallback,
+      onfailure: this.failureCallback
+    }
+    
+	gapi.signin2.render('loginButton', opts);
   }
 
   onSignOut() {
@@ -44,12 +56,14 @@ class SignIn extends Component {
 	  return (
 		<div>
 		  <p>You're Signed Out</p>
+		  <p>Sign In Again</p>
+          <button id="loginButton">Login with Google</button>
 		</div>
 	  )
 	} else if (this.state.isUnableToSignIn) {
 	  return (
 	    <div>
-		  <p>Sorry, there is an issue signing in.</p>
+		  <p>Sorry, there was an issue signing in.</p>
 		</div>
 	  )
     } else {
@@ -97,19 +111,17 @@ class SignIn extends Component {
 	  this.auth2.then(() => {}, this.invalidCallback);
 
 	  if (!this.state.isMock) {
-        window.gapi.load('signin2', () => {
-          const opts = {
-            width: 200,
-            height: 50,
-            onsuccess: this.successCallback,
-		    onfailure: this.failureCallback
-          }
-          gapi.signin2.render('loginButton', opts)
-        });
+        window.gapi.load('signin2', this.renderLoginCallback);
 	  } else {
 	    submitUser(null, true, this.failureCallback);
 	  }
     })
+  }
+
+  componentDidUpdate(prevProps, prevState,) {
+    if (this.isSignedOut !== prevState.isSignedOut) {
+	  window.gapi.load('signin2', this.renderLoginCallback);
+	}
   }
 
   render() {
