@@ -74,8 +74,6 @@ namespace Nancy.App.Hosting.Kestrel
                 // Else return ok
                 return "OK";
             });
-
-            this.Get("/test", (args) => GoogleApi.ValidateUser());
         }
     }
 }
