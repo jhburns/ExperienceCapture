@@ -25,4 +25,4 @@ jobs:
           password: "${{ secrets.DOCKER_PASSWORD }}"
           image_name: jhburns/ec-shellcheck-cache
           context: ./
-          dockerfile: Dockerfile.shellcheck.integration
+          dockerfile: shellcheck.integration.Dockerfile

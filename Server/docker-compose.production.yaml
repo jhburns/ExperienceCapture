@@ -47,7 +47,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./Caddy/Caddyfile.production:/etc/Caddyfile
+      - ./Caddy/production.Caddyfile:/etc/Caddyfile
       - ec-rp-volume:/etc/caddycerts
     env_file:
       - server.info.env

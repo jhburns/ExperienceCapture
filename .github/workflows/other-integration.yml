@@ -37,6 +37,9 @@ on:  # yamllint disable-line rule:truthy
       - '*.yml'
       - '.github/workflows/yaml-integration.yml'
       - 'Dockerfile.yaml.integration'
+      - 'Server/**'
+      - 'Deploy/**'
+      - '.github/workflows/docker-compose-integration.yml'
 
 jobs:
   build:

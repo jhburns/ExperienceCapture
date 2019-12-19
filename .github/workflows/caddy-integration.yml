@@ -23,4 +23,4 @@ jobs:
           password: "${{ secrets.DOCKER_PASSWORD }}"
           image_name: jhburns/ec-caddy-cache
           context: ./Server/Caddy
-          dockerfile: Dockerfile.integration
+          dockerfile: integration.Dockerfile

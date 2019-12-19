@@ -25,4 +25,4 @@ jobs:
           password: "${{ secrets.DOCKER_PASSWORD }}"
           image_name: jhburns/ec-spellcheck-cache
           context: ./
-          dockerfile: Dockerfile.spelling.integration
+          dockerfile: spelling.integration.Dockerfile
