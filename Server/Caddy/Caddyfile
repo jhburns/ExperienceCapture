@@ -8,12 +8,12 @@ tls off
 
 gzip
 
-proxy /api/v1 192.168.99.100:4321 {
+proxy /api/v1 api:80 {
 	without /api/v1
 	transparent
 }
 
-proxy / 192.168.99.100:3003 {
+proxy / web:3000 {
 	websocket
 	transparent
 }
