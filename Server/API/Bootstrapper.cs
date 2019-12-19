@@ -3,6 +3,7 @@ namespace Nancy.App.Hosting.Kestrel
     using MongoDB.Driver;
 
     using Nancy;
+    using Nancy.Configuration;
     using Nancy.TinyIoc;
 
     public class Bootstrapper : DefaultNancyBootstrapper
@@ -16,6 +17,11 @@ namespace Nancy.App.Hosting.Kestrel
         public Bootstrapper(IAppConfiguration appConfig)
         {
             this.appConfig = appConfig;
+        }
+
+        public override void Configure(INancyEnvironment environment)
+        {
+            environment.Tracing(enabled: true, displayErrorTraces: true);
         }
 
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)

@@ -8,6 +8,7 @@ namespace Nancy.App.Hosting.Kestrel
     using MongoDB.Driver;
 
     using Nancy.App.Random;
+    using Nancy.Extensions;
 
     using Network;
 
@@ -24,7 +25,6 @@ namespace Nancy.App.Hosting.Kestrel
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
                 while ((await sessions.Find(filter).FirstOrDefaultAsync()) != null)
                 {
-                    Console.WriteLine();
                     uniqueID = Generate.RandomString(4);
                     filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
                 }
@@ -36,12 +36,18 @@ namespace Nancy.App.Hosting.Kestrel
                 };
 
                 byte[] bson = sessionDoc.ToBson();
-                _ = sessions.InsertOneAsync(sessionDoc);
+                await sessions.InsertOneAsync(sessionDoc);
 
                 var clientDoc = new BsonDocument(sessionDoc);
                 clientDoc.Remove("_id");
-                byte[] clientBson = clientDoc.ToBson();
 
+                string json = JsonQuery.FulfilEncoding(this.Request.Query, clientDoc);
+                if (json != null)
+                {
+                    return json;
+                }
+
+                byte[] clientBson = clientDoc.ToBson();
                 return this.Response.FromByteArray(clientBson, "application/bson");
             });
 
@@ -65,7 +71,13 @@ namespace Nancy.App.Hosting.Kestrel
 
                 string collectionName = $"sessions.{uniqueID}";
                 var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
-                var document = BsonSerializer.Deserialize<BsonDocument>(this.Request.Body);
+
+                BsonDocument document = JsonQuery.FulfilDencoding(this.Request.Query, this.Request.Body.AsString());
+                if (document == null)
+                {
+                    document = BsonSerializer.Deserialize<BsonDocument>(this.Request.Body);
+                }
+
                 _ = sessionCollection.InsertOneAsync(document);
 
                 return "OK";
@@ -84,19 +96,11 @@ namespace Nancy.App.Hosting.Kestrel
                     return 404;
                 }
 
-                if (((bool)this.Request.Query["json"]) == true)
+                sessionDoc.Remove("_id");
+
+                string json = JsonQuery.FulfilEncoding(this.Request.Query, sessionDoc);
+                if (json != null)
                 {
-                    string json;
-
-                    if (((bool)this.Request.Query["ugly"]) == true)
-                    {
-                        json = sessionDoc.ToJson();
-                    }
-                    else
-                    {
-                        json = sessionDoc.ToJson(new JsonWriterSettings { Indent = true });
-                    }
-
                     return json;
                 }
 
@@ -118,7 +122,7 @@ namespace Nancy.App.Hosting.Kestrel
                     return 404;
                 }
 
-                _ = sessions.UpdateOneAsync(filter, update);
+                await sessions.UpdateOneAsync(filter, update);
 
                 return "OK";
             });

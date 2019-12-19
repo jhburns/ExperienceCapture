@@ -226,18 +226,15 @@ public class HandleCapturing : MonoBehaviour
             string extra = "Extra info about the frame.\n";
             extra += "Session ID: " + id + "\n";
 
-            if (allCapturable != null)
+            if (allCapturable != null) 
             {
                 extra += "Capturable objects: " + allCapturable.Count + "\n";
-                extra += "Open requests: " + openRequests + "\n";
-                extra += "Request response time: min=" +  minResponceTime;
-                extra += " mean=" + averageResponceTime;
-                extra += " max=" + maxResponceTime + "\n";
             }
-            else
-            {
-                extra += "Still setting up capture." + "\n";
-            }
+
+            extra += "Open requests: " + openRequests + "\n";
+            extra += "Request response time: min=" +  minResponceTime;
+            extra += " mean=" + averageResponceTime;
+            extra += " max=" + maxResponceTime + "\n";
 
             Debug.Log(extra);
         }
