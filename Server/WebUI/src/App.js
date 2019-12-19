@@ -9,7 +9,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-		<SignIn clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} />
+		    <SignIn clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} />
       </header>
     </div>
   );
