@@ -7,9 +7,8 @@ namespace Nancy.App.Hosting.Kestrel
     using MongoDB.Bson.Serialization;
     using MongoDB.Driver;
 
+    using Nancy.App.Network;
     using Nancy.App.Random;
-
-    using Network;
 
     public class Users : NancyModule
     {

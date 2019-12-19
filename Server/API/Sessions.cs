@@ -7,10 +7,9 @@ namespace Nancy.App.Hosting.Kestrel
     using MongoDB.Bson.Serialization;
     using MongoDB.Driver;
 
+    using Nancy.App.Network;
     using Nancy.App.Random;
     using Nancy.Extensions;
-
-    using Network;
 
     public class Sessions : NancyModule
     {
@@ -21,11 +20,11 @@ namespace Nancy.App.Hosting.Kestrel
             {
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
-                string uniqueID = Generate.RandomString(4);
+                string uniqueID = Generate.GetRandomId(4);
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
                 while ((await sessions.Find(filter).FirstOrDefaultAsync()) != null)
                 {
-                    uniqueID = Generate.RandomString(4);
+                    uniqueID = Generate.GetRandomId(4);
                     filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
                 }
 
