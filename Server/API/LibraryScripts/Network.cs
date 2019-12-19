@@ -63,7 +63,6 @@ namespace Network
         {
             if (((bool)query["json"]) == true)
             {
-                Console.WriteLine(json);
                 return BsonDocument.Parse(json);
             }
 

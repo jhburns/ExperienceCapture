@@ -78,7 +78,7 @@ namespace Nancy.App.Hosting.Kestrel
                     document = BsonSerializer.Deserialize<BsonDocument>(this.Request.Body);
                 }
 
-                await sessionCollection.InsertOneAsync(document);
+                _ = sessionCollection.InsertOneAsync(document);
 
                 return "OK";
             });

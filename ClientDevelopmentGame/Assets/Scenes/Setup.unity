@@ -165,12 +165,12 @@ Prefab:
     - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
         type: 2}
       propertyPath: offlineMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
         type: 2}
       propertyPath: printAdditionalCaptureInfo
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
         type: 2}
@@ -270,7 +270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fillerLength: 100
-  initialSpawn: 9
+  initialSpawn: 7
   scaleUp: 0
   varience: 0
   t: {fileID: 114652173187609828, guid: 3a22c922b7e792147a17b42d16244694, type: 2}
