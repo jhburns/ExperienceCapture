@@ -1,4 +1,4 @@
-namespace Nancy.App.Hosting.Kestrel
+/*namespace Nancy.App.Hosting.Kestrel
 {
     public class AppConfiguration : IAppConfiguration
     {
@@ -21,3 +21,4 @@ namespace Nancy.App.Hosting.Kestrel
         public LogLevel LogLevel { get; set; }
     }
 }
+*/

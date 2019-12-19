@@ -1,4 +1,4 @@
-namespace Nancy.App.Hosting.Kestrel
+/*namespace Nancy.App.Hosting.Kestrel
 {
     using MongoDB.Driver;
 
@@ -38,3 +38,4 @@ namespace Nancy.App.Hosting.Kestrel
         }
     }
 }
+*/
