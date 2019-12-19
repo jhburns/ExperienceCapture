@@ -1,4 +1,4 @@
-namespace Nancy.App.Authentication
+/*namespace Nancy.App.Authentication
 {
     using System;
 
@@ -19,3 +19,4 @@ namespace Nancy.App.Authentication
         }
     }
 }
+*/

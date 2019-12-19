@@ -1,4 +1,4 @@
-namespace Nancy.App.Hosting.Kestrel
+/*namespace Nancy.App.Hosting.Kestrel
 {
     public interface IAppConfiguration
     {
@@ -8,3 +8,4 @@ namespace Nancy.App.Hosting.Kestrel
         }
     }
 }
+*/

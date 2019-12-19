@@ -1,4 +1,4 @@
-﻿namespace Nancy.App.Hosting.Kestrel
+﻿/*namespace Nancy.App.Hosting.Kestrel
 {
     using System.IO;
     using Microsoft.AspNetCore.Hosting;
@@ -14,6 +14,16 @@
                 .Build();
 
             host.Run();
+        }
+    }
+}
+*/
+namespace Carter.App
+{
+    public class API
+    {
+        public static void Main(string[] args)
+        {
         }
     }
 }

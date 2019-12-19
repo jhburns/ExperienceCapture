@@ -1,4 +1,4 @@
-namespace Nancy.App.Hosting.Kestrel
+/*namespace Nancy.App.Hosting.Kestrel
 {
     using System;
 
@@ -77,3 +77,4 @@ namespace Nancy.App.Hosting.Kestrel
         }
     }
 }
+*/

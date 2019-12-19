@@ -1,4 +1,4 @@
-namespace Nancy.App.Network
+/*namespace Nancy.App.Network
 {
     using System;
     using System.Collections;
@@ -69,4 +69,4 @@ namespace Nancy.App.Network
             return null;
         }
     }
-}
+}*/

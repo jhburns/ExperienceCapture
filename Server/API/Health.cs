@@ -1,4 +1,4 @@
-namespace Nancy.App.Hosting.Kestrel
+/*namespace Nancy.App.Hosting.Kestrel
 {
     public class Health : NancyModule
     {
@@ -10,3 +10,4 @@ namespace Nancy.App.Hosting.Kestrel
         }
     }
 }
+*/
