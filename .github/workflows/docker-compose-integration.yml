@@ -7,7 +7,8 @@ on:  # yamllint disable-line rule:truthy
       - master
       - temp-master
     paths:
-      - '**/docker-compose*'
+      - 'Server/**'
+      - 'Deploy/**'
       - '.github/workflows/docker-compose-integration.yml'
 
 jobs:
