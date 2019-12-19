@@ -24,7 +24,6 @@ namespace Nancy.App.Hosting.Kestrel
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
                 while ((await sessions.Find(filter).FirstOrDefaultAsync()) != null)
                 {
-                    Console.WriteLine();
                     uniqueID = Generate.RandomString(4);
                     filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
                 }

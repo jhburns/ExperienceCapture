@@ -3,6 +3,7 @@ namespace Network
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
+    using System.Text.RegularExpressions;
 
     using MongoDB.Bson;
     using MongoDB.Bson.IO;
@@ -35,7 +36,7 @@ namespace Network
 
     public class JsonResponce
     {
-        public static string FulfilEncoding(Dictionary<string, DynamicDictionaryValue> query, BsonDocument document)
+        public static string FulfilEncoding(DynamicDictionary query, BsonDocument document)
         {
             string json;
 
@@ -44,6 +45,7 @@ namespace Network
                 if (((bool)query["ugly"]) == true)
                 {
                     json = document.ToJson();
+                    json = Regex.Replace(json, "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
                 }
                 else
                 {
