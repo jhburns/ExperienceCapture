@@ -1,0 +1,26 @@
+FROM docker/compose:1.25.0-alpine
+
+WORKDIR /app
+
+COPY . .
+
+# Brute-force, but it works
+# Shell scripts don't for some reason
+
+RUN docker-compose \
+	-f ./Server/docker-compose.yaml \
+	-f ./Server/docker-compose.override.yaml \
+	config
+
+RUN docker-compose \
+	-f ./Server/docker-compose.yaml \
+	-f ./Server/docker-compose.production.yaml \
+	config
+
+RUN docker-compose \
+	-f ./Server/docker-compose.production.infra.yaml \
+	config
+
+RUN docker-compose \
+	-f ./Deploy/docker-compose.yaml \
+	config
