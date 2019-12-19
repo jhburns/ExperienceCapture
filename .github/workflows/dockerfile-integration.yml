@@ -25,4 +25,4 @@ jobs:
           password: "${{ secrets.DOCKER_PASSWORD }}"
           image_name: jhburns/ec-dockerfile-cache
           context: ./
-          dockerfile: Dockerfile.integration
+          dockerfile: integration.Dockerfile

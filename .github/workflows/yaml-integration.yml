@@ -27,4 +27,4 @@ jobs:
           password: "${{ secrets.DOCKER_PASSWORD }}"
           image_name: jhburns/ec-yaml-cache
           context: ./
-          dockerfile: Dockerfile.yaml.integration
+          dockerfile: yaml.integration.Dockerfile
