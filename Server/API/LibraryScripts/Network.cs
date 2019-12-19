@@ -1,4 +1,4 @@
-namespace Network
+namespace Nancy.App.Network
 {
     using System;
     using System.Collections;
