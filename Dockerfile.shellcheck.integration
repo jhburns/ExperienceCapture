@@ -1,12 +1,9 @@
 FROM koalaman/shellcheck-alpine:v0.7.0
-ARG github_test_ci
 
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 WORKDIR /app
 
 COPY . .
-
-RUN echo "$github_test_ci"
 
 ENV SHELLCHECK_OPTS="--exclude=SC1017"
 RUN find . -name "*.sh" -print0 \
