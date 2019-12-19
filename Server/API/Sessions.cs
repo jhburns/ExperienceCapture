@@ -84,19 +84,9 @@ namespace Nancy.App.Hosting.Kestrel
                     return 404;
                 }
 
-                if (((bool)this.Request.Query["json"]) == true)
+                string json = JsonResponce.FulfilEncoding(this.Request.Query, sessionDoc);
+                if (json != null)
                 {
-                    string json;
-
-                    if (((bool)this.Request.Query["ugly"]) == true)
-                    {
-                        json = sessionDoc.ToJson();
-                    }
-                    else
-                    {
-                        json = sessionDoc.ToJson(new JsonWriterSettings { Indent = true });
-                    }
-
                     return json;
                 }
 

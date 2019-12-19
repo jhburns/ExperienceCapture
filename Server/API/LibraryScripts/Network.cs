@@ -1,14 +1,13 @@
 namespace Network
 {
     using System.Collections;
+    using System.Collections.Generic;
     using System.IO;
 
     using MongoDB.Bson;
+    using MongoDB.Bson.IO;
 
     using Nancy;
-
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Bson;
 
     public static class Extensions
     {
@@ -31,6 +30,30 @@ namespace Network
                     writer.Write(body);
                 }
             };
+        }
+    }
+
+    public class JsonResponce
+    {
+        public static string FulfilEncoding(Dictionary<string, DynamicDictionaryValue> query, BsonDocument document)
+        {
+            string json;
+
+            if (((bool)query["json"]) == true)
+            {
+                if (((bool)query["ugly"]) == true)
+                {
+                    json = document.ToJson();
+                }
+                else
+                {
+                    json = document.ToJson(new JsonWriterSettings { Indent = true });
+                }
+
+                return json;
+            }
+
+            return null;
         }
     }
 }
