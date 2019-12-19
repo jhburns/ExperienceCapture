@@ -1,5 +1,6 @@
 namespace Network
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.IO;
@@ -34,7 +35,7 @@ namespace Network
         }
     }
 
-    public class JsonResponce
+    public class JsonQuery
     {
         public static string FulfilEncoding(DynamicDictionary query, BsonDocument document)
         {
@@ -53,6 +54,17 @@ namespace Network
                 }
 
                 return json;
+            }
+
+            return null;
+        }
+
+        public static BsonDocument FulfilDencoding(DynamicDictionary query, string json)
+        {
+            if (((bool)query["json"]) == true)
+            {
+                Console.WriteLine(json);
+                return BsonDocument.Parse(json);
             }
 
             return null;

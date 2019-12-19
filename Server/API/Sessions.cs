@@ -8,6 +8,7 @@ namespace Nancy.App.Hosting.Kestrel
     using MongoDB.Driver;
 
     using Nancy.App.Random;
+    using Nancy.Extensions;
 
     using Network;
 
@@ -40,7 +41,7 @@ namespace Nancy.App.Hosting.Kestrel
                 var clientDoc = new BsonDocument(sessionDoc);
                 clientDoc.Remove("_id");
 
-                string json = JsonResponce.FulfilEncoding(this.Request.Query, clientDoc);
+                string json = JsonQuery.FulfilEncoding(this.Request.Query, clientDoc);
                 if (json != null)
                 {
                     return json;
@@ -70,8 +71,14 @@ namespace Nancy.App.Hosting.Kestrel
 
                 string collectionName = $"sessions.{uniqueID}";
                 var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
-                var document = BsonSerializer.Deserialize<BsonDocument>(this.Request.Body);
-                _ = sessionCollection.InsertOneAsync(document);
+
+                BsonDocument document = JsonQuery.FulfilDencoding(this.Request.Query, this.Request.Body.AsString());
+                if (document == null)
+                {
+                    document = BsonSerializer.Deserialize<BsonDocument>(this.Request.Body);
+                }
+
+                await sessionCollection.InsertOneAsync(document);
 
                 return "OK";
             });
@@ -91,7 +98,7 @@ namespace Nancy.App.Hosting.Kestrel
 
                 sessionDoc.Remove("_id");
 
-                string json = JsonResponce.FulfilEncoding(this.Request.Query, sessionDoc);
+                string json = JsonQuery.FulfilEncoding(this.Request.Query, sessionDoc);
                 if (json != null)
                 {
                     return json;
