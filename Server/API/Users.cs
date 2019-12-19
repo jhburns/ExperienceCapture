@@ -3,10 +3,9 @@ namespace Nancy.App.Hosting.Kestrel
     using System;
 
     using MongoDB.Bson;
-    using MongoDB.Bson.IO;
-    using MongoDB.Bson.Serialization;
     using MongoDB.Driver;
 
+    using Nancy.App.Authentication;
     using Nancy.App.Network;
     using Nancy.App.Random;
 
