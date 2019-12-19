@@ -35,12 +35,18 @@ namespace Nancy.App.Hosting.Kestrel
                 };
 
                 byte[] bson = sessionDoc.ToBson();
-                _ = sessions.InsertOneAsync(sessionDoc);
+                await sessions.InsertOneAsync(sessionDoc);
 
                 var clientDoc = new BsonDocument(sessionDoc);
                 clientDoc.Remove("_id");
-                byte[] clientBson = clientDoc.ToBson();
 
+                string json = JsonResponce.FulfilEncoding(this.Request.Query, clientDoc);
+                if (json != null)
+                {
+                    return json;
+                }
+
+                byte[] clientBson = clientDoc.ToBson();
                 return this.Response.FromByteArray(clientBson, "application/bson");
             });
 
@@ -83,6 +89,8 @@ namespace Nancy.App.Hosting.Kestrel
                     return 404;
                 }
 
+                sessionDoc.Remove("_id");
+
                 string json = JsonResponce.FulfilEncoding(this.Request.Query, sessionDoc);
                 if (json != null)
                 {
@@ -107,7 +115,7 @@ namespace Nancy.App.Hosting.Kestrel
                     return 404;
                 }
 
-                _ = sessions.UpdateOneAsync(filter, update);
+                await sessions.UpdateOneAsync(filter, update);
 
                 return "OK";
             });
