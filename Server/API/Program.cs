@@ -18,7 +18,7 @@
     }
 }
 */
-namespace Carter.App 
+namespace Carter.App
 {
     public class API
     {
