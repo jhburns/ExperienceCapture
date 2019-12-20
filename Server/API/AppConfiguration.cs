@@ -1,4 +1,4 @@
-namespace Carter.App.Hosting 
+namespace Carter.App.Hosting
 {
     public class AppConfiguration
     {
