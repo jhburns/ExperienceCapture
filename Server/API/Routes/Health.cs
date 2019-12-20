@@ -21,14 +21,14 @@ namespace Carter.Route.Health
     {
         public HomeModule()
         {
-            this.Get("/", (req, res) =>
+            this.Get("/", async (req, res) =>
             {
-                return res.WriteAsync("The api server is running.");
+                await res.WriteAsync("The api server is running.");
             });
 
-            this.Get("/health", (req, res) =>
+            this.Get("/health", async (req, res) =>
             {
-                return res.WriteAsync("OK");
+                await res.WriteAsync("OK");
             });
         }
     }
