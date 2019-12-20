@@ -12,6 +12,10 @@
   <PropertyGroup Condition=" '$(GHA_Build)' == 'True' ">
                  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+
+<ItemGroup>
+   <None Include="appsettings.json" CopyToPublishDirectory="Always" />
+</ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="Carter" Version="5.0.0" />
