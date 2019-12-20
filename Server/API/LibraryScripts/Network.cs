@@ -63,7 +63,7 @@ namespace Carter.App.Network
     {
         public static async void FromString(HttpResponse response, string json)
         {
-            response.ContentType = "application/json";
+            response.ContentType = "application/json; charset=utf-8";
             await response.WriteAsync(json);
         }
     }

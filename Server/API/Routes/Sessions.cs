@@ -130,6 +130,7 @@
 namespace Carter.Route.Health
 {
     using Carter;
+    using Carter.Request;
 
     using Carter.App.Generate;
     using Carter.App.Network;
@@ -138,6 +139,7 @@ namespace Carter.Route.Health
 
     using MongoDB.Bson;
     using MongoDB.Driver;
+    using MongoDB.Bson.Serialization;
 
     public class Sessions : CarterModule
     {
@@ -180,7 +182,37 @@ namespace Carter.Route.Health
 
             this.Post("/{id}", async (req, res) =>
             {
-                await res.WriteAsync("The api server is running.");
+                var sessions = db.GetCollection<BsonDocument>("sessions");
+
+                string uniqueID = req.RouteValues.As<string>("id");
+                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+
+                if (sessionDoc == null)
+                {
+                    res.StatusCode = 404;
+                    return;
+                }
+
+                if (sessionDoc["isOpen"] == false)
+                {
+                    res.StatusCode = 400;
+                    return;
+                }
+
+                string body = await req.Body.AsStringAsync();
+
+                BsonDocument document = JsonQuery.FulfilDencoding(req.Query, body);
+                if (document == null)
+                {
+                    document = BsonSerializer.Deserialize<BsonDocument>(body);
+                }
+
+                string collectionName = $"sessions.{uniqueID}";
+                var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
+                _ = sessionCollection.InsertOneAsync(document);
+
+                await res.WriteAsync("Ok");           
             });
 
             this.Get("/{id}", async (req, res) =>
