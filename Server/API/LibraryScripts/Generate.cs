@@ -45,3 +45,23 @@
     }
 }
 */
+
+namespace Carter.App.Generate
+{
+    using System;
+    using System.Linq;
+
+    public class Generate
+    {
+        internal static readonly string CharsForId = "ABCEFGHJKLMNPQRSUVWXY3456789";
+
+        private static Random random = new Random();
+
+        // Should NOT be considered secure
+        public static string GetRandomId(int length)
+        {
+            return new string(Enumerable.Repeat(CharsForId, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+    }
+}

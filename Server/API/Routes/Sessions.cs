@@ -55,11 +55,8 @@
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string uniqueID = (string)args.id;
-                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
-                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+                var filter = Builders<BsonDocument>.Filt    using
 
-                if (sessionDoc == null)
-                {
                     return 404;
                 }
 
@@ -129,3 +126,72 @@
     }
 }
 */
+
+namespace Carter.Route.Health
+{
+    using Carter;
+
+    using Carter.App.Generate;
+    using Carter.App.Network;
+
+    using Microsoft.AspNetCore.Http;
+
+    using MongoDB.Bson;
+    using MongoDB.Driver;
+
+    public class Sessions : CarterModule
+    {
+        public Sessions(IMongoDatabase db)
+            : base("/sessions")
+        {
+            this.Post("/", async (req, res) =>
+            {
+                var sessions = db.GetCollection<BsonDocument>("sessions");
+
+                string uniqueID = Generate.GetRandomId(4);
+                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+                while ((await sessions.Find(filter).FirstOrDefaultAsync()) != null)
+                {
+                    uniqueID = Generate.GetRandomId(4);
+                    filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+                }
+
+                var sessionDoc = new BsonDocument
+                {
+                    { "id", uniqueID },
+                    { "isOpen", true },
+                };
+
+                byte[] bson = sessionDoc.ToBson();
+                await sessions.InsertOneAsync(sessionDoc);
+
+                var clientDoc = new BsonDocument(sessionDoc);
+                clientDoc.Remove("_id");
+
+                string json = JsonQuery.FulfilEncoding(req.Query, clientDoc);
+                if (json != null)
+                {
+                    JsonResponce.FromString(res, json);
+                    return;
+                }
+
+                BsonResponse.FromDoc(res, clientDoc);
+            });
+
+            this.Post("/{id}", async (req, res) =>
+            {
+                await res.WriteAsync("The api server is running.");
+            });
+
+            this.Get("/{id}", async (req, res) =>
+            {
+                await res.WriteAsync("The api server is running.");
+            });
+
+            this.Delete("/{id}", async (req, res) =>
+            {
+                await res.WriteAsync("The api server is running.");
+            });
+        }
+    }
+}

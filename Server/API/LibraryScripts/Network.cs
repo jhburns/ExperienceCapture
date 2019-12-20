@@ -1,49 +1,25 @@
-/*namespace Nancy.App.Network
+namespace Carter.App.Network
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
     using System.IO;
     using System.Text.RegularExpressions;
+
+    using Carter.Request;
+    using Carter.Response;
+
+    using Microsoft.AspNetCore.Http;
 
     using MongoDB.Bson;
     using MongoDB.Bson.IO;
 
-    using Nancy;
-
-    public static class Extensions
-    {
-        public static Response FromByteArray(this IResponseFormatter formatter, byte[] body, string contentType = null)
-        {
-            return new ByteArrayResponse(body, contentType);
-        }
-    }
-
-    public class ByteArrayResponse : Response
-    {
-        public ByteArrayResponse(byte[] body, string contentType = null)
-        {
-            this.ContentType = contentType ?? "application/octet-stream";
-
-            this.Contents = stream =>
-            {
-                using (var writer = new BinaryWriter(stream))
-                {
-                    writer.Write(body);
-                }
-            };
-        }
-    }
-
     public class JsonQuery
     {
-        public static string FulfilEncoding(DynamicDictionary query, BsonDocument document)
+        public static string FulfilEncoding(IQueryCollection query, BsonDocument document)
         {
             string json;
 
-            if (((bool)query["json"]) == true)
+            if (query.As<bool>("json"))
             {
-                if (((bool)query["ugly"]) == true)
+                if (query.As<bool>("ugly"))
                 {
                     json = document.ToJson();
                     json = Regex.Replace(json, "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
@@ -59,9 +35,9 @@
             return null;
         }
 
-        public static BsonDocument FulfilDencoding(DynamicDictionary query, string json)
+        public static BsonDocument FulfilDencoding(IQueryCollection query, string json)
         {
-            if (((bool)query["json"]) == true)
+            if (query.As<bool>("json"))
             {
                 return BsonDocument.Parse(json);
             }
@@ -69,4 +45,26 @@
             return null;
         }
     }
-}*/
+
+    public class BsonResponse
+    {
+        public static async void FromDoc(HttpResponse response, BsonDocument doc)
+        {
+            byte[] clientBson = doc.ToBson();
+
+            using (var mystream = new MemoryStream(clientBson))
+            {
+                await response.FromStream(mystream, "application/bson");
+            }
+        }
+    }
+
+    public class JsonResponce
+    {
+        public static async void FromString(HttpResponse response, string json)
+        {
+            response.ContentType = "application/json";
+            await response.WriteAsync(json);
+        }
+    }
+}
