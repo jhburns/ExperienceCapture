@@ -130,16 +130,17 @@
 namespace Carter.Route.Health
 {
     using Carter;
-    using Carter.Request;
 
     using Carter.App.Generate;
     using Carter.App.Network;
 
+    using Carter.Request;
+
     using Microsoft.AspNetCore.Http;
 
     using MongoDB.Bson;
-    using MongoDB.Driver;
     using MongoDB.Bson.Serialization;
+    using MongoDB.Driver;
 
     public class Sessions : CarterModule
     {
@@ -210,19 +211,58 @@ namespace Carter.Route.Health
 
                 string collectionName = $"sessions.{uniqueID}";
                 var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
+
                 _ = sessionCollection.InsertOneAsync(document);
 
-                await res.WriteAsync("Ok");           
+                res.ContentType = "application/text; charset=utf-8";
+                await res.WriteAsync("OK");
             });
 
             this.Get("/{id}", async (req, res) =>
             {
-                await res.WriteAsync("The api server is running.");
+                var sessions = db.GetCollection<BsonDocument>("sessions");
+
+                string uniqueID = req.RouteValues.As<string>("id");
+                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+
+                if (sessionDoc == null)
+                {
+                    res.StatusCode = 404;
+                    return;
+                }
+
+                sessionDoc.Remove("_id");
+
+                string json = JsonQuery.FulfilEncoding(req.Query, sessionDoc);
+                if (json != null)
+                {
+                    JsonResponce.FromString(res, json);
+                    return;
+                }
+
+                BsonResponse.FromDoc(res, sessionDoc);
             });
 
             this.Delete("/{id}", async (req, res) =>
             {
-                await res.WriteAsync("The api server is running.");
+                var sessions = db.GetCollection<BsonDocument>("sessions");
+
+                string uniqueID = req.RouteValues.As<string>("id");
+                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+                var update = Builders<BsonDocument>.Update.Set("isOpen", false);
+                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+
+                if (sessionDoc == null)
+                {
+                    res.StatusCode = 404;
+                    return;
+                }
+
+                await sessions.UpdateOneAsync(filter, update);
+
+                res.ContentType = "application/text; charset=utf-8";
+                await res.WriteAsync("OK");
             });
         }
     }
