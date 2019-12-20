@@ -1,4 +1,4 @@
-/*namespace Nancy.App.Authentication
+namespace Carter.App.Authenticate
 {
     using System;
 
@@ -19,4 +19,3 @@
         }
     }
 }
-*/

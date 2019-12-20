@@ -1,34 +1,20 @@
-/*namespace Nancy.App.Hosting.Kestrel
-{
-    public class Health : NancyModule
-    {
-        public Health(IAppConfiguration appConfig)
-        {
-            this.Get("/", args => "The api server is running.");
-
-            this.Get("/health", args => "OK");
-        }
-    }
-}
-*/
-
 namespace Carter.Route.Health
 {
     using Carter;
     using Microsoft.AspNetCore.Http;
 
-    public class HomeModule : CarterModule
+    public class Health : CarterModule
     {
-        public HomeModule()
+        public Health()
         {
-            this.Get("/", (req, res) =>
+            this.Get("/", async (req, res) =>
             {
-                return res.WriteAsync("The api server is running.");
+                await res.WriteAsync("The api server is running.");
             });
 
-            this.Get("/health", (req, res) =>
+            this.Get("/health", async (req, res) =>
             {
-                return res.WriteAsync("OK");
+                await res.WriteAsync("OK");
             });
         }
     }

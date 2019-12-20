@@ -1,22 +1,24 @@
-/*namespace Nancy.App.Hosting.Kestrel
+namespace Carter.Route.Sessions
 {
-    using System;
+    using Carter;
+
+    using Carter.App.Generate;
+    using Carter.App.Network;
+
+    using Carter.Request;
+
+    using Microsoft.AspNetCore.Http;
 
     using MongoDB.Bson;
-    using MongoDB.Bson.IO;
     using MongoDB.Bson.Serialization;
     using MongoDB.Driver;
 
-    using Nancy.App.Network;
-    using Nancy.App.Random;
-    using Nancy.Extensions;
-
-    public class Sessions : NancyModule
+    public class Sessions : CarterModule
     {
         public Sessions(IMongoDatabase db)
-            : base("/sessions/")
+            : base("/sessions")
         {
-            this.Post("/", async (args) =>
+            this.Post("/", async (req, res) =>
             {
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
@@ -40,92 +42,99 @@
                 var clientDoc = new BsonDocument(sessionDoc);
                 clientDoc.Remove("_id");
 
-                string json = JsonQuery.FulfilEncoding(this.Request.Query, clientDoc);
+                string json = JsonQuery.FulfilEncoding(req.Query, clientDoc);
                 if (json != null)
                 {
-                    return json;
+                    JsonResponce.FromString(res, json);
+                    return;
                 }
 
-                byte[] clientBson = clientDoc.ToBson();
-                return this.Response.FromByteArray(clientBson, "application/bson");
+                BsonResponse.FromDoc(res, clientDoc);
             });
 
-            this.Post("/{id}", async (args) =>
+            this.Post("/{id}", async (req, res) =>
             {
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
-                string uniqueID = (string)args.id;
+                string uniqueID = req.RouteValues.As<string>("id");
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
                 var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
-                    return 404;
+                    res.StatusCode = 404;
+                    return;
                 }
 
                 if (sessionDoc["isOpen"] == false)
                 {
-                    return 400;
+                    res.StatusCode = 400;
+                    return;
+                }
+
+                string body = await req.Body.AsStringAsync();
+
+                BsonDocument document = JsonQuery.FulfilDencoding(req.Query, body);
+                if (document == null)
+                {
+                    document = BsonSerializer.Deserialize<BsonDocument>(body);
                 }
 
                 string collectionName = $"sessions.{uniqueID}";
                 var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
 
-                BsonDocument document = JsonQuery.FulfilDencoding(this.Request.Query, this.Request.Body.AsString());
-                if (document == null)
-                {
-                    document = BsonSerializer.Deserialize<BsonDocument>(this.Request.Body);
-                }
-
                 _ = sessionCollection.InsertOneAsync(document);
 
-                return "OK";
+                res.ContentType = "application/text; charset=utf-8";
+                await res.WriteAsync("OK");
             });
 
-            this.Get("/{id}", async (args) =>
+            this.Get("/{id}", async (req, res) =>
             {
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
-                string uniqueID = (string)args.id;
+                string uniqueID = req.RouteValues.As<string>("id");
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
                 var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
-                    return 404;
+                    res.StatusCode = 404;
+                    return;
                 }
 
                 sessionDoc.Remove("_id");
 
-                string json = JsonQuery.FulfilEncoding(this.Request.Query, sessionDoc);
+                string json = JsonQuery.FulfilEncoding(req.Query, sessionDoc);
                 if (json != null)
                 {
-                    return json;
+                    JsonResponce.FromString(res, json);
+                    return;
                 }
 
-                byte[] bson = sessionDoc.ToBson();
-                return this.Response.FromByteArray(bson, "application/bson");
+                BsonResponse.FromDoc(res, sessionDoc);
             });
 
-            this.Delete("/{id}", async (args) =>
+            this.Delete("/{id}", async (req, res) =>
             {
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
-                string uniqueID = (string)args.id;
+                string uniqueID = req.RouteValues.As<string>("id");
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
                 var update = Builders<BsonDocument>.Update.Set("isOpen", false);
                 var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
-                    return 404;
+                    res.StatusCode = 404;
+                    return;
                 }
 
                 await sessions.UpdateOneAsync(filter, update);
 
-                return "OK";
+                res.ContentType = "application/text; charset=utf-8";
+                await res.WriteAsync("OK");
             });
         }
     }
 }
-*/

@@ -1,7 +1,6 @@
-/*namespace Nancy.App.Random
+namespace Carter.App.Generate
 {
     using System;
-    using System.Collections;
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
@@ -44,4 +43,3 @@
         }
     }
 }
-*/
