@@ -1,4 +1,4 @@
-namespace Carter.Route.Health
+namespace Carter.Route.Sessions
 {
     using Carter;
 

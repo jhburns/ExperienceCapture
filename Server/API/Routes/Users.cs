@@ -1,20 +1,18 @@
-/*namespace Nancy.App.Hosting.Kestrel
+namespace Carter.Route.Users
 {
-    using System;
+    using Carter;
+
+    using Microsoft.AspNetCore.Http;
 
     using MongoDB.Bson;
     using MongoDB.Driver;
 
-    using Nancy.App.Authentication;
-    using Nancy.App.Network;
-    using Nancy.App.Random;
-
-    public class Users : NancyModule
+    public class Users : CarterModule
     {
         public Users(IMongoDatabase db)
-            : base("/users/")
+            : base("/users")
         {
-            this.Post("/", (args) =>
+            this.Post("/", async (req, res) =>
             {
                 var tokens = db.GetCollection<BsonDocument>("tokens");
 
@@ -26,10 +24,10 @@
                 var users = db.GetCollection<BsonDocument>("users");
 
                 // Else return OK
-                return "OK";
+                await res.WriteAsync("OK");
             });
 
-            this.Post("/{id}/tokens/", (args) =>
+            this.Post("/{id}/tokens/", async (req, res) =>
             {
                 var users = db.GetCollection<BsonDocument>("users");
 
@@ -42,18 +40,18 @@
                 // Check if is claim token, if so fulfill and return "OK"
 
                 // Else return new API token
-                return "API TOKEN";
+                await res.WriteAsync("API TOKEN");
             });
 
-            this.Post("/claims/", (args) =>
+            this.Post("/claims/", async (req, res) =>
             {
                 var claims = db.GetCollection<BsonDocument>("claims");
 
                 // Generate and return new claim token
-                return "ClAIM TOKEN";
+                await res.WriteAsync("ClAIM TOKEN");
             });
 
-            this.Get("/claims/", (args) =>
+            this.Get("/claims/", async (req, res) =>
             {
                 var claims = db.GetCollection<BsonDocument>("claims");
 
@@ -62,19 +60,18 @@
                 // If claim unfilled, return 202
 
                 // Else return API token for claim
-                return "API TOKEN";
+                await res.WriteAsync("API TOKEN");
             });
 
-            this.Delete("/claims/", (args) =>
+            this.Delete("/claims/", async (req, res) =>
             {
                 var claims = db.GetCollection<BsonDocument>("claims");
 
                 // Check if claim exists, else return 404
 
                 // Else return ok
-                return "OK";
+                await res.WriteAsync("OK");
             });
         }
     }
 }
-*/
