@@ -19,5 +19,4 @@ WORKDIR /app
 EXPOSE 80
 
 COPY --from=build-env /app/out .
-COPY appsettings.json .
 CMD ["dotnet", "API.dll"]

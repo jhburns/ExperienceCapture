@@ -11,6 +11,8 @@ services:
       update_config:
         parallelism: 0
         delay: 30s
+    volumes:
+      - ./API/appsettings.production.js:/app/appsettings.js
 
   web:
     build:
