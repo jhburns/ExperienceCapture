@@ -242,7 +242,7 @@ namespace Carter.App.Route.Users
                     res.StatusCode = 400;
                     return;
                 }
-                
+
                 string passwordHash = Environment.GetEnvironmentVariable("admin_password_hash");
                 if (!PasswordHasher.Check(newAdmin.Data.password, passwordHash))
                 {
@@ -259,7 +259,7 @@ namespace Carter.App.Route.Users
 
                 await signUpTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
 
-                await res.WriteAsync(newToken);           
+                await res.WriteAsync(newToken);    
             });
         }
     }

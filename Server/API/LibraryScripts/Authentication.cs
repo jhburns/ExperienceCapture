@@ -33,31 +33,48 @@ namespace Carter.App.Lib.Authentication
         }
     }
 
-    public static class PasswordHasher
+    public class PasswordHasher
     {
-    
         public static string Hash(string password)
         {
-            string hash;
-            using (SHA256 sha = new SHA256Managed())
+            try
             {
-                byte[] passwordDecoded = Convert.FromBase64String(password);
-                hash = Convert.ToBase64String(sha.ComputeHash(passwordDecoded));
+                string hash;
+                using (SHA256 sha = new SHA256Managed())
+                {
+                    byte[] passwordDecoded = Convert.FromBase64String(password);
+                    hash = Convert.ToBase64String(sha.ComputeHash(passwordDecoded));
+                }
+
+                return hash;
             }
-            return hash;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
         }
 
         public static bool Check(string password, string hash)
         {
-            byte[] newHash;
-            using (SHA256 sha = new SHA256Managed())
+            try
             {
-                byte[] passwordDecoded = Convert.FromBase64String(password);
-                newHash = sha.ComputeHash(passwordDecoded);
+                byte[] newHash;
+                using (SHA256 sha = new SHA256Managed())
+                {
+                    byte[] passwordDecoded = Convert.FromBase64String(password);
+                    newHash = sha.ComputeHash(passwordDecoded);
+                }
+
+                Console.WriteLine(hash);
+                Console.WriteLine(Convert.ToBase64String(newHash));
+                return Convert.FromBase64String(hash).SequenceEqual(newHash);
             }
-            Console.WriteLine(hash);
-            Console.WriteLine(Convert.ToBase64String(newHash));
-            return (Convert.FromBase64String(hash)).SequenceEqual(newHash);
+            catch (FormatException e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
         }
 
         public static void OutputNew()
