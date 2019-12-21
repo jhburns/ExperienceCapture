@@ -155,7 +155,7 @@ namespace Carter.App.Route.Users
                 var tokenDoc = new
                 {
                     body = newToken,
-                    expirationSeconds = 120, // One hour
+                    expirationSeconds = 3600, // One hour
                     isPending = true,
                     isExisting = true,
                     createdAt = new BsonDateTime(DateTime.Now),
