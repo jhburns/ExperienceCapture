@@ -1,4 +1,4 @@
-namespace Carter.App.Authenticate
+namespace Carter.App.Lib.Authentication
 {
     using System;
 

@@ -1,6 +1,9 @@
-namespace Carter.Route.Users
+namespace Carter.App.Route.Users
 {
     using Carter;
+    using Carter.ModelBinding;
+
+    using Carter.App.Validation.Person;
 
     using Microsoft.AspNetCore.Http;
 
@@ -14,7 +17,13 @@ namespace Carter.Route.Users
         {
             this.Post("/", async (req, res) =>
             {
-                var tokens = db.GetCollection<BsonDocument>("tokens");
+                var newUser = await req.BindAndValidate<Person>();
+
+                if (!newUser.ValidationResult.IsValid)
+                {
+                    res.StatusCode = 400;
+                    return;
+                }
 
                 // Check if sign-up token is valid, and id token is valid from Google
                 // Unless in local dev mode
