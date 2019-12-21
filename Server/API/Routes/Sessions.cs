@@ -66,7 +66,7 @@ namespace Carter.App.Route.Sessions
                     return;
                 }
 
-                if (sessionDoc["isOpen"] == false)
+                if (!sessionDoc["isOpen"].AsBoolean)
                 {
                     res.StatusCode = 400;
                     return;
