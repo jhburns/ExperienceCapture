@@ -108,6 +108,7 @@ namespace Carter.App.Route.Users
                 {
                     body = newToken,
                     user = new MongoDBRef("users", userDoc),
+                    expirationSeconds = 259200, // Three days
                     createdAt = new BsonDateTime(DateTime.Now),
                 };
 
@@ -118,15 +119,53 @@ namespace Carter.App.Route.Users
 
             this.Post("/claims/", async (req, res) =>
             {
-                // Generate and return new claim token
-                await res.WriteAsync("ClAIM TOKEN");
+                string newToken = Generate.GetRandomToken(33);
+                var accessTokens = db.GetCollection<BsonDocument>("tokens.claim");
+
+                var tokenDoc = new
+                {
+                    body = newToken,
+                    expirationSeconds = 3600, // One hour
+                    isFulfilled = false,
+                    isExisting = true,
+                    createdAt = new BsonDateTime(DateTime.Now),
+                };
+
+                await accessTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
+
+                await res.WriteAsync(newToken);                
             });
 
             this.Get("/claims/", async (req, res) =>
             {
-                // Check if claim exists, else return 404
+                string claimToken = req.Headers["ExperienceCapture-Claim-Token"];
+                if (claimToken == null) {
+                    res.StatusCode = 400;
+                    return;
+                }
 
-                // If claim unfilled, return 202
+                var claimTokens = db.GetCollection<BsonDocument>("tokens.claim");
+                var filter = Builders<BsonDocument>.Filter.Eq("body", claimToken);
+                var claimDoc = await claimTokens.Find(filter).FirstOrDefaultAsync();
+
+                if (claimDoc == null)
+                {
+                    res.StatusCode = 404;
+                    return;
+                }
+
+                if (!(bool)claimDoc["isExisting"])
+                {
+                    res.StatusCode = 404;
+                    return;
+                }
+
+                if (!(bool)claimDoc["isFulfilled"])
+                {
+                    res.StatusCode = 202;
+                    await res.WriteAsync("PENDING");
+                    return;
+                }
 
                 // Else return API token for claim
                 await res.WriteAsync("API TOKEN");
@@ -134,9 +173,24 @@ namespace Carter.App.Route.Users
 
             this.Delete("/claims/", async (req, res) =>
             {
-                // Check if claim exists, else return 404
+                string claimToken = req.Headers["ExperienceCapture-Claim-Token"];
+                if (claimToken == null) {
+                    res.StatusCode = 400;
+                    return;
+                }
 
-                // Else return ok
+                var claimTokens = db.GetCollection<BsonDocument>("tokens.claim");
+                var filter = Builders<BsonDocument>.Filter.Eq("body", claimToken);
+                var claimDoc = await claimTokens.Find(filter).FirstOrDefaultAsync();
+
+                if (claimDoc == null)
+                {
+                    res.StatusCode = 404;
+                    return;
+                }
+
+                var update = Builders<BsonDocument>.Update.Set("isExisting", false);
+                await claimTokens.UpdateOneAsync(filter, update);
                 await res.WriteAsync("OK");
             });
         }
