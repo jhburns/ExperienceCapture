@@ -1,6 +1,16 @@
-namespace Carter.Route.Users
+namespace Carter.App.Route.Users
 {
+    using System;
+
     using Carter;
+
+    using Carter.App.Lib.Authentication;
+    using Carter.App.Lib.Generate;
+    using Carter.App.Validation.AccessTokenRequest;
+    using Carter.App.Validation.Person;
+
+    using Carter.ModelBinding;
+    using Carter.Request;
 
     using Microsoft.AspNetCore.Http;
 
@@ -14,62 +24,207 @@ namespace Carter.Route.Users
         {
             this.Post("/", async (req, res) =>
             {
-                var tokens = db.GetCollection<BsonDocument>("tokens");
+                var newPerson = await req.BindAndValidate<Person>();
 
-                // Check if sign-up token is valid, and id token is valid from Google
-                // Unless in local dev mode
-                // If not, return 401
+                if (!newPerson.ValidationResult.IsValid)
+                {
+                    res.StatusCode = 400;
+                    return;
+                }
 
-                // Check if user already exists, if so return 409
+                if (!(await GoogleApi.ValidateUser(newPerson.Data.idToken)))
+                {
+                    res.StatusCode = 401;
+                    return;
+                }
+
+                var signUpTokens = db.GetCollection<BsonDocument>("tokens.signUp");
+
+                var filterTokens = Builders<BsonDocument>.Filter.Eq("body", newPerson.Data.signUpToken);
+                var existingToken = await signUpTokens.Find(filterTokens).FirstOrDefaultAsync();
+
+                if (existingToken == null)
+                {
+                    res.StatusCode = 401;
+                    return;
+                }
+
                 var users = db.GetCollection<BsonDocument>("users");
 
-                // Else return OK
+                var filterUsers = Builders<BsonDocument>.Filter.Eq("id", newPerson.Data.id);
+                var existingPerson = await users.Find(filterUsers).FirstOrDefaultAsync();
+
+                if (existingPerson != null)
+                {
+                    res.StatusCode = 409;
+                    return;
+                }
+
+                BsonDocument person = new BsonDocument()
+                {
+                    { "id", newPerson.Data.id },
+                    { "fullname", newPerson.Data.fullname },
+                    { "firstname", newPerson.Data.firstname },
+                    { "lastname", newPerson.Data.lastname },
+                    { "email", newPerson.Data.email },
+                    { "createdAt", new BsonDateTime(DateTime.Now) },
+                };
+
+                await users.InsertOneAsync(person);
                 await res.WriteAsync("OK");
             });
 
-            this.Post("/{id}/tokens/", async (req, res) =>
+            this.Post("/{id:int}/tokens/", async (req, res) =>
             {
                 var users = db.GetCollection<BsonDocument>("users");
 
-                // Check if user exists, else return 404
+                int userID = req.RouteValues.As<int>("id");
+                var filter = Builders<BsonDocument>.Filter.Eq("id", userID);
+                var userDoc = await users.Find(filter).FirstOrDefaultAsync();
 
-                // Check if jwt is valid from Google, unless in local dev mode
-                // If not, return 401
-                var tokens = db.GetCollection<BsonDocument>("tokens");
+                if (userDoc == null)
+                {
+                    res.StatusCode = 404;
+                    return;
+                }
 
-                // Check if is claim token, if so fulfill and return "OK"
+                var newAccessRequest = await req.BindAndValidate<AccessTokenRequest>();
+                if (!newAccessRequest.ValidationResult.IsValid)
+                {
+                    res.StatusCode = 400;
+                    return;
+                }
 
-                // Else return new API token
-                await res.WriteAsync("API TOKEN");
+                if (!(await GoogleApi.ValidateUser(newAccessRequest.Data.idToken)))
+                {
+                    res.StatusCode = 401;
+                    return;
+                }
+
+                string newToken = Generate.GetRandomToken(33);
+                var accessTokens = db.GetCollection<BsonDocument>("tokens.access");
+
+                var tokenObject = new
+                {
+                    body = newToken,
+                    user = userDoc["_id"],
+                    expirationSeconds = 259200, // Three days
+                    createdAt = new BsonDateTime(DateTime.Now),
+                };
+
+                BsonDocument tokenDoc = tokenObject.ToBsonDocument();
+
+                await accessTokens.InsertOneAsync(tokenDoc);
+
+                if (newAccessRequest.Data.claimToken != null)
+                {
+                    var claimTokens = db.GetCollection<BsonDocument>("tokens.claim");
+
+                    var filterClaims = Builders<BsonDocument>.Filter.Eq("body", newAccessRequest.Data.claimToken);
+                    var claimDoc = await claimTokens.Find(filterClaims).FirstOrDefaultAsync();
+
+                    if (claimDoc == null)
+                    {
+                        res.StatusCode = 401;
+                        return;
+                    }
+
+                    // Don't allow overwriting an access token
+                    if ((bool)claimDoc["isPending"] && (bool)claimDoc["isExisting"])
+                    {
+                        var update = Builders<BsonDocument>.Update
+                            .Set("isPending", false)
+                            .Set("access", tokenDoc["_id"]);
+                        await claimTokens.UpdateOneAsync(filterClaims, update);
+                    }
+
+                    await res.WriteAsync("OK");
+                }
+                else
+                {
+                    await res.WriteAsync(newToken);
+                }
             });
 
             this.Post("/claims/", async (req, res) =>
             {
-                var claims = db.GetCollection<BsonDocument>("claims");
+                string newToken = Generate.GetRandomToken(33);
+                var accessTokens = db.GetCollection<BsonDocument>("tokens.claim");
 
-                // Generate and return new claim token
-                await res.WriteAsync("ClAIM TOKEN");
+                var tokenDoc = new
+                {
+                    body = newToken,
+                    expirationSeconds = 3600, // One hour
+                    isPending = true,
+                    isExisting = true,
+                    createdAt = new BsonDateTime(DateTime.Now),
+                };
+
+                await accessTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
+
+                await res.WriteAsync(newToken);
             });
 
             this.Get("/claims/", async (req, res) =>
             {
-                var claims = db.GetCollection<BsonDocument>("claims");
+                string claimToken = req.Headers["ExperienceCapture-Claim-Token"];
+                if (claimToken == null)
+                {
+                    res.StatusCode = 400;
+                    return;
+                }
 
-                // Check if claim exists, else return 404
+                var claimTokens = db.GetCollection<BsonDocument>("tokens.claim");
+                var filter = Builders<BsonDocument>.Filter.Eq("body", claimToken);
+                var claimDoc = await claimTokens.Find(filter).FirstOrDefaultAsync();
 
-                // If claim unfilled, return 202
+                if (claimDoc == null)
+                {
+                    res.StatusCode = 404;
+                    return;
+                }
 
-                // Else return API token for claim
-                await res.WriteAsync("API TOKEN");
+                if (!(bool)claimDoc["isExisting"])
+                {
+                    res.StatusCode = 404;
+                    return;
+                }
+
+                if ((bool)claimDoc["isPending"])
+                {
+                    res.StatusCode = 202;
+                    await res.WriteAsync("PENDING");
+                    return;
+                }
+
+                var accessTokens = db.GetCollection<BsonDocument>("tokens.access");
+                var accessFilter = Builders<BsonDocument>.Filter.Eq("_id", (ObjectId)claimDoc["user"]);
+                var accessDoc = await accessTokens.Find(accessFilter).FirstOrDefaultAsync();
+
+                await res.WriteAsync((string)accessDoc["body"]);
             });
 
             this.Delete("/claims/", async (req, res) =>
             {
-                var claims = db.GetCollection<BsonDocument>("claims");
+                string claimToken = req.Headers["ExperienceCapture-Claim-Token"];
+                if (claimToken == null)
+                {
+                    res.StatusCode = 400;
+                    return;
+                }
 
-                // Check if claim exists, else return 404
+                var claimTokens = db.GetCollection<BsonDocument>("tokens.claim");
+                var filter = Builders<BsonDocument>.Filter.Eq("body", claimToken);
+                var claimDoc = await claimTokens.Find(filter).FirstOrDefaultAsync();
 
-                // Else return ok
+                if (claimDoc == null)
+                {
+                    res.StatusCode = 404;
+                    return;
+                }
+
+                var update = Builders<BsonDocument>.Update.Set("isExisting", false);
+                await claimTokens.UpdateOneAsync(filter, update);
                 await res.WriteAsync("OK");
             });
         }

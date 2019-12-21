@@ -1,4 +1,4 @@
-namespace Carter.Route.Health
+namespace Carter.App.Route.Health
 {
     using Carter;
     using Microsoft.AspNetCore.Http;

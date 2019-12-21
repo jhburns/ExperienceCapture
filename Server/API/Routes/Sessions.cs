@@ -1,9 +1,9 @@
-namespace Carter.Route.Sessions
+namespace Carter.App.Route.Sessions
 {
     using Carter;
 
-    using Carter.App.Generate;
-    using Carter.App.Network;
+    using Carter.App.Lib.Generate;
+    using Carter.App.Lib.Network;
 
     using Carter.Request;
 

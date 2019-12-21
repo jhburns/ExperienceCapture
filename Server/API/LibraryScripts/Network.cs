@@ -1,4 +1,4 @@
-namespace Carter.App.Network
+namespace Carter.App.Lib.Network
 {
     using System.IO;
     using System.Text.RegularExpressions;
