@@ -7,7 +7,9 @@ namespace Carter.App.Route.Users
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Timer;
+
     using Carter.App.Validation.AccessTokenRequest;
+    using Carter.App.Validation.AdminPassword;
     using Carter.App.Validation.Person;
 
     using Carter.ModelBinding;
@@ -39,7 +41,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var signUpTokens = db.GetCollection<BsonDocument>("tokens.signUp");
+                var signUpTokens = db.GetCollection<BsonDocument>("users.tokens.signUp");
 
                 var filterTokens = Builders<BsonDocument>.Filter.Eq("body", newPerson.Data.signUpToken);
                 var existingToken = await signUpTokens.Find(filterTokens).FirstOrDefaultAsync();
@@ -102,7 +104,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                string newToken = Generate.GetRandomToken(33);
+                string newToken = Generate.GetRandomToken();
                 var accessTokens = db.GetCollection<BsonDocument>("users.tokens.access");
 
                 var tokenObject = new
@@ -149,7 +151,7 @@ namespace Carter.App.Route.Users
 
             this.Post("/claims/", async (req, res) =>
             {
-                string newToken = Generate.GetRandomToken(33);
+                string newToken = Generate.GetRandomToken();
                 var accessTokens = db.GetCollection<BsonDocument>("users.tokens.claim");
 
                 var tokenDoc = new
@@ -227,6 +229,37 @@ namespace Carter.App.Route.Users
                 var update = Builders<BsonDocument>.Update.Set("isExisting", false);
                 await claimTokens.UpdateOneAsync(filter, update);
                 await res.WriteAsync("OK");
+            });
+
+            this.Post("/admin/password/", async (req, res) =>
+            {
+                string newToken = Generate.GetRandomToken();
+                var signUpTokens = db.GetCollection<BsonDocument>("users.tokens.signUp");
+
+                var newAdmin = await req.BindAndValidate<AdminPassword>();
+                if (!newAdmin.ValidationResult.IsValid)
+                {
+                    res.StatusCode = 400;
+                    return;
+                }
+                
+                string passwordHash = Environment.GetEnvironmentVariable("admin_password_hash");
+                if (!PasswordHasher.Check(newAdmin.Data.password, passwordHash))
+                {
+                    res.StatusCode = 401;
+                    return;
+                }
+
+                var tokenDoc = new
+                {
+                    body = newToken,
+                    expirationSeconds = 86400, // One hour
+                    createdAt = new BsonDateTime(DateTime.Now),
+                };
+
+                await signUpTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
+
+                await res.WriteAsync(newToken);           
             });
         }
     }
