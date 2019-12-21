@@ -1,9 +1,13 @@
 namespace Carter.App.Route.Users
 {
-    using Carter;
-    using Carter.ModelBinding;
+    using System;
 
+    using Carter;
+
+    using Carter.App.Lib.Authentication;
     using Carter.App.Validation.Person;
+
+    using Carter.ModelBinding;
 
     using Microsoft.AspNetCore.Http;
 
@@ -17,35 +21,62 @@ namespace Carter.App.Route.Users
         {
             this.Post("/", async (req, res) =>
             {
-                var newUser = await req.BindAndValidate<Person>();
+                var newPerson = await req.BindAndValidate<Person>();
 
-                if (!newUser.ValidationResult.IsValid)
+                if (!newPerson.ValidationResult.IsValid)
                 {
                     res.StatusCode = 400;
                     return;
                 }
 
-                // Check if sign-up token is valid, and id token is valid from Google
-                // Unless in local dev mode
-                // If not, return 401
+                if (!(await GoogleApi.ValidateUser(newPerson.Data.idToken)))
+                {
+                    res.StatusCode = 401;
+                    return;
+                }
 
-                // Check if user already exists, if so return 409
+                var signUpTokens = db.GetCollection<BsonDocument>("tokens.signUp");
+
+                var filterTokens = Builders<BsonDocument>.Filter.Eq("body", newPerson.Data.signUpToken);
+                var existingToken = await signUpTokens.Find(filterTokens).FirstOrDefaultAsync();
+
+                if (existingToken == null)
+                {
+                    res.StatusCode = 401;
+                    return;
+                }
+
                 var users = db.GetCollection<BsonDocument>("users");
 
-                // Else return OK
+                var filterUsers = Builders<BsonDocument>.Filter.Eq("id", newPerson.Data.id);
+                var existingPerson = await users.Find(filterUsers).FirstOrDefaultAsync();
+
+                if (existingPerson != null)
+                {
+                    res.StatusCode = 409;
+                    return;
+                }
+
+                BsonDocument person = new BsonDocument()
+                {
+                    { "id", newPerson.Data.id },
+                    { "fullname", newPerson.Data.fullname },
+                    { "firstname", newPerson.Data.firstname },
+                    { "lastname", newPerson.Data.lastname },
+                    { "email", newPerson.Data.email },
+                    { "joinDate", new BsonDateTime(DateTime.Now) },
+                };
+
+                await users.InsertOneAsync(person);
                 await res.WriteAsync("OK");
             });
 
             this.Post("/{id}/tokens/", async (req, res) =>
             {
-                var users = db.GetCollection<BsonDocument>("users");
-
                 // Check if user exists, else return 404
 
                 // Check if jwt is valid from Google, unless in local dev mode
                 // If not, return 401
-                var tokens = db.GetCollection<BsonDocument>("tokens");
-
                 // Check if is claim token, if so fulfill and return "OK"
 
                 // Else return new API token
@@ -54,16 +85,12 @@ namespace Carter.App.Route.Users
 
             this.Post("/claims/", async (req, res) =>
             {
-                var claims = db.GetCollection<BsonDocument>("claims");
-
                 // Generate and return new claim token
                 await res.WriteAsync("ClAIM TOKEN");
             });
 
             this.Get("/claims/", async (req, res) =>
             {
-                var claims = db.GetCollection<BsonDocument>("claims");
-
                 // Check if claim exists, else return 404
 
                 // If claim unfilled, return 202
@@ -74,8 +101,6 @@ namespace Carter.App.Route.Users
 
             this.Delete("/claims/", async (req, res) =>
             {
-                var claims = db.GetCollection<BsonDocument>("claims");
-
                 // Check if claim exists, else return 404
 
                 // Else return ok
