@@ -259,7 +259,7 @@ namespace Carter.App.Route.Users
 
                 await signUpTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
 
-                await res.WriteAsync(newToken);    
+                await res.WriteAsync(newToken);
             });
         }
     }

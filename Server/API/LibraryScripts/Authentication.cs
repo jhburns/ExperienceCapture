@@ -2,8 +2,8 @@ namespace Carter.App.Lib.Authentication
 {
     using System;
     using System.Linq;
-    using System.Threading.Tasks;
     using System.Security.Cryptography;
+    using System.Threading.Tasks;
 
     using Carter.App.Lib.Generate;
 
