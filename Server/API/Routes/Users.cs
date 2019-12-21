@@ -124,7 +124,7 @@ namespace Carter.App.Route.Users
                     var filterClaims = Builders<BsonDocument>.Filter.Eq("body", newAccessRequest.Data.claimToken);
                     var claimDoc = await claimTokens.Find(filterClaims).FirstOrDefaultAsync();
 
-                    if (claimDoc == null)
+                    if (claimDoc == null || claimDoc["createdAt"].IsAfter(claimDoc["expirationSeconds"]))
                     {
                         res.StatusCode = 401;
                         return;
