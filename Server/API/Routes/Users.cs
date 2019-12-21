@@ -87,7 +87,7 @@ namespace Carter.App.Route.Users
                     res.StatusCode = 404;
                     return;
                 }
-                
+
                 var newAccessRequest = await req.BindAndValidate<AccessTokenRequest>();
                 if (!newAccessRequest.ValidationResult.IsValid)
                 {
@@ -104,17 +104,45 @@ namespace Carter.App.Route.Users
                 string newToken = Generate.GetRandomToken(33);
                 var accessTokens = db.GetCollection<BsonDocument>("tokens.access");
 
-                var tokenDoc = new
+                var tokenObject = new
                 {
                     body = newToken,
-                    user = new MongoDBRef("users", userDoc),
+                    user = userDoc["_id"],
                     expirationSeconds = 259200, // Three days
                     createdAt = new BsonDateTime(DateTime.Now),
                 };
 
-                await accessTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
+                BsonDocument tokenDoc = tokenObject.ToBsonDocument();
 
-                await res.WriteAsync(newToken);
+                await accessTokens.InsertOneAsync(tokenDoc);
+
+                if (newAccessRequest.Data.claimToken != null)
+                {
+                    var claimTokens = db.GetCollection<BsonDocument>("tokens.claim");
+
+                    var filterClaims = Builders<BsonDocument>.Filter.Eq("body", newAccessRequest.Data.claimToken);
+                    var claimDoc = await claimTokens.Find(filterClaims).FirstOrDefaultAsync();
+
+                    if (claimDoc == null)
+                    {
+                        res.StatusCode = 401;
+                        return;
+                    }
+
+                    // Don't allow overwriting an access token
+                    if((bool)claimDoc["isPending"] && (bool)claimDoc["isExisting"]) {
+                        var update = Builders<BsonDocument>.Update
+                            .Set("isPending", false)
+                            .Set("access", tokenDoc["_id"]);
+                        await claimTokens.UpdateOneAsync(filterClaims, update);
+                    }
+
+                    await res.WriteAsync("OK");
+                }
+                else
+                {
+                    await res.WriteAsync(newToken);
+                }
             });
 
             this.Post("/claims/", async (req, res) =>
@@ -126,20 +154,21 @@ namespace Carter.App.Route.Users
                 {
                     body = newToken,
                     expirationSeconds = 3600, // One hour
-                    isFulfilled = false,
+                    isPending = true,
                     isExisting = true,
                     createdAt = new BsonDateTime(DateTime.Now),
                 };
 
                 await accessTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
 
-                await res.WriteAsync(newToken);                
+                await res.WriteAsync(newToken);    
             });
 
             this.Get("/claims/", async (req, res) =>
             {
                 string claimToken = req.Headers["ExperienceCapture-Claim-Token"];
-                if (claimToken == null) {
+                if (claimToken == null)
+                {
                     res.StatusCode = 400;
                     return;
                 }
@@ -160,21 +189,25 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                if (!(bool)claimDoc["isFulfilled"])
+                if ((bool)claimDoc["isPending"])
                 {
                     res.StatusCode = 202;
                     await res.WriteAsync("PENDING");
                     return;
                 }
 
-                // Else return API token for claim
-                await res.WriteAsync("API TOKEN");
+                var accessTokens = db.GetCollection<BsonDocument>("tokens.access");
+                var accessFilter = Builders<BsonDocument>.Filter.Eq("_id", (ObjectId)claimDoc["access"]);
+                var accessDoc = await accessTokens.Find(accessFilter).FirstOrDefaultAsync(); 
+
+                await res.WriteAsync((string)accessDoc["body"]);
             });
 
             this.Delete("/claims/", async (req, res) =>
             {
                 string claimToken = req.Headers["ExperienceCapture-Claim-Token"];
-                if (claimToken == null) {
+                if (claimToken == null)
+                {
                     res.StatusCode = 400;
                     return;
                 }
