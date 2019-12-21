@@ -43,7 +43,7 @@ namespace Carter.App.Route.Users
 
                 var signUpTokens = db.GetCollection<BsonDocument>("users.tokens.signUp");
 
-                var filterTokens = Builders<BsonDocument>.Filter.Eq("body", newPerson.Data.signUpToken);
+                var filterTokens = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(newPerson.Data.signUpToken));
                 var existingToken = await signUpTokens.Find(filterTokens).FirstOrDefaultAsync();
 
                 if (existingToken == null)
@@ -232,7 +232,7 @@ namespace Carter.App.Route.Users
 
                 var tokenDoc = new
                 {
-                    body = newToken,
+                    hash = PasswordHasher.Hash(newToken),
                     expirationSeconds = 86400, // One hour
                     createdAt = new BsonDateTime(DateTime.Now),
                 };
