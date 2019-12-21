@@ -6,6 +6,7 @@ namespace Carter.App.Route.Users
 
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
+    using Carter.App.Lib.Timer;
     using Carter.App.Validation.AccessTokenRequest;
     using Carter.App.Validation.Person;
 
@@ -102,7 +103,7 @@ namespace Carter.App.Route.Users
                 }
 
                 string newToken = Generate.GetRandomToken(33);
-                var accessTokens = db.GetCollection<BsonDocument>("tokens.access");
+                var accessTokens = db.GetCollection<BsonDocument>("users.tokens.access");
 
                 var tokenObject = new
                 {
@@ -118,19 +119,19 @@ namespace Carter.App.Route.Users
 
                 if (newAccessRequest.Data.claimToken != null)
                 {
-                    var claimTokens = db.GetCollection<BsonDocument>("tokens.claim");
+                    var claimTokens = db.GetCollection<BsonDocument>("users.tokens.claim");
 
                     var filterClaims = Builders<BsonDocument>.Filter.Eq("body", newAccessRequest.Data.claimToken);
                     var claimDoc = await claimTokens.Find(filterClaims).FirstOrDefaultAsync();
 
-                    if (claimDoc == null)
+                    if (claimDoc == null || claimDoc["createdAt"].IsAfter(claimDoc["expirationSeconds"]))
                     {
                         res.StatusCode = 401;
                         return;
                     }
 
                     // Don't allow overwriting an access token
-                    if ((bool)claimDoc["isPending"] && (bool)claimDoc["isExisting"])
+                    if (claimDoc["isPending"].AsBoolean && claimDoc["isExisting"].AsBoolean)
                     {
                         var update = Builders<BsonDocument>.Update
                             .Set("isPending", false)
@@ -149,7 +150,7 @@ namespace Carter.App.Route.Users
             this.Post("/claims/", async (req, res) =>
             {
                 string newToken = Generate.GetRandomToken(33);
-                var accessTokens = db.GetCollection<BsonDocument>("tokens.claim");
+                var accessTokens = db.GetCollection<BsonDocument>("users.tokens.claim");
 
                 var tokenDoc = new
                 {
@@ -174,7 +175,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var claimTokens = db.GetCollection<BsonDocument>("tokens.claim");
+                var claimTokens = db.GetCollection<BsonDocument>("users.tokens.claim");
                 var filter = Builders<BsonDocument>.Filter.Eq("body", claimToken);
                 var claimDoc = await claimTokens.Find(filter).FirstOrDefaultAsync();
 
@@ -184,24 +185,24 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                if (!(bool)claimDoc["isExisting"])
+                if (!claimDoc["isExisting"].AsBoolean || claimDoc["createdAt"].IsAfter(claimDoc["expirationSeconds"]))
                 {
                     res.StatusCode = 404;
                     return;
                 }
 
-                if ((bool)claimDoc["isPending"])
+                if (claimDoc["isPending"].AsBoolean)
                 {
                     res.StatusCode = 202;
                     await res.WriteAsync("PENDING");
                     return;
                 }
 
-                var accessTokens = db.GetCollection<BsonDocument>("tokens.access");
+                var accessTokens = db.GetCollection<BsonDocument>("users.tokens.access");
                 var accessFilter = Builders<BsonDocument>.Filter.Eq("_id", (ObjectId)claimDoc["user"]);
                 var accessDoc = await accessTokens.Find(accessFilter).FirstOrDefaultAsync();
 
-                await res.WriteAsync((string)accessDoc["body"]);
+                await res.WriteAsync(accessDoc["body"].AsString);
             });
 
             this.Delete("/claims/", async (req, res) =>
@@ -213,7 +214,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var claimTokens = db.GetCollection<BsonDocument>("tokens.claim");
+                var claimTokens = db.GetCollection<BsonDocument>("users.tokens.claim");
                 var filter = Builders<BsonDocument>.Filter.Eq("body", claimToken);
                 var claimDoc = await claimTokens.Find(filter).FirstOrDefaultAsync();
 
