@@ -71,7 +71,7 @@ namespace Carter.App.Route.Users
                 await res.WriteAsync("OK");
             });
 
-            this.Post("/{id}/tokens/", async (req, res) =>
+            this.Post("/{id:int}/tokens/", async (req, res) =>
             {
                 // Check if user exists, else return 404
 

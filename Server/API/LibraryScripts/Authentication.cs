@@ -15,7 +15,7 @@ namespace Carter.App.Lib.Authentication
             {
                 var validPayload = await GoogleJsonWebSignature.ValidateAsync(idToken);
 
-                if (validPayload == null) 
+                if (validPayload == null)
                 {
                     return false;
                 }
