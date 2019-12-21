@@ -5,9 +5,12 @@ namespace Carter.App.Route.Users
     using Carter;
 
     using Carter.App.Lib.Authentication;
+    using Carter.App.Lib.Generate;
+    using Carter.App.Validation.AccessTokenRequest;
     using Carter.App.Validation.Person;
 
     using Carter.ModelBinding;
+    using Carter.Request;
 
     using Microsoft.AspNetCore.Http;
 
@@ -64,7 +67,7 @@ namespace Carter.App.Route.Users
                     { "firstname", newPerson.Data.firstname },
                     { "lastname", newPerson.Data.lastname },
                     { "email", newPerson.Data.email },
-                    { "joinDate", new BsonDateTime(DateTime.Now) },
+                    { "createdAt", new BsonDateTime(DateTime.Now) },
                 };
 
                 await users.InsertOneAsync(person);
@@ -73,14 +76,44 @@ namespace Carter.App.Route.Users
 
             this.Post("/{id:int}/tokens/", async (req, res) =>
             {
-                // Check if user exists, else return 404
+                var users = db.GetCollection<BsonDocument>("users");
 
-                // Check if jwt is valid from Google, unless in local dev mode
-                // If not, return 401
-                // Check if is claim token, if so fulfill and return "OK"
+                int userID = req.RouteValues.As<int>("id");
+                var filter = Builders<BsonDocument>.Filter.Eq("id", userID);
+                var userDoc = await users.Find(filter).FirstOrDefaultAsync();
 
-                // Else return new API token
-                await res.WriteAsync("API TOKEN");
+                if (userDoc == null)
+                {
+                    res.StatusCode = 404;
+                    return;
+                }
+                
+                var newAccessRequest = await req.BindAndValidate<AccessTokenRequest>();
+                if (!newAccessRequest.ValidationResult.IsValid)
+                {
+                    res.StatusCode = 400;
+                    return;
+                }
+
+                if (!(await GoogleApi.ValidateUser(newAccessRequest.Data.idToken)))
+                {
+                    res.StatusCode = 401;
+                    return;
+                }
+
+                string newToken = Generate.GetRandomToken(33);
+                var accessTokens = db.GetCollection<BsonDocument>("tokens.access");
+
+                var tokenDoc = new
+                {
+                    body = newToken,
+                    user = new MongoDBRef("users", userDoc),
+                    createdAt = new BsonDateTime(DateTime.Now),
+                };
+
+                await accessTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
+
+                await res.WriteAsync(newToken);
             });
 
             this.Post("/claims/", async (req, res) =>
