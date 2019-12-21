@@ -9,7 +9,8 @@ COPY . .
 
 RUN cp ./Server/template.server.info.env ./Server/server.info.env && \
 	cp ./Deploy/template.deploy.info.env ./Deploy/deploy.info.env && \
-	cp ./Deploy/template.env ./Deploy/.env
+	cp ./Deploy/template.env ./Deploy/.env && \
+	cp ./Server/template.env ./Server/.env
 
 RUN docker-compose \
 	-f ./Server/docker-compose.yaml \

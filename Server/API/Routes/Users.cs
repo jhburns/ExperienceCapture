@@ -7,7 +7,9 @@ namespace Carter.App.Route.Users
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Timer;
+
     using Carter.App.Validation.AccessTokenRequest;
+    using Carter.App.Validation.AdminPassword;
     using Carter.App.Validation.Person;
 
     using Carter.ModelBinding;
@@ -39,9 +41,9 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var signUpTokens = db.GetCollection<BsonDocument>("tokens.signUp");
+                var signUpTokens = db.GetCollection<BsonDocument>("users.tokens.signUp");
 
-                var filterTokens = Builders<BsonDocument>.Filter.Eq("body", newPerson.Data.signUpToken);
+                var filterTokens = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(newPerson.Data.signUpToken));
                 var existingToken = await signUpTokens.Find(filterTokens).FirstOrDefaultAsync();
 
                 if (existingToken == null)
@@ -102,12 +104,13 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                string newToken = Generate.GetRandomToken(33);
+                string newToken = Generate.GetRandomToken();
+                string newHash = PasswordHasher.Hash(newToken);
                 var accessTokens = db.GetCollection<BsonDocument>("users.tokens.access");
 
                 var tokenObject = new
                 {
-                    body = newToken,
+                    hash = newHash,
                     user = userDoc["_id"],
                     expirationSeconds = 259200, // Three days
                     createdAt = new BsonDateTime(DateTime.Now),
@@ -121,7 +124,7 @@ namespace Carter.App.Route.Users
                 {
                     var claimTokens = db.GetCollection<BsonDocument>("users.tokens.claim");
 
-                    var filterClaims = Builders<BsonDocument>.Filter.Eq("body", newAccessRequest.Data.claimToken);
+                    var filterClaims = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(newAccessRequest.Data.claimToken));
                     var claimDoc = await claimTokens.Find(filterClaims).FirstOrDefaultAsync();
 
                     if (claimDoc == null || claimDoc["createdAt"].IsAfter(claimDoc["expirationSeconds"]))
@@ -135,7 +138,8 @@ namespace Carter.App.Route.Users
                     {
                         var update = Builders<BsonDocument>.Update
                             .Set("isPending", false)
-                            .Set("access", tokenDoc["_id"]);
+                            .Set("access", tokenDoc["_id"])
+                            .Set("accessToken", newToken);
                         await claimTokens.UpdateOneAsync(filterClaims, update);
                     }
 
@@ -143,18 +147,19 @@ namespace Carter.App.Route.Users
                 }
                 else
                 {
-                    await res.WriteAsync(newToken);
+                    await res.WriteAsync(newHash);
                 }
             });
 
             this.Post("/claims/", async (req, res) =>
             {
-                string newToken = Generate.GetRandomToken(33);
+                string newToken = Generate.GetRandomToken();
+                string newHash = PasswordHasher.Hash(newToken);
                 var accessTokens = db.GetCollection<BsonDocument>("users.tokens.claim");
 
                 var tokenDoc = new
                 {
-                    body = newToken,
+                    hash = newHash,
                     expirationSeconds = 3600, // One hour
                     isPending = true,
                     isExisting = true,
@@ -176,7 +181,7 @@ namespace Carter.App.Route.Users
                 }
 
                 var claimTokens = db.GetCollection<BsonDocument>("users.tokens.claim");
-                var filter = Builders<BsonDocument>.Filter.Eq("body", claimToken);
+                var filter = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(claimToken));
                 var claimDoc = await claimTokens.Find(filter).FirstOrDefaultAsync();
 
                 if (claimDoc == null)
@@ -198,35 +203,43 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var accessTokens = db.GetCollection<BsonDocument>("users.tokens.access");
-                var accessFilter = Builders<BsonDocument>.Filter.Eq("_id", (ObjectId)claimDoc["user"]);
-                var accessDoc = await accessTokens.Find(accessFilter).FirstOrDefaultAsync();
+                var update = Builders<BsonDocument>.Update
+                    .Set("isExisting", false)
+                    .Unset("accessToken");
+                await claimTokens.UpdateOneAsync(filter, update);
 
-                await res.WriteAsync(accessDoc["body"].AsString);
+                await res.WriteAsync(claimDoc["accessToken"].AsString);
             });
 
-            this.Delete("/claims/", async (req, res) =>
+            this.Post("/admin/password/", async (req, res) =>
             {
-                string claimToken = req.Headers["ExperienceCapture-Claim-Token"];
-                if (claimToken == null)
+                string newToken = Generate.GetRandomToken();
+                var signUpTokens = db.GetCollection<BsonDocument>("users.tokens.signUp");
+
+                var newAdmin = await req.BindAndValidate<AdminPassword>();
+                if (!newAdmin.ValidationResult.IsValid)
                 {
                     res.StatusCode = 400;
                     return;
                 }
 
-                var claimTokens = db.GetCollection<BsonDocument>("users.tokens.claim");
-                var filter = Builders<BsonDocument>.Filter.Eq("body", claimToken);
-                var claimDoc = await claimTokens.Find(filter).FirstOrDefaultAsync();
-
-                if (claimDoc == null)
+                string passwordHash = Environment.GetEnvironmentVariable("admin_password_hash");
+                if (!PasswordHasher.Check(newAdmin.Data.password, passwordHash))
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = 401;
                     return;
                 }
 
-                var update = Builders<BsonDocument>.Update.Set("isExisting", false);
-                await claimTokens.UpdateOneAsync(filter, update);
-                await res.WriteAsync("OK");
+                var tokenDoc = new
+                {
+                    hash = PasswordHasher.Hash(newToken),
+                    expirationSeconds = 86400, // One hour
+                    createdAt = new BsonDateTime(DateTime.Now),
+                };
+
+                await signUpTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
+
+                await res.WriteAsync(newToken);
             });
         }
     }

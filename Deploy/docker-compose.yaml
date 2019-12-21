@@ -2,15 +2,6 @@
 version: '3.5'
 
 services:
-  ssh_setup:
-    build:
-      context: ./SshClient
-    command: ["ssh-keygen", "-b", "2048", "-q", "-t", "rsa", "-N", "", "-f", "./id_rsa"]
-    volumes:
-      - ./.secrets/:/keys/
-    networks:
-      - ec-setup-network
-
   packer:
     build:
       context: ./Packer
@@ -19,6 +10,15 @@ services:
       - ../Server:/deploy/Server
     networks:
       - ec-deploy-network
+    env_file:
+      - .env
+      - deploy.info.env
+
+  pulumi:
+    build:
+      context: ./Pulumi
+    networks:
+      - ec-pulumi-network
     env_file:
       - .env
       - deploy.info.env
@@ -34,14 +34,14 @@ services:
     env_file:
       - deploy.info.env
 
-  pulumi:
+  ssh_setup:
     build:
-      context: ./Pulumi
+      context: ./SshClient
+    command: ["ssh-keygen", "-b", "2048", "-q", "-t", "rsa", "-N", "", "-f", "./id_rsa"]
+    volumes:
+      - ./.secrets/:/keys/
     networks:
-      - ec-pulumi-network
-    env_file:
-      - .env
-      - deploy.info.env
+      - ec-setup-network
 
 networks:
   ec-deploy-network: {}
