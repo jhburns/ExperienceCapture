@@ -130,7 +130,8 @@ namespace Carter.App.Route.Users
                     }
 
                     // Don't allow overwriting an access token
-                    if((bool)claimDoc["isPending"] && (bool)claimDoc["isExisting"]) {
+                    if ((bool)claimDoc["isPending"] && (bool)claimDoc["isExisting"])
+                    {
                         var update = Builders<BsonDocument>.Update
                             .Set("isPending", false)
                             .Set("access", tokenDoc["_id"]);
@@ -161,7 +162,7 @@ namespace Carter.App.Route.Users
 
                 await accessTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
 
-                await res.WriteAsync(newToken);    
+                await res.WriteAsync(newToken);
             });
 
             this.Get("/claims/", async (req, res) =>
@@ -197,8 +198,8 @@ namespace Carter.App.Route.Users
                 }
 
                 var accessTokens = db.GetCollection<BsonDocument>("tokens.access");
-                var accessFilter = Builders<BsonDocument>.Filter.Eq("_id", (ObjectId)claimDoc["access"]);
-                var accessDoc = await accessTokens.Find(accessFilter).FirstOrDefaultAsync(); 
+                var accessFilter = Builders<BsonDocument>.Filter.Eq("_id", (ObjectId)claimDoc["user"]);
+                var accessDoc = await accessTokens.Find(accessFilter).FirstOrDefaultAsync();
 
                 await res.WriteAsync((string)accessDoc["body"]);
             });
