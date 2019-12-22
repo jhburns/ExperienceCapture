@@ -169,22 +169,16 @@ namespace Carter.App.Route.Users
 
                 await accessTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
 
-                string json = JsonQuery.FulfilEncoding(req.Query, tokenDoc.ToBsonDocument());
-                if (json != null)
-                {
-                    JsonResponce.FromString(res, json);
-                    return;
-                }
-
                 await res.WriteAsync(newToken);
             });
 
             this.Get("/claims/", async (req, res) =>
             {
-                string claimToken = req.Headers["ExperienceCapture-Claim-Token"];
+                string claimToken = req.Cookies["ExperienceCapture-Claim-Token"];
                 if (claimToken == null)
                 {
                     res.StatusCode = 400;
+                    await res.WriteAsync(claimToken);
                     return;
                 }
 
