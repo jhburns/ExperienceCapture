@@ -1,5 +1,5 @@
 *.env
-!template.*.env
+!template*env
 
 # So keys aren't leaked
 .secrets/*

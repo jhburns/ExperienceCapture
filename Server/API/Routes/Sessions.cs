@@ -2,8 +2,10 @@ namespace Carter.App.Route.Sessions
 {
     using Carter;
 
+    using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Network;
+    using Carter.App.Route.PreSecurity;
 
     using Carter.Request;
 
@@ -18,6 +20,8 @@ namespace Carter.App.Route.Sessions
         public Sessions(IMongoDatabase db)
             : base("/sessions")
         {
+            this.Before += PreSecurity.GetSecurityCheck(db);
+
             this.Post("/", async (req, res) =>
             {
                 var sessions = db.GetCollection<BsonDocument>("sessions");
