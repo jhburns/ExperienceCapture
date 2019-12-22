@@ -1,14 +1,22 @@
 import { gapi } from 'gapi-script';
 
-function submitUser(isMock=false, onError) {
-	if (isMock) {
-		return;
+import { postData } from 'libs/fetchExtra';
+
+async function submitUser(isMock=false, onError) {
+	const profile = gapi.currentUser.get();
+	console.log("ID: " + profile.getId());
+	console.log('Full Name: ' + profile.getName());
+	console.log('Given Name: ' + profile.getGivenName());
+	console.log('Family Name: ' + profile.getFamilyName());
+	console.log("Email: " + profile.getEmail());
+	try {
+		const replyData = await postData('/api/v1/', {});
+		console.log(JSON.stringify(replyData));
+	} catch (error) {
+		console.error(error);
+		onError();
 	}
 }
-
-//function postUser(data, onError {
-//
-//}
 
 async function signOutUser(isMock=false) {
   if (isMock) {
