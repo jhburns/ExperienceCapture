@@ -35,7 +35,7 @@ namespace Carter.App.Route.PreSecurity
                     return false;
                 }
 
-                return true;        
+                return true;
             };
         }
     }
