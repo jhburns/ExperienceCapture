@@ -19,7 +19,7 @@ namespace Carter.App.Route.PreSecurity
             {
                 var accessTokens = db.GetCollection<BsonDocument>("users.tokens.access");
 
-                string token = ctx.Request.Headers["ExperienceCapture-Access-Token"];
+                string token = ctx.Request.Cookies["ExperienceCapture-Access-Token"];
                 if (token == null)
                 {
                     ctx.Response.StatusCode = 400;

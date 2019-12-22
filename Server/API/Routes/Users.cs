@@ -6,6 +6,7 @@ namespace Carter.App.Route.Users
 
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
+    using Carter.App.Lib.Network;
     using Carter.App.Lib.Timer;
 
     using Carter.App.Validation.AccessTokenRequest;
@@ -173,10 +174,11 @@ namespace Carter.App.Route.Users
 
             this.Get("/claims/", async (req, res) =>
             {
-                string claimToken = req.Headers["ExperienceCapture-Claim-Token"];
+                string claimToken = req.Cookies["ExperienceCapture-Claim-Token"];
                 if (claimToken == null)
                 {
                     res.StatusCode = 400;
+                    await res.WriteAsync(claimToken);
                     return;
                 }
 

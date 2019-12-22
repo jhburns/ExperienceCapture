@@ -2,7 +2,6 @@ namespace Carter.App.Route.Sessions
 {
     using Carter;
 
-    using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Network;
     using Carter.App.Route.PreSecurity;
