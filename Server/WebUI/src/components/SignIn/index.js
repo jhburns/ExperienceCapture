@@ -25,22 +25,13 @@ class SignIn extends Component {
     const opts = {
       width: 220,
       height: 50,
-	  longtitle: true,
+	    longtitle: true,
       onsuccess: this.successCallback,
       onfailure: this.failureCallback
     }
     
-	gapi.signin2.render('loginButton', opts);
+	  gapi.signin2.render('loginButton', opts);
   }
-
-//  onSignOut() {
-//	signOutUser(this.state.isMock, () => {
-//	  this.setState({
-//	    isSignedIn: false,
-//	    isSignedOut: true,
-//	  }, () => window.gapi.load('signin2', this.renderLoginCallback));
-//	});
-// }
 
   onSignOut() {
     signOutUser(this.state.isMock);
