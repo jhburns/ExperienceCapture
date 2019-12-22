@@ -17,7 +17,7 @@ services:
   web:
     build:
       context: ./WebUI
-      dockerfile: Dockerfile.integration
+      dockerfile: integration.Dockerfile
       args:  # Make sure to change the following arg
         REACT_APP_GOOGLE_CLIENT_ID: 555477545658-co1pgbl0uh99rp8tbo2q62t2ch8vlb1h.apps.googleusercontent.com
     command: "caddy"
