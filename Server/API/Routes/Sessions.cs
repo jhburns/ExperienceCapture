@@ -5,6 +5,7 @@ namespace Carter.App.Route.Sessions
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Network;
+    using Carter.App.Route.PreSecurity;
 
     using Carter.Request;
 
@@ -19,28 +20,7 @@ namespace Carter.App.Route.Sessions
         public Sessions(IMongoDatabase db)
             : base("/sessions")
         {
-            this.Before += async (ctx) =>
-            {
-                var accessTokens = db.GetCollection<BsonDocument>("users.tokens.access");
-
-                string token = ctx.Request.Headers["ExperienceCapture-Access-Token"];
-                if (token == null)
-                {
-                    ctx.Response.StatusCode = 400;
-                    return false;
-                }
-
-                var filterClaims = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(token));
-                var claimDoc = await accessTokens.Find(filterClaims).FirstOrDefaultAsync();
-
-                if (claimDoc == null)
-                {
-                    ctx.Response.StatusCode = 401;
-                    return false;
-                }
-
-                return true;
-            };
+            this.Before += PreSecurity.GetSecurityCheck(db);
 
             this.Post("/", async (req, res) =>
             {
