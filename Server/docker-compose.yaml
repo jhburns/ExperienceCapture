@@ -15,6 +15,7 @@ services:
       WAIT_HOSTS: db:27017
     env_file:
       - .env
+      - server.info.env
     networks:
       - ec-network
     healthcheck:

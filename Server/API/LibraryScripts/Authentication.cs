@@ -12,25 +12,32 @@ namespace Carter.App.Lib.Authentication
 
     public class GoogleApi
     {
-        public static async Task<bool> ValidateUser(string idToken)
+        private static readonly string SkipValidation = Environment.GetEnvironmentVariable("unsafe_do_no_validate_user");
+        private static readonly string Audience = Environment.GetEnvironmentVariable("aws_domain_name");
+
+        public static async Task<GoogleJsonWebSignature.Payload> ValidateUser(string idToken)
         {
-            string skipValidation = Environment.GetEnvironmentVariable("unsafe_do_no_validate_user");
-
-            if (skipValidation != "true")
+            if (SkipValidation == "true")
             {
-                var validPayload = await GoogleJsonWebSignature.ValidateAsync(idToken);
-
-                if (validPayload == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                return null;
             }
 
-            return true;
+            try
+            {
+                var settings = new GoogleJsonWebSignature.ValidationSettings()
+                {
+                    Audience = new string[] { "https://" + Audience }, // Token should only be sent over https anyway
+                };
+
+                var validPayload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+                Console.WriteLine(validPayload.JwtId);
+                return validPayload;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
         }
     }
 
