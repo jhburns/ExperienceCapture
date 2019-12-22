@@ -1,5 +1,6 @@
 namespace Carter.App.Lib.Network
 {
+    using System;
     using System.IO;
     using System.Text.RegularExpressions;
 
@@ -15,29 +16,29 @@ namespace Carter.App.Lib.Network
     {
         public static string FulfilEncoding(IQueryCollection query, BsonDocument document)
         {
-            string json;
-
-            if (query.As<bool>("json"))
+            if (query.As<bool>("bson"))
             {
-                if (query.As<bool>("ugly"))
-                {
-                    json = document.ToJson();
-                    json = Regex.Replace(json, "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
-                }
-                else
-                {
-                    json = document.ToJson(new JsonWriterSettings { Indent = true });
-                }
-
-                return json;
+                return null;
             }
 
-            return null;
+            string json;
+
+            if (query.As<bool>("ugly"))
+            {
+                json = document.ToJson();
+                json = Regex.Replace(json, "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
+                Console.WriteLine(json);
+                return json;
+            }
+            else
+            {
+                return document.ToJson(new JsonWriterSettings { Indent = true });
+            }
         }
 
         public static BsonDocument FulfilDencoding(IQueryCollection query, string json)
         {
-            if (query.As<bool>("json"))
+            if (!query.As<bool>("bson"))
             {
                 return BsonDocument.Parse(json);
             }
