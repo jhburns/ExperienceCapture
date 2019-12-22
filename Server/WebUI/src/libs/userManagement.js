@@ -2,8 +2,7 @@ import { gapi } from 'gapi-script';
 
 import { postData } from 'libs/fetchExtra';
 
-async function submitUser(isMock=false, onError) {
-	const profile = gapi.currentUser.get();
+async function submitUser(isMock=false, profile, onError) {
 	console.log("ID: " + profile.getId());
 	console.log('Full Name: ' + profile.getName());
 	console.log('Given Name: ' + profile.getGivenName());

@@ -21,26 +21,6 @@ class SignIn extends Component {
 	  this.renderLoginCallback = this.renderLogin.bind(this);
   }
 
-  renderLogin() {
-    const opts = {
-      width: 220,
-      height: 50,
-	    longtitle: true,
-      onsuccess: this.successCallback,
-      onfailure: this.failureCallback
-    }
-    
-	  gapi.signin2.render('loginButton', opts);
-  }
-
-  onSignOut() {
-    signOutUser(this.state.isMock);
-    this.setState({
-	    isSignedIn: false,
-	    isSignedOut: true,
-	  }, () => window.gapi.load('signin2', this.renderLoginCallback));
-  }
-
   getContent() {
   	if (this.state.isUnableToSignIn) {
 	  return (
@@ -73,8 +53,28 @@ class SignIn extends Component {
     }   
   }
 
+  renderLogin() {
+    const opts = {
+      width: 220,
+      height: 50,
+	    longtitle: true,
+      onsuccess: this.successCallback,
+      onfailure: this.failureCallback
+    }
+    
+	  gapi.signin2.render('loginButton', opts);
+  }
+
+  async onSignOut() {
+    await signOutUser(this.state.isMock);
+    this.setState({
+	    isSignedIn: false,
+	    isSignedOut: true,
+	  }, () => window.gapi.load('signin2', this.renderLoginCallback));
+  }
+
   onSuccess(user) {
-	  submitUser(undefined, this.failureCallback);
+	  submitUser(undefined, user, this.failureCallback);
 
     this.setState({
       isSignedIn: true,
