@@ -45,9 +45,9 @@ namespace Carter.App.Route.Users
                 var signUpTokens = db.GetCollection<BsonDocument>("users.tokens.signUp");
 
                 var filterTokens = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(newPerson.Data.signUpToken));
-                var existingToken = await signUpTokens.Find(filterTokens).FirstOrDefaultAsync();
+                var signUpDoc = await signUpTokens.Find(filterTokens).FirstOrDefaultAsync();
 
-                if (existingToken == null)
+                if (signUpDoc == null || signUpDoc["createdAt"].IsAfter(signUpDoc["expirationSeconds"]))
                 {
                     res.StatusCode = 401;
                     return;
