@@ -1,6 +1,5 @@
 namespace Carter.App.Lib.Mongo
 {
-
     using System.Threading.Tasks;
 
     using MongoDB.Bson;
