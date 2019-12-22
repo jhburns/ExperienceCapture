@@ -33,13 +33,21 @@ class SignIn extends Component {
 	gapi.signin2.render('loginButton', opts);
   }
 
+//  onSignOut() {
+//	signOutUser(this.state.isMock, () => {
+//	  this.setState({
+//	    isSignedIn: false,
+//	    isSignedOut: true,
+//	  }, () => window.gapi.load('signin2', this.renderLoginCallback));
+//	});
+// }
+
   onSignOut() {
-	signOutUser(this.state.isMock, () => {
-	  this.setState({
+    signOutUser(this.state.isMock);
+    this.setState({
 	    isSignedIn: false,
 	    isSignedOut: true,
 	  }, () => window.gapi.load('signin2', this.renderLoginCallback));
-	});
   }
 
   getContent() {
