@@ -9,60 +9,39 @@ class SignIn extends Component {
     super(props)
     this.state = {
       isSignedIn: false,
-	  isSignedOut: false, 
-	  isMock: false,
-	  isUnableToSignIn: false,
+	    isSignedOut: false, 
+	    isMock: false,
+	    isUnableToSignIn: false,
     }
 
-	this.successCallback = this.onSuccess.bind(this);
-	this.failureCallback = this.onFailure.bind(this);
-	this.invalidCallback = this.onInvalidRequest.bind(this);
-	this.signOutCallback = this.onSignOut.bind(this);
-	this.renderLoginCallback = this.renderLogin.bind(this);
-  }
-
-  renderLogin() {
-    const opts = {
-      width: 220,
-      height: 50,
-	  longtitle: true,
-      onsuccess: this.successCallback,
-      onfailure: this.failureCallback
-    }
-    
-	gapi.signin2.render('loginButton', opts);
-  }
-
-  onSignOut() {
-	signOutUser(this.state.isMock, () => {
-	  this.setState({
-	    isSignedIn: false,
-	    isSignedOut: true,
-	  }, () => window.gapi.load('signin2', this.renderLoginCallback));
-	});
+	  this.successCallback = this.onSuccess.bind(this);
+	  this.failureCallback = this.onFailure.bind(this);
+	  this.invalidCallback = this.onInvalidRequest.bind(this);
+	  this.signOutCallback = this.onSignOut.bind(this);
+	  this.renderLoginCallback = this.renderLogin.bind(this);
   }
 
   getContent() {
   	if (this.state.isUnableToSignIn) {
 	  return (
 	    <div>
-		  <p>Sorry, there was an issue signing in.</p>
-		</div>
+		    <p>Sorry, there was an issue signing in.</p>
+		  </div>
 	  )
     } else if (this.state.isSignedIn) {
       return (
-		<div>
-		  <p>You're Signed In</p>
-		  <SignOutButton onClickCallback={this.signOutCallback} />
-		</div>
+		    <div>
+		      <p>You're Signed In</p>
+		        <SignOutButton onClickCallback={this.signOutCallback} />
+		      </div>
 	  )
 	} else if (this.state.isSignedOut) {
 	  return (
-		<div>
-		  <p>You're Signed Out</p>
-		  <p>Sign In Again</p>
+		  <div>
+		    <p>You're Signed Out</p>
+		    <p>Sign In Again</p>
           <button id="loginButton">Login with Google</button>
-		</div>
+		  </div>
 	  )
     } else {
       return (
@@ -74,8 +53,28 @@ class SignIn extends Component {
     }   
   }
 
+  renderLogin() {
+    const opts = {
+      width: 220,
+      height: 50,
+	    longtitle: true,
+      onsuccess: this.successCallback,
+      onfailure: this.failureCallback
+    }
+    
+	  gapi.signin2.render('loginButton', opts);
+  }
+
+  async onSignOut() {
+    await signOutUser(this.state.isMock);
+    this.setState({
+	    isSignedIn: false,
+	    isSignedOut: true,
+	  }, () => window.gapi.load('signin2', this.renderLoginCallback));
+  }
+
   onSuccess(user) {
-	submitUser(undefined, this.failureCallback);
+	  submitUser(undefined, user, this.failureCallback);
 
     this.setState({
       isSignedIn: true,
@@ -92,7 +91,7 @@ class SignIn extends Component {
 
   onInvalidRequest(err) {
     console.log("Site is running locally, using mock data");
-	console.log(err);
+	  console.log(err);
 
   	this.setState({
 	  isSignedIn: true,
@@ -106,16 +105,15 @@ class SignIn extends Component {
         client_id: this.props.clientId,
       });
 
-	  this.auth2.then(() => {}, this.invalidCallback);
-
+	    this.auth2.then(() => {}, this.invalidCallback);
       window.gapi.load('signin2', this.renderLoginCallback);
     });
   }
 
   render() {
     return (
-	  <div className="SignIn">
-		{this.getContent()}
+	    <div className="SignIn">
+		    {this.getContent()}
       </div>
     )
   }
