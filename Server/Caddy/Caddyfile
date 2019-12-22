@@ -6,11 +6,10 @@ errors stdout
 
 tls off
 
-gzip
-
 proxy /api/v1 api:80 {
 	without /api/v1
 	transparent
+	header_downstream Access-Control-Allow-Origin  *
 }
 
 proxy / web:3000 {

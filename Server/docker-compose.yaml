@@ -55,5 +55,17 @@ services:
     networks:
       - ec-network
 
+  redoc:
+    image: redocly/redoc:v2.0.0-rc.20
+    hostname: redoc
+    ports:
+      - "4322:80"
+    depends_on:
+      - rp
+    environment:
+      - SPEC_URL=http://localhost:8090/api/v1/openapi
+    networks:
+      - ec-network
+
 networks:
   ec-network: {}
