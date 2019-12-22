@@ -12,7 +12,7 @@ services:
         parallelism: 0
         delay: 30s
     volumes:
-      - ./API/appsettings.production.js:/app/appsettings.js
+      - ./API/appsettings.production.json:/app/appsettings.js
 
   web:
     build:
@@ -51,6 +51,8 @@ services:
     volumes:
       - ./Caddy/production.Caddyfile:/etc/Caddyfile
       - ec-rp-volume:/etc/caddycerts
+    environment:
+      - caddypath=/etc/caddycerts
     env_file:
       - server.info.env
 

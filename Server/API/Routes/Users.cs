@@ -6,6 +6,7 @@ namespace Carter.App.Route.Users
 
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
+    using Carter.App.Lib.Network;
     using Carter.App.Lib.Timer;
 
     using Carter.App.Validation.AccessTokenRequest;
@@ -167,6 +168,13 @@ namespace Carter.App.Route.Users
                 };
 
                 await accessTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
+
+                string json = JsonQuery.FulfilEncoding(req.Query, tokenDoc.ToBsonDocument());
+                if (json != null)
+                {
+                    JsonResponce.FromString(res, json);
+                    return;
+                }
 
                 await res.WriteAsync(newToken);
             });
