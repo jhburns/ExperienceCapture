@@ -6,6 +6,7 @@ namespace Carter.App.Route.Users
 
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
+    using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Timer;
 
     using Carter.App.Validation.AccessTokenRequest;
@@ -46,8 +47,7 @@ namespace Carter.App.Route.Users
 
                 var signUpTokens = db.GetCollection<BsonDocument>("users.tokens.signUp");
 
-                var filterTokens = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(newPerson.Data.signUpToken));
-                var signUpDoc = await signUpTokens.Find(filterTokens).FirstOrDefaultAsync();
+                var signUpDoc = await signUpTokens.FindEqAsync("hash", PasswordHasher.Hash(newPerson.Data.signUpToken));
 
                 if (signUpDoc == null || signUpDoc["createdAt"].IsAfter(signUpDoc["expirationSeconds"]))
                 {
@@ -57,9 +57,7 @@ namespace Carter.App.Route.Users
 
                 var users = db.GetCollection<BsonDocument>("users");
 
-                var filterUsers = Builders<BsonDocument>.Filter.Eq("id", newPerson.Data.id);
-                var existingPerson = await users.Find(filterUsers).FirstOrDefaultAsync();
-
+                var existingPerson = await users.FindEqAsync("id", newPerson.Data.id);
                 if (existingPerson != null)
                 {
                     res.StatusCode = 409;
@@ -85,8 +83,7 @@ namespace Carter.App.Route.Users
                 var users = db.GetCollection<BsonDocument>("users");
 
                 int userID = req.RouteValues.As<int>("id");
-                var filter = Builders<BsonDocument>.Filter.Eq("id", userID);
-                var userDoc = await users.Find(filter).FirstOrDefaultAsync();
+                var userDoc = await users.FindEqAsync("id", userID);
 
                 if (userDoc == null)
                 {

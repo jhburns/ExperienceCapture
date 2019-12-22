@@ -4,6 +4,7 @@ namespace Carter.App.Route.Sessions
 
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Network;
+    using Carter.App.Lib.Mongo;
     using Carter.App.Route.PreSecurity;
 
     using Carter.Request;
@@ -60,8 +61,7 @@ namespace Carter.App.Route.Sessions
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
-                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+                var sessionDoc = await sessions.FindEqAsync("id", uniqueID);
 
                 if (sessionDoc == null)
                 {
@@ -97,8 +97,7 @@ namespace Carter.App.Route.Sessions
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
-                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+                var sessionDoc = await sessions.FindEqAsync("id", uniqueID);
 
                 if (sessionDoc == null)
                 {
