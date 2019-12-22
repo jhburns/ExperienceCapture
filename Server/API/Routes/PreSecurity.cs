@@ -4,6 +4,7 @@ namespace Carter.App.Route.PreSecurity
     using System.Threading.Tasks;
 
     using Carter.App.Lib.Authentication;
+    using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Timer;
 
     using Microsoft.AspNetCore.Http;
@@ -26,8 +27,7 @@ namespace Carter.App.Route.PreSecurity
                     return false;
                 }
 
-                var filter = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(token));
-                var accessDoc = await accessTokens.Find(filter).FirstOrDefaultAsync();
+                var accessDoc = await accessTokens.FindEqAsync("hash", PasswordHasher.Hash(token));
 
                 if (accessDoc == null || accessDoc["createdAt"].IsAfter(accessDoc["expirationSeconds"]))
                 {

@@ -16,29 +16,29 @@ internal class Program
 {
     private const string Ec2Size = "t2.medium";
 
+    private static readonly string AwsId = Environment.GetEnvironmentVariable("aws_account_id")
+                ?? throw new EnviromentVarNotSet("The following is unset", "aws_account_id");
+
+    private static readonly string AmiName = Environment.GetEnvironmentVariable("aws_deploy_ami_name")
+                ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ami_name");
+
+    private static readonly string IpId = Environment.GetEnvironmentVariable("aws_deploy_ip_allocation_id")
+                ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ip_allocation_id");
+
     private static Task<int> Main()
     {
         return Deployment.RunAsync(async () =>
         {
-            string awsId = Environment.GetEnvironmentVariable("aws_account_id")
-                ?? throw new EnviromentVarNotSet("The following is unset", "aws_account_id");
-
-            string amiName = Environment.GetEnvironmentVariable("aws_deploy_ami_name")
-                ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ami_name");
-
-            string ipId = Environment.GetEnvironmentVariable("aws_deploy_ip_allocation_id")
-                ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ip_allocation_id");
-
             var ami = await Pulumi.Aws.Invokes.GetAmi(new GetAmiArgs
             {
                 MostRecent = true,
-                Owners = { awsId },
+                Owners = { AwsId },
                 Filters =
                 {
                     new GetAmiFiltersArgs
                     {
                         Name = "name",
-                        Values = { amiName },
+                        Values = { AmiName },
                     },
                 },
             });
@@ -92,7 +92,7 @@ internal class Program
 
             var elasticIp = new EipAssociation("experience-capture-ip", new EipAssociationArgs
             {
-                AllocationId = ipId,
+                AllocationId = IpId,
                 InstanceId = server.Id,
             });
 

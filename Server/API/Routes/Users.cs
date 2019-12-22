@@ -6,7 +6,7 @@ namespace Carter.App.Route.Users
 
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
-    using Carter.App.Lib.Network;
+    using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Timer;
 
     using Carter.App.Validation.AccessTokenRequest;
@@ -23,6 +23,8 @@ namespace Carter.App.Route.Users
 
     public class Users : CarterModule
     {
+        private static readonly string PasswordHash = Environment.GetEnvironmentVariable("admin_password_hash");
+
         public Users(IMongoDatabase db)
             : base("/users")
         {
@@ -36,7 +38,8 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                if (!(await GoogleApi.ValidateUser(newPerson.Data.idToken)))
+                var person = await GoogleApi.ValidateUser(newPerson.Data.idToken);
+                if (person == null)
                 {
                     res.StatusCode = 401;
                     return;
@@ -44,8 +47,7 @@ namespace Carter.App.Route.Users
 
                 var signUpTokens = db.GetCollection<BsonDocument>("users.tokens.signUp");
 
-                var filterTokens = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(newPerson.Data.signUpToken));
-                var signUpDoc = await signUpTokens.Find(filterTokens).FirstOrDefaultAsync();
+                var signUpDoc = await signUpTokens.FindEqAsync("hash", PasswordHasher.Hash(newPerson.Data.signUpToken));
 
                 if (signUpDoc == null || signUpDoc["createdAt"].IsAfter(signUpDoc["expirationSeconds"]))
                 {
@@ -55,26 +57,24 @@ namespace Carter.App.Route.Users
 
                 var users = db.GetCollection<BsonDocument>("users");
 
-                var filterUsers = Builders<BsonDocument>.Filter.Eq("id", newPerson.Data.id);
-                var existingPerson = await users.Find(filterUsers).FirstOrDefaultAsync();
-
+                var existingPerson = await users.FindEqAsync("id", newPerson.Data.id);
                 if (existingPerson != null)
                 {
                     res.StatusCode = 409;
                     return;
                 }
 
-                BsonDocument person = new BsonDocument()
+                BsonDocument personDoc = new BsonDocument()
                 {
                     { "id", newPerson.Data.id },
-                    { "fullname", newPerson.Data.fullname },
-                    { "firstname", newPerson.Data.firstname },
-                    { "lastname", newPerson.Data.lastname },
-                    { "email", newPerson.Data.email },
+                    { "fullname", person.Name },
+                    { "firstname", person.GivenName },
+                    { "lastname", person.FamilyName },
+                    { "email", person.Email },
                     { "createdAt", new BsonDateTime(DateTime.Now) },
                 };
 
-                await users.InsertOneAsync(person);
+                await users.InsertOneAsync(personDoc);
                 await res.WriteAsync("OK");
             });
 
@@ -83,8 +83,7 @@ namespace Carter.App.Route.Users
                 var users = db.GetCollection<BsonDocument>("users");
 
                 int userID = req.RouteValues.As<int>("id");
-                var filter = Builders<BsonDocument>.Filter.Eq("id", userID);
-                var userDoc = await users.Find(filter).FirstOrDefaultAsync();
+                var userDoc = await users.FindEqAsync("id", userID);
 
                 if (userDoc == null)
                 {
@@ -99,7 +98,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                if (!(await GoogleApi.ValidateUser(newAccessRequest.Data.idToken)))
+                if (await GoogleApi.ValidateUser(newAccessRequest.Data.idToken) == null)
                 {
                     res.StatusCode = 401;
                     return;
@@ -222,8 +221,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                string passwordHash = Environment.GetEnvironmentVariable("admin_password_hash");
-                if (!PasswordHasher.Check(newAdmin.Data.password, passwordHash))
+                if (!PasswordHasher.Check(newAdmin.Data.password, PasswordHash))
                 {
                     res.StatusCode = 401;
                     return;
