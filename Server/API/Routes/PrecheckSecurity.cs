@@ -4,6 +4,7 @@ namespace Carter.App.Route.PreSecurity
     using System.Threading.Tasks;
 
     using Carter.App.Lib.Authentication;
+    using Carter.App.Lib.Timer;
 
     using Microsoft.AspNetCore.Http;
 
@@ -25,10 +26,10 @@ namespace Carter.App.Route.PreSecurity
                     return false;
                 }
 
-                var filterClaims = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(token));
-                var claimDoc = await accessTokens.Find(filterClaims).FirstOrDefaultAsync();
+                var filter = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(token));
+                var accessDoc = await accessTokens.Find(filter).FirstOrDefaultAsync();
 
-                if (claimDoc == null)
+                if (accessDoc == null || accessDoc["createdAt"].IsAfter(accessDoc["expirationSeconds"]))
                 {
                     ctx.Response.StatusCode = 401;
                     return false;

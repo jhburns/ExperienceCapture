@@ -211,11 +211,8 @@ namespace Carter.App.Route.Users
                 await res.WriteAsync(claimDoc["accessToken"].AsString);
             });
 
-            this.Post("/admin/password/", async (req, res) =>
+            this.Post("/signUp/admin/", async (req, res) =>
             {
-                string newToken = Generate.GetRandomToken();
-                var signUpTokens = db.GetCollection<BsonDocument>("users.tokens.signUp");
-
                 var newAdmin = await req.BindAndValidate<AdminPassword>();
                 if (!newAdmin.ValidationResult.IsValid)
                 {
@@ -230,10 +227,13 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
+                string newToken = Generate.GetRandomToken();
+                var signUpTokens = db.GetCollection<BsonDocument>("users.tokens.signUp");
+
                 var tokenDoc = new
                 {
                     hash = PasswordHasher.Hash(newToken),
-                    expirationSeconds = 86400, // One hour
+                    expirationSeconds = 3600, // One hour
                     createdAt = new BsonDateTime(DateTime.Now),
                 };
 
