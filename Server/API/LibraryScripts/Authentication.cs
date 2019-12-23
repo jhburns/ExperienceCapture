@@ -33,7 +33,7 @@ namespace Carter.App.Lib.Authentication
             {
                 var settings = new GoogleJsonWebSignature.ValidationSettings()
                 {
-                    Audience = new string[] {  Audience },
+                    Audience = new string[] { Audience },
                 };
 
                 var validPayload = await GoogleJsonWebSignature.ValidateAsync(idToken);
