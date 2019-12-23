@@ -15,8 +15,6 @@ services:
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
-    env_file:
-      - server.info.env
 
   rp:
     ports:

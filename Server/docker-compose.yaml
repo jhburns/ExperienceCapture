@@ -15,7 +15,6 @@ services:
       WAIT_HOSTS: db:27017
     env_file:
       - .env
-      - server.info.env
     networks:
       - ec-network
     healthcheck:
@@ -52,6 +51,8 @@ services:
   web:
     build:
       context: ./WebUI
+      args:  # Make sure to change the following arg
+        REACT_APP_GOOGLE_CLIENT_ID: 555477545658-co1pgbl0uh99rp8tbo2q62t2ch8vlb1h.apps.googleusercontent.com
     hostname: web
     networks:
       - ec-network
