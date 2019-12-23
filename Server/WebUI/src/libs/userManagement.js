@@ -2,12 +2,9 @@ import { gapi } from 'gapi-script';
 
 import { postData } from 'libs/fetchExtra';
 
-async function submitUser(isMock=false, profile, onError) {
-	console.log("ID: " + profile.getId());
-	console.log('Full Name: ' + profile.getName());
-	console.log('Given Name: ' + profile.getGivenName());
-	console.log('Family Name: ' + profile.getFamilyName());
-	console.log("Email: " + profile.getEmail());
+async function submitUser(isMock=false, user, onError) {
+	console.log("ID: " + user.getId());
+	console.log("secure token: " + user.getAuthResponse().id_token);
 	try {
 		const replyData = await postData('/api/v1/', {});
 		console.log(JSON.stringify(replyData));
