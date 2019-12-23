@@ -3,6 +3,7 @@ namespace Carter.App.Lib.Authentication
     using System;
     using System.Linq;
     using System.Security.Cryptography;
+    using System.Net;
 
     using System.Threading.Tasks;
 
@@ -96,8 +97,10 @@ namespace Carter.App.Lib.Authentication
         public static void OutputNew()
         {
             string password = Generate.GetRandomToken();
+            string urlPassword = WebUtility.UrlEncode(password);
             string hash = Hash(password);
             Console.WriteLine($"Password: {password}");
+            Console.WriteLine($"Password for URL: {urlPassword}");
             Console.WriteLine($"Hash: {hash}");
         }
     }

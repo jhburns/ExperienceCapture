@@ -4,6 +4,7 @@ import 'App.css';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import SignUpPage from "pages/SignUp";
+import AdminPage from "pages/Admin";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/home/settings">
               <SignUpPage />
             </Route>
+            <Route path="/admin" component={AdminPage} />
             <Route path="*"> {/* 404 page */}
               <p>Imma 404</p>
             </Route>
