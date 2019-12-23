@@ -5,14 +5,12 @@ import { postData } from 'libs/fetchExtra';
 async function submitUser(isMock=false, user, onError, onDuplicate) {
 	var userData = {
 		idToken: "This.is.not.a.real.id.token",
-		id: 4321234,
 		signUpToken: "ctPHOKJkLbCom5JrT4E7BupeyKVqQVb6Kgs+ZfHW3mI="
 	};
 
 	if (!isMock) {
 		userData = {
 			idToken: user.getAuthResponse().id_token,
-			id: user.getId(),
 			signUpToken: "waa"
 		};
 	}

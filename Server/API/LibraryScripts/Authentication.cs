@@ -13,7 +13,7 @@ namespace Carter.App.Lib.Authentication
     public class GoogleApi
     {
         private static readonly string SkipValidation = Environment.GetEnvironmentVariable("unsafe_do_no_validate_user");
-        private static readonly string Audience = Environment.GetEnvironmentVariable("aws_domain_name");
+        private static readonly string Audience = Environment.GetEnvironmentVariable("gcp_client_id");
 
         public static async Task<GoogleJsonWebSignature.Payload> ValidateUser(string idToken)
         {
@@ -21,10 +21,11 @@ namespace Carter.App.Lib.Authentication
             {
                 return new GoogleJsonWebSignature.Payload()
                 {
-                     Name = "Smitty Jenkins",
+                     Name = "Smitty Jensens",
                      GivenName = "Smitty",
-                     FamilyName = "Jenkins",
+                     FamilyName = "Jensens",
                      Email = "smitty@jenkins.com",
+                     Subject = "123456789109876543210", // Subject is longer than Int64
                 };
             }
 
@@ -32,10 +33,12 @@ namespace Carter.App.Lib.Authentication
             {
                 var settings = new GoogleJsonWebSignature.ValidationSettings()
                 {
-                    Audience = new string[] { "https://" + Audience }, // Token should only be sent over https anyway
+                    Audience = new string[] { Audience },
                 };
 
-                var validPayload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
+                var validPayload = await GoogleJsonWebSignature.ValidateAsync(idToken);
+                Console.WriteLine("Subject: " + validPayload.Subject);
+                Console.WriteLine("Audience: " + validPayload.Audience);
                 return validPayload;
             }
             catch (Exception e)

@@ -9,7 +9,6 @@ namespace Carter.App.Lib.Timer
         {
             int seconds = expirationTime.AsInt32;
             BsonDateTime endTime = new BsonDateTime(DateTime.Now.AddSeconds(-seconds));
-            Console.WriteLine(start.AsBsonDateTime.CompareTo(endTime));
             return start.AsBsonDateTime.CompareTo(endTime) < 0;
         }
     }

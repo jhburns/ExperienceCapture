@@ -57,7 +57,7 @@ namespace Carter.App.Route.Users
 
                 var users = db.GetCollection<BsonDocument>("users");
 
-                var existingPerson = await users.FindEqAsync("id", newPerson.Data.id);
+                var existingPerson = await users.FindEqAsync("id", person.Subject);
                 if (existingPerson != null)
                 {
                     res.StatusCode = 409;
@@ -66,7 +66,7 @@ namespace Carter.App.Route.Users
 
                 BsonDocument personDoc = new BsonDocument()
                 {
-                    { "id", newPerson.Data.id },
+                    { "id", person.Subject },
                     { "fullname", person.Name },
                     { "firstname", person.GivenName },
                     { "lastname", person.FamilyName },
@@ -78,11 +78,11 @@ namespace Carter.App.Route.Users
                 await res.WriteAsync("OK");
             });
 
-            this.Post("/{id:int}/tokens/", async (req, res) =>
+            this.Post("/{id}/tokens/", async (req, res) =>
             {
                 var users = db.GetCollection<BsonDocument>("users");
 
-                int userID = req.RouteValues.As<int>("id");
+                string userID = req.RouteValues.As<string>("id");
                 var userDoc = await users.FindEqAsync("id", userID);
 
                 if (userDoc == null)
