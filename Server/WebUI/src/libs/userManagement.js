@@ -28,7 +28,7 @@ async function submitUser(isMock=false, user, onError, onDuplicate) {
 			}
 		}
 
-		const token = replyData.text();
+		// const token = replyData.text();
 	} catch (error) {
 		console.error(error);
 		onError();
