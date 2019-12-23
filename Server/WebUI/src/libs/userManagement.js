@@ -2,11 +2,11 @@ import { gapi } from 'gapi-script';
 
 import { postData } from 'libs/fetchExtra';
 
-async function submitUser(isMock=false, user, onError) {
+async function submitUser(isMock=false, user, onError, onDuplicate) {
 	var userData = {
 		idToken: "This.is.not.a.real.id.token",
 		id: 4321234,
-		signUpToken: "waa"
+		signUpToken: "ctPHOKJkLbCom5JrT4E7BupeyKVqQVb6Kgs+ZfHW3mI="
 	};
 
 	if (!isMock) {
@@ -19,7 +19,16 @@ async function submitUser(isMock=false, user, onError) {
 
 	try {
 		const replyData = await postData('/api/v1/users/', userData);
-		console.log(JSON.stringify(replyData));
+
+		if (!replyData.ok) {
+			if (replyData.status === 409) {
+				onDuplicate();
+			} else {
+				throw Error(replyData.status);
+			}
+		}
+
+		const token = replyData.text();
 	} catch (error) {
 		console.error(error);
 		onError();
