@@ -1,10 +1,11 @@
-FROM node:12.2.0-alpine as build
+FROM node:13.1.0-alpine as build
 WORKDIR /app
-ARG REACT_APP_GOOGLE_CLIENT_ID
 ENV PATH /app/node_modules/.bin:$PATH
 
 COPY package.json package-lock.json /app/
 RUN npm install --silent
+
+ARG REACT_APP_GOOGLE_CLIENT_ID
 
 COPY jsconfig.json .
 COPY public ./public
