@@ -7,7 +7,7 @@ COPY . .
 # Brute-force, but it works
 # Shell scripts don't for some reason
 
-RUN cp ./Deploy/template.deploy.info.env ./Deploy/deploy.info.env && \
+RUN cp ./Deploy/template.deploy.env ./Deploy/.deploy.env && \
 	cp ./Deploy/template.env ./Deploy/.env && \
 	cp ./Server/template.env ./Server/.env
 
