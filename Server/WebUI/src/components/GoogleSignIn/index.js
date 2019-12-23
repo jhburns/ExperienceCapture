@@ -11,38 +11,47 @@ class SignIn extends Component {
       isSignedIn: false,
 	    isSignedOut: false, 
 	    isMock: false,
-	    isUnableToSignIn: false,
+      isUnableToSignIn: false,
+	    isDuplicateSignIn: false,
     }
 
 	  this.successCallback = this.onSuccess.bind(this);
 	  this.failureCallback = this.onFailure.bind(this);
 	  this.invalidCallback = this.onInvalidRequest.bind(this);
 	  this.signOutCallback = this.onSignOut.bind(this);
-	  this.renderLoginCallback = this.renderLogin.bind(this);
+    this.renderLoginCallback = this.renderLogin.bind(this);
+    this.duplicateCallback = this.onDuplicate.bind(this);
   }
 
   getContent() {
   	if (this.state.isUnableToSignIn) {
-	  return (
-	    <div>
-		    <p>Sorry, there was an issue signing in.</p>
-		  </div>
-	  )
+      return (
+        <div>
+          <p>Sorry, there was an issue signing in.</p>
+        </div>
+      )
+    } else if (this.state.isDuplicateSignIn) {
+      return (
+		    <div>
+		      <p>You've Already Signed Up</p>
+          <SignOutButton onClickCallback={this.signOutCallback} />
+		    </div>
+	    )
     } else if (this.state.isSignedIn) {
       return (
 		    <div>
 		      <p>You're Signed In</p>
 		        <SignOutButton onClickCallback={this.signOutCallback} />
-		      </div>
-	  )
-	} else if (this.state.isSignedOut) {
-	  return (
-		  <div>
-		    <p>You're Signed Out</p>
-		    <p>Sign In Again</p>
-          <button id="loginButton">Login with Google</button>
-		  </div>
-	  )
+		    </div>
+	    )
+	  } else if (this.state.isSignedOut) {
+	    return (
+		    <div>
+		      <p>You're Signed Out</p>
+		      <p>Sign In Again</p>
+          <button id="loginButton">Sign In With Google</button>
+		    </div>
+	    )
     } else {
       return (
         <div>
@@ -65,16 +74,24 @@ class SignIn extends Component {
 	  gapi.signin2.render('loginButton', opts);
   }
 
+  onDuplicate() {
+    this.setState({
+      isDuplicateSignIn: true,
+      isSignedIn: true,
+    });
+  }
+
   async onSignOut() {
     await signOutUser(this.state.isMock);
     this.setState({
 	    isSignedIn: false,
-	    isSignedOut: true,
-	  }, () => window.gapi.load('signin2', this.renderLoginCallback));
+      isSignedOut: true,
+      isDuplicateSignIn: false,
+    }, () => window.gapi.load('signin2', this.renderLoginCallback));
   }
 
   onSuccess(user) {
-	  submitUser(undefined, user, this.failureCallback);
+	  submitUser(undefined, user, this.failureCallback, this.duplicateCallback);
 
     this.setState({
       isSignedIn: true,
@@ -85,18 +102,19 @@ class SignIn extends Component {
     console.log("Error signing user in.");
 
     this.setState({
-	  isUnableToSignIn: true
+	    isUnableToSignIn: true
     });
   }
 
   onInvalidRequest(err) {
     console.log("Site is running locally, using mock data");
-	  console.log(err);
+    console.log(err);
+    submitUser(true, null, this.failureCallback, this.duplicateCallback)
 
   	this.setState({
-	  isSignedIn: true,
-	  isMock: true,
-	});
+	    isSignedIn: true,
+	    isMock: true,
+	  });
   }
 
   componentDidMount() {

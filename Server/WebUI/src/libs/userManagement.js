@@ -2,15 +2,33 @@ import { gapi } from 'gapi-script';
 
 import { postData } from 'libs/fetchExtra';
 
-async function submitUser(isMock=false, profile, onError) {
-	console.log("ID: " + profile.getId());
-	console.log('Full Name: ' + profile.getName());
-	console.log('Given Name: ' + profile.getGivenName());
-	console.log('Family Name: ' + profile.getFamilyName());
-	console.log("Email: " + profile.getEmail());
+async function submitUser(isMock=false, user, onError, onDuplicate) {
+	var userData = {
+		idToken: "This.is.not.a.real.id.token",
+		id: 4321234,
+		signUpToken: "ctPHOKJkLbCom5JrT4E7BupeyKVqQVb6Kgs+ZfHW3mI="
+	};
+
+	if (!isMock) {
+		userData = {
+			idToken: user.getAuthResponse().id_token,
+			id: user.getId(),
+			signUpToken: "waa"
+		};
+	}
+
 	try {
-		const replyData = await postData('/api/v1/', {});
-		console.log(JSON.stringify(replyData));
+		const replyData = await postData('/api/v1/users/', userData);
+
+		if (!replyData.ok) {
+			if (replyData.status === 409) {
+				onDuplicate();
+			} else {
+				throw Error(replyData.status);
+			}
+		}
+
+		// const token = replyData.text();
 	} catch (error) {
 		console.error(error);
 		onError();

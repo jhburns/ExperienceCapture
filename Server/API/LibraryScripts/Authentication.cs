@@ -19,7 +19,13 @@ namespace Carter.App.Lib.Authentication
         {
             if (SkipValidation == "true")
             {
-                return null;
+                return new GoogleJsonWebSignature.Payload()
+                {
+                     Name = "Smitty Jenkins",
+                     GivenName = "Smitty",
+                     FamilyName = "Jenkins",
+                     Email = "smitty@jenkins.com",
+                };
             }
 
             try
@@ -30,7 +36,6 @@ namespace Carter.App.Lib.Authentication
                 };
 
                 var validPayload = await GoogleJsonWebSignature.ValidateAsync(idToken, settings);
-                Console.WriteLine(validPayload.JwtId);
                 return validPayload;
             }
             catch (Exception e)

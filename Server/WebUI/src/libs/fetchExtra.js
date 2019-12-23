@@ -11,7 +11,7 @@ async function postData(url = '', data = {}) {
       referrerPolicy: 'no-referrer',
       body: JSON.stringify(data) // body data type must match "Content-Type" header
     });
-    return await response.json();
-  }
+    return await response;
+}
 
   export { postData };

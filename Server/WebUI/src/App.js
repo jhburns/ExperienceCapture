@@ -1,15 +1,39 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import 'App.css';
 
-import SignIn  from "components/SignIn";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+import SignUpPage from "pages/SignUp";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-		    <SignIn clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} />
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <SignUpPage />
+            </Route>
+            <Route path="/signUp">
+              <SignUpPage />
+            </Route>
+            <Route path="/signInFor">
+              <SignUpPage />
+            </Route>
+            <Route path="/home">
+              <SignUpPage />
+            </Route>
+            <Route path="/home/sessions">
+              <SignUpPage />
+            </Route>
+            <Route path="/home/settings">
+              <SignUpPage />
+            </Route>
+            <Route path="*"> {/* 404 page */}
+              <p>Imma 404</p>
+            </Route>
+          </Switch>
+        </Router>
       </header>
     </div>
   );
