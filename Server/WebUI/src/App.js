@@ -1,7 +1,7 @@
 import React from 'react';
 import 'App.css';
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import SignUpPage from "pages/SignUp";
 import AdminPage from "pages/Admin";
@@ -15,9 +15,7 @@ function App() {
             <Route exact path="/">
               <SignUpPage />
             </Route>
-            <Route path="/signUp">
-              <SignUpPage />
-            </Route>
+            <Route path="/signUp" component={SignUpPage} />
             <Route path="/signInFor">
               <SignUpPage />
             </Route>

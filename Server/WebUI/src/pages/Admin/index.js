@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import queryString from 'query-string';
 
 import { postData } from 'libs/fetchExtra';
-import { BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 class Admin extends Component {
 
@@ -10,7 +10,7 @@ class Admin extends Component {
     super(props)
     this.state = {
       isError: false,
-      accessToken: null
+      accessToken: null,
     }
 
     this.successCallback = this.onSuccess.bind(this);
@@ -63,14 +63,12 @@ class Admin extends Component {
       return (
         <div>
           <p>Redirecting...</p>
-          <Router>
-            <Redirect
-              to={{
-                pathname: "/signUp",
-                search: queryString.stringify({signUpToken: this.state.accessToken}),
-              }}
-            />
-          </Router>
+          <Redirect
+            to={{
+              pathname: "/signUp",
+              search: queryString.stringify({signUpToken: this.state.accessToken}),
+            }}
+          />
         </div>
       );
     }
