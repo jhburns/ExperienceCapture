@@ -10,6 +10,7 @@ class Admin extends Component {
     super(props)
     this.state = {
       isError: false,
+      isWaiting: true,
       accessToken: null,
     }
 
@@ -19,13 +20,15 @@ class Admin extends Component {
 
   onSuccess(token) {
     this.setState({
-      accessToken: token
+      accessToken: token,
+      isWaiting: false
     });
   }
   
   onError() {
     this.setState({
-      isError: true
+      isError: true,
+      isWaiting: false
     });
   }
 
@@ -52,7 +55,13 @@ class Admin extends Component {
   }
 
   render() {
-    if (this.state.isError) {
+    if (this.state.isWaiting) {
+      return (
+        <div>
+          <p>One sec...</p>
+        </div>
+      );
+    } else if (this.state.isError) {
       return (
         <div>
           <p>Password is Invalid</p>
