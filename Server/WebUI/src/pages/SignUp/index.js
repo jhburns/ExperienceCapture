@@ -6,6 +6,13 @@ import GoogleSignIn from "components/GoogleSignIn";
 import queryString from 'query-string';
 
 class SignUpPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      signUpToken: null,
+    }
+  }
+
   componentDidMount() {
     const query = queryString.parse(this.props.location.search);
 

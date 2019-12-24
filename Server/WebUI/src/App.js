@@ -12,11 +12,11 @@ function App() {
       <header className="App-header">
         <Router>
           <Switch>
-            <Route exact path="/">
+            {/*<Route exact path="/">
               <SignUpPage />
-            </Route>
+            </Route>*/}
             <Route path="/signUp" component={SignUpPage} />
-            <Route path="/signInFor">
+            {/*<Route path="/signInFor">
               <SignUpPage />
             </Route>
             <Route path="/home">
@@ -27,7 +27,7 @@ function App() {
             </Route>
             <Route path="/home/settings">
               <SignUpPage />
-            </Route>
+            </Route>*/}
             <Route path="/admin" component={AdminPage} />
             <Route path="*"> {/* 404 page */}
               <p>Imma 404</p>

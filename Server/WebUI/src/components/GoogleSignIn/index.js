@@ -91,7 +91,11 @@ class SignIn extends Component {
   }
 
   onSuccess(user) {
-	  submitUser(undefined, user, this.failureCallback, this.duplicateCallback);
+    const options = {
+      signUpToken: this.props.signUpToken,
+      claimToken: this.props.claimToken,
+    };
+	  submitUser(undefined, user, this.failureCallback, options, this.duplicateCallback);
 
     this.setState({
       isSignedIn: true,
@@ -109,8 +113,13 @@ class SignIn extends Component {
   onInvalidRequest(err) {
     console.log("Site is running locally, using mock data");
     console.log(err);
-    submitUser(true, null, this.failureCallback, this.duplicateCallback)
 
+    const options = {
+      signUpToken: this.props.signUpToken,
+      claimToken: this.props.claimToken,
+    };
+    submitUser(true, null, this.failureCallback, options, this.duplicateCallback);
+    
   	this.setState({
 	    isSignedIn: true,
 	    isMock: true,
