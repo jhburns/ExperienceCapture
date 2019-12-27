@@ -9,7 +9,7 @@ class ClaimPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        claimToken: null,
+      claimToken: null,
     }
   }
 
