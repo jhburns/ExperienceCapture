@@ -1,29 +1,37 @@
-namespace Nancy.App.Hosting.Kestrel
+namespace Carter.App.Hosting
 {
+    using Carter;
     using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
-    using Nancy.Owin;
+    using Microsoft.Extensions.DependencyInjection;
+
+    using MongoDB.Driver;
 
     public class Startup
     {
-        private readonly IConfiguration config;
+        private readonly AppConfiguration appconfig;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration config)
         {
-            var builder = new ConfigurationBuilder()
-                              .AddJsonFile("appsettings.json")
-                              .SetBasePath(env.ContentRootPath);
+            this.appconfig = new AppConfiguration();
+            config.Bind(this.appconfig);
+        }
 
-            this.config = builder.Build();
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddCarter();
+
+            MongoClient client = new MongoClient($"mongodb://{AppConfiguration.ConnectionString}:27017");
+            IMongoDatabase db = client.GetDatabase("ec");
+
+            services.AddSingleton<IMongoDatabase>(db);
         }
 
         public void Configure(IApplicationBuilder app)
         {
-            var appConfig = new AppConfiguration();
-            ConfigurationBinder.Bind(this.config, appConfig);
+            app.UseRouting();
 
-            app.UseOwin(x => x.UseNancy(opt => opt.Bootstrapper = new Bootstrapper(appConfig)));
+            app.UseEndpoints(builder => builder.MapCarter());
         }
     }
 }

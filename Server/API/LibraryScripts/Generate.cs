@@ -1,18 +1,33 @@
-namespace Nancy.App.Random
+namespace Carter.App.Lib.Generate
 {
     using System;
-    using System.Collections;
     using System.Linq;
+    using System.Security.Cryptography;
+    using System.Text;
 
     public class Generate
     {
+        internal static readonly string CharsForId = "ABCEFGHJKLMNPQRSUVWXY3456789";
+
         private static Random random = new Random();
 
-        public static string RandomString(int length)
+        // Should NOT be considered secure
+        public static string GetRandomId(int length)
         {
-            const string chars = "ABCEFGHJKLMNPQRSUVWXY3456789";
-            return new string(Enumerable.Repeat(chars, length)
+            return new string(Enumerable.Repeat(CharsForId, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        // Should be considered secure
+        public static string GetRandomToken()
+        {
+        var key = new byte[32];
+        using (var generator = RandomNumberGenerator.Create())
+        {
+            generator.GetBytes(key);
+            string apiKey = Convert.ToBase64String(key);
+            return apiKey;
+        }
         }
     }
 }

@@ -1,16 +1,24 @@
-﻿namespace Nancy.App.Hosting.Kestrel
+﻿namespace Carter.App.Hosting
 {
-    using System.IO;
-    using Microsoft.AspNetCore.Hosting;
+    using System.Linq;
 
-    public class API
+    using Carter.App.Lib.Authentication;
+
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Hosting;
+
+    public class Program
     {
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseKestrel()
-                .UseStartup<Startup>()
+            if (args.Contains("--passwordGenerate") || args.Contains("-p"))
+            {
+                PasswordHasher.OutputNew();
+                return;
+            }
+
+            var host = Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
                 .Build();
 
             host.Run();

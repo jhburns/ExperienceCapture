@@ -1,5 +1,6 @@
-node_modules
+bin/
+obj/
 
 .dockerignore
 Dockerfile
-Dockerfile.integrate
+Dockerfile.integration

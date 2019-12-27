@@ -1,3 +1,7 @@
+[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Dockerfile/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Dockerfile%22)
+[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Yaml/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Yaml%22)
+[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Spellcheck/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Spellcheck%22)
+
 # Experience Capture
 
 The project aims to simplify and empower data collection from interactive technologies.
@@ -7,7 +11,7 @@ It uses a client-server model to do so, and is broken down into important folder
 - *ExampleUnityGame/* is an example game using the client.
 - *ClientDevelopmentGame/* is a game used to develop the client. 
 - *SetupTestGame/* is a game for testing how easy/possible it is to integrate into the asset into a new game. 
-- *Server/* is a backend service for collection and analyzing data.
+- *Server/* is a back-end service for collection and analyzing data.
 
 ## Extra Folders
 

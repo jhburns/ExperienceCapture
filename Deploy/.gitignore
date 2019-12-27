@@ -1,6 +1,5 @@
-.env
-info.env
-credentials
+*.env
+!template*env
 
 # So keys aren't leaked
 .secrets/*

@@ -120,6 +120,16 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: limitOutputTo.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: limitOutputToSpecified.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4059769707023518, guid: 68aaa89a57e29194da9ce770ee766ab0, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -160,7 +170,32 @@ Prefab:
     - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
         type: 2}
       propertyPath: printAdditionalCaptureInfo
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: limitOutputTo.Array.data[0]
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: useWindowsDefault
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: limitOutputToSpecified.Array.data[0]
+      value: Tester(Clone)-init-9:tra
+      objectReference: {fileID: 0}
+    - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: limitOutputToSpecified.Array.data[1]
+      value: Tester(Clone)-init-9:waa
+      objectReference: {fileID: 0}
+    - target: {fileID: 114294613310670838, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: doNotThrowNotFound
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68aaa89a57e29194da9ce770ee766ab0, type: 2}
@@ -235,7 +270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fillerLength: 100
-  initialSpawn: 9
+  initialSpawn: 7
   scaleUp: 0
   varience: 0
   t: {fileID: 114652173187609828, guid: 3a22c922b7e792147a17b42d16244694, type: 2}

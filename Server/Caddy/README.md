@@ -1,8 +1,8 @@
-[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Caddy%20Integration/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Caddy+Integration%22)
+[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Caddy/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Caddy%22)
 
 # Caddy
 
-The backend used [Caddy 1.0](https://caddyserver.com/v1/) as a reserve proxy for each service.
+The back-end used [Caddy 1.0](https://caddyserver.com/v1/) as a reserve proxy for each service.
 
 See: https://caddyserver.com/v1/docs for documentation. 
 

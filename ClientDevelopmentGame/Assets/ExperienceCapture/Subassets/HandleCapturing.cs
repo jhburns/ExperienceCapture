@@ -12,35 +12,41 @@ using UnityEngine.Networking;
 using Newtonsoft.Json.Linq;
 using Network;
 
+using InputStructure;
+
 public class HandleCapturing : MonoBehaviour
 {
-    private string url;
+    public string url { get; set; }
     public string sessionPath;
 
-    private string username;
+    public string username { get; set; }
 
     private List<ICapturable> allCapturable;
 
-    private int captureRate;
+    public int captureRate { get; set; }
     private int frameCount;
 
-    private bool sendToConsole;
-    private string id;
-    private bool isCapturing;
-    private bool findEveryFrame;
+    public bool sendToConsole { get; set; }
+    public string id { get; set; }
+    public bool isCapturing { get; set; }
+    public bool isFindingOften { get; set; }
 
     private bool isFirst;
 
-    private bool isVerbose;
-    private bool isSilent;
+    public bool isVerbose { get; set; }
+    public bool isSilent { get; set; }
 
     private List<string> capturableNames;
 
-    private object extraInfo;
+    public object extraInfo { get; set; }
     private int openRequests;
+    private float minResponceTime;
     private float averageResponceTime;
+    private float maxResponceTime;
     private int responceCount;
 
+    public bool isIgnoringNotFound { get; set; }
+    public InputStructure.SpecificPair[] pairs { get; set; }
 
     void Awake()
     {
@@ -54,7 +60,10 @@ public class HandleCapturing : MonoBehaviour
         isCapturing = false;
         isFirst = true;
         responceCount = 0;
-        averageResponceTime = 1;
+
+        minResponceTime = 10000000f; //Some impossibly large value
+        averageResponceTime = 1f;
+        maxResponceTime = -1f;
     }
 
     void Update()
@@ -89,7 +98,7 @@ public class HandleCapturing : MonoBehaviour
             return;
         }
 
-        if (findEveryFrame)
+        if (isFindingOften)
         {
             for (int i = 0; i < allCapturable.Count; i++)
             {
@@ -115,46 +124,99 @@ public class HandleCapturing : MonoBehaviour
 
         object info = new
         {
-            Time.unscaledDeltaTime,
             Time.realtimeSinceStartup,
             Time.timeSinceLevelLoad,
+            Time.unscaledDeltaTime,
         };
 
         captureData.Add("gameObjects", gameObjects);
         captureData.Add("frameInfo", info);
-        sendCaptures(captureData);
+        sendCaptures(captureData, gameObjects);
     }
 
-    private void sendCaptures(object data)
+    private void sendCaptures(object data) {
+        serializeCaptures(data);
+    }
+
+    private void sendCaptures(Dictionary<string, object> data, Dictionary<string, object> gameData)
     {
+        if (pairs.Length != 0) {
+            Dictionary<string, object> tempData = new Dictionary<string, object>();
+
+            for (int i = 0; i < pairs.Length; i++) {
+                string name = pairs[i].name;
+                string key = pairs[i].key;
+                
+                if (!gameData.ContainsKey(name)) 
+                {
+                    if (isIgnoringNotFound) {
+                        continue;
+                    }
+
+                    throw new SpecificPairsNotFoundException("Game object with name not found", name, key);
+                }
+                object currentCapture = gameData[name];
+
+                if (currentCapture.GetType().GetProperty(key) == null) 
+                {
+                    if (isIgnoringNotFound) {
+                        continue;
+                    }
+
+                    throw new SpecificPairsNotFoundException("Lacking key", name, key);
+                }
+
+                tempData.Add(key, currentCapture.GetType().GetProperty(key).GetValue(currentCapture, null));
+            }
+
+            data = tempData;
+        }
+
+        serializeCaptures(data);
+    }
+
+    private void serializeCaptures(object data) {
         if (sendToConsole && !isSilent)
         {
-            Debug.Log(JsonConvert.SerializeObject(data, Formatting.Indented));
+            if (pairs.Length != 0) 
+            {
+                Debug.Log(JsonConvert.SerializeObject(data));
+            }
+            else  
+            {
+                Debug.Log(JsonConvert.SerializeObject(data, Formatting.Indented));
+            }
+
+            return;
         }
         
+        byte[] bson = Serial.toBSON(data);
 
-        if (!sendToConsole)
+        openRequests++;
+        float start = Time.realtimeSinceStartup;
+
+        StartCoroutine(HTTPHelpers.post(url + sessionPath + id, bson, 
+        (responceData) => 
         {
-            byte[] bson = Serial.toBSON(data);
+            openRequests--;
+            responceCount++;
 
-            openRequests++;
-            float start = Time.realtimeSinceStartup;
+            float responceTime = Time.realtimeSinceStartup - start;
+            averageResponceTime = (averageResponceTime * responceCount + responceTime) / (responceCount + 1);
 
-            StartCoroutine(HTTPHelpers.post(url + sessionPath + id, bson, 
-            (responceData) => 
-            {
-                openRequests--;
-                responceCount++;
+            if (responceTime < minResponceTime) {
+                minResponceTime = responceTime;
+            }
 
-                float responceTime = Time.realtimeSinceStartup - start;
-                averageResponceTime = (averageResponceTime * responceCount + responceTime) / (responceCount + 1);
-            }, 
-            (error) =>
-            {
-                Debug.Log(error);
-            })
-            );
-        }
+            if (responceTime > maxResponceTime) {
+                maxResponceTime = responceTime;
+            }
+        }, 
+        (error) =>
+        {
+            Debug.Log(error);
+        })
+        );
     }
 
     private void printExtraInfo()
@@ -164,16 +226,15 @@ public class HandleCapturing : MonoBehaviour
             string extra = "Extra info about the frame.\n";
             extra += "Session ID: " + id + "\n";
 
-            if (allCapturable != null)
+            if (allCapturable != null) 
             {
                 extra += "Capturable objects: " + allCapturable.Count + "\n";
-                extra += "Open requests: " + openRequests + "\n";
-                extra += "Average request response time: " + averageResponceTime + "\n";
             }
-            else
-            {
-                extra += "Still setting up capture." + "\n";
-            }
+
+            extra += "Open requests: " + openRequests + "\n";
+            extra += "Request response time: min=" +  minResponceTime;
+            extra += " mean=" + averageResponceTime;
+            extra += " max=" + maxResponceTime + "\n";
 
             Debug.Log(extra);
         }
@@ -237,7 +298,6 @@ public class HandleCapturing : MonoBehaviour
             }
         }
 
-
         for (int i = 0; i < capturableNames.Count; i++) 
         {
             if (repeatNames[i]) {
@@ -257,14 +317,17 @@ public class HandleCapturing : MonoBehaviour
             {
                 dateTime = DateTime.Now.ToString("yyyy.MM.dd-hh:mm:ss"),
                 description = "Session Started",
+                captureRate,
                 extraInfo,
+                special = true,
+                Application.targetFrameRate,
+                username,
                 frameInfo = new
                 {
                     unscaledDeltaTime = -1,
                     realtimeSinceStartup = -1,
                     timeSinceLevelLoad = -1,
                 },
-                username
             };
 
             sendCaptures(firstInfo);
@@ -276,13 +339,14 @@ public class HandleCapturing : MonoBehaviour
         object sceneLoadInfo = new
         {
             description = "Scene Loaded",
+            sceneName = scene.name,
+            special = true,
             frameInfo = new
             {
                 Time.unscaledDeltaTime,
                 Time.realtimeSinceStartup,
                 Time.timeSinceLevelLoad,
-            },
-            sceneName = scene.name
+            }
         };
 
         sendCaptures(sceneLoadInfo);
@@ -325,55 +389,5 @@ public class HandleCapturing : MonoBehaviour
         #else
             Application.Quit();
         #endif
-    }
-
-    public void setUrl(string u)
-    {
-        url = u;
-    }
-
-    public void setID(string i)
-    {
-        id = i;
-    }
-
-    public void setUsername(string n)
-    {
-        username = n;
-    }
-
-    public void setRate(int c)
-    {
-        captureRate = c;
-    }
-
-    public void setToConsole(bool c)
-    {
-        sendToConsole = c;
-    }
-
-    public void setCapturability(bool c)
-    {
-        isCapturing = c;
-    }
-
-    public void setVerbose(bool v)
-    {
-        isVerbose = v;
-    }
-
-    public void setSilence(bool s)
-    {
-        isSilent = s;
-    }
-
-    public void setFindEveryFrame(bool f)
-    {
-        findEveryFrame = f;
-    }
-
-    public void setExtraInfo(object e)
-    {
-        extraInfo = e;
     }
 }

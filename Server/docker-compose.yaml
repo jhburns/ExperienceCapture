@@ -1,67 +1,61 @@
-#- Name: Jonathan Hirokazu Burns
-#- ID: 2288851
-#- email: jburns@chapman.edu
-#- Course: 353-01
-#- Assignment: Submission #2/3
-#- Purpose: Builds, defines and starts the backend
-
+---
 version: '3.5'
 
 services:
   api:
-    build: 
+    build:
       context: ./API
     command: ["sh", "-c", "/wait && dotnet API.dll"]
     hostname: api
     ports:
-    - "4321:80"
+      - "4321:80"
     depends_on:
-    - db
+      - db
     environment:
       WAIT_HOSTS: db:27017
+    env_file:
+      - .env
     networks:
-     - ec-network
+      - ec-network
     healthcheck:
-       test: wget --quiet --tries=1 -O /dev/null http://localhost/health/ || exit 1
-       interval: 1m30s
-       timeout: 10s
-       retries: 3
+      test: wget --quiet --tries=1 -O /dev/null http://localhost/health/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
 
   db:
     image: mongo:3.6.14
     hostname: db
     ports:
-    - "27017:27017"
+      - "27017:27017"
     volumes:
-    - ec-data-volume:/data/db
+      - ec-data-volume:/data/db
     networks:
-    - ec-network
+      - ec-network
     healthcheck:
-       test: mongo --quiet --eval "db.adminCommand('ping')"
-       interval: 1m30s
-       timeout: 10s
-       retries: 3
-  
+      test: mongo --quiet --eval "db.adminCommand('ping')"
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+
   rp:
     image: abiosoft/caddy:1.0.3
     command: ["--conf", "/etc/Caddyfile"]
     hostname: web
-    ports:
-    - "8090:2015"
     depends_on:
-    - api
-    - web
+      - api
+      - web
     networks:
       - ec-network
 
   web:
     build:
       context: ./WebUI
+      args:  # Make sure to change the following arg
+        REACT_APP_GOOGLE_CLIENT_ID: 555477545658-co1pgbl0uh99rp8tbo2q62t2ch8vlb1h.apps.googleusercontent.com
     hostname: web
     networks:
       - ec-network
-    env_file:
-    - host.info.env
 
 networks:
-  ec-network:
+  ec-network: {}

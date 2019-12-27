@@ -59,7 +59,7 @@ With everything setup, data to be captured can now be added. The basic format is
     }
 ```
 This is using an [Anonymous type](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/anonymous-types).
-It lets you define implictly (meaning without having to declare `int`, `string`, etc) typed objects simply.
+It lets you define implicitly (meaning without having to declare `int`, `string`, etc) typed objects simply.
 
 Now run the Setup scene, and you should see a [JSON](https://www.newtonsoft.com/json) object
 being printed to console. It should have an info key, and a key called the same name as the

@@ -1,11 +1,5 @@
 ﻿// Code is adapted from example here: https://github.com/pulumi/examples/blob/master/aws-cs-webserver/Program.cs
 
-// - Name: Jonathan Hirokazu Burns
-// - ID: 2288851
-// - email: jburns@chapman.edu
-// - Course: 353-01
-// - Assignment: Submission #4
-// - Purpose: Manages Cloud State
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,37 +12,33 @@ using Pulumi.Aws.Ec2;
 using Pulumi.Aws.Ec2.Inputs;
 using Pulumi.Aws.Inputs;
 
-// Program class called by Pulumi
 internal class Program
 {
-    // Not using the free tier
     private const string Ec2Size = "t2.medium";
 
-    // Main
-      // Required by Pulumi to run things
+    private static readonly string AwsId = Environment.GetEnvironmentVariable("aws_account_id")
+                ?? throw new EnviromentVarNotSet("The following is unset", "aws_account_id");
+
+    private static readonly string AmiName = Environment.GetEnvironmentVariable("aws_deploy_ami_name")
+                ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ami_name");
+
+    private static readonly string IpId = Environment.GetEnvironmentVariable("aws_deploy_ip_allocation_id")
+                ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ip_allocation_id");
+
     private static Task<int> Main()
     {
         return Deployment.RunAsync(async () =>
         {
-            string awsId = Environment.GetEnvironmentVariable("aws_account_id")
-                ?? throw new EnviromentVarNotSet("The following is unset", "aws_account_id");
-
-            string amiName = Environment.GetEnvironmentVariable("aws_deploy_ami_name")
-                ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ami_name");
-
-            string ipId = Environment.GetEnvironmentVariable("aws_deploy_ip_allocation_id")
-                ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ip_allocation_id");
-
             var ami = await Pulumi.Aws.Invokes.GetAmi(new GetAmiArgs
             {
                 MostRecent = true,
-                Owners = { awsId },
+                Owners = { AwsId },
                 Filters =
                 {
                     new GetAmiFiltersArgs
                     {
                         Name = "name",
-                        Values = { amiName },
+                        Values = { AmiName },
                     },
                 },
             });
@@ -102,7 +92,7 @@ internal class Program
 
             var elasticIp = new EipAssociation("experience-capture-ip", new EipAssociationArgs
             {
-                AllocationId = ipId,
+                AllocationId = IpId,
                 InstanceId = server.Id,
             });
 

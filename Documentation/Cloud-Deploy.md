@@ -168,9 +168,9 @@ For each of the *.env files, copy the template into a not file with the followin
 - template.env -> .env (Yes, its starts with a period)
 - template.info.env -> info.env
 
-## Fill in the Enviroment Info
+## Fill in the Environment Info
 
-In no paticular order:
+In no particular order:
 - `aws_domain_name` you domain name.
 - `caddypath` keep the same.
 - `REACT_APP_GOOGLE_CLIENT_ID` your Google client id. See: https://developers.google.com/identity/sign-in/web/sign-in
@@ -184,15 +184,15 @@ In no paticular order:
 - `aws_packer_access_id` Packer account's access key. See https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey.
 - `aws_packer_secret_key` Packer account's secret key. See https://aws.amazon.com/blogs/security/wheres-my-secret-access-key/
 - `aws_user_for_packer` Packer account's name.
-- `aws_rexray_access_id` Rexray account's access key.
-- `aws_rexray_secret_key` Rexray account's secret key.
+- `aws_rexray_access_id` REX-ray account's access key.
+- `aws_rexray_secret_key` REX-ray account's secret key.
 - `PULUMI_ACCESS_TOKEN` Get from Pulumi, see https://www.pulumi.com/docs/intro/console/accounts-and-organizations/accounts/#access-tokens
 - `aws_access_key_id` Pulumi account's access key.
 - `aws_secret_access_key` Pulumi account's secret key.
 
 ## Using
 
-Run `docker-compose run ssh_setup` to generate the local ssh keys. 
+Run `docker-compose run ssh_setup` to generate the local SSH keys. 
 
 Run `docker-compose up packer` in *Deploy/* to build the AMI. Then change the `aws_deploy_ami_name` ENV var to the
 one returned by it.

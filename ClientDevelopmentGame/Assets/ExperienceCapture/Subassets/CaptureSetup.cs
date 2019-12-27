@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using System;
 
@@ -11,6 +12,8 @@ using Newtonsoft.Json.Bson;
 using System.IO;
 
 using Network;
+
+using InputStructure;
 
 public class CaptureSetup : MonoBehaviour
 {
@@ -38,6 +41,10 @@ public class CaptureSetup : MonoBehaviour
 
     [Tooltip("Uses Windows docker default host IP, instead of localhost.")]
     public bool useWindowsDefault;
+
+    [Tooltip("Prevents Exceptions when Specified game objects/keys aren't found. Useful when dynamically created objects.")]
+    public bool doNotThrowNotFound;
+    public string[] limitOutputToSpecified;
 
     public HandleCapturing handler;
 
@@ -136,11 +143,11 @@ public class CaptureSetup : MonoBehaviour
         }, 
         (error) =>
         {
-            newSession.gameObject.SetActive(true);
-
             sessionInfo.text = "Error creating new session: " + error;
+
             sessionInfo.gameObject.SetActive(true);
             sessionBackground.gameObject.SetActive(true);
+            newSession.gameObject.SetActive(true);
 
             Debug.Log(error);
         })
@@ -149,37 +156,83 @@ public class CaptureSetup : MonoBehaviour
 
     private void onStartClick()
     {
+        InputStructure.SpecificPair[] pairs;
+        try 
+        {
+            pairs = parseSpecific();
+        } 
+        catch (Exception e) 
+        {
+            Debug.Log(e);
+
+            sessionInfo.text = e.ToString();
+            sessionInfo.gameObject.SetActive(true);
+            sessionBackground.gameObject.SetActive(true);
+            start.gameObject.SetActive(true);
+
+            return;
+        }   
+
         if (offlineMode)
         {
-            createHandler("no URL", "NoSessionID", nameInput.text);
+            createHandler("no URL", "NoSessionID", nameInput.text, pairs);
         }
         else
         {
-            createHandler(url, sessionID, nameInput.text);
+            createHandler(url, sessionID, nameInput.text, pairs);
         }
     }
 
-    private void createHandler(string url, string id, string username)
+    private InputStructure.SpecificPair[] parseSpecific() {
+        InputStructure.SpecificPair[] tempPairs = new InputStructure.SpecificPair[limitOutputToSpecified.Length];
+
+        for (int i = 0; i < limitOutputToSpecified.Length; i++)
+        {
+            string pairInput = limitOutputToSpecified[i];
+            string[] pairSplit = pairInput.Split(':');
+
+            if (pairSplit.Length != 2) {
+                throw new InputStructure.SpecificPairsParsingException("Takes colon separated pair", pairInput);
+            }
+
+            if (pairSplit[0] == String.Empty) {
+                throw new InputStructure.SpecificPairsParsingException("GameObject must have name", pairInput);
+            }
+
+            if (pairSplit[1] == String.Empty) {
+                throw new InputStructure.SpecificPairsParsingException("Key must have name", pairInput);
+            }
+            
+            tempPairs[i] = new InputStructure.SpecificPair(pairSplit[0], pairSplit[1]);
+        }
+
+        return tempPairs;
+    }
+
+    private void createHandler(string url, string id, string username, InputStructure.SpecificPair[] pairs)
     {
         HandleCapturing newHandler = Instantiate(handler);
 
-        newHandler.setUrl(url);
-        newHandler.setUsername(username);
-        newHandler.setID(id);
+        newHandler.url = url;
+        newHandler.username = username;
+        newHandler.id = id;
 
-        newHandler.setRate(captureRate);
-        newHandler.setToConsole(offlineMode);
-        newHandler.setCapturability(false);
-        newHandler.setFindEveryFrame(findObjectsInEachFrame);
+        newHandler.captureRate = captureRate;
+        newHandler.sendToConsole = offlineMode;
+        newHandler.isCapturing = false;
+        newHandler.isFindingOften = findObjectsInEachFrame;
 
-        newHandler.setVerbose(printAdditionalCaptureInfo);
-        newHandler.setSilence(doNotPrintToConsole);
+        newHandler.isVerbose = printAdditionalCaptureInfo;
+        newHandler.isSilent = doNotPrintToConsole;
 
-        newHandler.setExtraInfo(new
+        newHandler.extraInfo = new
         {
+            clientVersion = clientVersionLocked,
             gameVersion = gameVersion,
-            clientVersion = clientVersionLocked
-        });
+        };
+
+        newHandler.isIgnoringNotFound = doNotThrowNotFound;
+        newHandler.pairs = pairs;
 
         SceneManager.LoadScene(sceneToLoad);
     }

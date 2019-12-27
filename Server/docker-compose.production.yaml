@@ -1,11 +1,9 @@
+---
 version: '3.5'
 
 services:
   api:
-    build:
-      labels:
-        - "xyz.expcap.isproduction"
-    image: local-deploy/ec-api:latest
+    image: 127.0.0.1:5000/ec-api
     deploy:
       restart_policy:
         condition: any
@@ -13,15 +11,15 @@ services:
       update_config:
         parallelism: 0
         delay: 30s
+    volumes:
+      - ./API/appsettings.production.json:/app/appsettings.js
 
   web:
     build:
       context: ./WebUI
-      dockerfile: Dockerfile.integration
-      labels:
-        - "xyz.expcap.isproduction"
+      dockerfile: integration.Dockerfile
     command: "caddy"
-    image: local-deploy/ec-web:latest
+    image: 127.0.0.1:5000/ec-web
     deploy:
       restart_policy:
         condition: any
@@ -30,7 +28,7 @@ services:
         parallelism: 0
         delay: 30s
     ports:
-    - "2015:2015"
+      - "2015:2015"
     healthcheck:
       test: wget --quiet --tries=1 -O /dev/null http://localhost:2015/ || exit 1
       interval: 1m30s
@@ -38,7 +36,7 @@ services:
       retries: 3
 
   rp:
-    command: ["--log", "stdout", "--agree"] #"-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
+    command: ["--agree", "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
     deploy:
       restart_policy:
         condition: any
@@ -46,13 +44,15 @@ services:
         parallelism: 0
         delay: 30s
     ports:
-    - "80:80"
-    - "443:443"
+      - "80:80"
+      - "443:443"
     volumes:
-    - ./Caddy/Caddyfile.production:/etc/Caddyfile
-    - ec-rp-volume:/etc/caddycerts
+      - ./Caddy/production.Caddyfile:/etc/Caddyfile
+      - ec-rp-volume:/etc/caddycerts
+    environment:
+      - caddypath=/etc/caddycerts
     env_file:
-    - host.info.env
+      - .env
 
   db:
     deploy:

@@ -1,6 +1,39 @@
+---
 version: '3.5'
 
 services:
+  packer:
+    build:
+      context: ./Packer
+    volumes:
+      - ./.secrets/id_rsa.pub:/deploy/id_rsa.pub
+      - ../Server:/deploy/Server
+    networks:
+      - ec-deploy-network
+    env_file:
+      - .env
+      - .deploy.env
+
+  pulumi:
+    build:
+      context: ./Pulumi
+    networks:
+      - ec-pulumi-network
+    env_file:
+      - .env
+      - .deploy.env
+
+  ssh_connect:
+    build:
+      context: ./SshClient
+    command: ["sh", "-c", "ssh -o StrictHostKeyChecking=no -i id_rsa -l ec-debug $$aws_host_ssh_address"]
+    volumes:
+      - ./.secrets/id_rsa:/keys/id_rsa
+    networks:
+      - ec-connect-network
+    env_file:
+      - .deploy.env
+
   ssh_setup:
     build:
       context: ./SshClient
@@ -10,55 +43,8 @@ services:
     networks:
       - ec-setup-network
 
-  packer:
-    build:
-      context: ./Packer
-    volumes:
-    - ./.secrets/id_rsa.pub:/deploy/id_rsa.pub
-    - ../Server:/deploy/Server
-    networks:
-      - ec-deploy-network
-    env_file:
-      - .env
-      - info.env
-
-  ssh_connect:
-    build:
-      context: ./SshClient
-    command: ["sh", "-c", "ssh -o StrictHostKeyChecking=no -i id_rsa -l ec-debug $$aws_host_ssh_address"]
-    volumes:
-    - ./.secrets/id_rsa:/keys/id_rsa
-    networks:
-    - ec-connect-network
-    env_file:
-      - info.env
-
-  pulumi_up:
-    build:
-      context: ./Pulumi
-    volumes:
-    - ./credentials:/root/.aws/credentials
-    networks:
-    - ec-pulumi-network
-    env_file:
-      - .env
-      - info.env
-
-  pulumi_destroy:
-    build:
-      context: ./Pulumi
-    command: ["sh", "-c", "pulumi login && pulumi destroy"]
-    volumes:
-    - ./credentials:/root/.aws/credentials
-    networks:
-    - ec-pulumi-network
-    env_file:
-      - .env
-      - info.env
-
-
 networks:
-  ec-deploy-network:
-  ec-setup-network:
-  ec-connect-network:
-  ec-pulumi-network:
+  ec-deploy-network: {}
+  ec-setup-network: {}
+  ec-connect-network: {}
+  ec-pulumi-network: {}

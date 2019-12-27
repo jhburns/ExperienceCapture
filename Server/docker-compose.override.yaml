@@ -1,28 +1,29 @@
+---
 version: '3.5'
 
 services:
   api:
     environment:
-    - accept_any_id_token=true
+      - unsafe_do_no_validate_user=true  # IMPORTANT: this should never be set in production
 
   web:
     volumes:
       - ./WebUI/:/app/
       - /app/node_modules
+    ports:
+      - "3003:3000"
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
-    ports:
-    - "3003:3000"
 
   rp:
     ports:
-    - "8090:2015"
+      - "8090:2015"
     volumes:
-    - ./Caddy/Caddyfile:/etc/Caddyfile
+      - ./Caddy/Caddyfile:/etc/Caddyfile
 
   exporter:
-    build: 
+    build:
       context: ./Exporter
     command: ["sh", "-c", "/wait && dotnet Exporter.dll"]
     depends_on:
@@ -34,5 +35,24 @@ services:
     networks:
       - ec-network
 
+  new_password:
+    build:
+      context: ./API
+    command: ["dotnet", "API.dll", "--passwordGenerate"]
+    networks:
+      - ec-network
+
+  redoc:
+    image: redocly/redoc:v2.0.0-rc.20
+    hostname: redoc
+    ports:
+      - "4322:80"
+    depends_on:
+      - rp
+    environment:
+      - SPEC_URL=http://localhost:8090/api/v1/openapi
+    networks:
+      - ec-network
+
 volumes:
-  ec-data-volume:
+  ec-data-volume: {}

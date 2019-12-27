@@ -1,4 +1,4 @@
-[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/API%20Integration/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22API+Integration%22)
+[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/API/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22API%22)
 
 # API
 
@@ -6,7 +6,7 @@ Written in .Net Core (C#) and the following packages:
 - [Nancyfx](http://nancyfx.org/)
 - [Kestrel web server](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?view=aspnetcore-3.0)
 - [JSON.Net](https://www.newtonsoft.com/json)
-- [Mongo c# driver](http://mongodb.github.io/mongo-csharp-driver/)
+- [MongoDB c# driver](http://mongodb.github.io/mongo-csharp-driver/)
 - [StyleCop.Analyzers](https://medium.com/@michaelparkerdev/linting-c-in-2019-stylecop-sonar-resharper-and-roslyn-73e88af57ebd)
 
  

@@ -1,19 +1,21 @@
-name: Packer Integration
+---
+name: Packer
 
-on:
+on:  # yamllint disable-line rule:truthy
   pull_request:
-    branches:    
+    branches:
       - master
+      - temp-master
     paths:
-    - 'Deploy/Packer/**'
-    - '.github/workflows/packer-integration.yml'
+      - 'Deploy/Packer/**'
+      - '.github/workflows/packer-integration.yml'
 
 jobs:
   build:
-    name: Check Build
+    name: Integration Checks
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Run Docker
         uses: whoan/docker-build-with-cache-action@v1
         with:
@@ -21,4 +23,4 @@ jobs:
           password: "${{ secrets.DOCKER_PASSWORD }}"
           image_name: jhburns/ec-packer-cache
           context: ./Deploy/Packer
-          dockerfile: Dockerfile.integration
+          dockerfile: integration.Dockerfile
