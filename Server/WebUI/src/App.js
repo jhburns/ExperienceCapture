@@ -7,6 +7,7 @@ import SignUpPage from "pages/SignUp";
 import AdminPage from "pages/Admin";
 import ClaimPage from "pages/Claim";
 import NormalSignInPage from "pages/NormalSignIn";
+import HomePage from 'pages/Home';
 
 function App() {
   return (
@@ -17,10 +18,8 @@ function App() {
             <Route exact path="/" component={NormalSignInPage}/>
             <Route path="/signUp" component={SignUpPage} />
             <Route path="/signInFor" component={ClaimPage} />
-            {/*<Route path="/home">
-              <SignUpPage />
-            </Route>
-            <Route path="/home/sessions">
+            <Route path="/home" component={HomePage} />
+            {/*<Route path="/home/sessions">
               <SignUpPage />
             </Route>
             <Route path="/home/settings">

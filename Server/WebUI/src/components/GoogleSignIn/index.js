@@ -4,6 +4,8 @@ import { gapi } from 'gapi-script';
 import { submitUser, signOutUser } from "libs/userManagement";
 import SignOutButton from "components/SignOutButton"
 
+import HomeButton from 'components/HomeButton';
+
 class SignIn extends Component {
   constructor(props) {
     super(props)
@@ -34,6 +36,7 @@ class SignIn extends Component {
       return (
 		    <div>
 		      <p>You've Already Signed Up</p>
+          <HomeButton />
           <SignOutButton onClickCallback={this.signOutCallback} />
 		    </div>
 	    )
@@ -41,7 +44,8 @@ class SignIn extends Component {
       return (
 		    <div>
 		      <p>You're Signed In</p>
-		        <SignOutButton onClickCallback={this.signOutCallback} />
+          <HomeButton />
+		      <SignOutButton onClickCallback={this.signOutCallback} />
 		    </div>
 	    )
 	  } else if (this.state.isSignedOut) {
