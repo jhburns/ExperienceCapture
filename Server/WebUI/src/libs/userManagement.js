@@ -1,6 +1,7 @@
 import { gapi } from 'gapi-script';
 
 import { postData } from 'libs/fetchExtra';
+import { createCookie } from 'libs/cookieExtra';
 
 async function submitUser(isMock=false, user, onError, options={ signUpToken: undefined, claimToken: undefined }, onDuplicate) {
 	if (options.signUpToken !== undefined) {
@@ -17,7 +18,6 @@ async function submitUser(isMock=false, user, onError, options={ signUpToken: un
 }
 
 async function signUpUser(isMock=true, user, signUpToken, onError, onDuplicate) {
-	console.log("pls");
 	let userData = {
 		idToken: "This.is.not.a.real.id.token",
 		signUpToken: signUpToken
@@ -40,6 +40,9 @@ async function signUpUser(isMock=true, user, signUpToken, onError, onDuplicate) 
 				throw Error(replyData.status);
 			}
 		}
+
+		const signUpToken = await replyData.text();
+		createCookie("ExperienceCapture-Access-Token", signUpToken);
 	} catch (error) {
 		console.error(error);
 		onError();
@@ -47,8 +50,33 @@ async function signUpUser(isMock=true, user, signUpToken, onError, onDuplicate) 
 }
 
 async function fulfillClaim(isMock=true, user, claimToken, onError) {
-	// Fill in
-}
+	let userData = {
+		idToken: "This.is.not.a.real.id.token",
+		claimToken: claimToken
+	};
+
+	let userId = "123456789109876543210"; // Has to be the same as the backend shim
+
+	if (!isMock) {
+		userData = {
+			idToken: user.getAuthResponse().id_token,
+			claimToken: claimToken
+		};
+
+		const userId = user.getId();
+		console.log(userId);
+	}
+
+	try {
+		const replyData = await postData(`/api/v1/users/${userId}/tokens/`, userData);
+
+		if (!replyData.ok) {
+			throw Error(replyData.status);
+		}
+	} catch (error) {
+		console.error(error);
+		onError();
+	}}
 
 async function signInUser(isMock=true, user, onError) {
 	let userData = {
@@ -62,7 +90,7 @@ async function signInUser(isMock=true, user, onError) {
 			idToken: user.getAuthResponse().id_token,
 		};
 
-		userId = user.getId();
+		const userId = user.getId();
 		console.log(userId);
 	}
 
@@ -72,6 +100,9 @@ async function signInUser(isMock=true, user, onError) {
 		if (!replyData.ok) {
 			throw Error(replyData.status);
 		}
+
+		const token = await replyData.text();
+		createCookie("ExperienceCapture-Access-Token", token);
 	} catch (error) {
 		console.error(error);
 		onError();
