@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import SignUpPage from "pages/SignUp";
 import AdminPage from "pages/Admin";
 import ClaimPage from "pages/Claim";
+import NormalSignInPage from "pages/NormalSignIn";
 
 function App() {
   return (
@@ -13,9 +14,7 @@ function App() {
       <header className="App-header">
         <Router>
           <Switch>
-            {/*<Route exact path="/">
-              <SignUpPage />
-            </Route>*/}
+            <Route exact path="/" component={NormalSignInPage}/>
             <Route path="/signUp" component={SignUpPage} />
             <Route path="/signInFor" component={ClaimPage} />
             {/*<Route path="/home">
