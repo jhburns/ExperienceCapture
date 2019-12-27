@@ -3,8 +3,6 @@ import logo from 'logo.svg';
 
 import GoogleSignIn from "components/GoogleSignIn";
 
-import queryString from 'query-string';
-
 class NormalSignInPage extends Component {
   render() {
     return (
