@@ -3,6 +3,6 @@ WORKDIR /app
 
 RUN npm install yaspeller@6.0.2 --global --silent
 
-Copy . . 
+COPY . . 
 
 RUN yaspeller ./

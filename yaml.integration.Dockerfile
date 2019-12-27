@@ -11,6 +11,6 @@ RUN pip3 install --quiet yamllint==1.19.0
 
 WORKDIR /app
 
-Copy . . 
+COPY . . 
 
 RUN yamllint --strict .
