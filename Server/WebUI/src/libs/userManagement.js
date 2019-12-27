@@ -1,6 +1,7 @@
 import { gapi } from 'gapi-script';
 
 import { postData } from 'libs/fetchExtra';
+import { createCookie } from 'libs/cookieExtra';
 
 async function submitUser(isMock=false, user, onError, options={ signUpToken: undefined, claimToken: undefined }, onDuplicate) {
 	if (options.signUpToken !== undefined) {
@@ -39,6 +40,9 @@ async function signUpUser(isMock=true, user, signUpToken, onError, onDuplicate) 
 				throw Error(replyData.status);
 			}
 		}
+
+		const signUpToken = await replyData.text();
+		createCookie("ExperienceCapture-Access-Token", signUpToken);
 	} catch (error) {
 		console.error(error);
 		onError();
@@ -96,6 +100,9 @@ async function signInUser(isMock=true, user, onError) {
 		if (!replyData.ok) {
 			throw Error(replyData.status);
 		}
+
+		const token = await replyData.text();
+		createCookie("ExperienceCapture-Access-Token", token);
 	} catch (error) {
 		console.error(error);
 		onError();
