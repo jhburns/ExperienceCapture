@@ -83,6 +83,7 @@
         group: docker
         shell: /usr/bin/fish
         password_lock: true
+      when: packer_debug == 'true'
 
     - name: Download the REX-Ray plugin
       command: "docker plugin install rexray/ebs:0.11.4 \
@@ -109,6 +110,7 @@
         user: ec-debug
         state: present
         key: "{{ lookup('file', './id_rsa.pub') }}"
+      when: packer_debug == 'true'
 
     - name: Rebuild Docker images for production
       command: docker-compose -f docker-compose.yaml -f docker-compose.production.yaml build --parallel

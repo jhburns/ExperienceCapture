@@ -63,10 +63,10 @@ async function fulfillClaim(isMock=true, user, claimToken, onError) {
 			claimToken: claimToken
 		};
 
-		const userId = user.getId();
-		console.log(userId);
+		userId = user.getId();
 	}
 
+	console.log(userId);
 	try {
 		const replyData = await postData(`/api/v1/users/${userId}/tokens/`, userData);
 
@@ -90,9 +90,11 @@ async function signInUser(isMock=true, user, onError) {
 			idToken: user.getAuthResponse().id_token,
 		};
 
-		const userId = user.getId();
-		console.log(userId);
+		userId = user.getId();
+		console.log(user.getAuthResponse().id_token);
 	}
+
+	console.log(userId);
 
 	try {
 		const replyData = await postData(`/api/v1/users/${userId}/tokens/`, userData);
