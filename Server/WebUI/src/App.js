@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import SignUpPage from "pages/SignUp";
 import AdminPage from "pages/Admin";
+import ClaimPage from "pages/Claim";
 
 function App() {
   return (
@@ -16,10 +17,8 @@ function App() {
               <SignUpPage />
             </Route>*/}
             <Route path="/signUp" component={SignUpPage} />
-            {/*<Route path="/signInFor">
-              <SignUpPage />
-            </Route>
-            <Route path="/home">
+            <Route path="/signInFor" component={ClaimPage} />
+            {/*<Route path="/home">
               <SignUpPage />
             </Route>
             <Route path="/home/sessions">
