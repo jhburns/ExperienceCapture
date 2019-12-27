@@ -61,7 +61,7 @@ public class HandleCapturing : MonoBehaviour
         isFirst = true;
         responceCount = 0;
 
-        minResponceTime = 10000000f; //Some impossibly large value
+        minResponceTime = int.MaxValue; //Some impossibly large value
         averageResponceTime = 1f;
         maxResponceTime = -1f;
     }
@@ -122,12 +122,7 @@ public class HandleCapturing : MonoBehaviour
                 }
         }
 
-        object info = new
-        {
-            Time.realtimeSinceStartup,
-            Time.timeSinceLevelLoad,
-            Time.unscaledDeltaTime,
-        };
+        TimeCapture info = new TimeCapture();
 
         captureData.Add("gameObjects", gameObjects);
         captureData.Add("frameInfo", info);
@@ -196,26 +191,26 @@ public class HandleCapturing : MonoBehaviour
         float start = Time.realtimeSinceStartup;
 
         StartCoroutine(HTTPHelpers.post(url + sessionPath + id, bson, 
-        (responceData) => 
-        {
-            openRequests--;
-            responceCount++;
+            (responceData) => 
+            {
+                openRequests--;
+                responceCount++;
 
-            float responceTime = Time.realtimeSinceStartup - start;
-            averageResponceTime = (averageResponceTime * responceCount + responceTime) / (responceCount + 1);
+                float responceTime = Time.realtimeSinceStartup - start;
+                averageResponceTime = (averageResponceTime * responceCount + responceTime) / (responceCount + 1);
 
-            if (responceTime < minResponceTime) {
-                minResponceTime = responceTime;
-            }
+                if (responceTime < minResponceTime) {
+                    minResponceTime = responceTime;
+                }
 
-            if (responceTime > maxResponceTime) {
-                maxResponceTime = responceTime;
-            }
-        }, 
-        (error) =>
-        {
-            Debug.Log(error);
-        })
+                if (responceTime > maxResponceTime) {
+                    maxResponceTime = responceTime;
+                }
+            }, 
+            (error) =>
+            {
+                Debug.Log(error);
+            })
         );
     }
 
@@ -315,7 +310,7 @@ public class HandleCapturing : MonoBehaviour
 
             object firstInfo = new
             {
-                dateTime = DateTime.Now.ToString("yyyy.MM.dd-hh:mm:ss"),
+                dateTime = DateTime.UtcNow.ToString("o"), // ISO 8601 datetime
                 description = "Session Started",
                 captureRate,
                 extraInfo,
@@ -389,5 +384,25 @@ public class HandleCapturing : MonoBehaviour
         #else
             Application.Quit();
         #endif
+    }
+}
+
+[Serializable]
+internal class TimeCapture
+{
+    public float realtimeSinceStartup { get; private set; }
+    public float timeSinceLevelLoad { get; private set; }
+    public float unscaledDeltaTime { get; private set; }
+
+    public TimeCapture() {
+        realtimeSinceStartup = Time.realtimeSinceStartup;
+        timeSinceLevelLoad = Time.timeSinceLevelLoad;
+        unscaledDeltaTime = Time.unscaledDeltaTime;
+    }
+
+    public TimeCapture(float rss, float tsll, float udt) {
+        realtimeSinceStartup = rss;
+        timeSinceLevelLoad = tsll;
+        unscaledDeltaTime = udt;
     }
 }
