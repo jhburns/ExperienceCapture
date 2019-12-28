@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 
-import { Link } from 'react-router-dom';
+import Menu from 'components/Menu';
 
 class HomePage extends Component {
   render() {
     return (
       <div>
         <p>Welcome Home</p>
-        <Link to="/home/sessions">Sessions</Link>
-        <Link to="/home/settings">Settings</Link>
+        <Menu />
       </div>
     );
   }
