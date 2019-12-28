@@ -317,12 +317,7 @@ public class HandleCapturing : MonoBehaviour
                 special = true,
                 Application.targetFrameRate,
                 username,
-                frameInfo = new
-                {
-                    unscaledDeltaTime = -1,
-                    realtimeSinceStartup = -1,
-                    timeSinceLevelLoad = -1,
-                },
+                frameInfo = new TimeCapture(-1f, -1f, -1f)
             };
 
             sendCaptures(firstInfo);
@@ -336,12 +331,7 @@ public class HandleCapturing : MonoBehaviour
             description = "Scene Loaded",
             sceneName = scene.name,
             special = true,
-            frameInfo = new
-            {
-                Time.unscaledDeltaTime,
-                Time.realtimeSinceStartup,
-                Time.timeSinceLevelLoad,
-            }
+            frameInfo = new TimeCapture()
         };
 
         sendCaptures(sceneLoadInfo);
