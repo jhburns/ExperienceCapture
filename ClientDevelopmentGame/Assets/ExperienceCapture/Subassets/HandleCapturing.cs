@@ -251,7 +251,7 @@ public class HandleCapturing : MonoBehaviour
 
             if (!sendToConsole)
             {
-                Debug.Log("Cleaning up...");
+                Debug.Log("Waiting for all connections to close...");
                 StartCoroutine(sendDelete());
             }
             else
@@ -361,7 +361,7 @@ public class HandleCapturing : MonoBehaviour
             }
             else
             {
-                Debug.Log("Finished cleanup, exiting");
+                Debug.Log("Finished cleanup, exiting for you.");
                 quit();
             }
         }
