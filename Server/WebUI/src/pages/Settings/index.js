@@ -13,7 +13,7 @@ class SettingsPage extends Component {
   }
 
   async onSignOut() {
-    await signOutUser(undefined); // Whether isMock is unknown because its in a different component
+    await signOutUser(undefined); // Whether this is mock is unknown because that state is in a different component
     this.props.history.push('/');
   }
 
