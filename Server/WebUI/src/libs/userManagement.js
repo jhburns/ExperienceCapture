@@ -119,8 +119,8 @@ async function signOutUser(isMock=false) {
 	try {
   	const auth2 = gapi.auth2.getAuthInstance();
 		await auth2.signOut();
-	} catch (error) {
-		console.error(error);
+	} catch (err) {
+		console.error(err);
 	}
 }
 
