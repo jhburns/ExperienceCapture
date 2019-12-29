@@ -21,16 +21,19 @@ namespace Carter.App.Lib.Network
             }
 
             string json;
+            JsonWriterSettings settings = new JsonWriterSettings();
+            settings.OutputMode = JsonOutputMode.Strict;
 
             if (query.As<bool>("ugly"))
             {
-                json = document.ToJson();
+                json = document.ToJson(settings);
                 json = Regex.Replace(json, "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
                 return json;
             }
             else
             {
-                return document.ToJson(new JsonWriterSettings { Indent = true });
+                settings.Indent = true;
+                return document.ToJson(settings);
             }
         }
 
