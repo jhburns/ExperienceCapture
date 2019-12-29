@@ -66,4 +66,13 @@ namespace Carter.App.Lib.Network
             await response.WriteAsync(json);
         }
     }
+
+    public class BasicResponce
+    {
+        public static async void Send(HttpResponse response, string body = "OK")
+        {
+            response.ContentType = "application/text; charset=utf-8";
+            await response.WriteAsync(body);
+        }
+    }
 }

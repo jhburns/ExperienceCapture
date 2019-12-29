@@ -1,12 +1,11 @@
 namespace Carter.App.Route.Tags
 {
     using Carter;
-
+    
+    using Carter.App.Lib.Network;
     using Carter.App.Route.PreSecurity;
 
     using Carter.Request;
-
-    using Microsoft.AspNetCore.Http;
 
     using MongoDB.Bson;
     using MongoDB.Driver;
@@ -45,8 +44,7 @@ namespace Carter.App.Route.Tags
                     await sessions.UpdateOneAsync(filter, update);
                 }
 
-                res.ContentType = "application/text; charset=utf-8";
-                await res.WriteAsync("OK");
+                BasicResponce.Send(res);
             });
 
             this.Delete("/{tagName}", async (req, res) =>
@@ -80,8 +78,7 @@ namespace Carter.App.Route.Tags
                 var update = Builders<BsonDocument>.Update.Set("tags", tags);
                 await sessions.UpdateOneAsync(filter, update);
 
-                res.ContentType = "application/text; charset=utf-8";
-                await res.WriteAsync("OK");
+                BasicResponce.Send(res);
             });
         }
     }
