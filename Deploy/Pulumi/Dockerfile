@@ -19,7 +19,7 @@ COPY *.csproj ./
 RUN dotnet restore
 
 # Copy everything else
-COPY . ./
+COPY . .
 
 # Pre-building so it doesn't happen everytime at runtime
 RUN dotnet build -nologo .
