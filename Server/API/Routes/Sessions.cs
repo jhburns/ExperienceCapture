@@ -1,7 +1,6 @@
 namespace Carter.App.Route.Sessions
 {
     using System;
-    using System.Linq;
 
     using Carter;
 
@@ -53,6 +52,7 @@ namespace Carter.App.Route.Sessions
                     isOpen = true,
                     user = user,
                     createdAt = new BsonDateTime(DateTime.Now),
+                    tags = new BsonArray(),
                 };
 
                 var bsonDoc = sessionDoc.ToBsonDocument();
