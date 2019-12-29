@@ -76,6 +76,7 @@ namespace Carter.App.Route.Sessions
             {
                 var sessions = db.GetCollection<BsonDocument>("sessions");
                 var projection = Builders<BsonDocument>.Projection.Exclude("_id");
+
                 var builder = Builders<BsonDocument>.Filter;
                 FilterDefinition<BsonDocument> filter = builder.Empty;
 
@@ -99,9 +100,7 @@ namespace Carter.App.Route.Sessions
                     filter = filter & builder.Gt("createdAt", range);
                 }
 
-                var sorter = Builders<BsonDocument>.Sort
-                    .Descending("createdAt");
-
+                var sorter = Builders<BsonDocument>.Sort.Descending("createdAt");
                 var sessionDocs = await sessions
                     .Find(filter)
                     .Project(projection)
@@ -110,7 +109,7 @@ namespace Carter.App.Route.Sessions
 
                 var clientValues = new
                 {
-                    contentArray = sessionDocs, // Bson documents can't start with an array, so a wrapping object is used instead
+                    contentArray = sessionDocs, // Bson documents can't start with an array like Json, so a wrapping object is used instead
                 };
                 var clientDoc = clientValues.ToBsonDocument();
 
