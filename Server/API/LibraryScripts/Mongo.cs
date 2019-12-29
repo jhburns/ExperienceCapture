@@ -18,5 +18,11 @@ namespace Carter.App.Lib.Mongo
             var filter = Builders<BsonDocument>.Filter.Eq(property, value);
             return await col.Find(filter).FirstOrDefaultAsync();
         }
+
+        public static async Task<BsonDocument> FindEqAsync(this IMongoCollection<BsonDocument> col, string property, ObjectId value)
+        {
+            var filter = Builders<BsonDocument>.Filter.Eq(property, value);
+            return await col.Find(filter).FirstOrDefaultAsync();
+        }
     }
 }

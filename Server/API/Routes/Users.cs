@@ -64,17 +64,17 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                BsonDocument personDoc = new BsonDocument()
+                var personDoc = new
                 {
-                    { "id", person.Subject },
-                    { "fullname", person.Name },
-                    { "firstname", person.GivenName },
-                    { "lastname", person.FamilyName },
-                    { "email", person.Email },
-                    { "createdAt", new BsonDateTime(DateTime.Now) },
+                    id = person.Subject,
+                    fullname = person.Name,
+                    firstname = person.GivenName,
+                    lastname = person.FamilyName,
+                    email = person.Email,
+                    createdAt = new BsonDateTime(DateTime.Now),
                 };
 
-                await users.InsertOneAsync(personDoc);
+                await users.InsertOneAsync(personDoc.ToBsonDocument());
                 await res.WriteAsync("OK");
             });
 
