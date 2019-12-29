@@ -147,7 +147,7 @@ namespace Carter.App.Route.Users
                 }
                 else
                 {
-                    await res.WriteAsync(newHash);
+                    await res.WriteAsync(newToken);
                 }
             });
 

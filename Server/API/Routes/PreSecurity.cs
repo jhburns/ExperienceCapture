@@ -6,6 +6,7 @@ namespace Carter.App.Route.PreSecurity
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Timer;
+    using Carter.App.Lib.DebugExtra;
 
     using Microsoft.AspNetCore.Http;
 
@@ -26,6 +27,8 @@ namespace Carter.App.Route.PreSecurity
                     ctx.Response.StatusCode = 400;
                     return false;
                 }
+
+                DebugExtra.PrintPls(PasswordHasher.Hash(token));
 
                 var accessDoc = await accessTokens.FindEqAsync("hash", PasswordHasher.Hash(token));
 

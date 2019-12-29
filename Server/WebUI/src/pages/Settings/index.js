@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Menu from 'components/Menu';
 import SignOutButton from 'components/SignOutButton';
+import GetSignUpLink from 'components/GetSignUpLink';
 
 import { signOutUser } from 'libs/userManagement';
 
@@ -23,6 +24,7 @@ class SettingsPage extends Component {
         <p>Welcome to Settings</p>
         <Menu />
         <SignOutButton onClickCallback={this.signOutCallback} />
+        <GetSignUpLink />
       </div>
     );
   }
