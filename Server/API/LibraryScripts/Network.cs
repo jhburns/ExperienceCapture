@@ -1,6 +1,5 @@
 namespace Carter.App.Lib.Network
 {
-    using System;
     using System.IO;
     using System.Text.RegularExpressions;
 
@@ -27,7 +26,6 @@ namespace Carter.App.Lib.Network
             {
                 json = document.ToJson();
                 json = Regex.Replace(json, "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
-                Console.WriteLine(json);
                 return json;
             }
             else

@@ -1,7 +1,11 @@
 namespace Carter.App.Route.Sessions
 {
+    using System;
+    using System.Linq;
+
     using Carter;
 
+    using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Network;
@@ -34,17 +38,68 @@ namespace Carter.App.Route.Sessions
                     filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
                 }
 
-                var sessionDoc = new BsonDocument
+                var accessTokens = db.GetCollection<BsonDocument>("users.tokens.access");
+                string token = req.Cookies["ExperienceCapture-Access-Token"]; // Has to exist due to PreSecurity Check
+
+                var accessTokenDoc = await accessTokens.FindEqAsync("hash", PasswordHasher.Hash(token));
+
+                var users = db.GetCollection<BsonDocument>("users");
+                var user = await users.FindEqAsync("_id", accessTokenDoc["user"].AsObjectId);
+
+                user.Remove("_id");
+
+                var sessionDoc = new
                 {
-                    { "id", uniqueID },
-                    { "isOpen", true },
+                    isOpen = true,
+                    user = user,
+                    createdAt = new BsonDateTime(DateTime.Now),
                 };
 
-                byte[] bson = sessionDoc.ToBson();
-                await sessions.InsertOneAsync(sessionDoc);
+                var bsonDoc = sessionDoc.ToBsonDocument();
+                bsonDoc.Add("id", uniqueID); // Added afterwards because the library will try to use it as the primary key
 
-                var clientDoc = new BsonDocument(sessionDoc);
-                clientDoc.Remove("_id");
+                await sessions.InsertOneAsync(bsonDoc);
+
+                bsonDoc.Remove("_id");
+
+                string json = JsonQuery.FulfilEncoding(req.Query, bsonDoc);
+                if (json != null)
+                {
+                    JsonResponce.FromString(res, json);
+                    return;
+                }
+
+                BsonResponse.FromDoc(res, bsonDoc);
+            });
+
+            this.Get("/", async (req, res) =>
+            {
+                var sessions = db.GetCollection<BsonDocument>("sessions");
+                var projection = Builders<BsonDocument>.Projection.Exclude("_id");
+                var builder = Builders<BsonDocument>.Filter;
+                FilterDefinition<BsonDocument> filter = builder.Empty;
+
+                // Three potential options: null, true, or false
+                if (req.Query.As<string>("isOpen") != null) {
+                    if (req.Query.As<bool>("isOpen"))
+                    {
+                        filter = filter & builder.Eq("isOpen", true);
+                    }
+                    else
+                    {
+                        filter = filter & builder.Eq("isOpen", false);
+                    }
+                }
+
+                var sessionDocs = await sessions.Find(filter)
+                    .Project(projection)
+                    .ToListAsync();
+
+                var clientValues = new
+                {
+                    contentArray = sessionDocs // Bson documents can't start with an array, so a wrapping object is used instead
+                };
+                var clientDoc = clientValues.ToBsonDocument();
 
                 string json = JsonQuery.FulfilEncoding(req.Query, clientDoc);
                 if (json != null)
@@ -53,7 +108,7 @@ namespace Carter.App.Route.Sessions
                     return;
                 }
 
-                BsonResponse.FromDoc(res, clientDoc);
+                BsonResponse.FromDoc(res, clientDoc.ToBsonDocument());
             });
 
             this.Post("/{id}", async (req, res) =>
