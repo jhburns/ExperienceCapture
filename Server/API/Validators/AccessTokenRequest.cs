@@ -1,7 +1,5 @@
 namespace Carter.App.Validation.AccessTokenRequest
 {
-    using System;
-
     using FluentValidation;
 
     public class AccessTokenRequest
