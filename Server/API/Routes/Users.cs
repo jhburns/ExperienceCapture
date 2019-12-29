@@ -7,6 +7,7 @@ namespace Carter.App.Route.Users
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Mongo;
+    using Carter.App.Lib.Network;
     using Carter.App.Lib.Timer;
 
     using Carter.App.Validation.AccessTokenRequest;
@@ -75,7 +76,7 @@ namespace Carter.App.Route.Users
                 };
 
                 await users.InsertOneAsync(personDoc.ToBsonDocument());
-                await res.WriteAsync("OK");
+                BasicResponce.Send(res);
             });
 
             this.Post("/{id}/tokens/", async (req, res) =>
@@ -143,11 +144,11 @@ namespace Carter.App.Route.Users
                         await claimTokens.UpdateOneAsync(filterClaims, update);
                     }
 
-                    await res.WriteAsync("OK");
+                    BasicResponce.Send(res);
                 }
                 else
                 {
-                    await res.WriteAsync(newToken);
+                    BasicResponce.Send(res, newToken);
                 }
             });
 
@@ -168,7 +169,7 @@ namespace Carter.App.Route.Users
 
                 await accessTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
 
-                await res.WriteAsync(newToken);
+                BasicResponce.Send(res, newToken);
             });
 
             this.Get("/claims/", async (req, res) =>
@@ -209,7 +210,7 @@ namespace Carter.App.Route.Users
                     .Unset("accessToken");
                 await claimTokens.UpdateOneAsync(filter, update);
 
-                await res.WriteAsync(claimDoc["accessToken"].AsString);
+                BasicResponce.Send(res, claimDoc["accessToken"].AsString);
             });
 
             this.Post("/signUp/admin/", async (req, res) =>
@@ -239,7 +240,7 @@ namespace Carter.App.Route.Users
 
                 await signUpTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
 
-                await res.WriteAsync(newToken);
+                BasicResponce.Send(res, newToken);
             });
         }
     }

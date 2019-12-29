@@ -200,9 +200,7 @@ namespace Carter.App.Route.Sessions
                 }
 
                 await sessions.UpdateOneAsync(filter, update);
-
-                res.ContentType = "application/text; charset=utf-8";
-                await res.WriteAsync("OK");
+                BasicResponce.Send(res);
             });
         }
     }
