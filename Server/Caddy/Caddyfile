@@ -1,4 +1,4 @@
-0.0.0.0 # Culprit for client not connecting? May need 192... IP on windows instead of localhost
+*:2015 # Culprit for client not connecting? May need 192... IP on windows instead of localhost
 
 log stdout
 
