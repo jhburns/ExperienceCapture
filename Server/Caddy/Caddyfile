@@ -1,4 +1,4 @@
-*:2015 # Culprit for client not connecting? May need 192... IP on windows instead of localhost
+*:2015 # TODO: check that this also works on Windows docker
 
 log stdout
 
