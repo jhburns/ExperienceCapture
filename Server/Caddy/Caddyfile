@@ -1,4 +1,4 @@
-0.0.0.0
+*:2015 # TODO: check that this also works on Windows docker
 
 log stdout
 

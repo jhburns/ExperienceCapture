@@ -41,8 +41,7 @@ async function signUpUser(isMock=true, user, signUpToken, onError, onDuplicate) 
 			}
 		}
 
-		const signUpToken = await replyData.text();
-		createCookie("ExperienceCapture-Access-Token", signUpToken);
+		signInUser(isMock, user, onError); // TODO: Check this call is workings
 	} catch (error) {
 		console.error(error);
 		onError();

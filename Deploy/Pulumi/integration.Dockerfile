@@ -17,6 +17,6 @@ COPY *.csproj ./
 RUN dotnet restore
 
 # Copy everything else
-COPY . ./
+COPY . .
 
 RUN dotnet build -nologo . -p:GHA_BUILD=True 
