@@ -1,5 +1,5 @@
-namespace Carter.App.Lib.DebugExtra {
-
+namespace Carter.App.Lib.DebugExtra
+{
     using System;
 
     public static class DebugExtra

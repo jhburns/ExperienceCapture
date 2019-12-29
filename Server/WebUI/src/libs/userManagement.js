@@ -41,7 +41,6 @@ async function signUpUser(isMock=true, user, signUpToken, onError, onDuplicate) 
 			}
 		}
 
-		const signUpToken = await replyData.text();
 		signInUser(isMock, user, onError); // TODO: Check this call is workings
 	} catch (error) {
 		console.error(error);
