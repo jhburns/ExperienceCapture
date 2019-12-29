@@ -91,8 +91,13 @@ namespace Carter.App.Route.Sessions
                     }
                 }
 
-                var sessionDocs = await sessions.Find(filter)
+                var sorter = Builders<BsonDocument>.Sort
+                    .Descending("createdAt");
+
+                var sessionDocs = await sessions
+                    .Find(filter)
                     .Project(projection)
+                    .Sort(sorter)
                     .ToListAsync();
 
                 var clientValues = new
