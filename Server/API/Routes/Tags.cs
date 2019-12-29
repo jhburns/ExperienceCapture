@@ -57,7 +57,7 @@ namespace Carter.App.Route.Tags
 
                 if (sessionDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = 204;
                     return;
                 }
 
