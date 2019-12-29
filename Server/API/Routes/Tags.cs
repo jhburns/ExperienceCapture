@@ -57,7 +57,7 @@ namespace Carter.App.Route.Tags
 
                 if (sessionDoc == null)
                 {
-                    res.StatusCode = 204;
+                    res.StatusCode = 404;
                     return;
                 }
 
@@ -68,15 +68,12 @@ namespace Carter.App.Route.Tags
 
                 string tag = req.RouteValues.As<string>("tagName");
 
-                if (!tags.Contains(tag))
+                if (tags.Contains(tag))
                 {
-                    res.StatusCode = 409;
-                    return;
+                    tags.Remove(tag);
+                    var update = Builders<BsonDocument>.Update.Set("tags", tags);
+                    await sessions.UpdateOneAsync(filter, update);
                 }
-
-                tags.Remove(tag);
-                var update = Builders<BsonDocument>.Update.Set("tags", tags);
-                await sessions.UpdateOneAsync(filter, update);
 
                 BasicResponce.Send(res);
             });
