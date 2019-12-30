@@ -19,8 +19,6 @@ class SessionTable extends Component {
     const sessionsData = await getSessions.json();
     const sessions = sessionsData.contentArray;
 
-    const currentUTC = new Date().getTime();
-
     const sessionsConverted = sessions.map((s) => {
       return {
         id: s.id,

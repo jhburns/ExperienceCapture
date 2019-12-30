@@ -9,7 +9,7 @@ class HomePage extends Component {
       <div>
         <p>Welcome Home</p>
         <Menu />
-        <SessionTable sessionsQuery={"createdWithin=2000"} />
+        <SessionTable sessionsQuery={"createdWithin=1800"} />
       </div>
     );
   }
