@@ -19,7 +19,19 @@ class SessionTable extends Component {
     const sessionsData = await getSessions.json();
     const sessions = sessionsData.contentArray;
 
-    const sessionsConverted = sessions.map((s) => {
+    const sessionsFiltered = sessions.reduce((sessions, s) => {
+      if (this.props.lacksTag !== undefined && !s.tags.includes(this.props.lacksTag)) {
+        sessions.push(s);
+      }
+
+      if (this.props.hasTag !== undefined && s.tags.includes(this.props.hasTag)) {
+        sessions.push(s);
+      }
+
+      return sessions;
+    }, []);
+
+    const sessionsConverted = sessionsFiltered.map((s) => {
       return {
         id: s.id,
         fullname: s.user.fullname,
