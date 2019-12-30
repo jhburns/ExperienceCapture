@@ -29,4 +29,19 @@ async function getData(url = '') {
   return await response;
 }
 
-export { postData, getData };
+async function deleteData(url = '') {
+  const response = await fetch(url, {
+    method: 'DELETE',
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    redirect: 'follow',
+    referrerPolicy: 'no-referrer',
+  });
+  return await response;
+}
+
+export { postData, getData, deleteData };

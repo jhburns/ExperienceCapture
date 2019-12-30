@@ -20,11 +20,14 @@ class SessionTable extends Component {
     const sessions = sessionsData.contentArray;
 
     const sessionsFiltered = sessions.reduce((sessions, s) => {
-      if (this.props.lacksTag !== undefined && !s.tags.includes(this.props.lacksTag)) {
-        sessions.push(s);
-      }
 
-      if (this.props.hasTag !== undefined && s.tags.includes(this.props.hasTag)) {
+      if (this.props.lacksTag !== undefined || this.props.hasTag !== undefined) {
+        if (this.props.lacksTag !== undefined && !s.tags.includes(this.props.lacksTag)) {
+          sessions.push(s);
+        } else if (this.props.hasTag !== undefined && s.tags.includes(this.props.hasTag)) {
+          sessions.push(s);
+        }
+      } else {
         sessions.push(s);
       }
 
