@@ -93,8 +93,6 @@ async function signInUser(isMock=true, user, onError) {
 		console.log(user.getAuthResponse().id_token);
 	}
 
-	console.log(userId);
-
 	try {
 		const replyData = await postData(`/api/v1/users/${userId}/tokens/`, userData);
 
