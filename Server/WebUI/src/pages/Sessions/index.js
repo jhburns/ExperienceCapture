@@ -39,7 +39,8 @@ class SessionsPage extends Component {
             header: ""
           }}
           lacksTag={"archived"}
-        />
+          isRenderingDate={true}
+      />
         <Link to="/home/archived">Archived</Link>
       </div>
     );

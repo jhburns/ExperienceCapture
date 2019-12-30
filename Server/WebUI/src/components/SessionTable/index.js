@@ -51,7 +51,12 @@ class SessionTable extends Component {
     const items = []
 
     for (const [index, value] of this.state.sessions.entries()) {
-      items.push(<Session key={index} sessionData={value} buttonData={this.props.buttonData} />)
+      items.push(<Session 
+        key={index}
+        sessionData={value} 
+        buttonData={this.props.buttonData}
+        isRenderingDate={this.props.isRenderingDate}
+      />)
     }
 
     return (
@@ -60,7 +65,7 @@ class SessionTable extends Component {
           <tr>
             <th scope="col">ID</th>
             <th scope="col">Captured By</th>
-            <th scope="col">Time</th>
+            <th scope="col">{this.props.isRenderingDate ? "Date" : "Time"}</th>
             {this.props.buttonData !== undefined &&
               <th scope="col">{this.props.buttonData.header}</th>
             }
