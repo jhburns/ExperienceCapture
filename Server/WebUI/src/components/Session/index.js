@@ -8,9 +8,10 @@ class Session extends Component {
       <tr>
         <th scope="row">{this.props.sessionData.id}</th>
         <td>{this.props.sessionData.fullname}</td>
-        <td>{this.props.isRenderingDate ? 
-          moment(this.props.sessionData.createdAt).format("MMM Do YY hh:mm a") :
-          moment(this.props.sessionData.createdAt).fromNow()
+        <td>{
+            this.props.isRenderingDate ? 
+              moment(this.props.sessionData.createdAt).format("MMM Do YY hh:mm a") :
+              moment(this.props.sessionData.createdAt).fromNow()
         }</td>
         {this.props.buttonData !== undefined &&
           <td>
