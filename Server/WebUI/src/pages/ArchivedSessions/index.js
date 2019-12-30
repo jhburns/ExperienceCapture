@@ -3,11 +3,11 @@ import React, { Component } from 'react';
 import Menu from 'components/Menu';
 import SessionTable from 'components/SessionTable';
 
-import { postData } from 'libs/fetchExtra';
+import { deleteData } from 'libs/fetchExtra';
 
 import { Link } from 'react-router-dom';
 
-class SessionsPage extends Component {
+class ArchivedSessionsPage extends Component {
   constructor(props) {
     super(props);
 
@@ -16,10 +16,10 @@ class SessionsPage extends Component {
 
   async onArchive(id) {
     try {
-      const archiveRequest = await postData(`/api/v1/sessions/${id}/tags/archived`);
+      const dearchiveRequest = await deleteData(`/api/v1/sessions/${id}/tags/archived`);
 
-      if (!archiveRequest.ok) {
-        throw Error(archiveRequest.status);
+      if (!dearchiveRequest.ok) {
+        throw Error(dearchiveRequest.status);
       }
     } catch (err) {
       console.error(err);
@@ -29,22 +29,22 @@ class SessionsPage extends Component {
   render() {
     return (
       <div>
-        <p>Welcome Home</p>
+        <p>Welcome To Archived Sessions</p>
         <Menu />
         <SessionTable
-          sessionsQuery={""} 
+          sessionsQuery={""}
           buttonData={{
             onClick: this.archiveCallback,
-            body: "Archive",
+            body: "Unarchive",
             header: ""
           }}
-          lacksTag={"archived"}
+          hasTag={"archived"}
           isRenderingDate={true}
-      />
-        <Link to="/home/archived">Archived</Link>
+        />
+        <Link to="/home/sessions">Back</Link>
       </div>
     );
   }
 }
 
-export default SessionsPage;
+export default ArchivedSessionsPage;

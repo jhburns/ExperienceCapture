@@ -10,6 +10,7 @@ import NormalSignInPage from "pages/NormalSignIn";
 import HomePage from 'pages/Home';
 import SessionsPage from 'pages/Sessions';
 import SettingsPage from 'pages/Settings';
+import ArchivePage from 'pages/ArchivedSessions';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route exact path="/home" component={HomePage} />
             <Route path="/home/sessions" component={SessionsPage} />
             <Route path="/home/settings" component={SettingsPage} />
+            <Route path="/home/archived" component={ArchivePage} />
             <Route path="/admin" component={AdminPage} />
             <Route path="*"> {/* 404 page */}
               <p>Imma 404</p>

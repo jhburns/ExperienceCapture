@@ -8,7 +8,18 @@ class Session extends Component {
       <tr>
         <th scope="row">{this.props.sessionData.id}</th>
         <td>{this.props.sessionData.fullname}</td>
-        <td>{moment(this.props.sessionData.createdAt).fromNow()}</td>
+        <td>{
+            this.props.isRenderingDate ? 
+              moment(this.props.sessionData.createdAt).format("MMM Do YY hh:mm a") :
+              moment(this.props.sessionData.createdAt).fromNow()
+        }</td>
+        {this.props.buttonData !== undefined &&
+          <td>
+            <button onClick={() => this.props.buttonData.onClick(this.props.sessionData.id)}>
+              {this.props.buttonData.body}
+            </button>
+          </td>
+        }
       </tr>
     )
   }
