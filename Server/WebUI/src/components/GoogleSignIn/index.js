@@ -97,12 +97,12 @@ class SignIn extends Component {
     }, () => window.gapi.load('signin2', this.renderLoginCallback));
   }
 
-  onSuccess(user) {
+  async onSuccess(user) {
     const options = {
       signUpToken: this.props.signUpToken,
       claimToken: this.props.claimToken,
     };
-	  submitUser(undefined, user, this.failureCallback, options, this.duplicateCallback);
+	  await submitUser(undefined, user, this.failureCallback, options, this.duplicateCallback);
 
     this.setState({
       isSignedIn: true,
