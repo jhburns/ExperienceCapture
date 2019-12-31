@@ -37,14 +37,9 @@ namespace Carter.App.Lib.Network
             }
         }
 
-        public static BsonDocument FulfilDencoding(IQueryCollection query, string json)
+        public static bool CheckDencoding(IQueryCollection query)
         {
-            if (!query.As<bool>("bson"))
-            {
-                return BsonDocument.Parse(json);
-            }
-
-            return null;
+            return query.As<bool>("bson");
         }
     }
 
