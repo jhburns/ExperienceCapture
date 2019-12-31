@@ -48,6 +48,8 @@ public class HandleCapturing : MonoBehaviour
     public bool isIgnoringNotFound { get; set; }
     public InputStructure.SpecificPair[] pairs { get; set; }
 
+    public SecretStorage store { get; set; }
+
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -190,7 +192,9 @@ public class HandleCapturing : MonoBehaviour
         openRequests++;
         float start = Time.realtimeSinceStartup;
 
-        StartCoroutine(HTTPHelpers.post(url + sessionPath + id, bson, 
+        string requestPath = url + sessionPath + "?bson=true" + id;
+
+        StartCoroutine(HTTPHelpers.post(requestPath, bson, store.accessToken,
             (responceData) => 
             {
                 openRequests--;
@@ -352,6 +356,7 @@ public class HandleCapturing : MonoBehaviour
         using (UnityWebRequest request = UnityWebRequest.Delete(url + sessionPath + id))
         {
             request.method = UnityWebRequest.kHttpVerbDELETE;
+            request.SetRequestHeader("Cookie", "ExperienceCapture-Access-Token=" + store.accessToken);
 
             yield return request.SendWebRequest();
 

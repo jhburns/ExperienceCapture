@@ -65,15 +65,17 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var personDoc = new
+                var personObject = new
                 {
-                    id = person.Subject,
                     fullname = person.Name,
                     firstname = person.GivenName,
                     lastname = person.FamilyName,
                     email = person.Email,
                     createdAt = new BsonDateTime(DateTime.Now),
                 };
+
+                var personDoc = personObject.ToBsonDocument();
+                personDoc.Add("id", person.Subject);
 
                 await users.InsertOneAsync(personDoc.ToBsonDocument());
                 BasicResponce.Send(res);
@@ -99,9 +101,16 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                if (await GoogleApi.ValidateUser(newAccessRequest.Data.idToken) == null)
+                var person = await GoogleApi.ValidateUser(newAccessRequest.Data.idToken);
+                if (person == null)
                 {
                     res.StatusCode = 401;
+                    return;
+                }
+
+                if (person.Subject != userID)
+                {
+                    res.StatusCode = 409;
                     return;
                 }
 
@@ -178,7 +187,6 @@ namespace Carter.App.Route.Users
                 if (claimToken == null)
                 {
                     res.StatusCode = 400;
-                    await res.WriteAsync(claimToken);
                     return;
                 }
 

@@ -1,14 +1,12 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 using System;
 
 using UnityEngine.UI;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
 using System.IO;
 
 using Network;
@@ -48,10 +46,12 @@ public class CaptureSetup : MonoBehaviour
 
     public HandleCapturing handler;
 
+    public Text nameTitle;
     public InputField nameInput;
 
     public Text urlTitle;
     public InputField urlInput;
+    public Text openingInfo;
 
     public Text sessionInfo;
     private string sessionInfoSave;
@@ -62,6 +62,7 @@ public class CaptureSetup : MonoBehaviour
 
     private string sessionID;
     private string url;
+    private SecretStorage store;
 
     private void Start()
     {
@@ -78,22 +79,24 @@ public class CaptureSetup : MonoBehaviour
 
         if (offlineMode)
         {
+            newSession.gameObject.SetActive(false);
             urlTitle.gameObject.SetActive(false);
             urlInput.gameObject.SetActive(false);
-            newSession.gameObject.SetActive(false);
         }
         else
         {
+            nameTitle.gameObject.SetActive(false);
+            nameInput.gameObject.SetActive(false);
             start.gameObject.SetActive(false);
         }
 
         if (useWindowsDefault)
         {
-            urlInput.text = "http://192.168.99.100:4321/";
+            urlInput.text = "http://192.168.99.100:8090";
         }
         else
         {
-            urlInput.text = "http://0.0.0.0:4321/";
+            urlInput.text = "http://0.0.0.0:8090";
         }
 
         nameInput.text = "Boyd";
@@ -102,55 +105,96 @@ public class CaptureSetup : MonoBehaviour
         sessionInfoSave = sessionInfo.text;
         sessionBackground.gameObject.SetActive(false);
 
-        newSession.onClick.AddListener(delegate () { onNewSessionClick(); });
+        openingInfo.gameObject.SetActive(false);
+
+        newSession.onClick.AddListener(delegate () { onLoginClick(); });
 
         start.onClick.AddListener(delegate () { onStartClick(); });
 
         clientVersion = clientVersionLocked;
     }
 
-    private void onNewSessionClick()
+    private void onLoginClick()
     {
-        newSession.gameObject.SetActive(false);
+        urlTitle.gameObject.SetActive(false);
+        urlInput.gameObject.SetActive(false);
 
-        byte[] bson = Serial.toBSON(new
-        {
-            create = 1
-        });
+        string emptyBody = new {}.ToString();
+        StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/users/claims/", emptyBody,
+            (responce) => {
+                openingInfo.gameObject.SetActive(true);
+                newSession.gameObject.SetActive(false);
 
-        StartCoroutine(HTTPHelpers.post(urlInput.text + "sessions/", bson, (data) =>
-        {
-            sessionInfo.gameObject.SetActive(true);
-            sessionBackground.gameObject.SetActive(true);
+                string claimSanitized = UnityWebRequest.EscapeURL(responce);
+                string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
 
-            try
+                Application.OpenURL(url);
+
+                pollClaim(responce);
+            }, (error) => {
+                Debug.Log(error);
+
+                sessionInfo.text = error;
+
+                sessionInfo.gameObject.SetActive(true);
+                sessionBackground.gameObject.SetActive(true);
+            })
+        );
+    }
+
+    private void pollClaim(string claimToken)
+{
+        StartCoroutine(HTTPHelpers.pollGet(urlInput.text + "/api/v1/users/claims/", claimToken, 
+            (responce) => {
+                store = new SecretStorage(responce);
+                createSession();
+            }, (error) => {
+                Debug.Log(error);
+            })
+        );
+    }
+
+    private void createSession()
+    {
+        byte[] emptyBody = Serial.toBSON(new {});
+
+        StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/sessions?bson=true", emptyBody, store.accessToken,
+            (data) =>
             {
-                MemoryStream memStream = new MemoryStream(data);
-                SessionData responce = Serial.fromBSON<SessionData>(memStream);
+                sessionInfo.gameObject.SetActive(true);
+                sessionBackground.gameObject.SetActive(true);
+                openingInfo.gameObject.SetActive(false);
 
-                sessionInfo.text = sessionInfoSave + responce.id;
-                url = urlInput.text;
-                sessionID = responce.id;
+                nameTitle.gameObject.SetActive(true);
+                nameInput.gameObject.SetActive(true);
 
-                start.gameObject.SetActive(true);
-            }
-            catch (Exception e)
+                try
+                {
+                    MemoryStream memStream = new MemoryStream(data);
+                    SessionData responce = Serial.fromBSON<SessionData>(memStream);
+
+                    sessionInfo.text = sessionInfoSave + responce.id;
+                    url = urlInput.text;
+                    sessionID = responce.id;
+
+                    start.gameObject.SetActive(true);
+                }
+                catch (Exception e)
+                {
+                    sessionInfo.text = "Error deserializing JSON response: " + e;
+                    Debug.Log(e);
+                    newSession.gameObject.SetActive(true);
+                }
+            }, (error) =>
             {
-                sessionInfo.text = "Error deserializing JSON response: " + e;
-                Debug.Log(e);
+                sessionInfo.text = error;
+
+                sessionInfo.gameObject.SetActive(true);
+                sessionBackground.gameObject.SetActive(true);
                 newSession.gameObject.SetActive(true);
-            }
-        }, 
-        (error) =>
-        {
-            sessionInfo.text = "Error creating new session: " + error;
 
-            sessionInfo.gameObject.SetActive(true);
-            sessionBackground.gameObject.SetActive(true);
-            newSession.gameObject.SetActive(true);
-
-            Debug.Log(error);
-        })
+                Debug.Log(error);
+            })
         );
     }
 
@@ -224,6 +268,8 @@ public class CaptureSetup : MonoBehaviour
 
         newHandler.isVerbose = printAdditionalCaptureInfo;
         newHandler.isSilent = doNotPrintToConsole;
+
+        newHandler.store = store;
 
         newHandler.extraInfo = new
         {
