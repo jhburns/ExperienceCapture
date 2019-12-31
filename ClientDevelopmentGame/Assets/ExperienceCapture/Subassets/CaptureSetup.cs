@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
@@ -118,13 +117,14 @@ public class CaptureSetup : MonoBehaviour
         StartCoroutine(HTTPHelpers.post(urlInput.text + "api/v1/users/claims/", emptyBody,
             (responce) => {
                 openingInfo.gameObject.SetActive(true);
+                newSession.gameObject.SetActive(false);
 
                 string claimSanitized = UnityWebRequest.EscapeURL(responce);
                 string url = urlInput.text + "signInFor?claimToken=" + claimSanitized;
 
                 Application.OpenURL(url);
 
-                StartCoroutine(pollClaim(responce));
+                pollClaim(responce);
             }, (error) => {
                 Debug.Log(error);
 
@@ -136,9 +136,14 @@ public class CaptureSetup : MonoBehaviour
         );
     }
 
-    private IEnumerator pollClaim(string claimToken) {
-
-        yield return null;
+    private void pollClaim(string claimToken) {
+        StartCoroutine(HTTPHelpers.pollGet(urlInput.text + "api/v1/users/claims/", claimToken, 
+            (responce) => {
+                Debug.Log(responce);
+            }, (error) => {
+                Debug.Log(error);
+            })
+        );
     }
 
     private void onStartClick()
