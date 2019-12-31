@@ -192,7 +192,7 @@ public class HandleCapturing : MonoBehaviour
         openRequests++;
         float start = Time.realtimeSinceStartup;
 
-        string requestPath = url + sessionPath + "?bson=true" + id;
+        string requestPath = url + sessionPath + id + "?bson=true";
 
         StartCoroutine(HTTPHelpers.post(requestPath, bson, store.accessToken,
             (responceData) => 

@@ -1,13 +1,16 @@
 namespace Carter.App.Route.Sessions
 {
     using System;
+    using System.IO;
 
     using Carter;
 
     using Carter.App.Lib.Authentication;
+    using Carter.App.Lib.DebugExtra;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Network;
+
     using Carter.App.Route.PreSecurity;
 
     using Carter.Request;
@@ -142,17 +145,26 @@ namespace Carter.App.Route.Sessions
                     return;
                 }
 
-                string body = await req.Body.AsStringAsync();
-
-                BsonDocument document = JsonQuery.FulfilDencoding(req.Query, body);
-                if (document == null)
+                BsonDocument document;
+                if (JsonQuery.CheckDecoding(req.Query))
                 {
-                    document = BsonSerializer.Deserialize<BsonDocument>(body);
+                    using (var ms = new MemoryStream())
+                    {
+                        await req.Body.CopyToAsync(ms);
+                        ms.Position = 0;
+                        document = BsonSerializer.Deserialize<BsonDocument>(ms);
+                    }
+                }
+                else
+                {
+                    string json = await req.Body.AsStringAsync();
+                    document = BsonDocument.Parse(json);
                 }
 
                 string collectionName = $"sessions.{uniqueID}";
                 var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
 
+                // This one call not awaitted for max performance
                 _ = sessionCollection.InsertOneAsync(document);
 
                 res.ContentType = "application/text; charset=utf-8";
