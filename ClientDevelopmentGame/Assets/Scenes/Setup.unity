@@ -1823,8 +1823,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54cff440ccd872442aa4d52fb46f72a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fillerLength: 100
-  initialSpawn: 7
+  fillerLength: 1000
+  initialSpawn: 10
   scaleUp: 0
   varience: 0
   t: {fileID: 114652173187609828, guid: 3a22c922b7e792147a17b42d16244694, type: 2}
