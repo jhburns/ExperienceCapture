@@ -556,7 +556,7 @@ MonoBehaviour:
   clientVersion: 
   defaultUrl: https://expcap2.xyz
   offlineMode: 0
-  printAdditionalCaptureInfo: 0
+  printAdditionalCaptureInfo: 1
   findObjectsInEachFrame: 1
   doNotPrintToConsole: 0
   doNotThrowNotFound: 1

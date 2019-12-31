@@ -9,7 +9,6 @@ using System.Linq;
 
 using Newtonsoft.Json;
 using UnityEngine.Networking;
-using Newtonsoft.Json.Linq;
 using Network;
 
 using InputStructure;
@@ -46,7 +45,7 @@ public class HandleCapturing : MonoBehaviour
     private int responceCount;
 
     public bool isIgnoringNotFound { get; set; }
-    public InputStructure.SpecificPair[] pairs { get; set; }
+    public SpecificPair[] pairs { get; set; }
 
     public SecretStorage store { get; set; }
 
