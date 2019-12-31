@@ -11,13 +11,15 @@ namespace Network
 
     class HTTPHelpers
     {
-        static public IEnumerator post(string url, byte[] data, System.Action<byte[]> onSuccess, System.Action<string> onError)
+        static public IEnumerator post(string url, byte[] data, string token, System.Action<byte[]> onSuccess, System.Action<string> onError)
         {
             using (UnityWebRequest request = UnityWebRequest.Put(url, data))
             {
                 request.method = UnityWebRequest.kHttpVerbPOST;
                 request.SetRequestHeader("Content-Type", "application/bson");
                 request.SetRequestHeader("Accept", "application/bson");
+                request.SetRequestHeader("Cookie", "ExperienceCapture-Access-Token=" + token);
+
                 request.timeout = 3;
 
                 yield return request.SendWebRequest();
@@ -109,6 +111,15 @@ namespace Network
                 obj = serializer.Deserialize<T>(reader);
             }
             return obj;
+        }
+    }
+
+    public class SecretStorage
+    {
+        public string accessToken { get; private set; }
+        public SecretStorage(string a)
+        {
+            accessToken = a;
         }
     }
 }

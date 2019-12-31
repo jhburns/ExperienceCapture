@@ -61,6 +61,7 @@ public class CaptureSetup : MonoBehaviour
 
     private string sessionID;
     private string url;
+    private SecretStorage store;
 
     private void Start()
     {
@@ -136,11 +137,53 @@ public class CaptureSetup : MonoBehaviour
         );
     }
 
-    private void pollClaim(string claimToken) {
+    private void pollClaim(string claimToken)
+{
         StartCoroutine(HTTPHelpers.pollGet(urlInput.text + "api/v1/users/claims/", claimToken, 
             (responce) => {
-                Debug.Log(responce);
+                store = new SecretStorage(responce);
+                createSession();
             }, (error) => {
+                Debug.Log(error);
+            })
+        );
+    }
+
+    private void createSession()
+    {
+        byte[] emptyBody = Serial.toBSON(new {});
+
+        StartCoroutine(HTTPHelpers.post(urlInput.text + "sessions?bson=true", emptyBody, store.accessToken,
+            (data) =>
+            {
+                sessionInfo.gameObject.SetActive(true);
+                sessionBackground.gameObject.SetActive(true);
+
+                try
+                {
+                    MemoryStream memStream = new MemoryStream(data);
+                    SessionData responce = Serial.fromBSON<SessionData>(memStream);
+
+                    sessionInfo.text = sessionInfoSave + responce.id;
+                    url = urlInput.text;
+                    sessionID = responce.id;
+
+                    start.gameObject.SetActive(true);
+                }
+                catch (Exception e)
+                {
+                    sessionInfo.text = "Error deserializing JSON response: " + e;
+                    Debug.Log(e);
+                    newSession.gameObject.SetActive(true);
+                }
+            }, (error) =>
+            {
+                sessionInfo.text = error;
+
+                sessionInfo.gameObject.SetActive(true);
+                sessionBackground.gameObject.SetActive(true);
+                newSession.gameObject.SetActive(true);
+
                 Debug.Log(error);
             })
         );
@@ -216,6 +259,8 @@ public class CaptureSetup : MonoBehaviour
 
         newHandler.isVerbose = printAdditionalCaptureInfo;
         newHandler.isSilent = doNotPrintToConsole;
+
+        newHandler.store = store;
 
         newHandler.extraInfo = new
         {

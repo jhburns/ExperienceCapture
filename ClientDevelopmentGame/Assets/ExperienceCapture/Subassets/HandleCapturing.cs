@@ -48,6 +48,8 @@ public class HandleCapturing : MonoBehaviour
     public bool isIgnoringNotFound { get; set; }
     public InputStructure.SpecificPair[] pairs { get; set; }
 
+    public SecretStorage store { get; set; }
+
     void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -190,7 +192,7 @@ public class HandleCapturing : MonoBehaviour
         openRequests++;
         float start = Time.realtimeSinceStartup;
 
-        StartCoroutine(HTTPHelpers.post(url + sessionPath + id, bson, 
+        StartCoroutine(HTTPHelpers.post(url + sessionPath + id, bson, store.accessToken,
             (responceData) => 
             {
                 openRequests--;

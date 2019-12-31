@@ -101,9 +101,16 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                if (await GoogleApi.ValidateUser(newAccessRequest.Data.idToken) == null)
+                var person = await GoogleApi.ValidateUser(newAccessRequest.Data.idToken);
+                if (person == null)
                 {
                     res.StatusCode = 401;
+                    return;
+                }
+
+                if (person.Subject != userID)
+                {
+                    res.StatusCode = 409;
                     return;
                 }
 
@@ -180,7 +187,6 @@ namespace Carter.App.Route.Users
                 if (claimToken == null)
                 {
                     res.StatusCode = 400;
-                    await res.WriteAsync(claimToken);
                     return;
                 }
 
