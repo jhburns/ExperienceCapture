@@ -118,7 +118,7 @@ public class CaptureSetup : MonoBehaviour
             create = 1
         });
 
-        StartCoroutine(HTTPHelpers.post(urlInput.text + "sessions/", bson, (data) =>
+        StartCoroutine(HTTPHelpers.post(urlInput.text + "sessions/?bson=true", bson, (data) =>
         {
             sessionInfo.gameObject.SetActive(true);
             sessionBackground.gameObject.SetActive(true);

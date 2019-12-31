@@ -197,6 +197,61 @@ Prefab:
       propertyPath: doNotThrowNotFound
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 224096384783060220, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 1500
+      objectReference: {fileID: 0}
+    - target: {fileID: 224838589108763182, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 1632
+      objectReference: {fileID: 0}
+    - target: {fileID: 224096384783060220, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 121
+      objectReference: {fileID: 0}
+    - target: {fileID: 224838589108763182, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 57
+      objectReference: {fileID: 0}
+    - target: {fileID: 224226018909687294, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 224109617234833296, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 114744416817846698, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: m_Text
+      value: Open URL
+      objectReference: {fileID: 0}
+    - target: {fileID: 224226018909687294, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: -96
+      objectReference: {fileID: 0}
+    - target: {fileID: 224423122553398370, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -359
+      objectReference: {fileID: 0}
+    - target: {fileID: 224423122553398370, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 1673
+      objectReference: {fileID: 0}
+    - target: {fileID: 114616253934248454, guid: 68aaa89a57e29194da9ce770ee766ab0,
+        type: 2}
+      propertyPath: m_Text
+      value: Login
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 68aaa89a57e29194da9ce770ee766ab0, type: 2}
   m_IsPrefabAsset: 0

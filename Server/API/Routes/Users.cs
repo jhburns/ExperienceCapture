@@ -65,15 +65,17 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var personDoc = new
+                var personObject = new
                 {
-                    id = person.Subject,
                     fullname = person.Name,
                     firstname = person.GivenName,
                     lastname = person.FamilyName,
                     email = person.Email,
                     createdAt = new BsonDateTime(DateTime.Now),
                 };
+
+                var personDoc = personObject.ToBsonDocument();
+                personDoc.Add("id", person.Subject);
 
                 await users.InsertOneAsync(personDoc.ToBsonDocument());
                 BasicResponce.Send(res);
