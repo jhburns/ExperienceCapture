@@ -30,6 +30,8 @@ class SignIn extends Component {
       return (
         <div>
           <p>Sorry, there was an issue signing in.</p>
+          <p>Try a different account.</p>
+          <SignOutButton onClickCallback={this.signOutCallback} />
         </div>
       )
     } else if (this.state.isDuplicateSignIn) {
@@ -91,15 +93,16 @@ class SignIn extends Component {
 	    isSignedIn: false,
       isSignedOut: true,
       isDuplicateSignIn: false,
+      isUnableToSignIn: false,
     }, () => window.gapi.load('signin2', this.renderLoginCallback));
   }
 
-  onSuccess(user) {
+  async onSuccess(user) {
     const options = {
       signUpToken: this.props.signUpToken,
       claimToken: this.props.claimToken,
     };
-	  submitUser(undefined, user, this.failureCallback, options, this.duplicateCallback);
+	  await submitUser(undefined, user, this.failureCallback, options, this.duplicateCallback);
 
     this.setState({
       isSignedIn: true,

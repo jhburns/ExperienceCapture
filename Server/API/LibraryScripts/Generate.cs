@@ -7,7 +7,7 @@ namespace Carter.App.Lib.Generate
 
     public class Generate
     {
-        internal static readonly string CharsForId = "ABCEFGHJKLMNPQRSUVWXY3456789";
+        internal static readonly string CharsForId = "ABCEFGHJKLMNPQRUVWXY346789";
 
         private static Random random = new Random();
 

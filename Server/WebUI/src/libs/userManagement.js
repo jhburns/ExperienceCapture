@@ -41,7 +41,7 @@ async function signUpUser(isMock=true, user, signUpToken, onError, onDuplicate) 
 			}
 		}
 
-		signInUser(isMock, user, onError); // TODO: Check this call is workings
+		await signInUser(isMock, user, onError);
 	} catch (error) {
 		console.error(error);
 		onError();
@@ -65,14 +65,14 @@ async function fulfillClaim(isMock=true, user, claimToken, onError) {
 		userId = user.getId();
 	}
 
-	console.log(claimToken);
-
 	try {
 		const replyData = await postData(`/api/v1/users/${userId}/tokens/`, userData);
 
 		if (!replyData.ok) {
 			throw Error(replyData.status);
 		}
+
+		await signInUser(isMock, user, onError);
 	} catch (error) {
 		console.error(error);
 		onError();
