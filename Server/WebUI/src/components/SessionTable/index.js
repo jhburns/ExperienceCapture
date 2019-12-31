@@ -14,7 +14,7 @@ class SessionTable extends Component {
   }
 
   async componentDidMount() {
-    const url = `/api/v1/sessions?${this.props.sessionsQuery}`;
+    const url = `/api/v1/sessions?${this.props.sessionsQuery}&ugly=true`;
     const getSessions = await getData(url);
     const sessionsData = await getSessions.json();
     const sessions = sessionsData.contentArray;
