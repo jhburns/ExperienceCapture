@@ -37,7 +37,7 @@ namespace Carter.App.Lib.Network
             }
         }
 
-        public static bool CheckDencoding(IQueryCollection query)
+        public static bool CheckDecoding(IQueryCollection query)
         {
             return query.As<bool>("bson");
         }

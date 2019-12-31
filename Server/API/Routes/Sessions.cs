@@ -146,7 +146,7 @@ namespace Carter.App.Route.Sessions
                 }
 
                 BsonDocument document;
-                if (JsonQuery.CheckDencoding(req.Query))
+                if (JsonQuery.CheckDecoding(req.Query))
                 {
                     using (var ms = new MemoryStream())
                     {
