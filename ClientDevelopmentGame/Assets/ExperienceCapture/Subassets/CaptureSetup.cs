@@ -46,6 +46,7 @@ public class CaptureSetup : MonoBehaviour
 
     public HandleCapturing handler;
 
+    public Text nameTitle;
     public InputField nameInput;
 
     public Text urlTitle;
@@ -78,20 +79,24 @@ public class CaptureSetup : MonoBehaviour
 
         if (offlineMode)
         {
-            //
+            newSession.gameObject.SetActive(false);
+            urlTitle.gameObject.SetActive(false);
+            urlInput.gameObject.SetActive(false);
         }
         else
         {
-
+            nameTitle.gameObject.SetActive(false);
+            nameInput.gameObject.SetActive(false);
+            start.gameObject.SetActive(false);
         }
 
         if (useWindowsDefault)
         {
-            urlInput.text = "http://192.168.99.100:8090/";
+            urlInput.text = "http://192.168.99.100:8090";
         }
         else
         {
-            urlInput.text = "http://0.0.0.0:8090/";
+            urlInput.text = "http://0.0.0.0:8090";
         }
 
         nameInput.text = "Boyd";
@@ -115,13 +120,13 @@ public class CaptureSetup : MonoBehaviour
         urlInput.gameObject.SetActive(false);
 
         string emptyBody = new {}.ToString();
-        StartCoroutine(HTTPHelpers.post(urlInput.text + "api/v1/users/claims/", emptyBody,
+        StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/users/claims/", emptyBody,
             (responce) => {
                 openingInfo.gameObject.SetActive(true);
                 newSession.gameObject.SetActive(false);
 
                 string claimSanitized = UnityWebRequest.EscapeURL(responce);
-                string url = urlInput.text + "signInFor?claimToken=" + claimSanitized;
+                string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
 
                 Application.OpenURL(url);
 
@@ -139,7 +144,7 @@ public class CaptureSetup : MonoBehaviour
 
     private void pollClaim(string claimToken)
 {
-        StartCoroutine(HTTPHelpers.pollGet(urlInput.text + "api/v1/users/claims/", claimToken, 
+        StartCoroutine(HTTPHelpers.pollGet(urlInput.text + "/api/v1/users/claims/", claimToken, 
             (responce) => {
                 store = new SecretStorage(responce);
                 createSession();
@@ -153,11 +158,15 @@ public class CaptureSetup : MonoBehaviour
     {
         byte[] emptyBody = Serial.toBSON(new {});
 
-        StartCoroutine(HTTPHelpers.post(urlInput.text + "sessions?bson=true", emptyBody, store.accessToken,
+        StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/sessions?bson=true", emptyBody, store.accessToken,
             (data) =>
             {
                 sessionInfo.gameObject.SetActive(true);
                 sessionBackground.gameObject.SetActive(true);
+                openingInfo.gameObject.SetActive(false);
+
+                nameTitle.gameObject.SetActive(true);
+                nameInput.gameObject.SetActive(true);
 
                 try
                 {
