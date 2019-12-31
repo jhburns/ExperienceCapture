@@ -9,7 +9,6 @@ namespace Network
 
     class HTTPHelpers
     {
-
         static public IEnumerator post(string url, byte[] data, System.Action<byte[]> onSuccess, System.Action<string> onError)
         {
             using (UnityWebRequest request = UnityWebRequest.Put(url, data))
@@ -32,6 +31,27 @@ namespace Network
             }
         }
 
+        static public IEnumerator post(string url, string data, System.Action<string> onSuccess, System.Action<string> onError)
+        {
+            using (UnityWebRequest request = UnityWebRequest.Put(url, data))
+            {
+                request.method = UnityWebRequest.kHttpVerbPOST;
+                request.SetRequestHeader("Content-Type", "application/bson");
+                request.SetRequestHeader("Accept", "application/bson");
+                request.timeout = 3;
+
+                yield return request.SendWebRequest();
+
+                if (request.isNetworkError || request.isHttpError)
+                {
+                    onError(request.error);
+                }
+                else
+                {
+                    onSuccess(request.downloadHandler.text);
+                }
+            }
+        }
     }
 
     class Serial

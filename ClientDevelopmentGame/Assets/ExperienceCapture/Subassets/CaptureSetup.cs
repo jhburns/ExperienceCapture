@@ -3,12 +3,11 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 using System;
 
 using UnityEngine.UI;
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
 using System.IO;
 
 using Network;
@@ -52,6 +51,7 @@ public class CaptureSetup : MonoBehaviour
 
     public Text urlTitle;
     public InputField urlInput;
+    public Text openingInfo;
 
     public Text sessionInfo;
     private string sessionInfoSave;
@@ -78,22 +78,20 @@ public class CaptureSetup : MonoBehaviour
 
         if (offlineMode)
         {
-            urlTitle.gameObject.SetActive(false);
-            urlInput.gameObject.SetActive(false);
-            newSession.gameObject.SetActive(false);
+            //
         }
         else
         {
-            start.gameObject.SetActive(false);
+
         }
 
         if (useWindowsDefault)
         {
-            urlInput.text = "http://192.168.99.100:4321/";
+            urlInput.text = "http://192.168.99.100:8090/";
         }
         else
         {
-            urlInput.text = "http://0.0.0.0:4321/";
+            urlInput.text = "http://0.0.0.0:8090/";
         }
 
         nameInput.text = "Boyd";
@@ -102,56 +100,45 @@ public class CaptureSetup : MonoBehaviour
         sessionInfoSave = sessionInfo.text;
         sessionBackground.gameObject.SetActive(false);
 
-        newSession.onClick.AddListener(delegate () { onNewSessionClick(); });
+        openingInfo.gameObject.SetActive(false);
+
+        newSession.onClick.AddListener(delegate () { onLoginClick(); });
 
         start.onClick.AddListener(delegate () { onStartClick(); });
 
         clientVersion = clientVersionLocked;
     }
 
-    private void onNewSessionClick()
+    private void onLoginClick()
     {
-        newSession.gameObject.SetActive(false);
+        urlTitle.gameObject.SetActive(false);
+        urlInput.gameObject.SetActive(false);
 
-        byte[] bson = Serial.toBSON(new
-        {
-            create = 1
-        });
+        string emptyBody = new {}.ToString();
+        StartCoroutine(HTTPHelpers.post(urlInput.text + "api/v1/users/claims/", emptyBody,
+            (responce) => {
+                openingInfo.gameObject.SetActive(true);
 
-        StartCoroutine(HTTPHelpers.post(urlInput.text + "sessions/?bson=true", bson, (data) =>
-        {
-            sessionInfo.gameObject.SetActive(true);
-            sessionBackground.gameObject.SetActive(true);
+                string claimSanitized = UnityWebRequest.EscapeURL(responce);
+                string url = urlInput.text + "signInFor?claimToken=" + claimSanitized;
 
-            try
-            {
-                MemoryStream memStream = new MemoryStream(data);
-                SessionData responce = Serial.fromBSON<SessionData>(memStream);
+                Application.OpenURL(url);
 
-                sessionInfo.text = sessionInfoSave + responce.id;
-                url = urlInput.text;
-                sessionID = responce.id;
+                StartCoroutine(pollClaim(responce));
+            }, (error) => {
+                Debug.Log(error);
 
-                start.gameObject.SetActive(true);
-            }
-            catch (Exception e)
-            {
-                sessionInfo.text = "Error deserializing JSON response: " + e;
-                Debug.Log(e);
-                newSession.gameObject.SetActive(true);
-            }
-        }, 
-        (error) =>
-        {
-            sessionInfo.text = "Error creating new session: " + error;
+                sessionInfo.text = error;
 
-            sessionInfo.gameObject.SetActive(true);
-            sessionBackground.gameObject.SetActive(true);
-            newSession.gameObject.SetActive(true);
-
-            Debug.Log(error);
-        })
+                sessionInfo.gameObject.SetActive(true);
+                sessionBackground.gameObject.SetActive(true);
+            })
         );
+    }
+
+    private IEnumerator pollClaim(string claimToken) {
+
+        yield return null;
     }
 
     private void onStartClick()
