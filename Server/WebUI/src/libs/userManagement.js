@@ -65,7 +65,6 @@ async function fulfillClaim(isMock=true, user, claimToken, onError) {
 		userId = user.getId();
 	}
 
-
 	try {
 		const replyData = await postData(`/api/v1/users/${userId}/tokens/`, userData);
 
