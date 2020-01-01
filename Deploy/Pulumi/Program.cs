@@ -48,13 +48,13 @@ internal class Program
                 Description = "Enable HTTP access",
                 Ingress =
             {
-                CreateIngressRule(80),
-                CreateIngressRule(22),
-                CreateIngressRule(443),
+                CreateIngressRule(80), // HTTP
+                CreateIngressRule(22), // SSH
+                CreateIngressRule(443), // HTTPS
             },
                 Egress =
             {
-                new SecurityGroupEgressArgs
+                new SecurityGroupEgressArgs // Allow all outbound traffic
                 {
                     Protocol = "-1",
                     FromPort = 0,
