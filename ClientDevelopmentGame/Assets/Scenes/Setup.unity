@@ -554,11 +554,11 @@ MonoBehaviour:
   sceneToLoad: SampleScene
   gameVersion: 
   clientVersion: 
+  defaultUrl: https://expcap2.xyz
   offlineMode: 0
   printAdditionalCaptureInfo: 0
   findObjectsInEachFrame: 1
   doNotPrintToConsole: 0
-  useWindowsDefault: 1
   doNotThrowNotFound: 1
   limitOutputToSpecified: []
   handler: {fileID: 114421317242070260, guid: 16284608f5e17b9419c1b59da5a4e2e2, type: 2}
@@ -567,6 +567,7 @@ MonoBehaviour:
   urlTitle: {fileID: 1001119032}
   urlInput: {fileID: 2143816103}
   openingInfo: {fileID: 1535374470}
+  connectionInfo: {fileID: 1567108342}
   sessionInfo: {fileID: 549930091}
   sessionBackground: {fileID: 752408026}
   newSession: {fileID: 1440756654}
