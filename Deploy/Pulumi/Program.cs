@@ -48,8 +48,8 @@ internal class Program
                 Description = "Enable HTTP access",
                 Ingress =
             {
-                CreateIngressRule(80), // HTTP
                 CreateIngressRule(22), // SSH
+                CreateIngressRule(80), // HTTP
                 CreateIngressRule(443), // HTTPS
             },
                 Egress =
