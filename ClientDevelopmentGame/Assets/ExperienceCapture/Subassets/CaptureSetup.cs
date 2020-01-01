@@ -52,6 +52,7 @@ public class CaptureSetup : MonoBehaviour
     public Text urlTitle;
     public InputField urlInput;
     public Text openingInfo;
+    public Text connectionInfo;
 
     public Text sessionInfo;
     private string sessionInfoSave;
@@ -106,6 +107,7 @@ public class CaptureSetup : MonoBehaviour
         sessionBackground.gameObject.SetActive(false);
 
         openingInfo.gameObject.SetActive(false);
+        connectionInfo.gameObject.SetActive(false);
 
         newSession.onClick.AddListener(delegate () { onLoginClick(); });
 
@@ -118,12 +120,15 @@ public class CaptureSetup : MonoBehaviour
     {
         urlTitle.gameObject.SetActive(false);
         urlInput.gameObject.SetActive(false);
+        newSession.gameObject.SetActive(false);
+
+        connectionInfo.gameObject.SetActive(true);
 
         string emptyBody = new {}.ToString();
         StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/users/claims/", emptyBody,
             (responce) => {
                 openingInfo.gameObject.SetActive(true);
-                newSession.gameObject.SetActive(false);
+                connectionInfo.gameObject.SetActive(false);
 
                 string claimSanitized = UnityWebRequest.EscapeURL(responce);
                 string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
@@ -136,8 +141,15 @@ public class CaptureSetup : MonoBehaviour
 
                 sessionInfo.text = error;
 
+                connectionInfo.gameObject.SetActive(false);
+
                 sessionInfo.gameObject.SetActive(true);
                 sessionBackground.gameObject.SetActive(true);
+
+                urlTitle.gameObject.SetActive(true);
+                urlInput.gameObject.SetActive(true);
+
+                newSession.gameObject.SetActive(true);
             })
         );
     }
