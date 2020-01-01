@@ -27,7 +27,7 @@ public class CaptureSetup : MonoBehaviour
     [Tooltip("Don't edit, is readonly and only informational.")]
     public string clientVersion;
 
-    [Tooltip("Uses Windows docker default host IP, instead of localhost.")]
+    [Tooltip("Url to fill in automatically on the login page. Examples: 'http://192.168.99.100:3003', 'https://expcap.xyz'")]
     public string defaultUrl;
 
     [Tooltip("If checked, print data to console and don't attempt to connect to a server.")]
