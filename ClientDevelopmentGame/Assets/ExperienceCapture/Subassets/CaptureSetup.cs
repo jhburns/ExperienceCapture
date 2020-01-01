@@ -27,6 +27,9 @@ public class CaptureSetup : MonoBehaviour
     [Tooltip("Don't edit, is readonly and only informational.")]
     public string clientVersion;
 
+    [Tooltip("Uses Windows docker default host IP, instead of localhost.")]
+    public string defaultUrl;
+
     [Tooltip("If checked, print data to console and don't attempt to connect to a server.")]
     public bool offlineMode;
 
@@ -36,9 +39,6 @@ public class CaptureSetup : MonoBehaviour
     public bool findObjectsInEachFrame;
     [Tooltip("Still capture data, but don't print it.")]
     public bool doNotPrintToConsole;
-
-    [Tooltip("Uses Windows docker default host IP, instead of localhost.")]
-    public bool useWindowsDefault;
 
     [Tooltip("Prevents Exceptions when Specified game objects/keys aren't found. Useful when dynamically created objects.")]
     public bool doNotThrowNotFound;
@@ -91,14 +91,7 @@ public class CaptureSetup : MonoBehaviour
             start.gameObject.SetActive(false);
         }
 
-        if (useWindowsDefault)
-        {
-            urlInput.text = "http://192.168.99.100:8090";
-        }
-        else
-        {
-            urlInput.text = "http://0.0.0.0:8090";
-        }
+        urlInput.text = defaultUrl;
 
         nameInput.text = "Boyd";
 
