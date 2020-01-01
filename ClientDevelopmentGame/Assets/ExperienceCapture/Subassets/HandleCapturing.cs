@@ -9,7 +9,6 @@ using System.Linq;
 
 using Newtonsoft.Json;
 using UnityEngine.Networking;
-using Newtonsoft.Json.Linq;
 using Network;
 
 using InputStructure;
@@ -44,9 +43,10 @@ public class HandleCapturing : MonoBehaviour
     private float averageResponceTime;
     private float maxResponceTime;
     private int responceCount;
+    private float averageOpenRequests;
 
     public bool isIgnoringNotFound { get; set; }
-    public InputStructure.SpecificPair[] pairs { get; set; }
+    public SpecificPair[] pairs { get; set; }
 
     public SecretStorage store { get; set; }
 
@@ -59,6 +59,7 @@ public class HandleCapturing : MonoBehaviour
     {
         frameCount = 0;
         openRequests = 0;
+        averageOpenRequests = 1f;
         isCapturing = false;
         isFirst = true;
         responceCount = 0;
@@ -203,6 +204,8 @@ public class HandleCapturing : MonoBehaviour
                 float responceTime = Time.realtimeSinceStartup - start;
                 averageResponceTime = (averageResponceTime * responceCount + responceTime) / (responceCount + 1);
 
+                averageOpenRequests = (averageOpenRequests * responceCount + openRequests) / (responceCount + 1);
+
                 if (responceTime < minResponceTime) {
                     minResponceTime = responceTime;
                 }
@@ -231,6 +234,7 @@ public class HandleCapturing : MonoBehaviour
             }
 
             extra += "Open requests: " + openRequests + "\n";
+            extra += "Average open requests: " + averageOpenRequests + "\n";
             extra += "Request response time: min=" +  minResponceTime;
             extra += " mean=" + averageResponceTime;
             extra += " max=" + maxResponceTime + "\n";

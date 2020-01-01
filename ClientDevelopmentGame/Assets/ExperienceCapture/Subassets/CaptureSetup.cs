@@ -27,6 +27,9 @@ public class CaptureSetup : MonoBehaviour
     [Tooltip("Don't edit, is readonly and only informational.")]
     public string clientVersion;
 
+    [Tooltip("Url to fill in automatically on the login page. Examples: 'http://192.168.99.100:3003', 'https://expcap.xyz'")]
+    public string defaultUrl;
+
     [Tooltip("If checked, print data to console and don't attempt to connect to a server.")]
     public bool offlineMode;
 
@@ -36,9 +39,6 @@ public class CaptureSetup : MonoBehaviour
     public bool findObjectsInEachFrame;
     [Tooltip("Still capture data, but don't print it.")]
     public bool doNotPrintToConsole;
-
-    [Tooltip("Uses Windows docker default host IP, instead of localhost.")]
-    public bool useWindowsDefault;
 
     [Tooltip("Prevents Exceptions when Specified game objects/keys aren't found. Useful when dynamically created objects.")]
     public bool doNotThrowNotFound;
@@ -52,6 +52,7 @@ public class CaptureSetup : MonoBehaviour
     public Text urlTitle;
     public InputField urlInput;
     public Text openingInfo;
+    public Text connectionInfo;
 
     public Text sessionInfo;
     private string sessionInfoSave;
@@ -90,14 +91,7 @@ public class CaptureSetup : MonoBehaviour
             start.gameObject.SetActive(false);
         }
 
-        if (useWindowsDefault)
-        {
-            urlInput.text = "http://192.168.99.100:8090";
-        }
-        else
-        {
-            urlInput.text = "http://0.0.0.0:8090";
-        }
+        urlInput.text = defaultUrl;
 
         nameInput.text = "Boyd";
 
@@ -106,6 +100,7 @@ public class CaptureSetup : MonoBehaviour
         sessionBackground.gameObject.SetActive(false);
 
         openingInfo.gameObject.SetActive(false);
+        connectionInfo.gameObject.SetActive(false);
 
         newSession.onClick.AddListener(delegate () { onLoginClick(); });
 
@@ -118,12 +113,15 @@ public class CaptureSetup : MonoBehaviour
     {
         urlTitle.gameObject.SetActive(false);
         urlInput.gameObject.SetActive(false);
+        newSession.gameObject.SetActive(false);
+
+        connectionInfo.gameObject.SetActive(true);
 
         string emptyBody = new {}.ToString();
         StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/users/claims/", emptyBody,
             (responce) => {
                 openingInfo.gameObject.SetActive(true);
-                newSession.gameObject.SetActive(false);
+                connectionInfo.gameObject.SetActive(false);
 
                 string claimSanitized = UnityWebRequest.EscapeURL(responce);
                 string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
@@ -136,8 +134,15 @@ public class CaptureSetup : MonoBehaviour
 
                 sessionInfo.text = error;
 
+                connectionInfo.gameObject.SetActive(false);
+
                 sessionInfo.gameObject.SetActive(true);
                 sessionBackground.gameObject.SetActive(true);
+
+                urlTitle.gameObject.SetActive(true);
+                urlInput.gameObject.SetActive(true);
+
+                newSession.gameObject.SetActive(true);
             })
         );
     }
