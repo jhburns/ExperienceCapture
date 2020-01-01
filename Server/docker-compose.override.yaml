@@ -28,8 +28,6 @@ services:
     command: ["sh", "-c", "/wait && dotnet Exporter.dll"]
     depends_on:
       - db
-    volumes:
-      - ./data/:/app/data
     environment:
       - WAIT_HOSTS=db:27017
     networks:
