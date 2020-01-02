@@ -3,6 +3,7 @@ namespace Export.App.Main
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Threading.Tasks;
 
     using Exporter.App.CustomExceptions;
 
@@ -18,107 +19,22 @@ namespace Export.App.Main
 
         public static void Main(string[] args)
         {
-            Console.WriteLine("Welcome to the Exporter. (v1.1.0)");
-            while (true)
-            {
-                MatchCommand(PromptOptions());
-            }
+            MainAsync(args).GetAwaiter().GetResult();
         }
 
-        private static int PromptOptions()
+        private static async Task MainAsync(string[] args)
         {
-            Console.WriteLine("--------------------------------------------------------");
-            Console.WriteLine("Please select an option.");
-            Console.WriteLine("\t1. List all closed sessions.");
-            Console.WriteLine("\t2. Download files of closed sessions.");
-            Console.WriteLine("\t3. Close this.");
-            Console.WriteLine("Option (1-3):");
+            string seperator = Path.DirectorySeparatorChar.ToString();
+            await CreateFolder($".{seperator}exported{seperator}");
 
-            int commandValue;
-            try
-            {
-                commandValue = Convert.ToInt32(Console.ReadLine());
-            }
-            catch
-            {
-                Console.WriteLine("Please only enter an number");
-                Console.WriteLine(string.Empty);
-                return PromptOptions();
-            }
+            await SortSession();
 
-            return commandValue;
+            return;
         }
 
-        private static void MatchCommand(int commandValue)
+        private static async Task SortSession()
         {
-            Console.WriteLine(string.Empty);
-
-            switch (commandValue)
-            {
-                case 1:
-                    PrintAllSessions();
-                    break;
-                case 2:
-                    ExportSessions();
-                    break;
-                case 3:
-                    Console.WriteLine("Closing...");
-                    Environment.Exit(0);
-                    break;
-                default:
-                    Console.WriteLine("Please input a number in range 1-3.");
-                    MatchCommand(PromptOptions());
-                    break;
-            }
-        }
-
-        private static void PrintAllSessions()
-        {
-            var sessionCollection = DB.GetCollection<BsonDocument>("sessions");
-            var filter = Builders<BsonDocument>.Filter.Eq("isOpen", false);
-
-            List<BsonDocument> allSessions = sessionCollection
-                .Find(filter)
-                .ToList();
-
-            Console.WriteLine("Session IDs");
-            foreach (BsonDocument session in allSessions)
-            {
-                Console.WriteLine(session["id"]);
-            }
-        }
-
-        private static void ExportSessions()
-        {
-            Console.WriteLine("Enter Session IDs, separated by a comma:");
-            string ids = Console.ReadLine();
-            List<string> idList = new List<string>(ids.Split(','));
-
-            idList.ForEach(delegate(string id)
-            {
-                id.Trim();
-            });
-
-            idList.RemoveAll(delegate(string id)
-            {
-                if (!CheckSession(id))
-                {
-                    Console.WriteLine($"Error: {id} session doesn't exist or is still open.");
-                    return true;
-                }
-
-                return false;
-            });
-
-            foreach (string id in idList)
-            {
-                SortSession(id);
-            }
-        }
-
-        private static async void SortSession(string id)
-        {
-            var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{id}");
+            var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{SessionId}");
 
             List<BsonDocument> docs = await sessionCollection
                 .Find(Builders<BsonDocument>.Filter.Empty)
@@ -135,37 +51,26 @@ namespace Export.App.Main
             docsTotal = docsTotal.Substring(0, docsTotal.Length - 1);
             docsTotal += "]";
 
-            OutputToFile(docsTotal, id);
+            await OutputToFile(docsTotal);
+            return;
         }
 
-        private static bool CheckSession(string sessionId)
-        {
-            var sessions = DB.GetCollection<BsonDocument>("sessions");
-
-            var filter = Builders<BsonDocument>.Filter.Eq("id", sessionId);
-            var sessionDoc = sessions.Find(filter).FirstOrDefault();
-
-            if (sessionDoc == null)
-            {
-                return false;
-            }
-
-            if (sessionDoc["isOpen"] == true)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private static void OutputToFile(string content, string id)
+        private static async Task OutputToFile(string content)
         {
             string seperator = Path.DirectorySeparatorChar.ToString();
-            string path = $".{seperator}data{seperator}exported{seperator}{id}.sorted.json";
+            string path = $".{seperator}exported{seperator}{SessionId}.sorted.raw.json";
 
-            Console.WriteLine("Outputted to file: " + path);
+            using (var sw = new StreamWriter(path))
+            {
+                await sw.WriteAsync(content);
+            }
 
-            System.IO.File.WriteAllText(path, content);
+            return;
+        }
+
+        private static async Task CreateFolder(string location)
+        {
+            await Task.Run(() => Directory.CreateDirectory(location));
         }
     }
 }
