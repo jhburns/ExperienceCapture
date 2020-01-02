@@ -3,20 +3,21 @@ namespace Export.App.Main
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Threading.Tasks;
+
+    using Exporter.App.CustomExceptions;
 
     using MongoDB.Bson;
     using MongoDB.Driver;
 
-    public class Export
+    public class ExportHandler
     {
-        private static IMongoDatabase db;
+        private static readonly IMongoDatabase DB = new MongoClient(@"mongodb://db:27017").GetDatabase("ec");
+
+        private static readonly string SessionId = Environment.GetEnvironmentVariable("exporter_session_id")
+            ?? throw new EnviromentVarNotSet("The following is unset", "exporter_session_id");
 
         public static void Main(string[] args)
         {
-            MongoClient client = new MongoClient(@"mongodb://db:27017");
-            db = client.GetDatabase("ec");
-
             Console.WriteLine("Welcome to the Exporter. (v1.1.0)");
             while (true)
             {
@@ -73,7 +74,7 @@ namespace Export.App.Main
 
         private static void PrintAllSessions()
         {
-            var sessionCollection = db.GetCollection<BsonDocument>("sessions");
+            var sessionCollection = DB.GetCollection<BsonDocument>("sessions");
             var filter = Builders<BsonDocument>.Filter.Eq("isOpen", false);
 
             List<BsonDocument> allSessions = sessionCollection
@@ -117,7 +118,7 @@ namespace Export.App.Main
 
         private static async void SortSession(string id)
         {
-            var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{id}");
+            var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{id}");
 
             List<BsonDocument> docs = await sessionCollection
                 .Find(Builders<BsonDocument>.Filter.Empty)
@@ -139,7 +140,7 @@ namespace Export.App.Main
 
         private static bool CheckSession(string sessionId)
         {
-            var sessions = db.GetCollection<BsonDocument>("sessions");
+            var sessions = DB.GetCollection<BsonDocument>("sessions");
 
             var filter = Builders<BsonDocument>.Filter.Eq("id", sessionId);
             var sessionDoc = sessions.Find(filter).FirstOrDefault();
