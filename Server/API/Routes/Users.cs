@@ -209,7 +209,7 @@ namespace Carter.App.Route.Users
                 if (claimDoc["isPending"].AsBoolean)
                 {
                     res.StatusCode = 202;
-                    await res.WriteAsync("PENDING");
+                    BasicResponce.Send(res, "PENDING");
                     return;
                 }
 

@@ -93,7 +93,7 @@ namespace Export.App.Main
 
             await ToJson(sessionSorted, "sorted.raw");
 
-            await ToJson(await GetSessionInfo(), "about");
+            await ToJson(await GetSessionInfo(), "database.about");
             Console.WriteLine("To Json:" + GetTimePassed());
 
             var scenes = ProcessScenes(sessionSorted);
