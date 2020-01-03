@@ -53,4 +53,5 @@ services:
       - ec-network
 
 volumes:
-  ec-data-volume: {}
+  ec-db-volume: {}
+  ec-os-volume: {}

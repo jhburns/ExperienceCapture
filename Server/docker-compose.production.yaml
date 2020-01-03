@@ -68,8 +68,13 @@ volumes:
     driver: rexray/ebs:0.11.4
     driver_opts:
       size: 1
-  ec-data-volume:
+  ec-db-volume:
     name: ec-prod-db-volume
+    driver: rexray/ebs:0.11.4
+    driver_opts:
+      size: 30
+  ec-os-volume:
+    name: ec-prod-os-volume
     driver: rexray/ebs:0.11.4
     driver_opts:
       size: 30
