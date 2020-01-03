@@ -53,6 +53,8 @@ namespace Carter.App.Route.Sessions
                 var sessionDoc = new
                 {
                     isOpen = true,
+                    isExported = false,
+                    isPending = false,
                     user = user, // Copying user data instead of referencing so it can never change with the session
                     createdAt = new BsonDateTime(DateTime.Now),
                     tags = new BsonArray(),

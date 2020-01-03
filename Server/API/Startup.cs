@@ -5,6 +5,8 @@ namespace Carter.App.Hosting
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
+    using Minio;
+
     using MongoDB.Driver;
 
     public class Startup
@@ -23,8 +25,10 @@ namespace Carter.App.Hosting
 
             MongoClient client = new MongoClient($"mongodb://{AppConfiguration.ConnectionString}:27017");
             IMongoDatabase db = client.GetDatabase("ec");
-
             services.AddSingleton<IMongoDatabase>(db);
+
+            MinioClient os = new MinioClient("os:9000", "minio", "minio123");
+            services.AddSingleton<MinioClient>(os);
         }
 
         public void Configure(IApplicationBuilder app)
