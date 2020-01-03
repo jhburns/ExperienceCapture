@@ -153,12 +153,11 @@ namespace Export.App.Main
 
         private static async Task ToJson(BsonDocument sessionDocs, string about)
         {
-            JsonWriterSettings settings = new JsonWriterSettings();
+            JsonWriterSettings settings = GetJsonWriterSettings();
             settings.Indent = true;
-            settings.OutputMode = JsonOutputMode.Strict;
 
             string filename = $"{SessionId}.{about}.json";
-            await OutputToFile(sessionDocs.ToJson(), filename);
+            await OutputToFile(sessionDocs.ToJson(settings), filename);
 
             return;
         }
