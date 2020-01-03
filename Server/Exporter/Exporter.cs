@@ -39,7 +39,7 @@ namespace Export.App.Main
         private static async Task ExportSession()
         {
             List<BsonDocument> sessionSorted = await SortSession();
-            
+
             await ToJson(sessionSorted, "sorted.raw");
 
             await ToJson(await GetSessionInfo(), "about");
@@ -67,7 +67,7 @@ namespace Export.App.Main
         private static async Task<BsonDocument> GetSessionInfo()
         {
             var sessions = DB.GetCollection<BsonDocument>("sessions");
-            
+
             var filter = Builders<BsonDocument>.Filter
                 .Eq("id", SessionId);
 
@@ -76,7 +76,8 @@ namespace Export.App.Main
                 .FirstOrDefaultAsync();
         }
 
-        private static async Task ToJson(List<BsonDocument> sessionDocs, string about) {
+        private static async Task ToJson(List<BsonDocument> sessionDocs, string about)
+        {
             string docsTotal = "[";
             foreach (BsonDocument d in sessionDocs)
             {
