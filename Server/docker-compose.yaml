@@ -29,7 +29,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ec-data-volume:/data/db
+      - ec-db-volume:/data/db
     networks:
       - ec-network
     healthcheck:
@@ -56,6 +56,23 @@ services:
     hostname: web
     networks:
       - ec-network
+
+  os:
+    image: minio/minio:RELEASE.2019-12-30T05-45-39Z
+    volumes:
+      - ec-os-volume:/data
+    ports:
+      - "9004:9000"
+    hostname: web
+    environment:  # Using defaults, do not run in insecure environment
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    command: server /data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
 
 networks:
   ec-network: {}
