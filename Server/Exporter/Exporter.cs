@@ -45,7 +45,7 @@ namespace Export.App.Main
 
             ZipFolder(outFolder, zipFolder + $"{SessionId}.exported.zip");
 
-            System.Threading.Thread.Sleep(100000000); // To make it so the program doesn't exist immediately
+            // System.Threading.Thread.Sleep(100000000); // To make it so the program doesn't exist immediately
             return;
         }
 
