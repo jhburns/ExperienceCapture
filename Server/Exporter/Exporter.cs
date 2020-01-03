@@ -17,6 +17,8 @@ namespace Export.App.Main
         private static readonly string SessionId = Environment.GetEnvironmentVariable("exporter_session_id")
             ?? throw new EnviromentVarNotSet("The following is unset", "exporter_session_id");
 
+        private static readonly string Seperator = Path.DirectorySeparatorChar.ToString();
+
         public static void Main(string[] args)
         {
             MainAsync(args).GetAwaiter().GetResult();
@@ -24,41 +26,59 @@ namespace Export.App.Main
 
         private static async Task MainAsync(string[] args)
         {
-            string seperator = Path.DirectorySeparatorChar.ToString();
-            await CreateFolder($".{seperator}exported{seperator}");
+            await CreateFolder($".{Seperator}exported{Seperator}");
 
-            await SortSession();
+            await ExportSession();
+
+            // System.Threading.Thread.Sleep(100000000); // To make it so the program doesn't exist immediately
 
             return;
         }
 
-        private static async Task SortSession()
+        private static async Task ExportSession()
+        {
+            List<BsonDocument> sessionSorted = await SortSession();
+            
+            await ToJson(sessionSorted);
+
+            return;
+        }
+
+        private static async Task<List<BsonDocument>> SortSession()
         {
             var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{SessionId}");
 
-            List<BsonDocument> docs = await sessionCollection
-                .Find(Builders<BsonDocument>.Filter.Empty)
-                .SortByDescending(d => d["frameInfo"]["realtimeSinceStartup"])
-                .ToListAsync();
+            var filter = Builders<BsonDocument>.Filter.Empty;
+            var sorter = Builders<BsonDocument>.Sort
+                .Ascending(d => d["frameInfo"]["realtimeSinceStartup"]);
+            var projection = Builders<BsonDocument>.Projection
+                .Exclude("_id");
 
+            return await sessionCollection
+                .Find(filter)
+                .Sort(sorter)
+                .Project(projection)
+                .ToListAsync();
+        }
+
+        private static async Task ToJson(List<BsonDocument> sessionDocs) {
             string docsTotal = "[";
-            foreach (BsonDocument d in docs)
+            foreach (BsonDocument d in sessionDocs)
             {
-                d.Remove("_id");
                 docsTotal += d.ToJson() + ",";
             }
 
             docsTotal = docsTotal.Substring(0, docsTotal.Length - 1);
             docsTotal += "]";
 
-            await OutputToFile(docsTotal);
+            string filename = $"{SessionId}.sorted.raw.json";
+            await OutputToFile(docsTotal, filename);
             return;
         }
 
-        private static async Task OutputToFile(string content)
+        private static async Task OutputToFile(string content, string filename)
         {
-            string seperator = Path.DirectorySeparatorChar.ToString();
-            string path = $".{seperator}exported{seperator}{SessionId}.sorted.raw.json";
+            string path = $".{Seperator}exported{Seperator}{filename}";
 
             using (var sw = new StreamWriter(path))
             {
