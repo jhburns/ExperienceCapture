@@ -17,11 +17,6 @@ services:
       - .env
     networks:
       - ec-network
-    healthcheck:
-      test: wget --quiet --tries=1 -O /dev/null http://localhost/health/ || exit 1
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
 
   db:
     image: mongo:3.6.14
@@ -32,11 +27,6 @@ services:
       - ec-db-volume:/data/db
     networks:
       - ec-network
-    healthcheck:
-      test: mongo --quiet --eval "db.adminCommand('ping')"
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
 
   rp:
     image: abiosoft/caddy:1.0.3
@@ -82,11 +72,6 @@ services:
       MINIO_SECRET_KEY: minio123
     networks:
       - ec-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
 
 networks:
   ec-network: {}
