@@ -62,7 +62,7 @@ services:
     volumes:
       - ec-os-volume:/data
     ports:
-      - "9004:9000"
+      - "9009:9000"
     hostname: web
     environment:  # Using defaults, do not run in insecure environment
       MINIO_ACCESS_KEY: minio
