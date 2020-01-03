@@ -7,6 +7,7 @@ namespace Export.App.Main
     using System.IO;
     using System.IO.Compression;
     using System.Linq;
+    using System.Text; // String Builder is basically required or things will be super slow
     using System.Threading.Tasks;
 
     using CsvHelper;
@@ -134,25 +135,27 @@ namespace Export.App.Main
 
         private static async Task ToJson(List<BsonDocument> sessionDocs, string about)
         {
-            string docsTotal = "[";
+            StringBuilder docsTotal = new StringBuilder();
+            docsTotal.Append("[");
             foreach (BsonDocument d in sessionDocs)
             {
-                docsTotal += d.ToJson(GetJsonWriterSettings()) + ",";
+                docsTotal.AppendFormat("{0}{1}", d.ToJson(GetJsonWriterSettings()), ",");
             }
 
-            docsTotal = docsTotal.Substring(0, docsTotal.Length - 1);
-            docsTotal += "]";
+            docsTotal.Length--; // Remove trailing comma
+            docsTotal.Append("]");
 
             string filename = $"{SessionId}.{about}.json";
-            await OutputToFile(docsTotal, filename);
+            await OutputToFile(docsTotal.ToString(), filename);
 
             return;
         }
 
         private static async Task ToJson(BsonDocument sessionDocs, string about)
         {
-            JsonWriterSettings settings = GetJsonWriterSettings();
+            JsonWriterSettings settings = new JsonWriterSettings();
             settings.Indent = true;
+            settings.OutputMode = JsonOutputMode.Strict;
 
             string filename = $"{SessionId}.{about}.json";
             await OutputToFile(sessionDocs.ToJson(), filename);
@@ -162,20 +165,21 @@ namespace Export.App.Main
 
         private static string ToFlatJson(List<BsonDocument> sessionDocs)
         {
-            string docsTotal = "[";
+            StringBuilder docsTotal = new StringBuilder();
+            docsTotal.Append("[");
             foreach (BsonDocument d in sessionDocs)
             {
                 string json = d.ToJson(GetJsonWriterSettings());
                 var dict = JsonHelper.DeserializeAndFlatten(json);
                 string flat = Newtonsoft.Json.JsonConvert.SerializeObject(dict);
 
-                docsTotal += flat + ",";
+                docsTotal.AppendFormat("{0}{1}", flat, ",");
             }
 
-            docsTotal = docsTotal.Substring(0, docsTotal.Length - 1);
-            docsTotal += "]";
+            docsTotal.Length--; // Remove trailing comma
+            docsTotal.Append("]");
 
-            return docsTotal;
+            return docsTotal.ToString();
         }
 
         private static JsonWriterSettings GetJsonWriterSettings()
