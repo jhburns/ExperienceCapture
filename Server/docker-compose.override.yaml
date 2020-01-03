@@ -16,13 +16,6 @@ services:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
 
-  exporter:
-    deploy:
-      resources:
-        limits:
-          cpus: '0.7'
-          memory: 2G
-
   rp:
     ports:
       - "8090:2015"

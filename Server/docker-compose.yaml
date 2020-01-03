@@ -11,17 +11,13 @@ services:
       - "4321:80"
     depends_on:
       - db
+      - os
     environment:
-      WAIT_HOSTS: db:27017
+      WAIT_HOSTS: db:27017, os:9000
     env_file:
       - .env
     networks:
       - ec-network
-    healthcheck:
-      test: wget --quiet --tries=1 -O /dev/null http://localhost/health/ || exit 1
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
 
   db:
     image: mongo:3.6.14
@@ -32,11 +28,6 @@ services:
       - ec-db-volume:/data/db
     networks:
       - ec-network
-    healthcheck:
-      test: mongo --quiet --eval "db.adminCommand('ping')"
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
 
   rp:
     image: abiosoft/caddy:1.0.3
@@ -70,7 +61,7 @@ services:
       - ec-network
 
   os:
-    image: minio/minio:RELEASE.2019-12-30T05-45-39Z
+    image: minio/minio:RELEASE.2020-01-03T19-12-21Z
     command: server /data
     hostname: os
     ports:
@@ -82,11 +73,6 @@ services:
       MINIO_SECRET_KEY: minio123
     networks:
       - ec-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
 
 networks:
   ec-network: {}

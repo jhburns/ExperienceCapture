@@ -78,6 +78,7 @@ namespace Export.App.Main
             Console.WriteLine("Zipped: " + GetTimePassed());
 
             await Upload(outLocation);
+            await UpdateDoc();
 
             Console.WriteLine("Uploaded: " + GetTimePassed());
 
@@ -92,7 +93,7 @@ namespace Export.App.Main
 
             await ToJson(sessionSorted, "sorted.raw");
 
-            await ToJson(await GetSessionInfo(), "about");
+            await ToJson(await GetSessionInfo(), "database.about");
             Console.WriteLine("To Json:" + GetTimePassed());
 
             var scenes = ProcessScenes(sessionSorted);
@@ -332,6 +333,20 @@ namespace Export.App.Main
             {
                 Console.WriteLine("File Upload Error: {0}", e.Message);
             }
+        }
+
+        private static async Task UpdateDoc()
+        {
+            var sessions = DB.GetCollection<BsonDocument>($"sessions");
+
+            var filter = Builders<BsonDocument>.Filter
+                .Eq("id", SessionId);
+            var update = Builders<BsonDocument>.Update
+                .Set("isExported", true)
+                .Set("isPending", false);
+
+            await sessions.UpdateOneAsync(filter, update);
+            return;
         }
     }
 

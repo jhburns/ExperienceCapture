@@ -13,6 +13,11 @@ services:
         delay: 30s
     volumes:
       - ./API/appsettings.production.json:/app/appsettings.js
+    healthcheck:
+      test: wget --quiet --tries=1 -O /dev/null http://localhost/health/ || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
 
   web:
     build:
@@ -61,6 +66,18 @@ services:
       update_config:
         parallelism: 0
         delay: 30s
+    healthcheck:
+      test: mongo --quiet --eval "db.adminCommand('ping')"
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+
+  os:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   ec-rp-volume:
