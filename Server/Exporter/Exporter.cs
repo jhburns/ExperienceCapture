@@ -3,6 +3,7 @@ namespace Export.App.Main
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Diagnostics;
     using System.IO;
     using System.IO.Compression;
     using System.Linq;
@@ -12,8 +13,10 @@ namespace Export.App.Main
     using CsvHelper.Configuration;
 
     using Exporter.App.CustomExceptions;
-
     using Exporter.App.JsonHelper;
+
+    using Minio;
+    using Minio.Exceptions;
 
     using MongoDB.Bson;
     using MongoDB.Bson.IO;
@@ -22,15 +25,38 @@ namespace Export.App.Main
     public class ExportHandler
     {
         private static readonly IMongoDatabase DB = new MongoClient(@"mongodb://db:27017").GetDatabase("ec");
+        private static readonly MinioClient OS = new MinioClient("os:9000", "minio", "minio123");
 
         private static readonly string SessionId = Environment.GetEnvironmentVariable("exporter_session_id")
             ?? throw new EnviromentVarNotSet("The following is unset", "exporter_session_id");
 
         private static readonly string Seperator = Path.DirectorySeparatorChar.ToString();
 
+        private static Stopwatch timer;
+
         public static void Main(string[] args)
         {
+            timer = new Stopwatch();
+            timer.Start();
+
             MainAsync(args).GetAwaiter().GetResult();
+        }
+
+        public static string GetTimePassed()
+        {
+            timer.Stop();
+            var span = timer.Elapsed;
+            string elapsed = string.Format(
+                "{0:00}:{1:00}:{2:00}.{3:00}",
+                span.Hours,
+                span.Minutes,
+                span.Seconds,
+                span.Milliseconds / 10);
+
+            timer.Reset();
+            timer.Start();
+
+            return elapsed;
         }
 
         private static async Task MainAsync(string[] args)
@@ -41,9 +67,18 @@ namespace Export.App.Main
             await CreateFolder(outFolder);
             await CreateFolder(zipFolder);
 
+            Console.WriteLine("Made folders: " + GetTimePassed());
+
             await ExportSession();
 
-            ZipFolder(outFolder, zipFolder + $"{SessionId}.exported.zip");
+            string outLocation = zipFolder + $"{SessionId}.exported.zip";
+            ZipFolder(outFolder, outLocation);
+
+            Console.WriteLine("Zipped: " + GetTimePassed());
+
+            await Upload(outLocation);
+
+            Console.WriteLine("Uploaded: " + GetTimePassed());
 
             // System.Threading.Thread.Sleep(100000000); // To make it so the program doesn't exist immediately
             return;
@@ -52,14 +87,18 @@ namespace Export.App.Main
         private static async Task ExportSession()
         {
             List<BsonDocument> sessionSorted = await SortSession();
+            Console.WriteLine("Sorted: " + GetTimePassed());
 
             await ToJson(sessionSorted, "sorted.raw");
 
             await ToJson(await GetSessionInfo(), "about");
+            Console.WriteLine("To Json:" + GetTimePassed());
 
             var scenes = ProcessScenes(sessionSorted);
+            Console.WriteLine("Processed Scenes:" + GetTimePassed());
 
             await ToCsv(scenes, "byScene");
+            Console.WriteLine("To CSV" + GetTimePassed());
 
             return;
         }
@@ -112,8 +151,11 @@ namespace Export.App.Main
 
         private static async Task ToJson(BsonDocument sessionDocs, string about)
         {
+            JsonWriterSettings settings = GetJsonWriterSettings();
+            settings.Indent = true;
+
             string filename = $"{SessionId}.{about}.json";
-            await OutputToFile(sessionDocs.ToJson(GetJsonWriterSettings()), filename);
+            await OutputToFile(sessionDocs.ToJson(), filename);
 
             return;
         }
@@ -139,7 +181,7 @@ namespace Export.App.Main
         private static JsonWriterSettings GetJsonWriterSettings()
         {
             JsonWriterSettings settings = new JsonWriterSettings();
-            settings.Indent = true;
+            settings.Indent = false;
             settings.OutputMode = JsonOutputMode.Strict;
 
             return settings;
@@ -259,6 +301,34 @@ namespace Export.App.Main
         private static void ZipFolder(string location, string outName)
         {
             ZipFile.CreateFromDirectory(location, outName);
+        }
+
+        // From: https://docs.min.io/docs/dotnet-client-quickstart-guide.html
+        private static async Task Upload(string fileLocation)
+        {
+            var bucketName = "sessions.exported";
+            var location = "us-west-1";
+            var objectName = $"{SessionId}.exported.zip";
+            var filePath = fileLocation;
+            var contentType = "application/zip";
+
+            try
+            {
+                // Make a bucket on the server, if not already present.
+                bool found = await OS.BucketExistsAsync(bucketName);
+                if (!found)
+                {
+                    await OS.MakeBucketAsync(bucketName, location);
+                }
+
+                // Upload a file to bucket.
+                await OS.PutObjectAsync(bucketName, objectName, filePath, contentType);
+                Console.WriteLine("Successfully uploaded " + objectName);
+            }
+            catch (MinioException e)
+            {
+                Console.WriteLine("File Upload Error: {0}", e.Message);
+            }
         }
     }
 
