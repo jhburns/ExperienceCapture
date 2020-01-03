@@ -17,13 +17,13 @@ internal class Program
     private const string Ec2Size = "t2.medium";
 
     private static readonly string AwsId = Environment.GetEnvironmentVariable("aws_account_id")
-                ?? throw new EnviromentVarNotSet("The following is unset", "aws_account_id");
+        ?? throw new EnviromentVarNotSet("The following is unset", "aws_account_id");
 
     private static readonly string AmiName = Environment.GetEnvironmentVariable("aws_deploy_ami_name")
-                ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ami_name");
+        ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ami_name");
 
     private static readonly string IpId = Environment.GetEnvironmentVariable("aws_deploy_ip_allocation_id")
-                ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ip_allocation_id");
+        ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ip_allocation_id");
 
     private static Task<int> Main()
     {
@@ -48,31 +48,13 @@ internal class Program
                 Description = "Enable HTTP access",
                 Ingress =
             {
-                new SecurityGroupIngressArgs
-                {
-                    Protocol = "tcp",
-                    FromPort = 80,
-                    ToPort = 80,
-                    CidrBlocks = { "0.0.0.0/0" },
-                },
-                new SecurityGroupIngressArgs
-                {
-                    Protocol = "tcp",
-                    FromPort = 22,
-                    ToPort = 22,
-                    CidrBlocks = { "0.0.0.0/0" },
-                },
-                new SecurityGroupIngressArgs
-                {
-                    Protocol = "tcp",
-                    FromPort = 443,
-                    ToPort = 443,
-                    CidrBlocks = { "0.0.0.0/0" },
-                },
+                CreateIngressRule(22), // SSH
+                CreateIngressRule(80), // HTTP
+                CreateIngressRule(443), // HTTPS
             },
                 Egress =
             {
-                new SecurityGroupEgressArgs
+                new SecurityGroupEgressArgs // Allow all outbound traffic
                 {
                     Protocol = "-1",
                     FromPort = 0,
@@ -102,5 +84,16 @@ internal class Program
                 { "publicDns", server.PublicDns },
             };
         });
+    }
+
+    private static SecurityGroupIngressArgs CreateIngressRule(int port)
+    {
+        return new SecurityGroupIngressArgs
+        {
+            Protocol = "tcp",
+            FromPort = port,
+            ToPort = port,
+            CidrBlocks = { "0.0.0.0/0" },
+        };
     }
 }
