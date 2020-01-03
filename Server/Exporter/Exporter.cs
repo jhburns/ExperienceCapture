@@ -8,6 +8,7 @@ namespace Export.App.Main
     using Exporter.App.CustomExceptions;
 
     using MongoDB.Bson;
+    using MongoDB.Bson.IO;
     using MongoDB.Driver;
 
     public class ExportHandler
@@ -30,7 +31,7 @@ namespace Export.App.Main
 
             await ExportSession();
 
-            // System.Threading.Thread.Sleep(100000000); // To make it so the program doesn't exist immediately
+            System.Threading.Thread.Sleep(100000000); // To make it so the program doesn't exist immediately
 
             return;
         }
@@ -39,7 +40,9 @@ namespace Export.App.Main
         {
             List<BsonDocument> sessionSorted = await SortSession();
             
-            await ToJson(sessionSorted);
+            await ToJson(sessionSorted, "sorted.raw");
+
+            await ToJson(await GetSessionInfo(), "about");
 
             return;
         }
@@ -61,7 +64,19 @@ namespace Export.App.Main
                 .ToListAsync();
         }
 
-        private static async Task ToJson(List<BsonDocument> sessionDocs) {
+        private static async Task<BsonDocument> GetSessionInfo()
+        {
+            var sessions = DB.GetCollection<BsonDocument>("sessions");
+            
+            var filter = Builders<BsonDocument>.Filter
+                .Eq("id", SessionId);
+
+            return await sessions
+                .Find(filter)
+                .FirstOrDefaultAsync();
+        }
+
+        private static async Task ToJson(List<BsonDocument> sessionDocs, string about) {
             string docsTotal = "[";
             foreach (BsonDocument d in sessionDocs)
             {
@@ -71,8 +86,21 @@ namespace Export.App.Main
             docsTotal = docsTotal.Substring(0, docsTotal.Length - 1);
             docsTotal += "]";
 
-            string filename = $"{SessionId}.sorted.raw.json";
+            string filename = $"{SessionId}.{about}.json";
             await OutputToFile(docsTotal, filename);
+
+            return;
+        }
+
+        private static async Task ToJson(BsonDocument sessionDocs, string about)
+        {
+            JsonWriterSettings settings = new JsonWriterSettings();
+            settings.Indent = true;
+            settings.OutputMode = JsonOutputMode.Strict;
+
+            string filename = $"{SessionId}.{about}.json";
+            await OutputToFile(sessionDocs.ToJson(settings), filename);
+
             return;
         }
 
