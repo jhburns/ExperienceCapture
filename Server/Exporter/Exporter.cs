@@ -4,6 +4,7 @@ namespace Export.App.Main
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
+    using System.IO.Compression;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -34,11 +35,17 @@ namespace Export.App.Main
 
         private static async Task MainAsync(string[] args)
         {
-            await CreateFolder($".{Seperator}exported{Seperator}");
+            string outFolder = $".{Seperator}exported{Seperator}";
+            string zipFolder = $".{Seperator}zipped{Seperator}";
+
+            await CreateFolder(outFolder);
+            await CreateFolder(zipFolder);
 
             await ExportSession();
 
-            // System.Threading.Thread.Sleep(100000000); // To make it so the program doesn't exist immediately
+            ZipFolder(outFolder, zipFolder + $"{SessionId}.exported.zip");
+
+            System.Threading.Thread.Sleep(100000000); // To make it so the program doesn't exist immediately
             return;
         }
 
@@ -247,6 +254,11 @@ namespace Export.App.Main
         private static async Task CreateFolder(string location)
         {
             await Task.Run(() => Directory.CreateDirectory(location));
+        }
+
+        private static void ZipFolder(string location, string outName)
+        {
+            ZipFile.CreateFromDirectory(location, outName);
         }
     }
 
