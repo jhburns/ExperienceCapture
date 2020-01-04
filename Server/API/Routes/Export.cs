@@ -36,7 +36,9 @@ namespace Carter.App.Route.Export
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string id = req.RouteValues.As<string>("id");
-                var sessionDoc = await sessions.FindEqAsync("id", id);
+                var filter = Builders<BsonDocument>.Filter
+                    .Eq("id", id);
+                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
@@ -70,6 +72,11 @@ namespace Carter.App.Route.Export
                 });
 
                 await docker.Containers.StartContainerAsync(exporter.ID, new ContainerStartParameters());
+
+                var update = Builders<BsonDocument>.Update
+                    .Set("isPending", true);
+
+                await sessions.UpdateOneAsync(filter, update);
 
                 BasicResponce.Send(res);
             });

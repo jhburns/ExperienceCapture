@@ -44,4 +44,28 @@ async function deleteData(url = '') {
   return await response;
 }
 
-export { postData, getData, deleteData };
+async function wait(milliseconds) {
+  return new Promise(res => setTimeout(res, milliseconds  ));
+}
+
+async function pollGet(url ='') {
+  while (true) {
+    try {
+      const poll = await getData(url);
+
+      if (!poll.ok) {
+        throw Error(poll.status);
+      }
+
+      if (poll.status === 200) {
+        return poll;
+      }
+
+      await wait(3000);
+    } catch (err) {
+      throw Error(err);
+    }
+  }
+}
+
+export { postData, getData, deleteData, pollGet };
