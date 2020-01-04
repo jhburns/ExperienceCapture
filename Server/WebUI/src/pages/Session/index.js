@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Menu from 'components/Menu';
 import Session from "components/Session";
 
-import { getData } from "libs/fetchExtra";
+import { getData, postData, pollGet  } from "libs/fetchExtra";
 
 class SessionPage extends Component {
   constructor(props) {
@@ -14,15 +14,12 @@ class SessionPage extends Component {
       isExported: false
     }
 
-    this.downloadCallback = this.onDownload.bind(this);
     this.exportCallback = this.onExport.bind(this);
+    this.sessionCallback = this.getSession.bind(this);
+    this.pollingCallback = this.pollExport.bind(this);
   }
 
-  async onExport() {
-    
-  }
-
-  async componentDidMount()
+  async getSession()
   {
     const { id } = this.props.match.params;
 
@@ -43,6 +40,43 @@ class SessionPage extends Component {
     });
   }
 
+  async onExport() {
+    const { id } = this.props.match.params;
+    const url = `/api/v1/sessions/${id}/export/`;
+
+    try {
+      const exportRequest = await postData(url);
+
+      if (!exportRequest.ok) {
+        throw Error(exportRequest.status);
+      }
+
+      this.getSession();
+
+      await this.pollExport();
+
+    } catch (err) {
+      throw Error(err);
+    }
+  }
+
+  async pollExport() {
+    const { id } = this.props.match.params;
+    const url = `/api/v1/sessions/${id}?ugly=true`;
+    await pollGet(url);
+    this.getSession();
+    console.log("done");
+  }
+
+  async componentDidMount()
+  {
+    await this.getSession();
+
+    if (this.state.session.isPending) {
+      pollGet();
+    }
+  }
+
   render() {
     if (this.state.session != null)
     {
@@ -53,6 +87,9 @@ class SessionPage extends Component {
             sessionData={this.state.session}
             onExport={this.exportCallback}
           />
+          {this.state.session.isPending &&
+            <p>Exporting...</p>
+          }
         </div>
       );
     } else {

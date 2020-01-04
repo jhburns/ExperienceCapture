@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 class Session extends Component {
   render() {
     const isExportDisabled = this.props.sessionData.isPending || this.props.sessionData.isExported;
-
+    console.log(isExportDisabled);
     return (
       <div>
         <p>Session: {this.props.sessionData.id}</p>
@@ -29,6 +29,17 @@ class Session extends Component {
         </Link>
       </div>
     )
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    Object.entries(this.props).forEach(([key, val]) =>
+      prevProps[key] !== val && console.log(`Prop '${key}' changed`)
+    );
+    if (this.state) {
+      Object.entries(this.state).forEach(([key, val]) =>
+        prevState[key] !== val && console.log(`State '${key}' changed`)
+      );
+    }
   }
 }
 
