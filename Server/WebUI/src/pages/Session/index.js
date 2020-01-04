@@ -51,10 +51,9 @@ class SessionPage extends Component {
         throw Error(exportRequest.status);
       }
 
-      this.getSession();
-
-      await this.pollExport();
-
+      this.pollingCallback();
+      
+      this.sessionCallback();
     } catch (err) {
       throw Error(err);
     }
@@ -62,10 +61,9 @@ class SessionPage extends Component {
 
   async pollExport() {
     const { id } = this.props.match.params;
-    const url = `/api/v1/sessions/${id}?ugly=true`;
+    const url = `/api/v1/sessions/${id}/export/`;
     await pollGet(url);
-    this.getSession();
-    console.log("done");
+    this.sessionCallback();
   }
 
   async componentDidMount()
@@ -73,7 +71,7 @@ class SessionPage extends Component {
     await this.getSession();
 
     if (this.state.session.isPending) {
-      pollGet();
+      await this.pollingCallback();
     }
   }
 
