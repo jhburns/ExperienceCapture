@@ -17,8 +17,6 @@ namespace Carter.App.Route.Users
     using Carter.ModelBinding;
     using Carter.Request;
 
-    using Microsoft.AspNetCore.Http;
-
     using MongoDB.Bson;
     using MongoDB.Driver;
 

@@ -1,6 +1,11 @@
 namespace Carter.App.Hosting
 {
+    using System;
+
     using Carter;
+
+    using Docker.DotNet;
+
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +34,11 @@ namespace Carter.App.Hosting
 
             MinioClient os = new MinioClient("os:9000", "minio", "minio123");
             services.AddSingleton<MinioClient>(os);
+
+            DockerClient docker = new DockerClientConfiguration(
+                new Uri("unix:///var/run/docker.sock"))
+                .CreateClient();
+            services.AddSingleton<IDockerClient>(docker);
         }
 
         public void Configure(IApplicationBuilder app)
