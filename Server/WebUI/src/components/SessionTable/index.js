@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { getData } from 'libs/fetchExtra';
 
-import Session from 'components/Session';
+import Session from 'components/SessionRow';
 
 class SessionTable extends Component {
   constructor(props) {
