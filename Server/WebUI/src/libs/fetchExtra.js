@@ -49,10 +49,7 @@ async function wait(milliseconds) {
 }
 
 async function pollGet(url ='') {
-  var isUnavailable = true;
-  while (isUnavailable) {
-    await wait(3000);
-
+  while (true) {
     try {
       const poll = await getData(url);
 
@@ -63,10 +60,11 @@ async function pollGet(url ='') {
       if (poll.status === 200) {
         return poll;
       }
+
+      await wait(3000);
     } catch (err) {
       throw Error(err);
     }
-
   }
 }
 
