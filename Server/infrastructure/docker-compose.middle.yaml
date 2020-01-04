@@ -23,7 +23,7 @@ services:
       mode: global
       labels:
         - "swarm.cronjob.enable=true"
-        - "swarm.cronjob.schedule=* * * * *"
-        - "swarm.cronjob.skip-running=false"
+        - "swarm.cronjob.schedule=30 * * * *"
+        - "swarm.cronjob.skip-running=true"
       restart_policy:
         condition: none
