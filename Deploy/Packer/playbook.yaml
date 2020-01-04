@@ -133,8 +133,9 @@
       command: docker system prune --all --force
 
     - name: Create other infrastructure services
-      at:
-        command: cd /srv && docker stack deploy -c ./infrastructure/docker-compose.early.yaml -c ./infrastructure/docker-compose.middle.yaml infra
+      command: docker stack deploy -c ./infrastructure/docker-compose.early.yaml -c ./infrastructure/docker-compose.middle.yaml infra
+      args:
+        chdir: /srv
 
     # Waits so that that services don't start before the instance is stopped
     - name: Create main Docker Swarm services
