@@ -73,7 +73,6 @@ namespace Carter.App.Route.Export
 
                 await docker.Containers.StartContainerAsync(exporter.ID, new ContainerStartParameters());
 
-
                 var update = Builders<BsonDocument>.Update
                     .Set("isPending", true);
 
