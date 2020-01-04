@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import { Link } from 'react-router-dom';
 
-class Session extends Component {
+class SingleSession extends Component {
   render() {
     const isExportDisabled = this.props.sessionData.isPending || this.props.sessionData.isExported;
 
@@ -32,4 +32,4 @@ class Session extends Component {
   }
 }
 
-export default Session;
+export default SingleSession;

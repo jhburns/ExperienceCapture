@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import Menu from 'components/Menu';
-import Session from "components/Session";
+import Session from "components/SingleSession";
 
 import { getData, postData, pollGet  } from "libs/fetchExtra";
 
