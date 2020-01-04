@@ -5,6 +5,7 @@ services:
   api:
     environment:
       - unsafe_do_no_validate_user=true  # IMPORTANT: this should never be set in production
+      - exporter_image_name=server_exporter:latest
 
   web:
     volumes:

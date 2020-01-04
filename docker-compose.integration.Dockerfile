@@ -22,7 +22,12 @@ RUN docker-compose \
 	config
 
 RUN docker-compose \
-	-f ./Server/docker-compose.production.infra.yaml \
+	-f ./Server/infrastructure/docker-compose.early.yaml \
+	config
+
+RUN docker-compose \
+	-f ./Server/infrastructure/docker-compose.early.yaml \
+	-f ./Server/infrastructure/docker-compose.middle.yaml \
 	config
 
 RUN docker-compose \

@@ -1,40 +1,77 @@
 namespace Carter.App.Route.Export
 {
     using System;
-    using System.IO;
+    using System.Collections.Generic;
     using System.Net.Mime;
 
     using Carter;
 
-    using Carter.App.Lib.Authentication;
-    using Carter.App.Lib.DebugExtra;
-    using Carter.App.Lib.Generate;
+    using Carter.App.Lib.CustomExceptions;
     using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Network;
-
     using Carter.App.Route.PreSecurity;
 
     using Carter.Request;
-    using Carter.Response;
 
-    using Microsoft.AspNetCore.Http;
+    using Docker.DotNet;
+    using Docker.DotNet.Models;
 
     using Minio;
 
     using MongoDB.Bson;
-    using MongoDB.Bson.Serialization;
     using MongoDB.Driver;
 
     public class Export : CarterModule
     {
-        public Export(IMongoDatabase db, MinioClient os)
+        private static readonly string ExporterImageName = Environment.GetEnvironmentVariable("exporter_image_name")
+            ?? throw new EnviromentVarNotSet("The following is unset", "exporter_image_name");
+
+        public Export(IMongoDatabase db, MinioClient os, IDockerClient docker)
             : base("/sessions/{id}/export")
         {
             this.Before += PreSecurity.GetSecurityCheck(db);
 
             this.Post("/", async (req, res) =>
             {
-                await res.WriteAsync("NOT IMPLEMENTED");
+                var sessions = db.GetCollection<BsonDocument>("sessions");
+
+                string id = req.RouteValues.As<string>("id");
+                var sessionDoc = await sessions.FindEqAsync("id", id);
+
+                if (sessionDoc == null)
+                {
+                    res.StatusCode = 404;
+                    return;
+                }
+
+                var exporter = await docker.Containers.CreateContainerAsync(new CreateContainerParameters()
+                {
+                    Image = ExporterImageName,
+                    Cmd = new List<string>() { "dotnet", "Exporter.dll" }, // Don't bother waiting since this API also needs the same resources
+                    Tty = true,
+                    AttachStdin = true,
+                    AttachStdout = true,
+                    AttachStderr = true,
+                    Env = new List<string>()
+                    {
+                        "WAIT_HOSTS= db:27017, os:9000",
+                        $"exporter_session_id={id}",
+                    },
+                    HostConfig = new HostConfig()
+                    {
+                        Memory = 500000000, // 500 MegaBytes
+                        CPUPercent = 80, // 80%
+                    },
+                });
+
+                await docker.Networks.ConnectNetworkAsync("server_ec-network", new NetworkConnectParameters()
+                {
+                    Container = exporter.ID,
+                });
+
+                await docker.Containers.StartContainerAsync(exporter.ID, new ContainerStartParameters());
+
+                BasicResponce.Send(res);
             });
 
             this.Get("/", async (req, res) =>

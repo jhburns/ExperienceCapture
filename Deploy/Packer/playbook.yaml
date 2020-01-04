@@ -62,7 +62,7 @@
       command: docker swarm init
 
     - name: Create Docker registry service
-      command: docker stack deploy -c docker-compose.production.infra.yaml infra
+      command: docker stack deploy -c ./infrastructure/docker-compose.early.yaml infra
       args:
         chdir: /srv
 
@@ -132,8 +132,13 @@
     - name: Prune non-production Docker images so the AMI uses less space
       command: docker system prune --all --force
 
+    - name: Create other infrastructure services
+      command: docker stack deploy -c ./infrastructure/docker-compose.early.yaml -c ./infrastructure/docker-compose.middle.yaml infra
+      args:
+        chdir: /srv
+
     # Waits so that that services don't start before the instance is stopped
-    - name: Create Docker Swarm services
+    - name: Create main Docker Swarm services
       at:
         command: cd /srv && docker stack deploy -c docker-compose.yaml -c docker-compose.production.yaml ec
         count: 2

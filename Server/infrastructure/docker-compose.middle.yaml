@@ -1,0 +1,29 @@
+---
+version: '3.5'
+
+services:
+  cron:
+    image: crazymax/swarm-cronjob:1.7.1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - "TZ=UTC"
+      - "LOG_LEVEL=info"
+      - "LOG_JSON=false"
+    deploy:
+      restart_policy:
+        condition: any
+
+  garbage_collector:
+    image: docker:19.03.5
+    command: ["docker", "system", "prune", "--force"]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      mode: global
+      labels:
+        - "swarm.cronjob.enable=true"
+        - "swarm.cronjob.schedule=30 * * * *"
+        - "swarm.cronjob.skip-running=true"
+      restart_policy:
+        condition: none
