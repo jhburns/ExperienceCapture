@@ -88,3 +88,8 @@ networks:
   ec-network:
     driver: overlay
     attachable: true
+
+volumes:
+  ec-db-volume: {}
+  ec-os-volume: {}
+  ec-rp-volume: {}
