@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Linq;
 using System;
@@ -12,24 +13,35 @@ public class TestSetup : MonoBehaviour {
 
     private string placeholder;
 
-    public int fillerLength;
     private string filler;
 
     public int initialSpawn;
-    public int scaleUp;
-    public int varience;
+    public int initialFillerLength;
+
+    public Text countDisplay;
+    public InputField inputLength;
+    public Toggle nullProperty;
+    public Toggle nullValue;
+
     private List<Tester> testers;
     public Tester t;
 
     void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
+        placeholder = "all work and no play makes jack a dull boy";
+        inputLength.text = initialFillerLength.ToString();
+        calculateFiller(initialFillerLength);
+
+        testers = new List<Tester>();
+
+        foreach (int i in Enumerable.Range(0, initialSpawn))
+        {
+            createTester("initial");
+        }
     }
 
-    void Start()
+    private void calculateFiller(int fillerLength)
     {
-        placeholder = "all work and no play makes jack a dull boy";
-
         string repeated = "";
         for (int i = 0; i < (fillerLength / placeholder.Length) + 1; i++)
         {
@@ -39,73 +51,68 @@ public class TestSetup : MonoBehaviour {
         filler = repeated.Substring(0, fillerLength);
     }
 
-    void Update()
+    public void onAdd()
     {
-        if (scaleUp > 0)
+        createTester("byUser");
+    }
+
+    public void onRemove()
+    {
+        destroyTester();
+    }
+
+    public void onUpdateFiller()
+    {
+        string userInput = inputLength.text;
+        int userInt = -1;
+        int.TryParse(userInput, out userInt);
+
+        if (userInt < 0)
         {
-            createTesters(1, "scale");
-
-            scaleUp--;
+            throw new Exception("Filler length should be a positive integer.");
         }
-        else if (varience > 0)
+
+        calculateFiller(userInt);
+        foreach (Tester t in testers)
         {
-            int change = UnityEngine.Random.Range(-varience + 1, varience);
-            Debug.Log(change);
-            
-            if (change > 0)
-            {
-                createTesters(change, "variant");
-            }
-            else if (change < 0)
-            {
-                for (int i = testers.Count + change; i < testers.Count; i++)
-                {
-                    Destroy(testers[i]);
-                    testers.RemoveAt(i);
-                }
-            }
+            t.setText(filler);
         }
     }
 
-    void OnEnable()
+    public void onNullValue()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        foreach (Tester t in testers)
+        {
+            t.isNullValue = nullValue.isOn;
+        }
     }
 
-    void OnDisable()
+    public void onNullProperty()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        foreach (Tester t in testers)
+        {
+            t.isNullProperty = nullProperty.isOn;
+        }
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void createTester(string type)
     {
-        testers = FindTesters();
+        Tester tester = Instantiate(t);
+        testers.Add(tester);
+        tester.setText(filler);
+        tester.name = tester.name + "-" + type + "-" + (testers.Count - 1);
+        countDisplay.text = testers.Count.ToString();
+    }
 
+    private void destroyTester()
+    {
         if (testers.Count > 0)
         {
-            foreach (Tester t in testers)
-            {
-                t.setText(filler);
-            }
-        }
-
-        createTesters(initialSpawn, "init");
-    }
-
-    private List<Tester> FindTesters()
-    {
-        var testers = FindObjectsOfType<Tester>();
-        return testers.Cast<Tester>().ToList();
-    }
-
-    private void createTesters(int count, string type)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            Tester test = Instantiate(t);
-            testers.Add(test);
-            test.setText(filler);
-            test.name = test.name + "-" + type + "-" + (testers.Count - 1);
+            GameObject t = testers[testers.Count - 1].gameObject;
+            DestroyImmediate(t);
+            t = null;
+            testers.RemoveAt(testers.Count - 1);
+            countDisplay.text = testers.Count.ToString();
         }
     }
 }
