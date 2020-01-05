@@ -21,18 +21,6 @@ services:
     networks:
       - ec-network
 
-  exporter:
-    build:
-      context: ./Exporter
-    command: ["sh", "-c", "/wait && dotnet Exporter.dll"]
-    depends_on:
-      - db
-      - os
-    environment:
-      - WAIT_HOSTS= db:27017, os:9000
-    networks:
-      - ec-network
-
   db:
     image: mongo:3.6.14
     hostname: db
