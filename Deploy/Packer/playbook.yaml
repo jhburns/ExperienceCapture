@@ -126,7 +126,7 @@
         timeout: 5
 
     - name: Pushes Docker images to local registry
-      command: docker-compose -f docker-compose.yaml -f docker-compose.swarm.yaml push
+      command: docker-compose -f docker-compose.yaml -f docker-compose.swarm.yaml -f docker-compose.swarm.production.yaml push
       args:
         chdir: /srv
 
