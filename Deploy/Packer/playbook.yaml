@@ -8,6 +8,7 @@
     rexray_secret_key: "{{ lookup('env','aws_rexray_secret_key') }}"
     aws_region_name: "{{ lookup('env','aws_region_name') }}"
     packer_debug: "{{ lookup('env','packer_debug_option') }}"
+    aws_target: "{{ lookup('env','aws_deploy_target') }}"
 
   tasks:
 
@@ -113,7 +114,7 @@
       when: packer_debug == 'true'
 
     - name: Rebuild Docker images for production
-      command: docker-compose -f docker-compose.yaml -f docker-compose.production.yaml build --parallel
+      command: docker-compose -f docker-compose.yaml -f docker-compose.swarm.yaml build --parallel
       args:
         chdir: /srv
 
@@ -125,7 +126,7 @@
         timeout: 5
 
     - name: Pushes Docker images to local registry
-      command: docker-compose -f docker-compose.yaml -f docker-compose.production.yaml push
+      command: docker-compose -f docker-compose.yaml -f docker-compose.swarm.yaml push
       args:
         chdir: /srv
 
@@ -138,8 +139,17 @@
         chdir: /srv
 
     # Waits so that that services don't start before the instance is stopped
-    - name: Create main Docker Swarm services
+    - name: Create production Docker Swarm services
       at:
-        command: cd /srv && docker stack deploy -c docker-compose.yaml -c docker-compose.production.yaml ec
+        command: cd /srv && docker stack deploy -c docker-compose.yaml -c docker-compose.swarm.yaml -c docker-compose.swarm.production.yaml ec
         count: 2
         units: minutes
+      register: result
+      when: aws_target == 'production'
+
+    - name: Create staging Docker Swarm services
+      at:
+        command: cd /srv && docker stack deploy -c docker-compose.yaml -c docker-compose.swarm.yaml -c docker-compose.swarm.staging.yaml ec
+        count: 2
+        units: minutes
+      when: result is skipped
