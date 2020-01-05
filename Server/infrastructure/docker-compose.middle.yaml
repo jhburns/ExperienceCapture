@@ -16,7 +16,7 @@ services:
 
   garbage_collector:
     image: docker:19.03.5
-    command: ["docker", "system", "prune", "--force", "--volume"]
+    command: ["docker", "system", "prune", "--force", "--volumes"]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     deploy:
