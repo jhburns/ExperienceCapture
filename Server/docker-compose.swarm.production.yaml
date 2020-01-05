@@ -4,7 +4,16 @@ version: '3.5'
 volumes:
   ec-rp-volume:
     name: ec-production-rp-volume
+    driver: rexray/ebs:0.11.4
+    driver_opts:
+      size: 1
   ec-db-volume:
     name: ec-production-db-volume
+    driver: rexray/ebs:0.11.4
+    driver_opts:
+      size: 30
   ec-os-volume:
     name: ec-production-os-volume
+    driver: rexray/ebs:0.11.4
+    driver_opts:
+      size: 30

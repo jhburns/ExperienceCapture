@@ -84,23 +84,6 @@ services:
       timeout: 10s
       retries: 3
 
-volumes:
-  ec-rp-volume:
-    name: ec-prod-rp-volume
-    driver: rexray/ebs:0.11.4
-    driver_opts:
-      size: 1
-  ec-db-volume:
-    name: ec-prod-db-volume
-    driver: rexray/ebs:0.11.4
-    driver_opts:
-      size: 30
-  ec-os-volume:
-    name: ec-prod-os-volume
-    driver: rexray/ebs:0.11.4
-    driver_opts:
-      size: 30
-
 networks:
   ec-network:
     driver: overlay

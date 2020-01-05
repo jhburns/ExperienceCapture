@@ -114,7 +114,7 @@
       when: packer_debug == 'true'
 
     - name: Rebuild Docker images for production
-      command: docker-compose -f docker-compose.yaml -f docker-compose.swarm.yaml build --parallel
+      command: docker-compose -f docker-compose.yaml -f docker-compose.swarm.yaml -f docker-compose.swarm.production.yaml build --parallel
       args:
         chdir: /srv
 
@@ -126,7 +126,7 @@
         timeout: 5
 
     - name: Pushes Docker images to local registry
-      command: docker-compose -f docker-compose.yaml -f docker-compose.swarm.yaml push
+      command: docker-compose -f docker-compose.yaml -f docker-compose.swarm.yaml -f docker-compose.swarm.production.yaml push
       args:
         chdir: /srv
 
