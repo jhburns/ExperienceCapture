@@ -16,14 +16,23 @@ internal class Program
 {
     private const string Ec2Size = "t2.medium";
 
+    // Required Env vars
     private static readonly string AwsId = Environment.GetEnvironmentVariable("aws_account_id")
         ?? throw new EnviromentVarNotSet("The following is unset", "aws_account_id");
 
     private static readonly string AmiName = Environment.GetEnvironmentVariable("aws_deploy_ami_name")
         ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ami_name");
 
-    private static readonly string IpId = Environment.GetEnvironmentVariable("aws_deploy_ip_allocation_id")
-        ?? throw new EnviromentVarNotSet("The following is unset", "aws_deploy_ip_allocation_id");
+    // Either ip could be required, so both are to simplify
+    private static readonly string IpIdProduction = Environment.GetEnvironmentVariable("aws_production_deploy_ip_allocation_id")
+        ?? throw new EnviromentVarNotSet("The following is unset", "aws_production_deploy_ip_allocation_id");
+
+    private static readonly string IpIdStaging = Environment.GetEnvironmentVariable("aws_staging_deploy_ip_allocation_id")
+        ?? throw new EnviromentVarNotSet("The following is unset", "aws_staging_deploy_ip_allocation_id");
+
+    // Optional Env vars
+    private static readonly string IsProduction = Environment.GetEnvironmentVariable("aws_deploy_to_production")
+        ?? string.Empty;
 
     private static Task<int> Main()
     {
@@ -72,9 +81,19 @@ internal class Program
                 AssociatePublicIpAddress = false,
             });
 
+            string ipId;
+            if (IsProduction == "production")
+            {
+                ipId = IpIdProduction;
+            }
+            else
+            {
+                ipId = IpIdStaging;
+            }
+
             var elasticIp = new EipAssociation("experience-capture-ip", new EipAssociationArgs
             {
-                AllocationId = IpId,
+                AllocationId = ipId,
                 InstanceId = server.Id,
             });
 

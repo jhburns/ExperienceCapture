@@ -1,0 +1,10 @@
+---
+version: '3.5'
+
+volumes:
+  ec-rp-volume:
+    name: ec-production-rp-volume
+  ec-db-volume:
+    name: ec-production-db-volume
+  ec-os-volume:
+    name: ec-production-os-volume
