@@ -34,7 +34,7 @@ RUN docker-compose \
 
 RUN docker-compose \
 	-f ./Server/infrastructure/docker-compose.early.yaml \
-	-f ./Server/infrastructure/docker-compose.middle.yaml \
+	-f ./Server/infrastructure/docker-compose.regular.yaml \
 	config
 
 RUN docker-compose \
