@@ -29,12 +29,12 @@ RUN docker-compose \
 	config
 
 RUN docker-compose \
-	-f ./Server/infrastructure/docker-compose.early.yaml \
+	-f ./Server/docker-compose.infra.early.yaml \
 	config
 
 RUN docker-compose \
-	-f ./Server/infrastructure/docker-compose.early.yaml \
-	-f ./Server/infrastructure/docker-compose.regular.yaml \
+	-f ./Server/docker-compose.infra.early.yaml \
+	-f ./Server/docker-compose.infra.yaml \
 	config
 
 RUN docker-compose \
