@@ -64,5 +64,21 @@ services:
     networks:
       - ec-network
 
+  # Note: this service doesn't wait for the db to become active
+  bu:
+    build:
+      context: ./Backupper
+    image: 127.0.0.1:5000/infra-backupper
+    volumes:
+      - ec-db-volume:/app/backup
+    depends_on:
+      - db
+    environment:
+      aws_deploy_target: staging
+    env_file:
+      - .env
+    networks:
+      - ec-network
+
 networks:
   ec-network: {}
