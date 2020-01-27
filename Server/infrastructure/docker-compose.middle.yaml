@@ -27,3 +27,7 @@ services:
         - "swarm.cronjob.skip-running=true"
       restart_policy:
         condition: none
+
+  backupper:
+    build:
+      context: ./Backupper
