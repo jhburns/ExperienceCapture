@@ -13,7 +13,7 @@ RUN curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o 
 RUN unzip awscliv2.zip && ./aws/install
 
 COPY credentials /root/.aws/credentials
-COPY backup-mongodb-to-s3.sh .
-RUN chmod +x backup-mongodb-to-s3.sh
+COPY backup-mongodb-to-s3.sh restore-mongodb-from-s3.sh ./
+RUN chmod +x backup-mongodb-to-s3.sh restore-mongodb-from-s3.sh
 
 CMD ["./backup-mongodb-to-s3.sh"]

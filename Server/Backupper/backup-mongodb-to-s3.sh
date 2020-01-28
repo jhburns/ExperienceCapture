@@ -1,22 +1,20 @@
 #!/bin/sh
 
-# From: https://gist.github.com/eladnava/96bd9771cd2e01fb4427230563991c8d#file-mongodb-s3-backup-sh-L42
+# From: https://gist.github.com/eladnava/96bd9771cd2e01fb4427230563991c8d#file-mongodb-s3-backup-sh-L42 kinda
 
 set -e
 HOST=db
 DB=ec
 TIME=`/bin/date --utc +%FT%TZ` # ISO8601 UTC timestamp
-TAR="./backup/archives/${TIME}.gz"
+FILENAME="${TIME}.gz"
 
 export AWS_ACCESS_KEY_ID=$aws_backupper_access_id \
     AWS_SECRET_ACCESS_KEY=$aws_backupper_secret_key \
     AWS_DEFAULT_REGION=$aws_region_name
 
-S3PATH="s3://experiencecapture-ec-db-backups/${aws_deploy_target}/"
+
+S3PATH="s3://${aws_backup_bucket_name}/${aws_deploy_target}/${FILENAME}"
 
 /bin/mkdir -p ./backup/archives
 
-/usr/bin/mongodump --gzip --archive=$TAR -d $DB -h $HOST
-/usr/local/bin/aws2 s3 cp $TAR $S3PATH
-
-/bin/rm -f $TAR
+/usr/bin/mongodump --archive --gzip -d $DB -h $HOST | /usr/local/bin/aws2 s3 cp - $S3PATH

@@ -152,9 +152,12 @@ Backupper's
             "Effect": "Allow",
             "Action": [
                 "s3:CreateBucket",
+                "s3:GetObject",
                 "s3:PutObject"
             ],
-            "Resource": ["*"]
+            "Resource": [
+                "*"
+            ]
         }
     ]
 }
