@@ -21,13 +21,24 @@ services:
     networks:
       - ec-network
 
-  db:
-    image: mongo:4.2.2-bionic
-    hostname: db
-    ports:
-      - "27017:27017"
-    volumes:
-      - ec-db-volume:/data/db
+  web:
+    build:
+      context: ./WebUI
+      args:  # Make sure to change the following arg
+        REACT_APP_GOOGLE_CLIENT_ID: 555477545658-co1pgbl0uh99rp8tbo2q62t2ch8vlb1h.apps.googleusercontent.com
+    hostname: web
+    networks:
+      - ec-network
+
+  exporter:
+    build:
+      context: ./Exporter
+    command: ["sh", "-c", "/wait && dotnet Exporter.dll"]
+    depends_on:
+      - db
+      - os
+    environment:
+      - WAIT_HOSTS= db:27017, os:9000
     networks:
       - ec-network
 
@@ -41,12 +52,13 @@ services:
     networks:
       - ec-network
 
-  web:
-    build:
-      context: ./WebUI
-      args:  # Make sure to change the following arg
-        REACT_APP_GOOGLE_CLIENT_ID: 555477545658-co1pgbl0uh99rp8tbo2q62t2ch8vlb1h.apps.googleusercontent.com
-    hostname: web
+  db:
+    image: mongo:4.2.2-bionic
+    hostname: db
+    ports:
+      - "27017:27017"
+    volumes:
+      - ec-db-volume:/data/db
     networks:
       - ec-network
 
