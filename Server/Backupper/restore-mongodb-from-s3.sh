@@ -3,6 +3,7 @@
 set -e
 HOST=db
 
+# shellcheck disable=SC2154
 export AWS_ACCESS_KEY_ID=$aws_backupper_access_id \
     AWS_SECRET_ACCESS_KEY=$aws_backupper_secret_key \
     AWS_DEFAULT_REGION=$aws_region_name

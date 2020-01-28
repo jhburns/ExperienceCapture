@@ -147,7 +147,7 @@
 
     - name: Create other infrastructure services
       command: |
-               docker stack deploy \ 
+               docker stack deploy \
                -c docker-compose.infra.early.yaml \
                -c docker-compose.infra.yaml \
                infra
