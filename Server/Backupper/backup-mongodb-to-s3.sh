@@ -1,6 +1,8 @@
 #!/bin/sh
 
-# From: https://gist.github.com/eladnava/96bd9771cd2e01fb4427230563991c8d#file-mongodb-s3-backup-sh-L42 kinda
+# Inspired by: 
+# https://gist.github.com/eladnava/96bd9771cd2e01fb4427230563991c8d#file-mongodb-s3-backup-sh-L42 
+# https://gist.github.com/caraboides/7679bb73f4f13e36fc2b9dbded3c24c0
 
 set -e
 HOST=db
@@ -16,7 +18,5 @@ export AWS_ACCESS_KEY_ID=$aws_backupper_access_id \
 
 # shellcheck disable=SC2154
 S3PATH="s3://${aws_backup_bucket_name}/${aws_deploy_target}/${FILENAME}"
-
-/bin/mkdir -p ./backup/archives
 
 /usr/bin/mongodump --archive --gzip -d $DB -h $HOST | /usr/local/bin/aws2 s3 cp - "$S3PATH"
