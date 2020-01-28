@@ -84,6 +84,17 @@ services:
       timeout: 10s
       retries: 3
 
+  bu:
+    image: 127.0.0.1:5000/ec-bu
+    deploy:
+      mode: global
+      labels:
+        - "swarm.cronjob.enable=true"
+        - "swarm.cronjob.schedule=0 2 * * *"  # Every day at 2AM
+        - "swarm.cronjob.skip-running=true"
+      restart_policy:
+        condition: none
+
 networks:
   ec-network:
     driver: overlay

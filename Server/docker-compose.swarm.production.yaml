@@ -1,6 +1,11 @@
 ---
 version: '3.5'
 
+services:
+  bu:
+    environment:
+      aws_deploy_target: production
+
 volumes:
   ec-rp-volume:
     name: ec-production-rp-volume
