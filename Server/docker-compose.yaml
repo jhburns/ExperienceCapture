@@ -80,7 +80,6 @@ services:
   bu:
     build:
       context: ./Backupper
-    image: 127.0.0.1:5000/infra-backupper
     volumes:
       - ec-db-volume:/app/backup
     depends_on:
