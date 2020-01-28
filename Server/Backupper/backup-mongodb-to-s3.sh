@@ -19,4 +19,7 @@ export AWS_ACCESS_KEY_ID=$aws_backupper_access_id \
 # shellcheck disable=SC2154
 S3PATH="s3://${aws_backup_bucket_name}/${aws_deploy_target}/${FILENAME}"
 
-/usr/bin/mongodump --archive --gzip -d $DB -h $HOST | /usr/local/bin/aws2 s3 cp - "$S3PATH"
+# Storage Class is Infrequently Accessed, multiple zones
+# See: https://docs.aws.amazon.com/AmazonS3/latest/dev/storage-class-intro.html
+/usr/bin/mongodump --archive --gzip -d $DB -h $HOST \
+    | /usr/local/bin/aws2 s3 cp --storage-class="STANDARD_IA" - "$S3PATH"
