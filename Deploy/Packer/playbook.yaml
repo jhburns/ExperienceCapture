@@ -8,15 +8,16 @@
     rexray_secret_key: "{{ lookup('env','aws_rexray_secret_key') }}"
     aws_region_name: "{{ lookup('env','aws_region_name') }}"
     packer_debug: "{{ lookup('env','packer_debug_option') }}"
+    aws_target: "{{ lookup('env','aws_deploy_target') }}"
 
   tasks:
 
     # Needed because the Ubuntu AMI does not come with python2
     - name: symlink /usr/bin/python -> /usr/bin/python3
       raw: |
-           if [ -f /usr/bin/python3 ] && [ ! -f /usr/bin/python ]; then
-             ln --symbolic /usr/bin/python3 /usr/bin/python;
-           fi
+            if [ -f /usr/bin/python3 ] && [ ! -f /usr/bin/python ]; then
+              ln --symbolic /usr/bin/python3 /usr/bin/python;
+            fi
 
     - name: Update cache before installing packages
       apt:
@@ -31,12 +32,12 @@
         update_cache: true
         name: "{{ item }}"
       loop:
-        - 'apt-transport-https=1.6.6ubuntu0.1'
-        - 'ca-certificates=20180409'
-        - 'curl=7.58.0-2ubuntu3.8'
-        - 'software-properties-common=0.96.24.32.11'
-        - 'rsync=3.1.2-2.1ubuntu1'
-        - 'fish=3.0.2-1~bionic'
+        - 'apt-transport-https=1.6.*'
+        - 'ca-certificates=*'
+        - 'curl=7.58.*'
+        - 'software-properties-common=0.96.*'
+        - 'rsync=3.1.*'
+        - 'fish=3.0.*'
 
     - name: Add Docker GPG apt Key
       apt_key:
@@ -62,7 +63,7 @@
       command: docker swarm init
 
     - name: Create Docker registry service
-      command: docker stack deploy -c ./infrastructure/docker-compose.early.yaml infra
+      command: docker stack deploy -c docker-compose.infra.early.yaml infra
       args:
         chdir: /srv
 
@@ -86,11 +87,12 @@
       when: packer_debug == 'true'
 
     - name: Download the REX-Ray plugin
-      command: "docker plugin install rexray/ebs:0.11.4 \
+      command: |
+               docker plugin install rexray/ebs:0.11.4 \
                --grant-all-permissions \
-              EBS_ACCESSKEY={{ rexray_access_id }} \
-              EBS_SECRETKEY={{ rexray_secret_key }} \
-              EBS_REGION={{ aws_region_name }}"
+               EBS_ACCESSKEY={{ rexray_access_id }} \
+               EBS_SECRETKEY={{ rexray_secret_key }} \
+               EBS_REGION={{ aws_region_name }}
 
     - name: Allow all access from RFC1918 networks to this host
       ufw:
@@ -113,7 +115,13 @@
       when: packer_debug == 'true'
 
     - name: Rebuild Docker images for production
-      command: docker-compose -f docker-compose.yaml -f docker-compose.production.yaml build --parallel
+      command: |
+               docker-compose \
+               -f docker-compose.yaml \
+               -f docker-compose.swarm.yaml \
+               -f docker-compose.swarm.production.yaml \
+               build \
+               --parallel
       args:
         chdir: /srv
 
@@ -125,7 +133,12 @@
         timeout: 5
 
     - name: Pushes Docker images to local registry
-      command: docker-compose -f docker-compose.yaml -f docker-compose.production.yaml push
+      command: |
+               docker-compose \
+               -f docker-compose.yaml \
+               -f docker-compose.swarm.yaml \
+               -f docker-compose.swarm.production.yaml \
+               push
       args:
         chdir: /srv
 
@@ -133,13 +146,38 @@
       command: docker system prune --all --force
 
     - name: Create other infrastructure services
-      command: docker stack deploy -c ./infrastructure/docker-compose.early.yaml -c ./infrastructure/docker-compose.middle.yaml infra
+      command: |
+               docker stack deploy \
+               -c docker-compose.infra.early.yaml \
+               -c docker-compose.infra.yaml \
+               infra
       args:
         chdir: /srv
 
     # Waits so that that services don't start before the instance is stopped
-    - name: Create main Docker Swarm services
+    - name: Create production Docker Swarm services
       at:
-        command: cd /srv && docker stack deploy -c docker-compose.yaml -c docker-compose.production.yaml ec
+        command: |
+                 cd /srv && \
+                 docker stack deploy \
+                 -c docker-compose.yaml \
+                 -c docker-compose.swarm.yaml \
+                 -c docker-compose.swarm.production.yaml \
+                 ec
         count: 2
         units: minutes
+      register: result
+      when: aws_target == 'production'
+
+    - name: Create staging Docker Swarm services
+      at:
+        command: |
+                 cd /srv && \
+                 docker stack deploy \
+                 -c docker-compose.yaml \
+                 -c docker-compose.swarm.yaml \
+                 -c docker-compose.swarm.staging.yaml \
+                 ec
+        count: 2
+        units: minutes
+      when: result is skipped

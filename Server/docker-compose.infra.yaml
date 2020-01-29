@@ -16,14 +16,14 @@ services:
 
   garbage_collector:
     image: docker:19.03.5
-    command: ["docker", "system", "prune", "--force", "--volume"]
+    command: ["docker", "system", "prune", "--force", "--volumes"]
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     deploy:
       mode: global
       labels:
         - "swarm.cronjob.enable=true"
-        - "swarm.cronjob.schedule=30 * * * *"
+        - "swarm.cronjob.schedule=30 * * * *"  # Every 30 minutes
         - "swarm.cronjob.skip-running=true"
       restart_policy:
         condition: none

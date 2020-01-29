@@ -84,22 +84,16 @@ services:
       timeout: 10s
       retries: 3
 
-volumes:
-  ec-rp-volume:
-    name: ec-prod-rp-volume
-    driver: rexray/ebs:0.11.4
-    driver_opts:
-      size: 1
-  ec-db-volume:
-    name: ec-prod-db-volume
-    driver: rexray/ebs:0.11.4
-    driver_opts:
-      size: 30
-  ec-os-volume:
-    name: ec-prod-os-volume
-    driver: rexray/ebs:0.11.4
-    driver_opts:
-      size: 30
+  bu:
+    image: 127.0.0.1:5000/ec-bu
+    deploy:
+      mode: global
+      labels:
+        - "swarm.cronjob.enable=true"
+        - "swarm.cronjob.schedule=0 2 * * *"  # Every day at 2AM
+        - "swarm.cronjob.skip-running=true"
+      restart_policy:
+        condition: none
 
 networks:
   ec-network:

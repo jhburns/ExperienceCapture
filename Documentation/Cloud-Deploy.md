@@ -143,6 +143,26 @@ Packer's
 }
 ```
 
+Backupper's
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:CreateBucket",
+                "s3:GetObject",
+                "s3:PutObject"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
+```
+
 ## More AWS Setup
 
 - Make sure there is a default VPC in the region you are targeting.

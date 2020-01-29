@@ -18,16 +18,23 @@ RUN docker-compose \
 
 RUN docker-compose \
 	-f ./Server/docker-compose.yaml \
-	-f ./Server/docker-compose.production.yaml \
+	-f ./Server/docker-compose.swarm.yaml \
+	-f ./Server/docker-compose.swarm.production.yaml \
 	config
 
 RUN docker-compose \
-	-f ./Server/infrastructure/docker-compose.early.yaml \
+	-f ./Server/docker-compose.yaml \
+	-f ./Server/docker-compose.swarm.yaml \
+	-f ./Server/docker-compose.swarm.staging.yaml \
 	config
 
 RUN docker-compose \
-	-f ./Server/infrastructure/docker-compose.early.yaml \
-	-f ./Server/infrastructure/docker-compose.middle.yaml \
+	-f ./Server/docker-compose.infra.early.yaml \
+	config
+
+RUN docker-compose \
+	-f ./Server/docker-compose.infra.early.yaml \
+	-f ./Server/docker-compose.infra.yaml \
 	config
 
 RUN docker-compose \
