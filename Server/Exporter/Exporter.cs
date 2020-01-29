@@ -93,11 +93,16 @@ namespace Export.App.Main
 
             await ToJson(sessionSorted, "raw");
 
-            await ToJson(await GetSessionInfo(), "database.about");
+            await ToJson(await GetSessionInfo(), "database");
             Console.WriteLine("To Json:" + GetTimePassed());
 
-            var scenes = ProcessScenes(sessionSorted);
+            var (about, scenes) = ProcessScenes(sessionSorted);
             Console.WriteLine("Processed Scenes:" + GetTimePassed());
+
+            var ws = new JsonWriterSettings();
+            ws.Indent = true;
+            await ToJson(about, "sessionInfo", ws);
+            Console.WriteLine("Session Info:" + GetTimePassed());
 
             await ToCsv(scenes, "byScene");
             Console.WriteLine("To CSV" + GetTimePassed());
@@ -134,13 +139,13 @@ namespace Export.App.Main
                 .FirstOrDefaultAsync();
         }
 
-        private static async Task ToJson(List<BsonDocument> sessionDocs, string about)
+        private static async Task ToJson(List<BsonDocument> sessionDocs, string about, JsonWriterSettings ws = null)
         {
             StringBuilder docsTotal = new StringBuilder();
             docsTotal.Append("[");
             foreach (BsonDocument d in sessionDocs)
             {
-                docsTotal.AppendFormat("{0}{1}", d.ToJson(GetJsonWriterSettings()), ",");
+                docsTotal.AppendFormat("{0}{1}", d.ToJson(ws ?? GetJsonWriterSettings()), ",");
             }
 
             docsTotal.Length--; // Remove trailing comma
@@ -191,7 +196,7 @@ namespace Export.App.Main
             return settings;
         }
 
-        private static List<SceneBlock> ProcessScenes(List<BsonDocument> sessionDocs)
+        private static (List<BsonDocument>, List<SceneBlock>) ProcessScenes(List<BsonDocument> sessionDocs)
         {
             var sceneDocs = sessionDocs.FindAll(d => d.Contains("sceneName"));
 
@@ -206,6 +211,7 @@ namespace Export.App.Main
             }).ToList();
 
             var normalCaptures = sessionDocs.FindAll(d => d.Contains("gameObjects"));
+            var otherCaptures = sessionDocs.FindAll(d => !d.Contains("gameObjects"));
 
             int sceneIndex = 0;
             var currentScene = sceneMap[sceneIndex];
@@ -226,7 +232,7 @@ namespace Export.App.Main
                 currentScene.Docs.Add(currentDoc);
             }
 
-            return sceneMap;
+            return (otherCaptures, sceneMap);
         }
 
         private static async Task ToCsv(List<SceneBlock> scenes, string about)
