@@ -170,8 +170,7 @@ namespace Carter.App.Route.Sessions
                     document = BsonDocument.Parse(json);
                 }
 
-                string collectionName = $"sessions.{uniqueID}";
-                var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
+                var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
 
                 // This one call not awaitted for max performance
                 _ = sessionCollection.InsertOneAsync(document);
