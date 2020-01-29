@@ -67,6 +67,12 @@ namespace Carter.App.Route.Sessions
 
                 bsonDoc.Remove("_id");
 
+                string collectionName = $"sessions.{uniqueID}";
+                var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
+
+                var builder = Builders<BsonDocument>.IndexKeys;
+                var keys = builder.Ascending("frameInfo.realtimeSinceStartup");
+
                 string json = JsonQuery.FulfilEncoding(req.Query, bsonDoc);
                 if (json != null)
                 {
