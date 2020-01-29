@@ -91,7 +91,7 @@ namespace Export.App.Main
             List<BsonDocument> sessionSorted = await SortSession();
             Console.WriteLine("Sorted: " + GetTimePassed());
 
-            await ToJson(sessionSorted, "sorted.raw");
+            await ToJson(sessionSorted, "raw");
 
             await ToJson(await GetSessionInfo(), "database.about");
             Console.WriteLine("To Json:" + GetTimePassed());
