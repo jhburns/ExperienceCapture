@@ -104,6 +104,9 @@ namespace Export.App.Main
             await ToJson(about, "sessionInfo", ws);
             Console.WriteLine("Session Info:" + GetTimePassed());
 
+            await ToJson(scenes, "onlyCaptures", ws);
+            Console.WriteLine("Only Captures:" + GetTimePassed());
+
             await ToCsv(scenes, "byScene");
             Console.WriteLine("To CSV" + GetTimePassed());
 
@@ -196,7 +199,7 @@ namespace Export.App.Main
             return settings;
         }
 
-        private static (List<BsonDocument>, List<SceneBlock>) ProcessScenes(List<BsonDocument> sessionDocs)
+        private static (List<BsonDocument> otherCaptures, List<SceneBlock> scenes) ProcessScenes(List<BsonDocument> sessionDocs)
         {
             var sceneDocs = sessionDocs.FindAll(d => d.Contains("sceneName"));
 
@@ -233,6 +236,20 @@ namespace Export.App.Main
             }
 
             return (otherCaptures, sceneMap);
+        }
+
+        private static async Task ToJson(List<SceneBlock> scenes, string about, JsonWriterSettings ws = null)
+        {
+            var demapped = new List<BsonDocument>();
+            foreach (var s in scenes)
+            {
+                foreach (var d in s.Docs)
+                {
+                    demapped.Add(d);
+                }
+            }
+
+            await ToJson(demapped, about, ws);
         }
 
         private static async Task ToCsv(List<SceneBlock> scenes, string about)
