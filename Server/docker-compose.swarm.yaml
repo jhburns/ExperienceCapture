@@ -50,9 +50,6 @@ services:
     deploy:
       restart_policy:
         condition: any
-      # Apparently has Auto HTTPS for fleets, since they all share the same folder
-      # See: https://caddyserver.com/v1/blog/caddy-0_10_11-released
-      replicas: 3
       update_config:
         parallelism: 0
         delay: 30s
@@ -66,6 +63,7 @@ services:
       - caddypath=/etc/caddycerts
     env_file:
       - .env
+    # Warning: Do not try to add a healthcheck here because as it will stop Let's Encrypt from working
 
   db:
     deploy:
