@@ -7,7 +7,7 @@ services:
     deploy:
       restart_policy:
         condition: any
-      replicas: 3
+      replicas: 4
       update_config:
         parallelism: 0
         delay: 30s
@@ -50,6 +50,9 @@ services:
     deploy:
       restart_policy:
         condition: any
+      # Apparently has Auto HTTPS for fleets, since they all share the same folder
+      # See: https://caddyserver.com/v1/blog/caddy-0_10_11-released
+      replicas: 3
       update_config:
         parallelism: 0
         delay: 30s
