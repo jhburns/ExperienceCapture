@@ -91,8 +91,6 @@ internal class Program
                 ipId = IpIdStaging;
             }
 
-            Console.WriteLine(ipId);
-
             var elasticIp = new EipAssociation("experience-capture-ip", new EipAssociationArgs
             {
                 AllocationId = ipId,
