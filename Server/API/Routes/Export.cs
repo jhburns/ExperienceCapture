@@ -4,6 +4,8 @@ namespace Carter.App.Route.Export
     using System.Collections.Generic;
     using System.Net.Mime;
 
+    using System.IO;
+
     using Carter;
 
     using Carter.App.Lib.CustomExceptions;
@@ -12,6 +14,7 @@ namespace Carter.App.Route.Export
     using Carter.App.Route.PreSecurity;
 
     using Carter.Request;
+    using Carter.Response;
 
     using Docker.DotNet;
     using Docker.DotNet.Models;
@@ -115,11 +118,19 @@ namespace Carter.App.Route.Export
                 res.ContentType = "application/zip";
                 res.Headers["Content-Disposition"] = about.ToString();
 
-                await os.GetObjectAsync(bucketName, objectName,
-                (stream) =>
+                try
                 {
-                    stream.CopyToAsync(res.Body);
-                });
+                    await os.GetObjectAsync(bucketName, objectName,
+                    (stream) =>
+                    {
+                        // Just doesn't work, seemily the stream gets closed before finishing the responce
+                        stream.CopyToAsync(res.Body);
+                    });
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             });
         }
     }
