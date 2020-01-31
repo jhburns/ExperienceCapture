@@ -63,7 +63,7 @@ services:
       - caddypath=/etc/caddycerts
     env_file:
       - .env
-    # Warning: Do not try to add a healthcheck here because as it will stop Let's Encrypt from working
+      # Warning: Do not try to add a healthcheck here because as it will stop Let's Encrypt from working
 
   db:
     deploy:
