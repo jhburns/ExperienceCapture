@@ -83,7 +83,6 @@ namespace Export.App.Main
             Console.WriteLine("Uploaded: " + GetTimePassed());
 
             // System.Threading.Thread.Sleep(100000000); // To make it so the program doesn't exist immediately
-
             return;
         }
 

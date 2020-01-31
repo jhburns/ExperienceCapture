@@ -120,7 +120,7 @@ namespace Carter.App.Route.Export
                     await os.GetObjectAsync(bucketName, objectName,
                     (stream) =>
                     {
-                        // Just doesn't work, seemily the stream gets closed before finishing the responce
+                        // Just doesn't work, seemingly the stream gets closed before finishing the responce
                         stream.CopyToAsync(res.Body);
                     });
                 }
