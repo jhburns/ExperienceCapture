@@ -115,11 +115,19 @@ namespace Carter.App.Route.Export
                 res.ContentType = "application/zip";
                 res.Headers["Content-Disposition"] = about.ToString();
 
-                await os.GetObjectAsync(bucketName, objectName,
-                (stream) =>
+                try
                 {
-                    stream.CopyToAsync(res.Body);
-                });
+                    await os.GetObjectAsync(bucketName, objectName,
+                    (stream) =>
+                    {
+                        // Just doesn't work, seemingly the stream gets closed before finishing the responce
+                        stream.CopyToAsync(res.Body);
+                    });
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             });
         }
     }

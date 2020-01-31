@@ -94,21 +94,21 @@ namespace Export.App.Main
             await ToJson(sessionSorted, "raw");
 
             await ToJson(await GetSessionInfo(), "database");
-            Console.WriteLine("To Json:" + GetTimePassed());
+            Console.WriteLine("To Json: " + GetTimePassed());
 
             var (about, scenes) = ProcessScenes(sessionSorted);
-            Console.WriteLine("Processed Scenes:" + GetTimePassed());
+            Console.WriteLine("Processed Scenes: " + GetTimePassed());
 
             var ws = new JsonWriterSettings();
             ws.Indent = true;
             await ToJson(about, "sessionInfo", ws);
-            Console.WriteLine("Session Info:" + GetTimePassed());
+            Console.WriteLine("Session Info: " + GetTimePassed());
 
             await ToJson(scenes, "onlyCaptures", ws);
-            Console.WriteLine("Only Captures:" + GetTimePassed());
+            Console.WriteLine("Only Captures: " + GetTimePassed());
 
             await ToCsv(scenes, "byScene");
-            Console.WriteLine("To CSV" + GetTimePassed());
+            Console.WriteLine("To CSV: " + GetTimePassed());
 
             return;
         }
