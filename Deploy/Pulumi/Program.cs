@@ -31,7 +31,7 @@ internal class Program
         ?? throw new EnviromentVarNotSet("The following is unset", "aws_staging_deploy_ip_allocation_id");
 
     // Optional Env vars
-    private static readonly string IsProduction = Environment.GetEnvironmentVariable("aws_deploy_to_production")
+    private static readonly string IsProduction = Environment.GetEnvironmentVariable("aws_deploy_target")
         ?? string.Empty;
 
     private static Task<int> Main()
@@ -90,6 +90,8 @@ internal class Program
             {
                 ipId = IpIdStaging;
             }
+
+            Console.WriteLine(ipId);
 
             var elasticIp = new EipAssociation("experience-capture-ip", new EipAssociationArgs
             {
