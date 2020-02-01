@@ -46,10 +46,11 @@ services:
     image: 127.0.0.1:5000/ec-exporter
 
   rp:
-    command: ["--agree"]  # , "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
+    command: ["--agree", "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
     deploy:
       restart_policy:
         condition: any
+      replicas: 3
       update_config:
         parallelism: 0
         delay: 30s
@@ -60,7 +61,8 @@ services:
       - ./Caddy/production.Caddyfile:/etc/Caddyfile
       - ec-rp-volume:/etc/caddycerts
     environment:
-      - caddypath=/etc/caddycerts
+      - CADDYPATH=/etc/caddycerts
+      - HOME=/etc/caddycerts
     env_file:
       - .env
       # Warning: Do not try to add a healthcheck here because as it will stop Let's Encrypt from working
