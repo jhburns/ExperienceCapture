@@ -5,7 +5,7 @@ class HomeButton extends Component {
   render() {
     return (
       <Link to="/home" className="btn btn-dark btn-block">
-          Go Home
+        Go Home
       </Link>
 	  )
   }
