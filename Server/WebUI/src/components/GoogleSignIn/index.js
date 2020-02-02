@@ -6,6 +6,8 @@ import SignOutButton from "components/SignOutButton"
 
 import HomeButton from 'components/HomeButton';
 
+import { Wrapper } from 'components/GoogleSignIn/style';
+
 class SignIn extends Component {
   constructor(props) {
     super(props)
@@ -28,42 +30,52 @@ class SignIn extends Component {
   getContent() {
   	if (this.state.isUnableToSignIn) {
       return (
-        <div>
-          <p>Sorry, there was an issue signing in.</p>
-          <p>Try a different account.</p>
-          <SignOutButton onClickCallback={this.signOutCallback} />
-        </div>
+        <Wrapper>
+          <div>
+            <p>Sorry, there was an issue signing in.</p>
+            <p>Try a different account.</p>
+            <SignOutButton onClickCallback={this.signOutCallback} />
+          </div>
+        </Wrapper>
       )
     } else if (this.state.isDuplicateSignIn) {
       return (
-		    <div>
-		      <p>You've Already Signed Up</p>
-          <HomeButton />
-          <SignOutButton onClickCallback={this.signOutCallback} />
-		    </div>
+        <Wrapper>
+          <div>
+            <p>You've Already Signed Up</p>
+            <HomeButton />
+            <SignOutButton onClickCallback={this.signOutCallback} />
+          </div>
+        </Wrapper>
 	    )
     } else if (this.state.isSignedIn) {
       return (
-		    <div>
-		      <p>You're Signed In</p>
-          <HomeButton />
-		      <SignOutButton onClickCallback={this.signOutCallback} />
-		    </div>
+        <Wrapper>
+          <div>
+            <p>You're Signed In</p>
+            <HomeButton />
+            <SignOutButton onClickCallback={this.signOutCallback} />
+          </div>
+        </Wrapper>
 	    )
 	  } else if (this.state.isSignedOut) {
 	    return (
-		    <div>
-		      <p>You're Signed Out</p>
-		      <p>Sign In Again</p>
-          <button id="loginButton">Sign In With Google</button>
-		    </div>
+        <Wrapper>
+          <div>
+            <p>You're Signed Out</p>
+            <p>Sign In Again</p>
+            <button id="loginButton">Sign In With Google</button>
+          </div>
+        </Wrapper>
 	    )
     } else {
       return (
-        <div>
-          <p>Please Sign In</p>
-          <button id="loginButton">Sign In With Google</button>
-        </div>
+        <Wrapper>
+          <div>
+            <p>Please Sign In</p>
+            <button id="loginButton">Sign In With Google</button>
+          </div>
+        </Wrapper>
       )
     }   
   }

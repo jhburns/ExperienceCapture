@@ -15,11 +15,13 @@ import SessionPage from 'pages/Session';
 
 import BootstrapProvider from '@bootstrap-styled/provider/lib/BootstrapProvider';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-
 const theme = {
-  '$btn-primary-bg': 'blue',
-  '$btn-primary-color': 'white',
+  '$font-family-base': 'sans-serif',
+  '$body-bg': '#FFFFFF',
+  '$body-color': '#000000',
+  //'$btn-primary-bg': '#000000',
+  //'$btn-border-radius': '.035rem',
+  //'$link-color': '#000000',
 };
 
 function App() {
