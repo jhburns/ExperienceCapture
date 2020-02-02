@@ -113,7 +113,7 @@ class SignIn extends Component {
           </Row>
           <Row>
             <Col className="text-center">
-              <Google id="loginButton">Sign In With Google</Google>
+              <Google id="loginButton" />
             </Col>
           </Row>
         </Wrapper>
@@ -132,7 +132,7 @@ class SignIn extends Component {
           </Row>
           <Row>
             <Col className="text-center">
-              <Google id="loginButton">Sign In With Google</Google>
+              <Google id="loginButton" />
             </Col>
           </Row>
         </Wrapper>
