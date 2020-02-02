@@ -4,4 +4,10 @@ const Wrapper = styled.section`
 
 `;
 
-export { Wrapper };
+const Info = styled.section`
+  background-color: #F8F8F8;
+  padding: 1rem 1rem 1rem 1rem;
+
+`;
+
+export { Wrapper, Info, };

@@ -26,7 +26,7 @@ class NormalSignInPage extends Component {
             <Col></Col>
           </Row>
           <Row className="justify-content-center" noGutters={true}>
-            <Col xs={8} >
+            <Col xs={10} >
               <GoogleSignIn clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} />
             </Col>
           </Row>

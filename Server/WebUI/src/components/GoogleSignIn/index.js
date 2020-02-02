@@ -6,7 +6,7 @@ import SignOutButton from "components/SignOutButton"
 
 import HomeButton from 'components/HomeButton';
 
-import { Wrapper } from 'components/GoogleSignIn/style';
+import { Wrapper, Info } from 'components/GoogleSignIn/style';
 
 import { P, Button, Row, Col, } from '@bootstrap-styled/v4';
 
@@ -33,12 +33,14 @@ class SignIn extends Component {
   	if (this.state.isUnableToSignIn) {
       return (
         <Wrapper>
-          <Row>
-            <Col>
-              <P>
-                Sorry, there was an issue signing in <br />
-                Try a different account
-              </P>
+          <Row className="justify-content-center">
+            <Col xs={10} >
+              <Info className="rounded align-middle">
+                <h5 className="mt-0 mb-0">
+                  Sorry, there was an issue signing in <br />
+                  Try a different account
+                </h5>
+              </Info>
             </Col>
           </Row>
           <Row>
@@ -49,9 +51,13 @@ class SignIn extends Component {
     } else if (this.state.isDuplicateSignIn) {
       return (
         <Wrapper>
-          <Row>
-            <Col>
-              <P>You've Already Signed Up</P>
+          <Row className="justify-content-center">
+            <Col xs={10} >
+              <Info className="rounded align-middle">
+                <h5 className="mt-0 mb-0">
+                  You've Already Signed Up
+                </h5>
+              </Info>
             </Col>
           </Row>
           <Row>
@@ -63,9 +69,13 @@ class SignIn extends Component {
     } else if (this.state.isSignedIn) {
       return (
         <Wrapper>
-          <Row>
-            <Col>
-              <P>You're Signed In</P>
+          <Row className="justify-content-center">
+            <Col xs={10} >
+              <Info className="rounded align-middle">
+                <h5 className="mt-0 mb-0">
+                  You're Signed In
+                </h5>
+              </Info>
             </Col>
           </Row>
           <Row>
@@ -79,12 +89,14 @@ class SignIn extends Component {
 	  } else if (this.state.isSignedOut) {
 	    return (
         <Wrapper>
-          <Row>
-            <Col>
-              <P>
-                You're Signed Out <br />
-                Sign In Again
-              </P>
+          <Row className="justify-content-center">
+            <Col xs={10} >
+              <Info className="rounded align-middle">
+                <h5 className="mt-0 mb-0">
+                  You're Signed Out <br />
+                  Sign In Again
+               </h5>
+              </Info>
             </Col>
           </Row>
           <Row>
@@ -97,9 +109,13 @@ class SignIn extends Component {
     } else {
       return (
         <Wrapper>
-          <Row>
-            <Col>
-              <P>Please Sign In</P>
+          <Row className="justify-content-center">
+            <Col xs={10} >
+              <Info className="rounded align-middle">
+                <h5 className="mt-0 mb-0">
+                  <P>Please Sign In</P>
+                </h5>
+              </Info>
             </Col>
           </Row>
           <Row>
