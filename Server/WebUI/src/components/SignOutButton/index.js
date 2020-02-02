@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
 
+import { Button } from 'components/SignOutButton/style';
+
 class SignOutButton extends Component {
   render() {
     return (
-		  <button onClick={this.props.onClickCallback}>Sign Out</button>
+      <Button 
+        onClick={this.props.onClickCallback}
+        className="btn btn-outline-dark btn-block"
+      >
+        Sign Out
+      </Button>
 	  )
   }
 }

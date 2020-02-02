@@ -10,4 +10,12 @@ const Info = styled.section`
 
 `;
 
-export { Wrapper, Info, };
+const Google = styled.button`
+    background-color: Transparent;
+    background-repeat: no-repeat;
+    border: none;
+    overflow: hidden;
+    outline: none;
+`;
+
+export { Wrapper, Info, Google, };

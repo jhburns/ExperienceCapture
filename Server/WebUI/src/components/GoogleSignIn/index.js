@@ -6,7 +6,7 @@ import SignOutButton from "components/SignOutButton"
 
 import HomeButton from 'components/HomeButton';
 
-import { Wrapper, Info } from 'components/GoogleSignIn/style';
+import { Wrapper, Info, Google } from 'components/GoogleSignIn/style';
 
 import { P, Button, Row, Col, } from '@bootstrap-styled/v4';
 
@@ -34,7 +34,7 @@ class SignIn extends Component {
       return (
         <Wrapper>
           <Row className="justify-content-center">
-            <Col xs={10} >
+            <Col xs={10} className="mb-4">
               <Info className="rounded align-middle">
                 <h5 className="mt-0 mb-0">
                   Sorry, there was an issue signing in <br />
@@ -44,7 +44,9 @@ class SignIn extends Component {
             </Col>
           </Row>
           <Row>
-            <SignOutButton onClickCallback={this.signOutCallback} />
+            <Col>
+              <SignOutButton onClickCallback={this.signOutCallback} />
+            </Col>
           </Row>
         </Wrapper>
       )
@@ -52,7 +54,7 @@ class SignIn extends Component {
       return (
         <Wrapper>
           <Row className="justify-content-center">
-            <Col xs={10} >
+            <Col xs={10} className="mb-4">
               <Info className="rounded align-middle">
                 <h5 className="mt-0 mb-0">
                   You've Already Signed Up
@@ -60,9 +62,15 @@ class SignIn extends Component {
               </Info>
             </Col>
           </Row>
-          <Row>
-            <HomeButton />
-            <SignOutButton onClickCallback={this.signOutCallback} />
+          <Row className="justify-content-center">
+            <Col xs={6} className="mb-2">
+              <HomeButton />
+            </Col>
+          </Row>
+          <Row className="justify-content-center">
+            <Col xs={6}>
+              <SignOutButton onClickCallback={this.signOutCallback} />
+            </Col>
           </Row>
         </Wrapper>
 	    )
@@ -70,7 +78,7 @@ class SignIn extends Component {
       return (
         <Wrapper>
           <Row className="justify-content-center">
-            <Col xs={10} >
+            <Col xs={10} className="mb-4">
               <Info className="rounded align-middle">
                 <h5 className="mt-0 mb-0">
                   You're Signed In
@@ -78,11 +86,15 @@ class SignIn extends Component {
               </Info>
             </Col>
           </Row>
-          <Row>
-              <HomeButton />            
+          <Row className="justify-content-center">
+            <Col xs={6} className="mb-2">
+              <HomeButton />
+            </Col>        
           </Row>
-          <Row>
-            <SignOutButton onClickCallback={this.signOutCallback} />
+          <Row className="justify-content-center">
+            <Col xs={6}>
+              <SignOutButton onClickCallback={this.signOutCallback} />
+            </Col>
           </Row>
         </Wrapper>
 	    )
@@ -90,7 +102,7 @@ class SignIn extends Component {
 	    return (
         <Wrapper>
           <Row className="justify-content-center">
-            <Col xs={10} >
+            <Col xs={10} className="mb-4">
               <Info className="rounded align-middle">
                 <h5 className="mt-0 mb-0">
                   You're Signed Out <br />
@@ -100,8 +112,8 @@ class SignIn extends Component {
             </Col>
           </Row>
           <Row>
-            <Col>
-              <Button id="loginButton">Sign In With Google</Button>
+            <Col className="text-center">
+              <Google id="loginButton">Sign In With Google</Google>
             </Col>
           </Row>
         </Wrapper>
@@ -110,7 +122,7 @@ class SignIn extends Component {
       return (
         <Wrapper>
           <Row className="justify-content-center">
-            <Col xs={10} >
+            <Col xs={10} className="mb-4">
               <Info className="rounded align-middle">
                 <h5 className="mt-0 mb-0">
                   <P>Please Sign In</P>
