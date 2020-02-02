@@ -3,7 +3,7 @@ WORKDIR /app
 ENV PATH=/app/node_modules/.bin:$PATH CI=true
 
 COPY package.json package-lock.json /app/
-RUN npm install --silent
+RUN npm ci --silent
 
 ARG REACT_APP_GOOGLE_CLIENT_ID
 

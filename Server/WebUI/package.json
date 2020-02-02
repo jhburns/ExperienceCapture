@@ -22,7 +22,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint \"**/*.js\" --max-warnings=0",
-    "test.withIgnore": "npm test -- --transformIgnorePatterns \"node_modules/(?!(gapi-script)/)\""
+    "test.withIgnore": "npm test -- --transformIgnorePatterns \"node_modules/(?!(gapi-script|bootstrap)/)\""
   },
   "eslintConfig": {
     "extends": [
