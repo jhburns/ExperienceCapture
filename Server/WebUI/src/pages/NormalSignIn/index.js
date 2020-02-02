@@ -9,8 +9,8 @@ import { Wrapper } from 'pages/NormalSignIn/style';
 class NormalSignInPage extends Component {
   render() {
     return (
-      <Container>
-        <Wrapper>
+      <Wrapper>
+        <Container>
           <Row className="justify-content-center" noGutters={true}>
             <Col xs={4} >
               <img src={logo} alt="logo" />
@@ -30,8 +30,8 @@ class NormalSignInPage extends Component {
               <GoogleSignIn clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} />
             </Col>
           </Row>
-        </Wrapper>
-      </Container>
+        </Container>
+      </Wrapper>
     );
   }
 }

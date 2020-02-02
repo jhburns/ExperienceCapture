@@ -8,7 +8,7 @@ import HomeButton from 'components/HomeButton';
 
 import { Wrapper } from 'components/GoogleSignIn/style';
 
-import { P, Button, } from '@bootstrap-styled/v4';
+import { P, Button, Row, Col, } from '@bootstrap-styled/v4';
 
 class SignIn extends Component {
   constructor(props) {
@@ -33,50 +33,80 @@ class SignIn extends Component {
   	if (this.state.isUnableToSignIn) {
       return (
         <Wrapper>
-          <div>
-            <P>Sorry, there was an issue signing in.</P>
-            <P>Try a different account.</P>
+          <Row>
+            <Col>
+              <P>
+                Sorry, there was an issue signing in <br />
+                Try a different account
+              </P>
+            </Col>
+          </Row>
+          <Row>
             <SignOutButton onClickCallback={this.signOutCallback} />
-          </div>
+          </Row>
         </Wrapper>
       )
     } else if (this.state.isDuplicateSignIn) {
       return (
         <Wrapper>
-          <div>
-            <P>You've Already Signed Up</P>
+          <Row>
+            <Col>
+              <P>You've Already Signed Up</P>
+            </Col>
+          </Row>
+          <Row>
             <HomeButton />
             <SignOutButton onClickCallback={this.signOutCallback} />
-          </div>
+          </Row>
         </Wrapper>
 	    )
     } else if (this.state.isSignedIn) {
       return (
         <Wrapper>
-          <div>
-            <P>You're Signed In</P>
-            <HomeButton />
+          <Row>
+            <Col>
+              <P>You're Signed In</P>
+            </Col>
+          </Row>
+          <Row>
+              <HomeButton />            
+          </Row>
+          <Row>
             <SignOutButton onClickCallback={this.signOutCallback} />
-          </div>
+          </Row>
         </Wrapper>
 	    )
 	  } else if (this.state.isSignedOut) {
 	    return (
         <Wrapper>
-          <div>
-            <P>You're Signed Out</P>
-            <P>Sign In Again</P>
-            <Button id="loginButton">Sign In With Google</Button>
-          </div>
+          <Row>
+            <Col>
+              <P>
+                You're Signed Out <br />
+                Sign In Again
+              </P>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Button id="loginButton">Sign In With Google</Button>
+            </Col>
+          </Row>
         </Wrapper>
 	    )
     } else {
       return (
         <Wrapper>
-          <div>
-            <P>Please Sign In</P>
-            <Button id="loginButton">Sign In With Google</Button>
-          </div>
+          <Row>
+            <Col>
+              <P>Please Sign In</P>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <Button id="loginButton">Sign In With Google</Button>
+            </Col>
+          </Row>
         </Wrapper>
       )
     }   
