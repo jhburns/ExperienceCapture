@@ -15,6 +15,8 @@ import SessionPage from 'pages/Session';
 
 import BootstrapProvider from '@bootstrap-styled/provider/lib/BootstrapProvider';
 
+import "bootstrap/dist/css/bootstrap.min.css";
+
 const theme = {
   '$font-family-base': 'sans-serif',
   '$body-bg': '#FFFFFF',

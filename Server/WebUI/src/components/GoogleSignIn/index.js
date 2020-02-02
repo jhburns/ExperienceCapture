@@ -8,6 +8,8 @@ import HomeButton from 'components/HomeButton';
 
 import { Wrapper } from 'components/GoogleSignIn/style';
 
+import { P, Button, } from '@bootstrap-styled/v4';
+
 class SignIn extends Component {
   constructor(props) {
     super(props)
@@ -32,8 +34,8 @@ class SignIn extends Component {
       return (
         <Wrapper>
           <div>
-            <p>Sorry, there was an issue signing in.</p>
-            <p>Try a different account.</p>
+            <P>Sorry, there was an issue signing in.</P>
+            <P>Try a different account.</P>
             <SignOutButton onClickCallback={this.signOutCallback} />
           </div>
         </Wrapper>
@@ -42,7 +44,7 @@ class SignIn extends Component {
       return (
         <Wrapper>
           <div>
-            <p>You've Already Signed Up</p>
+            <P>You've Already Signed Up</P>
             <HomeButton />
             <SignOutButton onClickCallback={this.signOutCallback} />
           </div>
@@ -52,7 +54,7 @@ class SignIn extends Component {
       return (
         <Wrapper>
           <div>
-            <p>You're Signed In</p>
+            <P>You're Signed In</P>
             <HomeButton />
             <SignOutButton onClickCallback={this.signOutCallback} />
           </div>
@@ -62,9 +64,9 @@ class SignIn extends Component {
 	    return (
         <Wrapper>
           <div>
-            <p>You're Signed Out</p>
-            <p>Sign In Again</p>
-            <button id="loginButton">Sign In With Google</button>
+            <P>You're Signed Out</P>
+            <P>Sign In Again</P>
+            <Button id="loginButton">Sign In With Google</Button>
           </div>
         </Wrapper>
 	    )
@@ -72,8 +74,8 @@ class SignIn extends Component {
       return (
         <Wrapper>
           <div>
-            <p>Please Sign In</p>
-            <button id="loginButton">Sign In With Google</button>
+            <P>Please Sign In</P>
+            <Button id="loginButton">Sign In With Google</Button>
           </div>
         </Wrapper>
       )
