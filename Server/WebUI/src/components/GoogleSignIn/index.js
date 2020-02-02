@@ -6,9 +6,9 @@ import SignOutButton from "components/SignOutButton"
 
 import HomeButton from 'components/HomeButton';
 
-import { Wrapper } from 'components/GoogleSignIn/style';
+import { Wrapper, Info, Google } from 'components/GoogleSignIn/style';
 
-import { P, Button, } from '@bootstrap-styled/v4';
+import { P, Row, Col, } from '@bootstrap-styled/v4';
 
 class SignIn extends Component {
   constructor(props) {
@@ -33,50 +33,108 @@ class SignIn extends Component {
   	if (this.state.isUnableToSignIn) {
       return (
         <Wrapper>
-          <div>
-            <P>Sorry, there was an issue signing in.</P>
-            <P>Try a different account.</P>
-            <SignOutButton onClickCallback={this.signOutCallback} />
-          </div>
+          <Row className="justify-content-center">
+            <Col xs={10} className="mb-4">
+              <Info className="rounded align-middle">
+                <h5 className="mt-0 mb-0">
+                  Sorry, there was an issue signing in <br />
+                  Try a different account
+                </h5>
+              </Info>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <SignOutButton onClickCallback={this.signOutCallback} />
+            </Col>
+          </Row>
         </Wrapper>
       )
     } else if (this.state.isDuplicateSignIn) {
       return (
         <Wrapper>
-          <div>
-            <P>You've Already Signed Up</P>
-            <HomeButton />
-            <SignOutButton onClickCallback={this.signOutCallback} />
-          </div>
+          <Row className="justify-content-center">
+            <Col xs={10} className="mb-4">
+              <Info className="rounded align-middle">
+                <h5 className="mt-0 mb-0">
+                  You've Already Signed Up
+                </h5>
+              </Info>
+            </Col>
+          </Row>
+          <Row className="justify-content-center">
+            <Col xs={6} className="mb-2">
+              <HomeButton />
+            </Col>
+          </Row>
+          <Row className="justify-content-center">
+            <Col xs={6}>
+              <SignOutButton onClickCallback={this.signOutCallback} />
+            </Col>
+          </Row>
         </Wrapper>
 	    )
     } else if (this.state.isSignedIn) {
       return (
         <Wrapper>
-          <div>
-            <P>You're Signed In</P>
-            <HomeButton />
-            <SignOutButton onClickCallback={this.signOutCallback} />
-          </div>
+          <Row className="justify-content-center">
+            <Col xs={10} className="mb-4">
+              <Info className="rounded align-middle">
+                <h5 className="mt-0 mb-0">
+                  You're Signed In
+                </h5>
+              </Info>
+            </Col>
+          </Row>
+          <Row className="justify-content-center">
+            <Col xs={6} className="mb-2">
+              <HomeButton />
+            </Col>        
+          </Row>
+          <Row className="justify-content-center">
+            <Col xs={6}>
+              <SignOutButton onClickCallback={this.signOutCallback} />
+            </Col>
+          </Row>
         </Wrapper>
 	    )
 	  } else if (this.state.isSignedOut) {
 	    return (
         <Wrapper>
-          <div>
-            <P>You're Signed Out</P>
-            <P>Sign In Again</P>
-            <Button id="loginButton">Sign In With Google</Button>
-          </div>
+          <Row className="justify-content-center">
+            <Col xs={10} className="mb-4">
+              <Info className="rounded align-middle">
+                <h5 className="mt-0 mb-0">
+                  You're Signed Out <br />
+                  Sign In Again
+               </h5>
+              </Info>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="text-center">
+              <Google id="loginButton">Sign In With Google</Google>
+            </Col>
+          </Row>
         </Wrapper>
 	    )
     } else {
       return (
         <Wrapper>
-          <div>
-            <P>Please Sign In</P>
-            <Button id="loginButton">Sign In With Google</Button>
-          </div>
+          <Row className="justify-content-center">
+            <Col xs={10} className="mb-4">
+              <Info className="rounded align-middle">
+                <h5 className="mt-0 mb-0">
+                  <P>Please Sign In</P>
+                </h5>
+              </Info>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="text-center">
+              <Google id="loginButton">Sign In With Google</Google>
+            </Col>
+          </Row>
         </Wrapper>
       )
     }   

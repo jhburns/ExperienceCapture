@@ -12,6 +12,7 @@ import SessionsPage from 'pages/Sessions';
 import SettingsPage from 'pages/Settings';
 import ArchivePage from 'pages/ArchivedSessions';
 import SessionPage from 'pages/Session';
+import NotFoundPage from 'pages/NotFound';
 
 import BootstrapProvider from '@bootstrap-styled/provider/lib/BootstrapProvider';
 
@@ -41,9 +42,7 @@ function App() {
             <Route exact path="/home/settings" component={SettingsPage} />
             <Route exact path="/home/archived" component={ArchivePage} />
             <Route exact path="/admin" component={AdminPage} />
-            <Route path="*"> {/* 404 page */}
-              <p>Imma 404</p>
-            </Route>
+            <Route path="*" component={NotFoundPage} /> {/* 404 page */}
           </Switch>
         </Router>
       </BootstrapProvider>
