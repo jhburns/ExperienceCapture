@@ -8,7 +8,7 @@ import HomeButton from 'components/HomeButton';
 
 import { Wrapper, Info, Google } from 'components/GoogleSignIn/style';
 
-import { P, Button, Row, Col, } from '@bootstrap-styled/v4';
+import { P, Row, Col, } from '@bootstrap-styled/v4';
 
 class SignIn extends Component {
   constructor(props) {
