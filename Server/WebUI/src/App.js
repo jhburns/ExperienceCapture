@@ -13,10 +13,19 @@ import SettingsPage from 'pages/Settings';
 import ArchivePage from 'pages/ArchivedSessions';
 import SessionPage from 'pages/Session';
 
+import BootstrapProvider from '@bootstrap-styled/provider/lib/BootstrapProvider';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const theme = {
+  '$btn-primary-bg': 'blue',
+  '$btn-primary-color': 'white',
+};
+
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
+      <BootstrapProvider theme={theme}>
         <Router>
           <Switch>
             <Route exact path="/" component={NormalSignInPage}/>
@@ -33,7 +42,7 @@ function App() {
             </Route>
           </Switch>
         </Router>
-      </header>
+      </BootstrapProvider>
     </div>
   );
 }
