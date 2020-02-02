@@ -131,8 +131,8 @@ class SignIn extends Component {
             </Col>
           </Row>
           <Row>
-            <Col>
-              <Button id="loginButton">Sign In With Google</Button>
+            <Col className="text-center">
+              <Google id="loginButton">Sign In With Google</Google>
             </Col>
           </Row>
         </Wrapper>
