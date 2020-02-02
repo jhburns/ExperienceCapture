@@ -121,7 +121,7 @@ namespace Carter.App.Route.Export
                     /*async*/ (stream) =>
                     {
                         // Just doesn't work, seemingly the stream gets closed before finishing the responce
-                        /*await*/ stream.CopyToAsync(res.Body);
+                        /*await*/ stream.CopyToAsync(res.Body, 81920); // Buffersize included because its needed for async
                     });
                 }
                 catch (Exception e)
