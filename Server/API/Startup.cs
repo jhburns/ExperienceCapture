@@ -32,7 +32,12 @@ namespace Carter.App.Hosting
             IMongoDatabase db = client.GetDatabase("ec");
             services.AddSingleton<IMongoDatabase>(db);
 
-            MinioClient os = new MinioClient("os:9000", "minio", "minio123");
+            string minioUsername = "minio";
+            string minioPassword = "minio123";
+            services.AddSingleton<string>(minioUsername);
+            services.AddSingleton<string>(minioPassword);
+
+            MinioClient os = new MinioClient("os:9000", minioUsername, minioPassword);
             services.AddSingleton<MinioClient>(os);
 
             DockerClient docker = new DockerClientConfiguration(

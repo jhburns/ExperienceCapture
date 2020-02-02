@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { gapi } from 'gapi-script';
 
-import { submitUser, signOutUser } from "libs/userManagement";
+import { submitUser, signOutUser, } from "libs/userManagement";
 import SignOutButton from "components/SignOutButton"
 
 import HomeButton from 'components/HomeButton';

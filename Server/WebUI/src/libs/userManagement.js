@@ -121,4 +121,4 @@ async function signOutUser(isMock=false) {
 	}
 }
 
-export { submitUser, signOutUser };
+export { submitUser, signOutUser, };

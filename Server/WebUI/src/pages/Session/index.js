@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Menu from 'components/Menu';
 import Session from "components/SingleSession";
 
-import { getData, postData, pollGet  } from "libs/fetchExtra";
+import { getData, postData, pollGet, } from "libs/fetchExtra";
 
 class SessionPage extends Component {
   constructor(props) {

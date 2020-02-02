@@ -1,6 +1,6 @@
 FROM node:13.1.0-alpine as build
 WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
+ENV PATH=/app/node_modules/.bin:$PATH CI=true
 
 COPY package.json package-lock.json /app/
 RUN npm install --silent
@@ -12,6 +12,7 @@ COPY public ./public
 COPY src ./src
 
 RUN npm run lint
+RUN npm run test.withIgnore
 RUN npm run build
 
 # production environment

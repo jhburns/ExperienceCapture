@@ -68,4 +68,4 @@ async function pollGet(url ='') {
   }
 }
 
-export { postData, getData, deleteData, pollGet };
+export { postData, getData, deleteData, pollGet, };
