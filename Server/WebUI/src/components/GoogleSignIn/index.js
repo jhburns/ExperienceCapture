@@ -19,7 +19,7 @@ class SignIn extends Component {
 	    isMock: false,
       isUnableToSignIn: false,
 	    isDuplicateSignIn: false,
-    }
+    };
 
 	  this.successCallback = this.onSuccess.bind(this);
 	  this.failureCallback = this.onFailure.bind(this);
