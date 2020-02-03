@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0.101-alpine3.10 AS build-env
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.101-alpine3.10 AS build-env
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
@@ -11,7 +11,7 @@ RUN dotnet publish -c Release -o out -nologo
 
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0.1-alpine3.10
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.1-alpine3.10
 
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.6.0/wait /wait
 RUN chmod +x /wait
