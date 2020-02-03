@@ -12,7 +12,7 @@ import { P, Row, Col, } from '@bootstrap-styled/v4';
 
 class SignIn extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       isSignedIn: false,
 	    isSignedOut: false, 
@@ -37,14 +37,14 @@ class SignIn extends Component {
             <Col xs={10} className="mb-4">
               <Info className="rounded align-middle">
                 <h5 className="mt-0 mb-0">
-                  Sorry, there was an issue signing in <br />
-                  Try a different account
+                  Sorry, there was an issue signing in. <br />
+                  Try a different account.
                 </h5>
               </Info>
             </Col>
           </Row>
-          <Row>
-            <Col>
+          <Row className="justify-content-center">
+            <Col xs={6}>
               <SignOutButton onClickCallback={this.signOutCallback} />
             </Col>
           </Row>
@@ -113,7 +113,7 @@ class SignIn extends Component {
           </Row>
           <Row>
             <Col className="text-center">
-              <Google id="loginButton">Sign In With Google</Google>
+              <Google id="loginButton" />
             </Col>
           </Row>
         </Wrapper>
@@ -132,7 +132,7 @@ class SignIn extends Component {
           </Row>
           <Row>
             <Col className="text-center">
-              <Google id="loginButton">Sign In With Google</Google>
+              <Google id="loginButton" />
             </Col>
           </Row>
         </Wrapper>
