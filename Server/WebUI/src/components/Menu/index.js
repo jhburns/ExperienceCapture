@@ -15,6 +15,8 @@ import {
   NavbarToggler,
 } from "@bootstrap-styled/v4";
 
+import Brand from 'components/Brand';
+
 class Menu extends Component {
   constructor(props) {
     super(props);
@@ -28,9 +30,7 @@ class Menu extends Component {
       <Wrapper>
         <Navbar color="faded" light toggleable="lg">
           <Container>
-            <NavbarBrand tag={Link} to="/home" className="mr-5">
-              Experience Capture
-            </NavbarBrand>
+            <NavbarBrand tag={Brand} to="/home" className="mr-3" />
             <NavbarToggler
               onClick={() => this.setState({ isOpen: !this.state.isOpen })}
               className="ml-auto"
