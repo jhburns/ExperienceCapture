@@ -12,7 +12,7 @@ import { P, Row, Col, } from '@bootstrap-styled/v4';
 
 class SignIn extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       isSignedIn: false,
 	    isSignedOut: false, 
