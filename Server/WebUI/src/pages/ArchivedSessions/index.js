@@ -40,6 +40,7 @@ class ArchivedSessionsPage extends Component {
           }}
           hasTag={"archived"}
           isRenderingDate={true}
+          emptyMessage="No archived sessions."
         />
         <Link to="/home/sessions">Back</Link>
       </div>
