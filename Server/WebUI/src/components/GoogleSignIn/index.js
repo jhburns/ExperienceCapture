@@ -19,7 +19,7 @@ class SignIn extends Component {
 	    isMock: false,
       isUnableToSignIn: false,
 	    isDuplicateSignIn: false,
-    };
+    }
 
 	  this.successCallback = this.onSuccess.bind(this);
 	  this.failureCallback = this.onFailure.bind(this);
@@ -37,14 +37,14 @@ class SignIn extends Component {
             <Col xs={10} className="mb-4">
               <Info className="rounded align-middle">
                 <h5 className="mt-0 mb-0">
-                  Sorry, there was an issue signing in <br />
-                  Try a different account
+                  Sorry, there was an issue signing in. <br />
+                  Try a different account.
                 </h5>
               </Info>
             </Col>
           </Row>
-          <Row>
-            <Col>
+          <Row className="justify-content-center">
+            <Col xs={6}>
               <SignOutButton onClickCallback={this.signOutCallback} />
             </Col>
           </Row>
