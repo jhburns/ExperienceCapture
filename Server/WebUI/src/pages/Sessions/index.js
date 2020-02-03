@@ -7,6 +7,10 @@ import { postData } from 'libs/fetchExtra';
 
 import { Link } from 'react-router-dom';
 
+import { Container, Row, Col, } from '@bootstrap-styled/v4';
+
+import { Wrapper } from 'pages/Sessions/style';
+
 class SessionsPage extends Component {
   constructor(props) {
     super(props);
@@ -28,11 +32,12 @@ class SessionsPage extends Component {
 
   render() {
     return (
-      <div>
-        <p>Welcome Home</p>
-        <Menu />
+      <Wrapper>
+        <Container>
+          <Menu />
+        </Container>
         <SessionTable
-          sessionsQuery={""} 
+          sessionsQuery={""}
           buttonData={{
             onClick: this.archiveCallback,
             body: "Archive",
@@ -41,9 +46,17 @@ class SessionsPage extends Component {
           lacksTag={"archived"}
           isRenderingDate={true}
           emptyMessage="No unarchived sessions."
-      />
-        <Link to="/home/archived">Archived</Link>
-      </div>
+        />
+        <Container>
+          <Row className="justify-content-center mt-3 mb-5">
+            <Col className="text-center">
+              <Link to="/home/archived" className="btn btn-outline-dark">
+                Archived
+              </Link>
+            </Col>
+          </Row>
+        </Container>
+      </Wrapper>
     );
   }
 }

@@ -16,12 +16,15 @@ class Session extends Component {
         <td>{this.props.sessionData.fullname}</td>
         <td>{
             this.props.isRenderingDate ? 
-              moment(this.props.sessionData.createdAt).format("MMM Do YY hh:mm a") :
+              moment(this.props.sessionData.createdAt).format("MMM Do, YYYY, h:mm A") :
               moment(this.props.sessionData.createdAt).fromNow()
         }</td>
         {this.props.buttonData !== undefined &&
           <td>
-            <button onClick={() => this.props.buttonData.onClick(this.props.sessionData.id)}>
+            <button 
+              onClick={() => this.props.buttonData.onClick(this.props.sessionData.id)}
+              className="btn btn-outline-dark"
+            >
               {this.props.buttonData.body}
             </button>
           </td>

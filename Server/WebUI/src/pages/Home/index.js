@@ -13,16 +13,16 @@ class HomePage extends Component {
       <Wrapper>
         <Container>
           <Menu />
-          <Row className="mt-3">
-            <Col>
-              <SessionTable
-                sessionsQuery={"createdWithin=1800&isOpen=true"} /* 30 minutes */
-                isRenderingDate={false}
-                emptyMessage="No active sessions right now."
-              />
-            </Col>
-          </Row>
         </Container>
+        <Row>
+          <Col>
+            <SessionTable
+              sessionsQuery={"createdWithin=1800&isOpen=true"} /* 30 minutes */
+              isRenderingDate={false}
+              emptyMessage="No active sessions right now."
+            />
+          </Col>
+        </Row>
       </Wrapper>
     );
   }
