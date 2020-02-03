@@ -64,7 +64,7 @@ namespace Carter.App.Route.Export
                     },
                     HostConfig = new HostConfig()
                     {
-                        Memory = 500000000, // 500 MegaBytes
+                        Memory = 1500000000, // ~1.5 Gigabytes
                         CPUPercent = 80, // 80%
                     },
                 });
@@ -126,27 +126,27 @@ namespace Carter.App.Route.Export
 
     internal static class MinioExtra
     {
-        public static async Task<byte[]> GetBytesAsync(this MinioClient os, string bucketName, string objectHandle)
+        public static async Task<byte[]> GetBytesAsync(this MinioClient os, string bucketName, string objectName)
         {
-            byte[] objectByteArray = null;
+            byte[] objectBytes = null;
 
             try
             {
-                await os.GetObjectAsync(bucketName, objectHandle,
+                await os.GetObjectAsync(bucketName, objectName,
                 (stream) =>
                 {
-                    using (var responseStream = new MemoryStream())
+                    using (var outStream = new MemoryStream())
                     {
-                        stream.CopyTo(responseStream);
-                        objectByteArray = responseStream.ToArray();
+                        stream.CopyTo(outStream);
+                        objectBytes = outStream.ToArray();
                     }
                 });
 
-                return objectByteArray;
+                return objectBytes;
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                throw new Exception($"GetBytesAsync Error. ObjectId: {objectHandle}, Bucket: {bucketName}", exception);
+                throw new Exception($"GetBytesAsync Error. ObjectId: {objectName}, Bucket: {bucketName}", e);
             }
         }
     }

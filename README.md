@@ -1,3 +1,4 @@
+[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Report/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Report%22)
 [![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Dockerfile/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Dockerfile%22)
 [![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Yaml/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Yaml%22)
 [![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Spellcheck/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Spellcheck%22)
