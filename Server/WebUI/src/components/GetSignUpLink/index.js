@@ -4,6 +4,8 @@ import queryString from 'query-string';
 
 import { postData } from 'libs/fetchExtra';
 
+import { Text, Wrapper, } from "components/GetSignUpLink/style"
+
 class GetSignUpLink extends Component {
   constructor(props) {
     super(props);
@@ -32,10 +34,19 @@ class GetSignUpLink extends Component {
 
   render() {
     return (
-      <div>
-        <p>{this.state.link}</p>
-        <button onClick={this.buttonCallback}>New Sign Up Link</button>
-      </div>
+      <Wrapper>
+        {this.state.link !== "" &&
+          <Text className="mt-4 mb-4">
+            {this.state.link}
+          </Text>
+        }
+        <button
+          onClick={this.buttonCallback}
+          className="btn btn-outline-dark btn-block"
+        >
+          New Sign Up Link
+        </button>
+      </Wrapper>
     );
   }
 }

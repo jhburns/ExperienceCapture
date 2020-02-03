@@ -5,6 +5,10 @@ import Session from "components/SingleSession";
 
 import { getData, postData, pollGet, } from "libs/fetchExtra";
 
+import { Container, Row, Col, } from '@bootstrap-styled/v4';
+
+import { Wrapper } from 'pages/Session/style';
+
 class SessionPage extends Component {
   constructor(props) {
     super(props)
@@ -79,23 +83,33 @@ class SessionPage extends Component {
     if (this.state.session != null)
     {
       return (
-        <div>
-          <Menu />
-          <Session
-            sessionData={this.state.session}
-            onExport={this.exportCallback}
-          />
-          {this.state.session.isPending &&
-            <p>Exporting...</p>
-          }
-        </div>
-      );
-    } else {
+        <Wrapper>
+          <Container>
+            <Menu />
+            <Row className="mb-3">
+              <Col>
+                <Session
+                  sessionData={this.state.session}
+                  onExport={this.exportCallback}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col className="text-center">
+                {this.state.session.isPending &&
+                  <h6>Exporting...</h6>
+                }
+              </Col>
+            </Row>
+          </Container>
+        </Wrapper>
+      )
+    } else { // TODO: Fix this so it don't show on reload
       return (
-        <div>
-          <p>404: Session not found</p>
-        </div>
-      );
+      <Wrapper>
+        <p>Fetching session...</p>
+      </Wrapper>
+      )
     }
   }
 }

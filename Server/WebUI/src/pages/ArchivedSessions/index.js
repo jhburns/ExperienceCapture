@@ -7,6 +7,10 @@ import { deleteData } from 'libs/fetchExtra';
 
 import { Link } from 'react-router-dom';
 
+import { Wrapper } from 'pages/ArchivedSessions/style';
+
+import { Container, Row, Col, } from '@bootstrap-styled/v4';
+
 class ArchivedSessionsPage extends Component {
   constructor(props) {
     super(props);
@@ -28,9 +32,10 @@ class ArchivedSessionsPage extends Component {
 
   render() {
     return (
-      <div>
-        <p>Welcome To Archived Sessions</p>
-        <Menu />
+      <Wrapper>
+        <Container>
+          <Menu />
+        </Container>
         <SessionTable
           sessionsQuery={""}
           buttonData={{
@@ -40,9 +45,18 @@ class ArchivedSessionsPage extends Component {
           }}
           hasTag={"archived"}
           isRenderingDate={true}
+          emptyMessage="No archived sessions."
         />
-        <Link to="/home/sessions">Back</Link>
-      </div>
+        <Container>
+          <Row className="justify-content-center mt-3 mb-5">
+            <Col className="text-center">
+              <Link to="/home/sessions" className="btn btn-outline-dark">
+                Back
+              </Link>
+            </Col>
+          </Row>
+        </Container>
+      </Wrapper>
     );
   }
 }

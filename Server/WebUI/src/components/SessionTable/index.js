@@ -4,6 +4,9 @@ import { getData } from 'libs/fetchExtra';
 
 import Session from 'components/SessionRow';
 
+import { P, Row, Col } from '@bootstrap-styled/v4';
+import { Wrapper } from 'components/SessionTable/style';
+
 class SessionTable extends Component {
   constructor(props) {
     super(props)
@@ -59,22 +62,38 @@ class SessionTable extends Component {
       />)
     }
 
+    let isEmpty = false;
+    if (items.length === 0)
+    {
+      isEmpty = true;
+    }
+
     return (
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Captured By</th>
-            <th scope="col">{this.props.isRenderingDate ? "Date" : "Time"}</th>
-            {this.props.buttonData !== undefined &&
-              <th scope="col">{this.props.buttonData.header}</th>
-            }
-          </tr>
-        </thead>
-        <tbody>
-          {items}
-        </tbody>
-      </table>
+      <Wrapper>
+        <table className="table">
+          <thead className="thead-dark">
+            <tr>
+              <th scope="col m-0">ID</th>
+              <th scope="col">Captured By</th>
+              <th scope="col">{this.props.isRenderingDate ? "Date" : "Time"}</th>
+              {this.props.buttonData !== undefined &&
+                <th scope="col">{this.props.buttonData.header}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            {items}
+          </tbody>
+        </table>
+        
+        {isEmpty &&
+          <Row className="justify-content-center">
+            <Col>
+              <P className="text-center">{this.props.emptyMessage}</P>
+            </Col>
+          </Row>
+        }
+      </Wrapper>
     )
   }
 }
