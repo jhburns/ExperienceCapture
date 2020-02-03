@@ -2,7 +2,9 @@ namespace Carter.App.Route.Export
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Net.Mime;
+    using System.Threading.Tasks;
 
     using Carter;
 
@@ -12,6 +14,7 @@ namespace Carter.App.Route.Export
     using Carter.App.Route.PreSecurity;
 
     using Carter.Request;
+    using Carter.Response;
 
     using Docker.DotNet;
     using Docker.DotNet.Models;
@@ -110,25 +113,41 @@ namespace Carter.App.Route.Export
 
                 string bucketName = "sessions.exported";
                 string objectName = $"{id}.exported.zip";
+                byte[] body = await os.GetBytesAsync(bucketName, objectName);
+
                 var about = new ContentDisposition { FileName = objectName };
-
-                res.ContentType = "application/zip";
-                res.Headers["Content-Disposition"] = about.ToString();
-
-                try
+                using (var stream = new MemoryStream(body))
                 {
-                    await os.GetObjectAsync(bucketName, objectName,
-                    /*async*/ (stream) =>
-                    {
-                        // Just doesn't work, seemingly the stream gets closed before finishing the responce
-                        /*await*/ stream.CopyToAsync(res.Body, 81920); // Buffersize included because its needed for async
-                    });
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
+                    await res.FromStream(stream, "application/zip", about);
                 }
             });
+        }
+    }
+
+    internal static class MinioExtra
+    {
+        public static async Task<byte[]> GetBytesAsync(this MinioClient os, string bucketName, string objectHandle)
+        {
+            byte[] objectByteArray = null;
+
+            try
+            {
+                await os.GetObjectAsync(bucketName, objectHandle,
+                (stream) =>
+                {
+                    using (var responseStream = new MemoryStream())
+                    {
+                        stream.CopyTo(responseStream);
+                        objectByteArray = responseStream.ToArray();
+                    }
+                });
+
+                return objectByteArray;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"GetBytesAsync Error. ObjectId: {objectHandle}, Bucket: {bucketName}", exception);
+            }
         }
     }
 }
