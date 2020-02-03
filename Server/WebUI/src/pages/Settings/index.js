@@ -6,6 +6,10 @@ import GetSignUpLink from 'components/GetSignUpLink';
 
 import { signOutUser } from 'libs/userManagement';
 
+import { Container, Row, Col, } from '@bootstrap-styled/v4';
+
+import { Wrapper } from 'components/SingleSession/style';
+
 class SettingsPage extends Component {
   constructor(props) {
     super(props)
@@ -20,12 +24,21 @@ class SettingsPage extends Component {
 
   render() {
     return (
-      <div>
-        <p>Welcome to Settings</p>
-        <Menu />
-        <SignOutButton onClickCallback={this.signOutCallback} />
-        <GetSignUpLink />
-      </div>
+      <Wrapper>
+        <Container>
+          <Menu />
+          <Row className="justify-content-center mb-3">
+            <Col xs={7}>
+              <SignOutButton onClickCallback={this.signOutCallback} />
+            </Col>
+          </Row>
+          <Row className="justify-content-center">
+            <Col xs={7}>
+              <GetSignUpLink />
+            </Col>
+          </Row>
+        </Container>
+      </Wrapper>
     );
   }
 }

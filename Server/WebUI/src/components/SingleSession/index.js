@@ -4,7 +4,7 @@ import moment from 'moment';
 
 import { Link } from 'react-router-dom';
 
-import { Row, Col } from '@bootstrap-styled/v4';
+import { Row, Col, } from '@bootstrap-styled/v4';
 
 import { Wrapper } from 'components/SingleSession/style';
 

@@ -7,7 +7,6 @@ const Wrapper = styled.section`
 const Info = styled.section`
   background-color: #F8F8F8;
   padding: 1rem 1rem 1rem 1rem;
-
 `;
 
 const Google = styled.button`
