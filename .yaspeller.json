@@ -59,7 +59,8 @@
     "ssh",
     "timestamps",
     "unitypackage",
-    "v1"
+    "v1",
+    "repeatable"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
