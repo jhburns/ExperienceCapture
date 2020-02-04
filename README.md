@@ -5,6 +5,8 @@
 
 # Experience Capture
 
+div style="text-align: center;"><img src="Documentation/images/logo.png" style="width: 10rem; height: auto;"/></div>
+
 This project is a custom video game analytics platform that is designed to support research needs. The four main parts are:
   - [Unity asset package](https://docs.unity3d.com/Manual/AssetPackages.html) client that integrates into any Unity game.
   - Back-end server that receives, stores, and processes captured data from play-sessions.
