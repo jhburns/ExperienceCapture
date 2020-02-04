@@ -5,22 +5,28 @@
 
 # Experience Capture
 
-The project aims to simplify and empower data collection from interactive technologies.
+This project is a custom video game analytics platform that is designed to support research needs. The four main parts are:
+  - [Unity asset package](https://docs.unity3d.com/Manual/AssetPackages.html) client that integrates into any Unity game.
+  - Back-end server that receives, stores, and processes captured data from play-sessions.
+  - Front-end client that coordinates authentication and allows users to manage data.
+  - Deploy system that allows repeatable and automated deploys of the service to [Amazon Web Services (AWS)](https://aws.amazon.com/).
 
-It uses a client-server model to do so, and is broken down into important folders:
+Briefly, the main strength of this game analytics platform is to capture all data each frame, instead of using an event-based model. As a result, it is both easier to capture large amounts of data, hence the name, and perform arbitrary analytics work after a play-session. More on this in the [documentation]().
 
-- *ExampleUnityGame/* is an example game using the client.
-- *ClientDevelopmentGame/* is a game used to develop the client. 
-- *SetupTestGame/* is a game for testing how easy/possible it is to integrate into the asset into a new game. 
-- *Server/* is a back-end service for collection and analyzing data.
+## Folders
 
-## Extra Folders
+- `ExampleUnityGame/` is an demo game showing off the client.
+- `ClientDevelopmentGame/` is the game used to develop the client.
+- `Server/` is a collection of back-end services for collection and processing data.
+- `Deploy/` is an automated system to deploy the server to AWS in a repeatable way.
+- `SetupTestGame/` is a game for testing if it is possible to integrate the client asset into a new game.
+- `.github/`` Contains the workflow files, defining [https://github.com/features/actions].
+- `Documentation/` has most of the documentation of course.
 
-- *Deploy/* bakes images and manages cloud deploys. 
-- *.github/* Contains the workflow files. 
+## Setup Games
 
-## Setup
+All of the games only need Unity (2018.2.11f)[https://unity3d.com/unity/whatsnew/unity-2018.2.11], which can be installed through Unity Hub.
 
-All of the games only need Unity 2018.2.11f, link: https://unity3d.com/unity/whatsnew/unity-2018.2.11.
+## Other Setup
 
-For the [server README](https://github.com/jhburns/ExperienceCapture/tree/master/Server#server) for setup info about that.
+The other services (server, deploy, ..) only have the requirement of having [Docker](https://docs.docker.com/install/) installed locally. For deploys, having various cloud services is needed. See the README in each folder for more information on each service.
