@@ -6,7 +6,7 @@
 # Experience Capture
 
 <p align="center">
-  <img src="Documentation/images/logo.png" style="width: 100px"/>
+  <img src="Documentation/images/logo.png" />
 </p>
 
 This project is a custom video game analytics platform that is designed to support research needs. The four main parts are:
