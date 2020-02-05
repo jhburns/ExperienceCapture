@@ -2,11 +2,13 @@
 
 # API
 
-Written in .Net Core (C#) and the following packages:
-- [Nancyfx](http://nancyfx.org/)
+Written in .Net Core (C#) and has the following dependencies:
+- [Carter framework](https://github.com/CarterCommunity/Carter)
 - [Kestrel web server](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?view=aspnetcore-3.0)
-- [JSON.Net](https://www.newtonsoft.com/json)
-- [MongoDB c# driver](http://mongodb.github.io/mongo-csharp-driver/)
-- [StyleCop.Analyzers](https://medium.com/@michaelparkerdev/linting-c-in-2019-stylecop-sonar-resharper-and-roslyn-73e88af57ebd)
+- [MongoDB client](http://mongodb.github.io/mongo-csharp-driver/)
+- [Minio Driver](https://github.com/minio/minio-dotnet)
+- [Docker.DotNet](https://github.com/microsoft/Docker.DotNet)
+- [FluentValidation](https://fluentvalidation.net/)
+- [Google APIs client](https://developers.google.com/api-client-library/dotnet)
 
- 
+This is the bulk of the logic in the application.

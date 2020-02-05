@@ -2,24 +2,23 @@
 
 ## Setup
 
-1. Install [Docker](https://docs.docker.com/v17.09/engine/installation/) along with [Docker Compose](https://docs.docker.com/compose/install/).
+### Env File
+
+Copy the `template.env` file to a empty file named `.env` and `template.deploy.env` into `.deploy.env`. More info on what each variable is coming soon.
+
+### Build
+
 1. Run `docker-compose build`. 
-1. Copy the contents of *template.env* to a new file named *.env* then fill out its content with values from [AWS](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys).
-1. Finally, run `docker-compose run ssh_setup` before any of the other commands.
-It generates SSH keys that will be used for the rest of the process.
-
-### Optionally 
-
-Change the variables in *info.env*, for example `aws_region_name` can be set to a different [AWS region](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RegionsAndAvailabilityZones.html).
+1. Finally, run `docker-compose run ssh_setup` before any of the other commands. It generates SSH keys that will be used is the ssh debug key is set.
 
 ## Usage
 
-- Build [AMI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html): `docker-compose up packer` builds a new AMI using [Packer](https://www.packer.io/) and [Ansible](https://www.ansible.com/).
-- `docker-compose run pulumi up` and follow the prompts to deploy the application.
+- Build an [AMI](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html): `docker-compose up packer` builds a new AMI using [Packer](https://www.packer.io/) and [Ansible](https://www.ansible.com/).
+- Provision resources: `docker-compose run pulumi up` and follow the prompts to deploy the application.
 - Connect to Instance: `docker-compose up ssh_connect` starts a terminal session to the Server. Change `aws_host_location` in *info.env* to specify the IP/hostname this is to be connected to.
-- `docker-compose run pulumi destroy` and follow the prompts to destroy the application.
+- Delete resources: `docker-compose run pulumi destroy` and follow the prompts to destroy the application.
 
-### Tip
+### Pulumi
 
 Any command can be passed to Pulumi, see https://www.pulumi.com/docs/reference/cli/.
 
