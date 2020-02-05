@@ -15,7 +15,7 @@ This project is a custom video game analytics platform that is designed to suppo
   - Front-end client that coordinates authentication and allows users to manage data.
   - Deploy system that allows repeatable and automated deploys of the service to [Amazon Web Services (AWS)](https://aws.amazon.com/).
 
-Briefly, the main strength of this game analytics platform is to capture all data each frame, instead of using an event-based model. As a result, it is both easier to capture large amounts of data, hence the name, and perform arbitrary analytics work after a play-session. More on this in the [documentation]().
+Briefly, the main strength of this game analytics platform is to capture all data each frame, instead of using an event-based model. As a result, it is both easier to capture large amounts of data, hence the name, and perform arbitrary analytics work after a play-session. More on this in the [documentation](Documentation/README.md).
 
 ## Folders
 
