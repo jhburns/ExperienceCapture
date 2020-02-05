@@ -39,3 +39,7 @@ game.
 
 **Check:** Pressing start in the Unity Editor from the Setup scene should instantly load the first scene.
 It should also have a 'DontDestroyOnLoad' portion with the HandleCapturing clone in it.
+
+## Migrate, Breaking Changes
+
+From version 1.0.0 => 1.1.0 change all instances of 'getCapture()' to 'GetCapture()'.

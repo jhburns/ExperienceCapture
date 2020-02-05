@@ -1,4 +1,5 @@
-[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/WebUI/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22WebUI%22)
+### This README is generated, so see [here](Custom-README.md) for actual about information
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

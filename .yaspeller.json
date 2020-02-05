@@ -60,7 +60,20 @@
     "timestamps",
     "unitypackage",
     "v1",
-    "repeatable"
+    "repeatable",
+    "playbook",
+    "Minio",
+    "FluentValidation",
+    "DotNet",
+    "Backupper",
+    "S3",
+    "endpoint",
+    "Cronjob",
+    "crontab",
+    "cron",
+    "s3",
+    "MongoDB's",
+    ""
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
