@@ -9,7 +9,7 @@ on:  # yamllint disable-line rule:truthy
       - '**/*Dockerfile*'
       - '*Dockerfile*'
       - '.github/workflows/dockerfile-integration.yml'
-      - 'Dockerfile.integration'
+      - 'integration.Dockerfile'
 
 jobs:
   build:

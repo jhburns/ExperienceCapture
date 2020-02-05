@@ -9,7 +9,7 @@ on:  # yamllint disable-line rule:truthy
       - '**/*.sh'
       - '*.sh'
       - '.github/workflows/shell-integration.yml'
-      - 'Dockerfile.shellcheck.integration'
+      - 'shellcheck.integration.Dockerfile'
 
 jobs:
   build:

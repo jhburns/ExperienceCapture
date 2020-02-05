@@ -11,7 +11,7 @@ on:  # yamllint disable-line rule:truthy
       - '*.yaml'
       - '*.yml'
       - '.github/workflows/yaml-integration.yml'
-      - 'Dockerfile.yaml.integration'
+      - 'yaml.integration.Dockerfile'
 
 jobs:
   build:

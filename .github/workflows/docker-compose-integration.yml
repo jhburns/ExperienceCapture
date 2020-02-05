@@ -9,6 +9,7 @@ on:  # yamllint disable-line rule:truthy
       - 'Server/**'
       - 'Deploy/**'
       - '.github/workflows/docker-compose-integration.yml'
+      - 'docker-compose.integration.Dockerfile'
 
 jobs:
   build:

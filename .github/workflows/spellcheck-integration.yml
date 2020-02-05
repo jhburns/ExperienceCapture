@@ -9,7 +9,7 @@ on:  # yamllint disable-line rule:truthy
       - '**/*.md'
       - '*.md'
       - '.github/workflows/spellcheck-integration.yml'
-      - 'Dockerfile.spelling.integration'
+      - 'spelling.integration.Dockerfile'
 
 jobs:
   build:
