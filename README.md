@@ -34,8 +34,9 @@ All of the games only need Unity [2018.2.11f](https://unity3d.com/unity/whatsnew
 ## Other Setup
 
 The other services (server, deploy, ...) require the following installed:
-    - [Docker](https://docs.docker.com/install/), Linux version only.
-    - [Docker Compose](https://docs.docker.com/compose/install/) which may come with docker.
+
+- [Docker](https://docs.docker.com/install/), Linux version only.
+- [Docker Compose](https://docs.docker.com/compose/install/) which may come with docker.
     
 For deploys, having various cloud services is needed, [see here](Documentation/Cloud-Deploy.md). See the README in each folder and sub-folder for more information on each service.
 
