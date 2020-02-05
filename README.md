@@ -24,7 +24,7 @@ Briefly, the main strength of this game analytics platform is to capture all dat
 - `Server/` is a collection of back-end services for collection and processing data.
 - `Deploy/` is an automated system to deploy the server to AWS in a repeatable way.
 - `SetupTestGame/` is a game for testing if it is possible to integrate the client asset into a new game.
-- `.github/`` Contains the workflow files, defining [Github Actions](https://github.com/features/actions).
+- `.github/` Contains the workflow files, defining [Github Actions](https://github.com/features/actions).
 - `Documentation/` has most of the documentation of course.
 
 ## Setup Games
@@ -35,7 +35,7 @@ All of the games only need Unity [2018.2.11f](https://unity3d.com/unity/whatsnew
 
 The other services (server, deploy, ...) require the following installed:
 
-- [Docker](https://docs.docker.com/install/), Linux version only.
+- [Docker](https://docs.docker.com/install/), Linux version only please.
 - [Docker Compose](https://docs.docker.com/compose/install/) which may come with docker.
     
 For deploys, having various cloud services is needed, [see here](Documentation/Cloud-Deploy.md). See the README in each folder and sub-folder for more information on each service.
