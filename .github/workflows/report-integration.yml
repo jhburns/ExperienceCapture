@@ -21,4 +21,4 @@ jobs:
           context: ./
           dockerfile: report.integration.Dockerfile
     env:
-      DOCKER_BUILDKIT: 1
+      DOCKER_BUILDKIT: 1  # Needed so that docker build will read in correct .dockerignore
