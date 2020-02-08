@@ -1,7 +1,9 @@
 FROM hashicorp/packer:1.4.5 as builder
 
 # Prevents pip from complaining about being out of date
+# And installs reviewdog to a folder that is in the PATH
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1 BINDIR=/usr/local/bin
+SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 
 WORKDIR /deploy
 

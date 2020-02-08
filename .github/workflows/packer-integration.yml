@@ -23,3 +23,4 @@ jobs:
           image_name: jhburns/ec-packer-cache
           context: ./Deploy/Packer
           dockerfile: integration.Dockerfile
+          build_extra_args: "--build-arg REVIEWDOG_TOKEN=\"${{ secrets.REVIEWDOG_TOKEN }}\""
