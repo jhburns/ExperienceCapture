@@ -138,7 +138,7 @@ namespace Carter.App.Route.Users
 
                     var filterClaims = Builders<BsonDocument>.Filter
                         .Eq("hash", PasswordHasher.Hash(newAccessRequest.Data.claimToken));
-                    
+
                     var claimDoc = await claimTokens.Find(filterClaims).FirstOrDefaultAsync();
 
                     // 401 returned twice, which may be hard for the client to interpret

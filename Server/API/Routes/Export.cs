@@ -54,8 +54,10 @@ namespace Carter.App.Route.Export
                 var exporter = await docker.Containers.CreateContainerAsync(new CreateContainerParameters()
                 {
                     Image = ExporterImageName,
+                    #pragma warning disable SA1515
                     // Don't bother using wait-for since this API also needs the same resources
                     Cmd = new List<string>() { "dotnet", "Exporter.dll" },
+                    #pragma warning restore SA1515
                     Tty = true,
                     AttachStdin = true,
                     AttachStdout = true,
@@ -126,7 +128,7 @@ namespace Carter.App.Route.Export
         }
     }
 
-    // Minio client expects the CopyTo to be both sync and async, 
+    // Minio client expects the CopyTo to be both sync and async,
     // So it is wrapped in a function call
     internal static class MinioExtra
     {
