@@ -49,17 +49,19 @@ namespace Carter.App.Route.Export
                     return;
                 }
 
+                // Warning: doing all of this is slow
+                // About 2 seconds
                 var exporter = await docker.Containers.CreateContainerAsync(new CreateContainerParameters()
                 {
                     Image = ExporterImageName,
-                    Cmd = new List<string>() { "dotnet", "Exporter.dll" }, // Don't bother waiting since this API also needs the same resources
+                    // Don't bother using wait-for since this API also needs the same resources
+                    Cmd = new List<string>() { "dotnet", "Exporter.dll" },
                     Tty = true,
                     AttachStdin = true,
                     AttachStdout = true,
                     AttachStderr = true,
                     Env = new List<string>()
                     {
-                        "WAIT_HOSTS= db:27017, os:9000",
                         $"exporter_session_id={id}",
                     },
                     HostConfig = new HostConfig()
@@ -124,6 +126,8 @@ namespace Carter.App.Route.Export
         }
     }
 
+    // Minio client expects the CopyTo to be both sync and async, 
+    // So it is wrapped in a function call
     internal static class MinioExtra
     {
         public static async Task<byte[]> GetBytesAsync(this MinioClient os, string bucketName, string objectName)
@@ -146,6 +150,7 @@ namespace Carter.App.Route.Export
             }
             catch (Exception e)
             {
+                // Should never be thrown as object state is checked from Mongo
                 throw new Exception($"GetBytesAsync Error. ObjectId: {objectName}, Bucket: {bucketName}", e);
             }
         }

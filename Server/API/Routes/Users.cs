@@ -5,6 +5,7 @@ namespace Carter.App.Route.Users
     using Carter;
 
     using Carter.App.Lib.Authentication;
+    using Carter.App.Lib.CustomExceptions;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Network;
@@ -22,7 +23,8 @@ namespace Carter.App.Route.Users
 
     public class Users : CarterModule
     {
-        private static readonly string PasswordHash = Environment.GetEnvironmentVariable("admin_password_hash");
+        private static readonly string PasswordHash = Environment.GetEnvironmentVariable("admin_password_hash")
+            ?? throw new EnviromentVarNotSet("The following is unset", "admin_password_hash");
 
         public Users(IMongoDatabase db)
             : base("/users")

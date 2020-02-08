@@ -7,7 +7,8 @@ namespace Export.App.Main
     using System.IO;
     using System.IO.Compression;
     using System.Linq;
-    using System.Text; // String Builder is basically required or things will be super slow
+    // String Builder is basically required or things will be super slow
+    using System.Text;
     using System.Threading.Tasks;
 
     using CsvHelper;
@@ -37,6 +38,8 @@ namespace Export.App.Main
 
         public static void Main(string[] args)
         {
+            // Stopwatch is only used to track time between steps,
+            // Not total
             timer = new Stopwatch();
             timer.Start();
 
@@ -146,6 +149,7 @@ namespace Export.App.Main
         {
             StringBuilder docsTotal = new StringBuilder();
             docsTotal.Append("[");
+
             foreach (BsonDocument d in sessionDocs)
             {
                 docsTotal.AppendFormat("{0}{1}", d.ToJson(ws ?? GetJsonWriterSettings()), ",");
@@ -190,6 +194,7 @@ namespace Export.App.Main
             return docsTotal.ToString();
         }
 
+        // Acts a way to generate default JsonWriterSettings
         private static JsonWriterSettings GetJsonWriterSettings()
         {
             JsonWriterSettings settings = new JsonWriterSettings();
@@ -268,8 +273,7 @@ namespace Export.App.Main
         // https://stackoverflow.com/a/36348017
         private static DataTable JsonToTable(string jsonContent)
         {
-            DataTable dt = Newtonsoft.Json.JsonConvert.DeserializeObject<DataTable>(jsonContent);
-            return dt;
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<DataTable>(jsonContent);
         }
 
         private static string JsonToCsv(string jsonContent, string delimiter)
@@ -360,10 +364,11 @@ namespace Export.App.Main
 
         private static async Task UpdateDoc()
         {
-            var sessions = DB.GetCollection<BsonDocument>($"sessions");
+            var sessions = DB.GetCollection<BsonDocument>("sessions");
 
             var filter = Builders<BsonDocument>.Filter
                 .Eq("id", SessionId);
+
             var update = Builders<BsonDocument>.Update
                 .Set("isExported", true)
                 .Set("isPending", false);
@@ -373,6 +378,7 @@ namespace Export.App.Main
         }
     }
 
+    // Used to group together captures based on timestamps
     internal class SceneBlock
     {
         #pragma warning disable SA1516, SA1300

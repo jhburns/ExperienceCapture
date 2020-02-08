@@ -71,6 +71,9 @@ namespace Carter.App.Route.Sessions
 
                 var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
 
+                // Secondary index or else Mongo will fail on large queries
+                // It has a limit for max number of documents on properties
+                // Without an index
                 var index = Builders<BsonDocument>.IndexKeys;
                 var key = index.Ascending("frameInfo.realtimeSinceStartup");
                 var options = new CreateIndexOptions();
