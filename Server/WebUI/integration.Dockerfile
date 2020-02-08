@@ -1,6 +1,6 @@
 FROM node:13.1.0-alpine as build
 WORKDIR /app
-ENV PATH=/app/node_modules/.bin:$PATH CI=true
+ENV CI=true
 
 COPY package.json package-lock.json /app/
 RUN npm ci --silent

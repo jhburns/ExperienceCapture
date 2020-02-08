@@ -31,6 +31,7 @@ class SessionPage extends Component {
     const getSessions = await getData(url);
     const sessionsData = await getSessions.json();
 
+    // Flattening the structure
     const cleanedSession = {
       id: sessionsData.id,
       fullname: sessionsData.user.fullname,
@@ -67,6 +68,7 @@ class SessionPage extends Component {
     const { id } = this.props.match.params;
     const url = `/api/v1/sessions/${id}/export/`;
     await pollGet(url);
+
     this.sessionCallback();
   }
 
@@ -104,7 +106,8 @@ class SessionPage extends Component {
           </Container>
         </Wrapper>
       )
-    } else { // TODO: Fix this so it don't show on reload
+    } else {
+      // TODO: Fix this so it don't show on reload
       return (
       <Wrapper>
         <p>Fetching session...</p>
