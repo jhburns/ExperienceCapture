@@ -26,7 +26,5 @@ RUN apk update \
 
 COPY .ansible-lint build.json playbook.yaml ./
 
-RUN echo $CI_REPO_OWNER
-
 RUN packer validate build.json
 RUN ansible-lint playbook.yaml | reviewdog -f=ansible-lint -reporter=github-pr-check
