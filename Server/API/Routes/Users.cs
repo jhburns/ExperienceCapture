@@ -48,6 +48,7 @@ namespace Carter.App.Route.Users
 
                 var signUpDoc = await signUpTokens.FindEqAsync("hash", PasswordHasher.Hash(newPerson.Data.signUpToken));
 
+                // 401 returned twice which may make interpretting the code harder for a client
                 if (signUpDoc == null || signUpDoc["createdAt"].IsAfter(signUpDoc["expirationSeconds"]))
                 {
                     res.StatusCode = 401;
@@ -79,6 +80,7 @@ namespace Carter.App.Route.Users
                 BasicResponce.Send(res);
             });
 
+            // TODO: refactor this section
             this.Post("/{id}/tokens/", async (req, res) =>
             {
                 var users = db.GetCollection<BsonDocument>("users");
@@ -132,9 +134,12 @@ namespace Carter.App.Route.Users
                 {
                     var claimTokens = db.GetCollection<BsonDocument>("users.tokens.claim");
 
-                    var filterClaims = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(newAccessRequest.Data.claimToken));
+                    var filterClaims = Builders<BsonDocument>.Filter
+                        .Eq("hash", PasswordHasher.Hash(newAccessRequest.Data.claimToken));
+                    
                     var claimDoc = await claimTokens.Find(filterClaims).FirstOrDefaultAsync();
 
+                    // 401 returned twice, which may be hard for the client to interpret
                     if (claimDoc == null || claimDoc["createdAt"].IsAfter(claimDoc["expirationSeconds"]))
                     {
                         res.StatusCode = 401;
@@ -147,7 +152,12 @@ namespace Carter.App.Route.Users
                         var update = Builders<BsonDocument>.Update
                             .Set("isPending", false)
                             .Set("access", tokenDoc["_id"])
+                            #pragma warning disable SA1515
+                            // Unfortunately claim access tokens have to be saved to the database
+                            // So that state can be communicated between clients
+                            #pragma warning restore SA1515
                             .Set("accessToken", newToken);
+
                         await claimTokens.UpdateOneAsync(filterClaims, update);
                     }
 
@@ -198,6 +208,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
+                // 404 returned twice, may be hard for client to understand
                 if (!claimDoc["isExisting"].AsBoolean || claimDoc["createdAt"].IsAfter(claimDoc["expirationSeconds"]))
                 {
                     res.StatusCode = 404;
@@ -213,7 +224,12 @@ namespace Carter.App.Route.Users
 
                 var update = Builders<BsonDocument>.Update
                     .Set("isExisting", false)
+                    #pragma warning disable SA1515
+                    // Removes the access token from the database
+                    // Important to increase secuirty
+                    #pragma warning restore SA1515
                     .Unset("accessToken");
+
                 await claimTokens.UpdateOneAsync(filter, update);
 
                 BasicResponce.Send(res, claimDoc["accessToken"].AsString);
