@@ -18,6 +18,7 @@ namespace Carter.App.Hosting
     {
         private readonly AppConfiguration appconfig;
 
+        // TODO: CHeck/fix config so OpenAPI is customizable
         public Startup(IConfiguration config)
         {
             this.appconfig = new AppConfiguration();
@@ -28,6 +29,7 @@ namespace Carter.App.Hosting
         {
             services.AddCarter();
 
+            // TODO: change port number to be included in config
             MongoClient client = new MongoClient($"mongodb://{AppConfiguration.ConnectionString}:27017");
             IMongoDatabase db = client.GetDatabase("ec");
             services.AddSingleton<IMongoDatabase>(db);
@@ -37,12 +39,15 @@ namespace Carter.App.Hosting
             services.AddSingleton<string>(minioUsername);
             services.AddSingleton<string>(minioPassword);
 
+            // TODO: change this to use config string like Mongo
             MinioClient os = new MinioClient("os:9000", minioUsername, minioPassword);
             services.AddSingleton<MinioClient>(os);
 
+            // TODO: Check if this work on Docker for Windows
             DockerClient docker = new DockerClientConfiguration(
                 new Uri("unix:///var/run/docker.sock"))
                 .CreateClient();
+
             services.AddSingleton<IDockerClient>(docker);
         }
 
