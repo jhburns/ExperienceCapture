@@ -24,5 +24,8 @@ jobs:
           context: ./Deploy/Packer
           dockerfile: integration.Dockerfile
           build_extra_args:
-            "--build-arg
-            REVIEWDOG_GITHUB_API_TOKEN=\"${{ secrets.REVIEWDOG_TOKEN }}\""
+            "--build-arg CI_PULL_REQUEST=223
+            --build-arg CI_REPO_OWNER=jhburns
+            --build-arg CI_REPO_NAME=ExperienceCapture
+            --build-arg CI_COMMIT=$(git rev-parse HEAD)
+            --build-arg REVIEWDOG_TOKEN=\"${{ secrets.REVIEWDOG_TOKEN }}\""
