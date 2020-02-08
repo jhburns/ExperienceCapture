@@ -5,6 +5,12 @@ FROM hashicorp/packer:1.4.5 as builder
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1 BINDIR=/usr/local/bin
 SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
 
+ARG CI_PULL_REQUEST
+ARG CI_REPO_OWNER
+ARG CI_REPO_NAME
+ARG CI_COMMIT
+ARG REVIEWDOG_TOKEN
+
 WORKDIR /deploy
 
 RUN wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s v0.9.17
