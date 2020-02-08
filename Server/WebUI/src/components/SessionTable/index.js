@@ -53,7 +53,7 @@ class SessionTable extends Component {
 
   render() {
     const items = []
-    const isEmpty = items.length === 0;
+    const isEmpty = () => items.length === 0;
 
     for (const [index, value] of this.state.sessions.entries()) {
       items.push(<Session 
@@ -82,7 +82,7 @@ class SessionTable extends Component {
           </tbody>
         </table>
         
-        {isEmpty &&
+        {isEmpty() &&
           <Row className="justify-content-center">
             <Col>
               <P className="text-center">{this.props.emptyMessage}</P>
