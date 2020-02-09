@@ -41,5 +41,5 @@ When done with the service, take it down with `docker-compose pulumi destroy`. A
 When changing deploy target to production or staging, check that the following are done:
 - Change `aws_domain_name` in the `Server/.env` file to reflect the domain it is being deployed too.
 - Set `packer_debug_option` in the `Deploy/.deploy.env` file to false if deploying to production to follow best security practices.
-- Change `aws_deploy_target` in the `Server/.deploy.env` file to the correct one one, either production or staging.
+- Change `aws_deploy_target` in the `Server/.deploy.env` file to the correct one, either production or staging.
 - Rebuild the AMI with `docker-compose up packer`.
