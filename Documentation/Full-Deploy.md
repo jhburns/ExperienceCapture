@@ -270,7 +270,7 @@ Set `aws_domain_name` variable in the `Server/.env` file to whichever domain is 
 
 ## Generate Password
 
-Run `docker-compose up new_password` and copy the Hash value into the `admin_password_hash` variable in the `Server/.env`file. This used used to bootstrap the website by visiting, `http://[your domain]/admin?password=[Password for URL value]` in the browser. 
+Run `docker-compose up new_password` and copy the Hash value into the `admin_password_hash` variable in the `Server/.env`file. This is used to bootstrap the website by visiting, `http://[your domain]/admin?password=[Password for URL value]` in the browser. 
 
 ## Optional Environmental Variables
 
@@ -279,8 +279,8 @@ The following variables aren't required to be changed in order to deploy.
 In `Server/.deploy.env`:
 - `aws_region_name` where to deploy the service too, default us-west-1.
 - `aws_ami_version_number` version to give built AMI, ex 1.1.4 .
-- `packer_debug_option` whether to allow ssh access the the server, either true or false.
-- `aws_deploy_target` what mode to deploy in, either production or statging.
+- `packer_debug_option` whether to allow ssh access the server, either true or false.
+- `aws_deploy_target` what mode to deploy in, either production or stating.
 - `aws_host_ssh_address` where for the ssh client to connect to, ex expcap.xyz .
 
 In `Deploy/.env`:
@@ -288,4 +288,4 @@ In `Deploy/.env`:
 
 ## Sharing and Deploying
 
-Everything should be setup now. This setup is designed so that other developers only need to copy the files locally and are done. Next up, [Deploy the service](Partial-Deploy.md).
+Everything should be setup now. This setup is designed so that these files can be shared with other developers. Next up, [Deploy the service](Partial-Deploy.md).

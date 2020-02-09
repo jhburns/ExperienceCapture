@@ -73,7 +73,12 @@
     "cron",
     "s3",
     "MongoDB's",
-    "CsvHelper"
+    "CsvHelper",
+    "Namecheap",
+    "GCP",
+    "TTL",
+    "expcap",
+    "xyz"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
