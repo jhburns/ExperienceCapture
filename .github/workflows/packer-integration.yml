@@ -23,3 +23,9 @@ jobs:
           image_name: jhburns/ec-packer-cache
           context: ./Deploy/Packer
           dockerfile: integration.Dockerfile
+          build_extra_args:
+            "--build-arg GITHUB_ACTION
+            --build-arg GITHUB_EVENT_PATH
+            --build-arg REVIEWDOG_TOKEN=${{ secrets.REVIEWDOG_TOKEN }}"
+    env:
+      DOCKER_BUILDKIT: 1
