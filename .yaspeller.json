@@ -78,7 +78,8 @@
     "GCP",
     "TTL",
     "expcap",
-    "xyz"
+    "xyz",
+    "rebake"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
