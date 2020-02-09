@@ -99,7 +99,7 @@ class SessionPage extends Component {
             <Row>
               <Col className="text-center">
                 {this.state.session.isPending &&
-                  <h6>Exporting...</h6>
+                  <h5>Exporting...</h5>
                 }
               </Col>
             </Row>

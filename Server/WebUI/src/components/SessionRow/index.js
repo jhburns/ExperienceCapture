@@ -20,10 +20,10 @@ class Session extends Component {
               moment(this.props.sessionData.createdAt).fromNow()
         }</td>
         {this.props.buttonData !== undefined &&
-          <td>
+          <td className>
             <button 
               onClick={() => this.props.buttonData.onClick(this.props.sessionData.id)}
-              className="btn btn-outline-dark"
+              className="btn btn-outline-dark mr-2 mr-lg-0"
             >
               {this.props.buttonData.body}
             </button>
