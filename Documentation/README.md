@@ -34,4 +34,4 @@ For someone who is setting up the cloud service for the first time, [follow this
 
 ## Contributing
 
-Coming soon...
+Information on contributing [here](Contributing.md).
