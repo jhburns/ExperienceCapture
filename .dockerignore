@@ -1,6 +1,8 @@
 .git/
 .vs/
+.vscode/
+
 ClientDevelopmentGame/
-ExampleUnityGame/
+DemoGame/
 SetupTestGame/
 Deploy/.secrets/

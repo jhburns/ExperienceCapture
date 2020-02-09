@@ -19,13 +19,13 @@ Briefly, the main strength of this game analytics platform is to capture all dat
 
 ## Folders
 
-- `ExampleUnityGame/` is an demo game showing off the client.
+- `DemoGame/` is an demo game showing an example of how to use the client.
 - `ClientDevelopmentGame/` is the game used to develop the client.
 - `Server/` is a collection of back-end services for collection and processing data.
 - `Deploy/` is an automated system to deploy the server to AWS in a repeatable way.
 - `SetupTestGame/` is a game for testing if it is possible to integrate the client asset into a new game.
-- `.github/` Contains the workflow files, defining [Github Actions](https://github.com/features/actions).
 - `Documentation/` has most of the documentation of course.
+- `.github/` Contains the workflow files, defining [Github Actions](https://github.com/features/actions).
 
 ## Setup Games
 
