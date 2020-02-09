@@ -2,9 +2,9 @@
 
 ## Setup
 
-### Env File
+### Env Files
 
-Follow the direction [here]().
+Follow the tutorial [here](https://github.com/jhburns/ExperienceCapture/blob/master/Documentation/Partial-Deploy.md#create-and-copy-environment-files).
 
 ### Build
 

@@ -2,9 +2,9 @@
 
 ## Setup
 
-### Env File
+### Env Files
 
-Copy the `template.env` file to a empty file named `.env`. More info on what each variable is coming soon.
+Follow the tutorial [here](https://github.com/jhburns/ExperienceCapture/blob/master/Documentation/Partial-Deploy.md#create-and-copy-environment-files) and [here](https://github.com/jhburns/ExperienceCapture/blob/master/Documentation/Partial-Deploy.md#change-build-arg)
 
 ### Build
 
