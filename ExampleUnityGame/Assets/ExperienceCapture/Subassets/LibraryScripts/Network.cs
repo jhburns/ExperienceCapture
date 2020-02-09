@@ -7,10 +7,36 @@ namespace Network
     using Newtonsoft.Json.Bson;
     using System.IO;
 
+    using UnityEngine;
+
     class HTTPHelpers
     {
+        static public IEnumerator post(string url, byte[] data, string token, System.Action<byte[]> onSuccess, System.Action<string> onError)
+        {
+            using (UnityWebRequest request = UnityWebRequest.Put(url, data))
+            {
+                request.method = UnityWebRequest.kHttpVerbPOST;
+                request.SetRequestHeader("Content-Type", "application/bson");
+                request.SetRequestHeader("Accept", "application/bson");
+                request.SetRequestHeader("Cookie", "ExperienceCapture-Access-Token=" + token);
 
-        static public IEnumerator post(string url, byte[] data, System.Action<byte[]> onSuccess, System.Action<string> onError)
+                request.timeout = 3;
+
+                yield return request.SendWebRequest();
+
+                if (request.isNetworkError || request.isHttpError)
+                {
+                    Debug.Log(request.responseCode);
+                    onError(request.error);
+                }
+                else
+                {
+                    onSuccess(request.downloadHandler.data);
+                }
+            }
+        }
+
+        static public IEnumerator post(string url, string data, System.Action<string> onSuccess, System.Action<string> onError)
         {
             using (UnityWebRequest request = UnityWebRequest.Put(url, data))
             {
@@ -27,11 +53,40 @@ namespace Network
                 }
                 else
                 {
-                    onSuccess(request.downloadHandler.data);
+                    onSuccess(request.downloadHandler.text);
                 }
             }
         }
 
+        static public IEnumerator pollGet(string url, string token, System.Action<string> onSuccess, System.Action<string> onError)
+        {
+            bool isNotReady = true;
+            while(isNotReady)
+            {
+                using (UnityWebRequest request = UnityWebRequest.Get(url))
+                {
+                    request.SetRequestHeader("Accept", "application/text");
+                    request.SetRequestHeader("Cookie", "ExperienceCapture-Claim-Token=" + token);
+                    request.timeout = 3;
+
+                    yield return request.SendWebRequest();
+
+                    if (request.isNetworkError || request.isHttpError)
+                    {
+                        onError(request.error);
+                    }
+                    else
+                    {
+                        if (request.responseCode == 200) {
+                            onSuccess(request.downloadHandler.text);
+                            isNotReady = false;
+                        }
+                    }
+                    
+                    yield return new WaitForSeconds(3);
+                }
+            }
+        }
     }
 
     class Serial
@@ -57,6 +112,15 @@ namespace Network
                 obj = serializer.Deserialize<T>(reader);
             }
             return obj;
+        }
+    }
+
+    public class SecretStorage
+    {
+        public string accessToken { get; private set; }
+        public SecretStorage(string a)
+        {
+            accessToken = a;
         }
     }
 }

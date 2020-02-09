@@ -64,9 +64,11 @@
     <Compile Include="Assets\ExperienceCapture\Subassets\Capture.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\CaptureSetup.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\HandleCapturing.cs" />
+    <Compile Include="Assets\ExperienceCapture\Subassets\InputStructure.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\LibraryScripts\Network.cs" />
     <Compile Include="Assets\Scripts\Spinner.cs" />
     <Compile Include="Assets\Scripts\UIController.cs" />
+    <None Include="Assets\ExperienceCapture\JsonDotNet\link.xml" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/Hat/source/repos/jhburns/ExperienceCapture/ExampleUnityGame/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
