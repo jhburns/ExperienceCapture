@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { getData } from 'libs/fetchExtra';
 
-import Session from 'components/SessionRow';
+import SessionRow from 'components/SessionRow';
 
 import { P, Row, Col, } from '@bootstrap-styled/v4';
 import { Wrapper } from 'components/SessionTable/style';
@@ -56,7 +56,7 @@ class SessionTable extends Component {
     const isEmpty = () => items.length === 0;
 
     for (const [index, value] of this.state.sessions.entries()) {
-      items.push(<Session 
+      items.push(<SessionRow 
         key={index}
         sessionData={value} 
         buttonData={this.props.buttonData}

@@ -7,11 +7,11 @@ class Session extends Component {
   render() {
     return (
       <tr>
-        <th scope="row">
-          <Link to={`/home/sessions/${this.props.sessionData.id}/`}>
-            {this.props.sessionData.id}
-          </Link>
-        </th>
+          <th scope="row">
+            <Link to={`/home/sessions/${this.props.sessionData.id}/`}>
+              {this.props.sessionData.id}
+            </Link>
+          </th>
 
         <td>{this.props.sessionData.fullname}</td>
         <td>{
