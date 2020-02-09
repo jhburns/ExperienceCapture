@@ -25,11 +25,12 @@ services:
     build:
       context: ./WebUI
       dockerfile: integration.Dockerfile
-    command: "caddy"
+    command: ["caddy"]
     image: 127.0.0.1:5000/ec-web
     deploy:
       restart_policy:
         condition: any
+      # Web going down isn't much of an issue, so little replicas
       replicas: 2
       update_config:
         parallelism: 0
@@ -46,7 +47,8 @@ services:
     image: 127.0.0.1:5000/ec-exporter
 
   rp:
-    command: ["--agree", "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
+    # Leaving this here in case of a rate limit
+    command: ["--agree" ] #, "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
     deploy:
       restart_policy:
         condition: any
