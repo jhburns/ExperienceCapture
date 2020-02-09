@@ -9,11 +9,11 @@ ARG GITHUB_EVENT_PATH
 ARG GITHUB_ACTION
 ARG REVIEWDOG_TOKEN
 
-RUN echo $GITHUB_ACTION
+RUN ls
 
 WORKDIR /deploy
 
-RUN wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s v0.9.17
+RUN wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s v0.9.17
 
 RUN apk update \
     && apk add --no-cache \

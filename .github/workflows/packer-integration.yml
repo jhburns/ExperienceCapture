@@ -26,4 +26,7 @@ jobs:
           build_extra_args:
             "--build-arg GITHUB_ACTION
             --build-arg GITHUB_EVENT_PATH
-            --build-arg REVIEWDOG_TOKEN=${{ secrets.REVIEWDOG_TOKEN }}"
+            --build-arg REVIEWDOG_TOKEN=${{ secrets.REVIEWDOG_TOKEN }}
+            --volume"
+    env:
+      DOCKER_BUILDKIT: 1
