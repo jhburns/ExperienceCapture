@@ -2,9 +2,9 @@
 
 ## Setup
 
-### Env File
+### Env Files
 
-Follow the direction [here]().
+Follow the tutorial [here](https://github.com/jhburns/ExperienceCapture/blob/master/Documentation/Partial-Deploy.md#create-and-copy-environment-files).
 
 ### Build
 
@@ -18,7 +18,7 @@ Follow the direction [here]().
 - Connect to Instance: `docker-compose up ssh_connect` starts a terminal session to the Server. Change `aws_host_location` in *info.env* to specify the IP/hostname this is to be connected to.
 - Delete resources: `docker-compose run pulumi destroy` and follow the prompts to destroy the application.
 
-### Pulumi
+### Pulumi Tip
 
 Any command can be passed to Pulumi, see https://www.pulumi.com/docs/reference/cli/.
 
@@ -34,3 +34,6 @@ rebaking/deploying the full application.
 
 Additionally, do not share/publish any of the variables found in the *.env* file because they 
 allow access to various cloud services. 
+
+In terms of the api tokens/keys being leaked the service should be taken down, all of the tokens revoked and reissued.
+Then rebake/deploy the full application.

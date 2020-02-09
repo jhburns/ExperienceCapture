@@ -288,4 +288,4 @@ In `Deploy/.env`:
 
 ## Sharing and Deploying
 
-Everything should be setup now. This setup is designed so that these files can be shared with other developers. Next up, [Deploy the service](Partial-Deploy.md).
+Everything should be setup now. This setup is designed so that these files can be shared with other developers. Test that everything is working by [following a normal deploy](Partial-Deploy.md).

@@ -2,9 +2,9 @@
 
 ## Setup
 
-### Env File
+### Env Files
 
-Copy the `template.env` file to a empty file named `.env`. More info on what each variable is coming soon.
+Follow the tutorial [here](https://github.com/jhburns/ExperienceCapture/blob/master/Documentation/Partial-Deploy.md#create-and-copy-environment-files) and [here](https://github.com/jhburns/ExperienceCapture/blob/master/Documentation/Partial-Deploy.md#change-build-arg).
 
 ### Build
 
@@ -12,14 +12,14 @@ Run `docker-compose build` to develop locally.
 
 ### Running
 
-- API: `docker-compose up rp api` starts the api server.
+- API: `docker-compose up rp api` starts the api server. It should be available at http://localhost:8090/api/v1/.
+- WebUI: `docker-compose up rp web` starts the front-end in development mode. It should be available at http://localhost:8090.
 - Database: should be started alongside any service that needs it, but `docker-compose down` also stops it.
 - Exporter: `docker-compose run -e exporter_session_id=XXXX exporter` starts the exporter, with it exporting the given exporter_session_id (required). It will exit when done. Keep in mind the API also can start an exporter job.
-- WebUI: `docker-compose up rp web` starts the front-end in development mode, meaning with hot reload.
 - Reverse-Proxy (Caddy): `docker-compose up rp` with start the reverse proxy, and almost all of the rest of the stack. This may be broken, so use the API's command if it is.
 - Backupper: `docker-compose up bu` which will dump MongoDB's data into S3.
 
-`Ctrl-C` stops any service, that was named in the `docker-compose up`. To stop all services, run `docker-compose down`.
+`Ctrl-C` stops any service, that was named in the `docker-compose up`. To stop all services, run `docker-compose down`. See the `Server/docker-compose.yaml` file for the port mappings on any service besides the API or WebUI.
 
 ## About Docker Compose 
 

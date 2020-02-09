@@ -78,7 +78,12 @@
     "GCP",
     "TTL",
     "expcap",
-    "xyz"
+    "xyz",
+    "rebake",
+    "dockerized",
+    "recreatable",
+    "CI",
+    "GitHub"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
