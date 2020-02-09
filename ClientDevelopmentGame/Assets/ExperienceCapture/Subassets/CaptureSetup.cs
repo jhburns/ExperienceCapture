@@ -261,12 +261,12 @@ public class CaptureSetup : MonoBehaviour
         return tempPairs;
     }
 
-    private void createHandler(string url, string id, string username, InputStructure.SpecificPair[] pairs)
+    private void createHandler(string url, string id, string playerName, InputStructure.SpecificPair[] pairs)
     {
         HandleCapturing newHandler = Instantiate(handler);
 
         newHandler.url = url;
-        newHandler.username = username;
+        newHandler.playerName = playerName;
         newHandler.id = id;
 
         newHandler.captureRate = captureRate;
@@ -283,7 +283,7 @@ public class CaptureSetup : MonoBehaviour
         newHandler.extraInfo = new
         {
             clientVersion = clientVersionLocked,
-            gameVersion = gameVersion,
+            gameVersion,
         };
 
         newHandler.isIgnoringNotFound = doNotThrowNotFound;
