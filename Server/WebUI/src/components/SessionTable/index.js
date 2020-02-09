@@ -66,7 +66,7 @@ class SessionTable extends Component {
 
     return (
       <Wrapper>
-        <table className="table">
+        <table className="table mb-5">
           <thead className="thead-dark">
             <tr>
               <th scope="col m-0">ID</th>
