@@ -20,7 +20,7 @@ The reason for this a given, and it is achieved two ways. First, games in Unity 
 
 ### Transparency 
 
-Transparency is important to make sure that the data captured is valid. This is implemented through everything as code as mentioned before and a discrete build system for the server. What that means is given a copy of the Server code, it should identically recreatable without anything irregular coming in to play.
+ It is important to make sure that the data captured is valid, which means transparency of how this functions is a priority. This is implemented through everything as code as mentioned before and a discrete build system for the server. What that means is given a copy of the Server code, it should identically recreatable without anything irregular coming in to play.
 
 ## Open A Pull-Request
 
