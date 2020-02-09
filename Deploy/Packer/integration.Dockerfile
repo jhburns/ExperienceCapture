@@ -1,19 +1,9 @@
 FROM hashicorp/packer:1.4.5 as builder
 
 # Prevents pip from complaining about being out of date
-# And installs reviewdog to a folder that is in the PATH
-ENV PIP_DISABLE_PIP_VERSION_CHECK=1 BINDIR=/usr/local/bin
-SHELL ["/bin/ash", "-eo", "pipefail", "-c"]
-
-ARG GITHUB_EVENT_PATH
-ARG GITHUB_ACTION
-ARG REVIEWDOG_TOKEN
-
-RUN pwd
+ENV BINDIR=/usr/local/bin
 
 WORKDIR /deploy
-
-RUN wget -O - -q https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s v0.9.17
 
 RUN apk update \
     && apk add --no-cache \
@@ -27,4 +17,4 @@ RUN apk update \
 COPY .ansible-lint build.json playbook.yaml ./
 
 RUN packer validate build.json
-RUN ansible-lint playbook.yaml | reviewdog -f=ansible-lint -reporter=github-pr-check
+RUN ansible-lint playbook.yaml
