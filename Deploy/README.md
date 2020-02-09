@@ -4,12 +4,12 @@
 
 ### Env File
 
-Copy the `template.env` file to a empty file named `.env` and `template.deploy.env` into `.deploy.env`. More info on what each variable is coming soon.
+Follow the direction [here]().
 
 ### Build
 
 1. Run `docker-compose build`. 
-1. Finally, run `docker-compose run ssh_setup` before any of the other commands. It generates SSH keys that will be used is the ssh debug key is set.
+1. Finally, run `docker-compose run ssh_setup` before any of the other commands. It generates SSH keys that will be used is the ssh debug key is set to true.
 
 ## Usage
 
