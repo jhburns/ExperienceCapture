@@ -45,10 +45,11 @@ async function deleteData(url = '') {
 }
 
 async function wait(milliseconds) {
-  return new Promise(res => setTimeout(res, milliseconds  ));
+  return new Promise(res => setTimeout(res, milliseconds));
 }
 
 async function pollGet(url ='') {
+  // Expects a return to break the loop
   while (true) {
     try {
       const poll = await getData(url);
@@ -61,7 +62,7 @@ async function pollGet(url ='') {
         return poll;
       }
 
-      await wait(3000);
+      await wait(3000); // 3 seconds
     } catch (err) {
       throw Error(err);
     }

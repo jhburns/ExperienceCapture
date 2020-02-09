@@ -54,7 +54,9 @@ async function fulfillClaim(isMock=true, user, claimToken, onError) {
 		claimToken: claimToken
 	};
 
-	let userId = "123456789109876543210"; // Has to be the same as the backend shim
+	// Has to be the same as the backend shim
+	// Long to match the length of real subjects
+	let userId = "123456789109876543210";
 
 	if (!isMock) {
 		userData = {

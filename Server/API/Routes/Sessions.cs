@@ -6,7 +6,6 @@ namespace Carter.App.Route.Sessions
     using Carter;
 
     using Carter.App.Lib.Authentication;
-    using Carter.App.Lib.DebugExtra;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Network;
@@ -34,6 +33,9 @@ namespace Carter.App.Route.Sessions
 
                 string uniqueID = Generate.GetRandomId(4);
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+
+                // Will loop until a unique id is found
+                // Needed because the ids that are generated are from a small number of combinations
                 while ((await sessions.Find(filter).FirstOrDefaultAsync()) != null)
                 {
                     uniqueID = Generate.GetRandomId(4);
@@ -48,6 +50,7 @@ namespace Carter.App.Route.Sessions
                 var users = db.GetCollection<BsonDocument>("users");
                 var user = await users.FindEqAsync("_id", accessTokenDoc["user"].AsObjectId);
 
+                // TODO: replace this line with a project
                 user.Remove("_id");
 
                 var sessionDoc = new
@@ -64,13 +67,17 @@ namespace Carter.App.Route.Sessions
                 bsonDoc.Add("id", uniqueID); // Added afterwards because the library will try to use it as the primary key
 
                 await sessions.InsertOneAsync(bsonDoc);
-
                 bsonDoc.Remove("_id");
 
                 var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
+
+                // Secondary index or else Mongo will fail on large queries
+                // It has a limit for max number of documents on properties
+                // Without an index
                 var index = Builders<BsonDocument>.IndexKeys;
                 var key = index.Ascending("frameInfo.realtimeSinceStartup");
                 var options = new CreateIndexOptions();
+
                 var model = new CreateIndexModel<BsonDocument>(key, options);
                 await sessionCollection.Indexes.CreateOneAsync(model);
 
@@ -91,6 +98,8 @@ namespace Carter.App.Route.Sessions
 
                 var builder = Builders<BsonDocument>.Filter;
                 FilterDefinition<BsonDocument> filter = builder.Empty;
+
+                // TODO: add a way to query based on tag
 
                 // Three potential options: null, true, or false
                 if (req.Query.As<string>("isOpen") != null)
@@ -173,8 +182,10 @@ namespace Carter.App.Route.Sessions
                 var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
 
                 // This one call not awaitted for max performance
+                // Error propagation be darned
                 _ = sessionCollection.InsertOneAsync(document);
 
+                // TODO: replace with BasicResponce
                 res.ContentType = "application/text; charset=utf-8";
                 await res.WriteAsync("OK");
             });
@@ -192,6 +203,7 @@ namespace Carter.App.Route.Sessions
                     return;
                 }
 
+                // TODO: replace with projection
                 sessionDoc.Remove("_id");
 
                 string json = JsonQuery.FulfilEncoding(req.Query, sessionDoc);

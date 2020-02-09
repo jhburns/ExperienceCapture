@@ -4,7 +4,7 @@ import { getData } from 'libs/fetchExtra';
 
 import Session from 'components/SessionRow';
 
-import { P, Row, Col } from '@bootstrap-styled/v4';
+import { P, Row, Col, } from '@bootstrap-styled/v4';
 import { Wrapper } from 'components/SessionTable/style';
 
 class SessionTable extends Component {
@@ -22,8 +22,8 @@ class SessionTable extends Component {
     const sessionsData = await getSessions.json();
     const sessions = sessionsData.contentArray;
 
+    // Removing any session if it lacks or has a tag it shouldn't
     const sessionsFiltered = sessions.reduce((sessions, s) => {
-
       if (this.props.lacksTag !== undefined || this.props.hasTag !== undefined) {
         if (this.props.lacksTag !== undefined && !s.tags.includes(this.props.lacksTag)) {
           sessions.push(s);
@@ -37,6 +37,7 @@ class SessionTable extends Component {
       return sessions;
     }, []);
 
+    // Removing all the extra data from each session, and flattening
     const sessionsConverted = sessionsFiltered.map((s) => {
       return {
         id: s.id,
@@ -52,6 +53,7 @@ class SessionTable extends Component {
 
   render() {
     const items = []
+    const isEmpty = () => items.length === 0;
 
     for (const [index, value] of this.state.sessions.entries()) {
       items.push(<Session 
@@ -62,12 +64,6 @@ class SessionTable extends Component {
       />)
     }
 
-    let isEmpty = false;
-    if (items.length === 0)
-    {
-      isEmpty = true;
-    }
-
     return (
       <Wrapper>
         <table className="table">
@@ -75,7 +71,7 @@ class SessionTable extends Component {
             <tr>
               <th scope="col m-0">ID</th>
               <th scope="col">Captured By</th>
-              <th scope="col">{this.props.isRenderingDate ? "Date" : "Time"}</th>
+              <th scope="col">{this.props.isRenderingDate ? "Date" : "Time" }</th>
               {this.props.buttonData !== undefined &&
                 <th scope="col">{this.props.buttonData.header}</th>
               }
@@ -86,7 +82,7 @@ class SessionTable extends Component {
           </tbody>
         </table>
         
-        {isEmpty &&
+        {isEmpty() &&
           <Row className="justify-content-center">
             <Col>
               <P className="text-center">{this.props.emptyMessage}</P>

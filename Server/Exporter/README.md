@@ -5,6 +5,7 @@
 Written in .Net Core (C#) and has the following dependencies:
 - [MongoDB client](http://mongodb.github.io/mongo-csharp-driver/)
 - [Minio Driver](https://github.com/minio/minio-dotnet)
+- [CsvHelper](https://joshclose.github.io/CsvHelper/)
 
 Gets a game session's data from MongoDB, processes it, outputs it to file, then uploads a
 zip of all the data to Minio.
