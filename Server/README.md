@@ -4,7 +4,7 @@
 
 ### Env Files
 
-Follow the tutorial [here](https://github.com/jhburns/ExperienceCapture/blob/master/Documentation/Partial-Deploy.md#create-and-copy-environment-files) and [here](https://github.com/jhburns/ExperienceCapture/blob/master/Documentation/Partial-Deploy.md#change-build-arg)
+Follow the tutorial [here](https://github.com/jhburns/ExperienceCapture/blob/master/Documentation/Partial-Deploy.md#create-and-copy-environment-files) and [here](https://github.com/jhburns/ExperienceCapture/blob/master/Documentation/Partial-Deploy.md#change-build-arg).
 
 ### Build
 
