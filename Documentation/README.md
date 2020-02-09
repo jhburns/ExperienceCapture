@@ -6,7 +6,7 @@
 
 1. [Download and setup the client asset package.](Setup.md)
 1. [Learn how to add data capturing code to the Unity game.](Coding.md)
-1. [How your data is captured. (Optional)](AboutCapture.md)
+1. [How your data is captured. (Optional)](About-Capture.md)
 1. Additionally see the [FAQ](FAQ.md) and if that doesn't help join the `#experience-capture` channel and ask.
 
 ### Updating Unity Client
@@ -27,7 +27,10 @@ Coming soon...
 
 ## Cloud Deploy
 
-Coming soon...
+Cloud Deploys can happen at two levels, a full setup or a partial redeploy. You'll likely want
+a partial redeploy, so [follow this guide](Partial-Deploy.md).
+
+For someone who is setting up the cloud service for the first time, [follow this one instead](Full-Deploy.md).
 
 ## Contributing
 
