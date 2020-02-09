@@ -28,7 +28,8 @@ class GetSignUpLink extends Component {
     const query = queryString.stringify({ signUpToken: signUpToken });
 
     this.setState({
-      link: `https://${window.location.host}/signUp?${query}` // Remove https manually when working locally
+      // Convert https to http manually when working locally
+      link: `https://${window.location.host}/signUp?${query}`
     });
   }
 
@@ -42,7 +43,7 @@ class GetSignUpLink extends Component {
         }
         <button
           onClick={this.buttonCallback}
-          className="btn btn-outline-dark btn-block"
+          className="btn btn-dark btn-block"
         >
           New Sign Up Link
         </button>

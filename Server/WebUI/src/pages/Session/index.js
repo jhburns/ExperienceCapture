@@ -86,9 +86,9 @@ class SessionPage extends Component {
     {
       return (
         <Wrapper>
-          <Container>
+          <Container className="p-0">
             <Menu />
-            <Row className="mb-3">
+            <Row className="mb-3 p-5">
               <Col>
                 <Session
                   sessionData={this.state.session}
@@ -107,11 +107,20 @@ class SessionPage extends Component {
         </Wrapper>
       )
     } else {
-      // TODO: Fix this so it don't show on reload
+      // TODO: Fix this so a loading screen doesn't need to be shown
       return (
-      <Wrapper>
-        <p>Fetching session...</p>
-      </Wrapper>
+        <Wrapper>
+          <Container className="p-0">
+            <Menu />
+            <Row>
+              <Col className="text-center">
+                <h3>
+                  Fetching session...
+                </h3>
+              </Col>
+            </Row>
+          </Container>
+        </Wrapper>
       )
     }
   }
