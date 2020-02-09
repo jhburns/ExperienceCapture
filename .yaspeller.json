@@ -79,7 +79,11 @@
     "TTL",
     "expcap",
     "xyz",
-    "rebake"
+    "rebake",
+    "dockerized",
+    "recreatable",
+    "CI",
+    "GitHub"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
