@@ -9,35 +9,46 @@ using System.Linq;
 
 using Newtonsoft.Json;
 using UnityEngine.Networking;
-using Newtonsoft.Json.Linq;
 using Network;
+
+using InputStructure;
 
 public class HandleCapturing : MonoBehaviour
 {
-    private string url;
+    public string url { get; set; }
     public string sessionPath;
 
-    private string username;
+    public string username { get; set; }
 
     private List<ICapturable> allCapturable;
 
-    private int captureRate;
+    public int captureRate { get; set; }
     private int frameCount;
 
-    private bool sendToConsole;
-    private string id;
-    private int openRequests;
-    private bool isCapturing;
-    private bool findEveryFrame;
+    public bool sendToConsole { get; set; }
+    public string id { get; set; }
+    public bool isCapturing { get; set; }
+    public bool isFindingOften { get; set; }
 
     private bool isFirst;
 
-    private bool isVerbose;
-    private bool isSilent;
+    public bool isVerbose { get; set; }
+    public bool isSilent { get; set; }
 
     private List<string> capturableNames;
 
-    private object extraInfo;
+    public object extraInfo { get; set; }
+    private int openRequests;
+    private float minResponceTime;
+    private float averageResponceTime;
+    private float maxResponceTime;
+    private int responceCount;
+    private float averageOpenRequests;
+
+    public bool isIgnoringNotFound { get; set; }
+    public SpecificPair[] pairs { get; set; }
+
+    public SecretStorage store { get; set; }
 
     void Awake()
     {
@@ -48,8 +59,14 @@ public class HandleCapturing : MonoBehaviour
     {
         frameCount = 0;
         openRequests = 0;
+        averageOpenRequests = 1f;
         isCapturing = false;
         isFirst = true;
+        responceCount = 0;
+
+        minResponceTime = int.MaxValue; //Some impossibly large value
+        averageResponceTime = 1f;
+        maxResponceTime = -1f;
     }
 
     void Update()
@@ -84,7 +101,7 @@ public class HandleCapturing : MonoBehaviour
             return;
         }
 
-        if (findEveryFrame)
+        if (isFindingOften)
         {
             for (int i = 0; i < allCapturable.Count; i++)
             {
@@ -108,42 +125,100 @@ public class HandleCapturing : MonoBehaviour
                 }
         }
 
-        object info = new
-        {
-            Time.unscaledDeltaTime,
-            Time.realtimeSinceStartup,
-            Time.timeSinceLevelLoad,
-        };
+        TimeCapture info = new TimeCapture();
 
         captureData.Add("gameObjects", gameObjects);
         captureData.Add("frameInfo", info);
-        sendCaptures(captureData);
+        sendCaptures(captureData, gameObjects);
     }
 
-    private void sendCaptures(object data)
+    private void sendCaptures(object data) {
+        serializeCaptures(data);
+    }
+
+    private void sendCaptures(Dictionary<string, object> data, Dictionary<string, object> gameData)
     {
+        if (pairs.Length != 0) {
+            Dictionary<string, object> tempData = new Dictionary<string, object>();
+
+            for (int i = 0; i < pairs.Length; i++) {
+                string name = pairs[i].name;
+                string key = pairs[i].key;
+                
+                if (!gameData.ContainsKey(name)) 
+                {
+                    if (isIgnoringNotFound) {
+                        continue;
+                    }
+
+                    throw new SpecificPairsNotFoundException("Game object with name not found", name, key);
+                }
+                object currentCapture = gameData[name];
+
+                if (currentCapture.GetType().GetProperty(key) == null) 
+                {
+                    if (isIgnoringNotFound) {
+                        continue;
+                    }
+
+                    throw new SpecificPairsNotFoundException("Lacking key", name, key);
+                }
+
+                tempData.Add(key, currentCapture.GetType().GetProperty(key).GetValue(currentCapture, null));
+            }
+
+            data = tempData;
+        }
+
+        serializeCaptures(data);
+    }
+
+    private void serializeCaptures(object data) {
         if (sendToConsole && !isSilent)
         {
-            Debug.Log(JsonConvert.SerializeObject(data, Formatting.Indented));
+            if (pairs.Length != 0) 
+            {
+                Debug.Log(JsonConvert.SerializeObject(data));
+            }
+            else  
+            {
+                Debug.Log(JsonConvert.SerializeObject(data, Formatting.Indented));
+            }
+
+            return;
         }
         
+        byte[] bson = Serial.toBSON(data);
 
-        if (!sendToConsole)
-        {
-            byte[] bson = Serial.toBSON(data);
+        openRequests++;
+        float start = Time.realtimeSinceStartup;
 
-            openRequests++;
-            StartCoroutine(HTTPHelpers.post(url + sessionPath + id, bson, 
+        string requestPath = url + sessionPath + id + "?bson=true";
+
+        StartCoroutine(HTTPHelpers.post(requestPath, bson, store.accessToken,
             (responceData) => 
             {
                 openRequests--;
+                responceCount++;
+
+                float responceTime = Time.realtimeSinceStartup - start;
+                averageResponceTime = (averageResponceTime * responceCount + responceTime) / (responceCount + 1);
+
+                averageOpenRequests = (averageOpenRequests * responceCount + openRequests) / (responceCount + 1);
+
+                if (responceTime < minResponceTime) {
+                    minResponceTime = responceTime;
+                }
+
+                if (responceTime > maxResponceTime) {
+                    maxResponceTime = responceTime;
+                }
             }, 
             (error) =>
             {
                 Debug.Log(error);
             })
-            );
-        }
+        );
     }
 
     private void printExtraInfo()
@@ -151,17 +226,18 @@ public class HandleCapturing : MonoBehaviour
         if (isVerbose && !isSilent)
         {
             string extra = "Extra info about the frame.\n";
-            extra += "Session ID: " + id;
+            extra += "Session ID: " + id + "\n";
 
-            if (allCapturable != null)
+            if (allCapturable != null) 
             {
                 extra += "Capturable objects: " + allCapturable.Count + "\n";
-                extra += "Open requests: " + openRequests + "\n";
             }
-            else
-            {
-                extra += "Still setting up capture.";
-            }
+
+            extra += "Open requests: " + openRequests + "\n";
+            extra += "Average open requests: " + averageOpenRequests + "\n";
+            extra += "Request response time: min=" +  minResponceTime;
+            extra += " mean=" + averageResponceTime;
+            extra += " max=" + maxResponceTime + "\n";
 
             Debug.Log(extra);
         }
@@ -183,7 +259,7 @@ public class HandleCapturing : MonoBehaviour
 
             if (!sendToConsole)
             {
-                Debug.Log("Cleaning up...");
+                Debug.Log("Waiting for all connections to close...");
                 StartCoroutine(sendDelete());
             }
             else
@@ -225,7 +301,6 @@ public class HandleCapturing : MonoBehaviour
             }
         }
 
-
         for (int i = 0; i < capturableNames.Count; i++) 
         {
             if (repeatNames[i]) {
@@ -243,16 +318,14 @@ public class HandleCapturing : MonoBehaviour
 
             object firstInfo = new
             {
-                dateTime = DateTime.Now.ToString("yyyy.MM.dd-hh:mm:ss"),
+                dateTime = DateTime.UtcNow.ToString("o"), // ISO 8601 datetime
                 description = "Session Started",
+                captureRate,
                 extraInfo,
-                frameInfo = new
-                {
-                    unscaledDeltaTime = -1,
-                    realtimeSinceStartup = -1,
-                    timeSinceLevelLoad = -1,
-                },
-                username
+                special = true,
+                Application.targetFrameRate,
+                username,
+                frameInfo = new TimeCapture(-1f, -1f, -1f)
             };
 
             sendCaptures(firstInfo);
@@ -264,13 +337,9 @@ public class HandleCapturing : MonoBehaviour
         object sceneLoadInfo = new
         {
             description = "Scene Loaded",
-            frameInfo = new
-            {
-                Time.unscaledDeltaTime,
-                Time.realtimeSinceStartup,
-                Time.timeSinceLevelLoad,
-            },
-            sceneName = scene.name
+            sceneName = scene.name,
+            special = true,
+            frameInfo = new TimeCapture()
         };
 
         sendCaptures(sceneLoadInfo);
@@ -291,6 +360,7 @@ public class HandleCapturing : MonoBehaviour
         using (UnityWebRequest request = UnityWebRequest.Delete(url + sessionPath + id))
         {
             request.method = UnityWebRequest.kHttpVerbDELETE;
+            request.SetRequestHeader("Cookie", "ExperienceCapture-Access-Token=" + store.accessToken);
 
             yield return request.SendWebRequest();
 
@@ -300,7 +370,7 @@ public class HandleCapturing : MonoBehaviour
             }
             else
             {
-                Debug.Log("Finished cleanup, exiting");
+                Debug.Log("Finished cleanup, exiting for you.");
                 quit();
             }
         }
@@ -314,54 +384,24 @@ public class HandleCapturing : MonoBehaviour
             Application.Quit();
         #endif
     }
+}
 
-    public void setUrl(string u)
-    {
-        url = u;
+[Serializable]
+internal class TimeCapture
+{
+    public float realtimeSinceStartup { get; private set; }
+    public float timeSinceLevelLoad { get; private set; }
+    public float unscaledDeltaTime { get; private set; }
+
+    public TimeCapture() {
+        realtimeSinceStartup = Time.realtimeSinceStartup;
+        timeSinceLevelLoad = Time.timeSinceLevelLoad;
+        unscaledDeltaTime = Time.unscaledDeltaTime;
     }
 
-    public void setID(string i)
-    {
-        id = i;
-    }
-
-    public void setUsername(string n)
-    {
-        username = n;
-    }
-
-    public void setRate(int c)
-    {
-        captureRate = c;
-    }
-
-    public void setToConsole(bool c)
-    {
-        sendToConsole = c;
-    }
-
-    public void setCapturability(bool c)
-    {
-        isCapturing = c;
-    }
-
-    public void setVerbose(bool v)
-    {
-        isVerbose = v;
-    }
-
-    public void setSilence(bool s)
-    {
-        isSilent = s;
-    }
-
-    public void setFindEveryFrame(bool f)
-    {
-        findEveryFrame = f;
-    }
-
-    public void setExtraInfo(object e)
-    {
-        extraInfo = e;
+    public TimeCapture(float rss, float tsll, float udt) {
+        realtimeSinceStartup = rss;
+        timeSinceLevelLoad = tsll;
+        unscaledDeltaTime = udt;
     }
 }

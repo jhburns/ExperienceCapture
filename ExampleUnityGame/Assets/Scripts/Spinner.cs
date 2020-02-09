@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 using Capture;
 
 public class Spinner : MonoBehaviour, ICapturable
 {
 	
-	void Update () {
+	void Update() {
 		transform.Rotate (Vector3.forward * -3);
 	}
 
