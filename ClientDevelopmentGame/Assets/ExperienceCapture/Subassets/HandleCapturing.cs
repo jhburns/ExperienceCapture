@@ -18,7 +18,7 @@ public class HandleCapturing : MonoBehaviour
     public string url { get; set; }
     public string sessionPath;
 
-    public string username { get; set; }
+    public string playerName { get; set; }
 
     private List<ICapturable> allCapturable;
 
@@ -342,7 +342,7 @@ public class HandleCapturing : MonoBehaviour
                 extraInfo,
                 special = true,
                 Application.targetFrameRate,
-                username,
+                playerName,
                 // Negative numbers used because although there is no meaningful
                 // timestamp associated with this data, it makes exporting easier
                 frameInfo = new TimeCapture(-1f, -1f, -1f)
