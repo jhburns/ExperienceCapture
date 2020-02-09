@@ -30,7 +30,7 @@ services:
     volumes:
       - ./.secrets/id_rsa:/keys/id_rsa
     networks:
-      - ec-connect-network
+      - ec-deploy-network
     env_file:
       - .deploy.env
 
@@ -41,10 +41,7 @@ services:
     volumes:
       - ./.secrets/:/keys/
     networks:
-      - ec-setup-network
+      - ec-deploy-network
 
 networks:
   ec-deploy-network: {}
-  ec-setup-network: {}
-  ec-connect-network: {}
-  ec-pulumi-network: {}

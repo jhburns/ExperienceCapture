@@ -24,7 +24,7 @@ services:
   web:
     build:
       context: ./WebUI
-      args:  # Make sure to change the following arg
+      args:  # Make sure to change the following arg for different websites
         REACT_APP_GOOGLE_CLIENT_ID: 555477545658-co1pgbl0uh99rp8tbo2q62t2ch8vlb1h.apps.googleusercontent.com
     hostname: web
     networks:
@@ -70,7 +70,7 @@ services:
       - "9009:9000"
     volumes:
       - ec-os-volume:/data
-    environment:  # Using defaults, do not run in insecure environment
+    environment:  # Using defaults, do not run in an insecure environment
       MINIO_ACCESS_KEY: minio
       MINIO_SECRET_KEY: minio123
     networks:

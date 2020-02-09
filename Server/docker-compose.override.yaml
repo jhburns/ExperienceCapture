@@ -4,7 +4,9 @@ version: '3.5'
 services:
   api:
     environment:
-      - unsafe_do_no_validate_user=true  # IMPORTANT: this should never be set in production
+      # IMPORTANT: unsafe_do_no_validate_user should never be set in production
+      # It shims Google Authentication instead of doing a real check
+      - unsafe_do_no_validate_user=true
       - exporter_image_name=server_exporter:latest
 
   web:

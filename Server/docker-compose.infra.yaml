@@ -18,6 +18,7 @@ services:
     image: docker:19.03.5
     command: ["docker", "system", "prune", "--force", "--volumes"]
     volumes:
+      # May not work on windows
       - /var/run/docker.sock:/var/run/docker.sock
     deploy:
       mode: global
