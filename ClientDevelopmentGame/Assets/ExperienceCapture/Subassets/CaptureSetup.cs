@@ -23,7 +23,7 @@ public class CaptureSetup : MonoBehaviour
 
     [Tooltip("Label the game version before releasing.")]
     public string gameVersion;
-    public const string clientVersionLocked = "1.1.4";
+    public const string clientVersionLocked = "1.1.6";
     [Tooltip("Don't edit, is readonly and only informational.")]
     public string clientVersion;
 
