@@ -107,7 +107,7 @@ class SessionPage extends Component {
         </Wrapper>
       )
     } else {
-      // TODO: Fix this so a loading screen doesn't need to be shown
+      // TODO: Fix the component so this loading screen doesn't need to be shown
       return (
         <Wrapper>
           <Container className="p-0">
