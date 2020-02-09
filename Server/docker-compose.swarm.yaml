@@ -48,7 +48,7 @@ services:
 
   rp:
     # Leaving this here in case of a rate limit
-    command: ["--agree" ] #, "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
+    command: ["--agree"]  # , "-ca", "https://acme-staging-v02.api.letsencrypt.org/directory"]
     deploy:
       restart_policy:
         condition: any
