@@ -80,8 +80,6 @@ services:
   bu:
     build:
       context: ./Backupper
-    volumes:
-      - ec-db-volume:/app/backup
     depends_on:
       - db
     environment:

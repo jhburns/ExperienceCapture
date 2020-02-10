@@ -102,7 +102,9 @@ services:
       mode: global
       labels:
         - "swarm.cronjob.enable=true"
-        - "swarm.cronjob.schedule=0 2 * * *"  # Every day at 2AM
+        # Every day at 2AM PST
+        # Or 10AM UTC
+        - "swarm.cronjob.schedule=0 10 * * *"
         - "swarm.cronjob.skip-running=true"
       restart_policy:
         condition: none
