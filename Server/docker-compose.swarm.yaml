@@ -15,6 +15,7 @@ services:
       - ./API/appsettings.production.json:/app/appsettings.js
     environment:
       - exporter_image_name=127.0.0.1:5000/ec-exporter
+      - ec_network_name=ec_ec-network
     healthcheck:
       test: wget --quiet --tries=1 -O /dev/null http://localhost/health/ || exit 1
       interval: 1m30s

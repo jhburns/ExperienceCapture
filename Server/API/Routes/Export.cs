@@ -29,6 +29,9 @@ namespace Carter.App.Route.Export
         private static readonly string ExporterImageName = Environment.GetEnvironmentVariable("exporter_image_name")
             ?? throw new EnviromentVarNotSet("The following is unset", "exporter_image_name");
 
+        private static readonly string NetworkName = Environment.GetEnvironmentVariable("ec_network_name")
+            ?? throw new EnviromentVarNotSet("The following is unset", "ec_network_name");
+
         public Export(IMongoDatabase db, MinioClient os, IDockerClient docker)
             : base("/sessions/{id}/export")
         {
@@ -74,7 +77,7 @@ namespace Carter.App.Route.Export
                     },
                 });
 
-                await docker.Networks.ConnectNetworkAsync("server_ec-network", new NetworkConnectParameters()
+                await docker.Networks.ConnectNetworkAsync(NetworkName, new NetworkConnectParameters()
                 {
                     Container = exporter.ID,
                 });

@@ -8,6 +8,7 @@ services:
       # It shims Google Authentication instead of doing a real check
       - unsafe_do_no_validate_user=true
       - exporter_image_name=server_exporter:latest
+      - ec_network_name=server_ec-network
 
   web:
     volumes:
