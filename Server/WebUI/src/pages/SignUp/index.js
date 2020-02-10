@@ -28,19 +28,17 @@ class SignUpPage extends Component {
     return (
       <Wrapper>
         <Container>
-          <Row className="justify-content-center" noGutters={true}>
-            <Col xs={4} >
-              <img src={logo} alt="logo" />
+          <Row className="justify-content-center mb-4 pb-2" noGutters={true}>
+            <Col>
+              <Logo src={logo} alt="logo" />
             </Col>
           </Row>
-          <Row noGutters={true} className="mt-3 mb-5">
-            <Col></Col>
-            <Col xs={10} >
+          <Row noGutters={true} className="mb-5">
+            <Col>
               <h1 className="text-center">
                 Experience <br /> Capture
               </h1>
             </Col>
-            <Col></Col>
           </Row>
           <Row className="justify-content-center" noGutters={true}>
             <Col xs={10} >
@@ -52,7 +50,7 @@ class SignUpPage extends Component {
           </Row>
         </Container>
       </Wrapper>
-    );
+    )
   }
 }
 

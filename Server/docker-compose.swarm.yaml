@@ -45,6 +45,12 @@ services:
 
   exporter:
     image: 127.0.0.1:5000/ec-exporter
+    deploy:
+      restart_policy:
+        # Exporter should only be started by the API service
+        # So it shouldn't be restarted on failure which will always happen
+        # When started without exporter_session_id
+        condition: none
 
   rp:
     # Leaving this here in case of a rate limit

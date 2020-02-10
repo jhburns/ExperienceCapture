@@ -41,6 +41,7 @@ namespace Carter.App.Route.Export
                 string id = req.RouteValues.As<string>("id");
                 var filter = Builders<BsonDocument>.Filter
                     .Eq("id", id);
+
                 var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
@@ -56,7 +57,7 @@ namespace Carter.App.Route.Export
                     Image = ExporterImageName,
                     #pragma warning disable SA1515
                     // Don't bother using wait-for since this API also needs the same resources
-                    Cmd = new List<string>() { "dotnet", "Exporter.dll" },
+                    Cmd = new List<string>(){ "dotnet", "Exporter.dll" },
                     #pragma warning restore SA1515
                     Tty = true,
                     AttachStdin = true,
