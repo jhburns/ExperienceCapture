@@ -83,7 +83,14 @@
     "dockerized",
     "recreatable",
     "CI",
-    "GitHub"
+    "GitHub",
+    "timestamp",
+    "sessionInfo",
+    "EXEX",
+    "gameObjects",
+    "onlyCaptures",
+    "SampleScene",
+    "csv"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
