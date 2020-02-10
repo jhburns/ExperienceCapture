@@ -34,7 +34,7 @@ class SignIn extends Component {
       return (
         <Wrapper>
           <Row className="justify-content-center">
-            <Col xs={10} className="mb-4">
+            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
               <Info className="rounded align-middle">
                 <h5 className="mt-0 mb-0">
                   Sorry, there was an issue signing in. <br />
@@ -44,7 +44,7 @@ class SignIn extends Component {
             </Col>
           </Row>
           <Row className="justify-content-center">
-            <Col xs={6}>
+            <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
               <SignOutButton onClickCallback={this.signOutCallback} />
             </Col>
           </Row>
@@ -54,7 +54,7 @@ class SignIn extends Component {
       return (
         <Wrapper>
           <Row className="justify-content-center">
-            <Col xs={10} className="mb-4">
+            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
               <Info className="rounded align-middle">
                 <h5 className="mt-0 mb-0">
                   You've Already Signed Up
@@ -63,12 +63,12 @@ class SignIn extends Component {
             </Col>
           </Row>
           <Row className="justify-content-center">
-            <Col xs={6} className="mb-2">
+            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
               <HomeButton />
             </Col>
           </Row>
           <Row className="justify-content-center">
-            <Col xs={6}>
+            <Col xs={6} sm={5} md={4} lg={3}>
               <SignOutButton onClickCallback={this.signOutCallback} />
             </Col>
           </Row>
@@ -78,7 +78,7 @@ class SignIn extends Component {
       return (
         <Wrapper>
           <Row className="justify-content-center">
-            <Col xs={10} className="mb-4">
+            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
               <Info className="rounded align-middle">
                 <h5 className="mt-0 mb-0">
                   You're Signed In
@@ -87,12 +87,12 @@ class SignIn extends Component {
             </Col>
           </Row>
           <Row className="justify-content-center">
-            <Col xs={6} className="mb-2">
+            <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
               <HomeButton />
             </Col>        
           </Row>
           <Row className="justify-content-center">
-            <Col xs={6}>
+            <Col xs={6} sm={5} md={4} lg={3}>
               <SignOutButton onClickCallback={this.signOutCallback} />
             </Col>
           </Row>
@@ -102,7 +102,7 @@ class SignIn extends Component {
 	    return (
         <Wrapper>
           <Row className="justify-content-center">
-            <Col xs={10} className="mb-4">
+            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
               <Info className="rounded align-middle">
                 <h5 className="mt-0 mb-0">
                   You're Signed Out <br />
@@ -122,7 +122,7 @@ class SignIn extends Component {
       return (
         <Wrapper>
           <Row className="justify-content-center">
-            <Col xs={10} className="mb-4">
+            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
               <Info className="rounded align-middle">
                 <h5 className="mt-0 mb-0">
                   <P>Please Sign In</P>

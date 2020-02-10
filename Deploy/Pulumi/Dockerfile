@@ -3,7 +3,7 @@
 FROM alpine:3.9.4 as pulumi-download
 
 WORKDIR /download
-RUN wget -O  pulumi.tar.gz https://get.pulumi.com/releases/sdk/pulumi-v1.9.1-linux-x64.tar.gz
+RUN wget -O  pulumi.tar.gz https://get.pulumi.com/releases/sdk/pulumi-v1.10.1-linux-x64.tar.gz
 RUN tar -zxf pulumi.tar.gz
 
 # Copy over project files

@@ -11,18 +11,18 @@ class HomePage extends Component {
   render() {
     return (
       <Wrapper>
-        <Container>
+        <Container className="p-0">
           <Menu />
+          <Row className="pr-0 justify-content-center">
+            <Col lg={10} className="pr-0 pl-xl-0">
+              <SessionTable
+                sessionsQuery={"createdWithin=1800&isOpen=true"} /* 30 minutes */
+                isRenderingDate={false}
+                emptyMessage="No active sessions right now."
+              />
+            </Col>
+          </Row>
         </Container>
-        <Row>
-          <Col>
-            <SessionTable
-              sessionsQuery={"createdWithin=1800&isOpen=true"} /* 30 minutes */
-              isRenderingDate={false}
-              emptyMessage="No active sessions right now."
-            />
-          </Col>
-        </Row>
       </Wrapper>
     );
   }

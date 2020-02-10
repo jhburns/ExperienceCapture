@@ -33,22 +33,24 @@ class SessionsPage extends Component {
   render() {
     return (
       <Wrapper>
-        <Container>
+        <Container className="p-0">
           <Menu />
-        </Container>
-        <SessionTable
-          sessionsQuery={""}
-          buttonData={{
-            onClick: this.archiveCallback,
-            body: "Archive",
-            header: ""
-          }}
-          lacksTag={"archived"}
-          isRenderingDate={true}
-          emptyMessage="No unarchived sessions."
-        />
-        <Container>
-          <Row className="justify-content-center mt-3 mb-5">
+          <Row className="pr-0 justify-content-center">
+            <Col lg={10} className="pr-0 pl-xl-0">
+              <SessionTable
+                sessionsQuery={""}
+                buttonData={{
+                  onClick: this.archiveCallback,
+                  body: "Archive",
+                  header: ""
+                }}
+                lacksTag={"archived"}
+                isRenderingDate={true}
+                emptyMessage="No unarchived sessions."
+              />
+            </Col>
+          </Row>
+          <Row className="mt-3 mb-5">
             <Col className="text-center">
               <Link to="/home/archived" className="btn btn-outline-dark">
                 Archived

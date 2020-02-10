@@ -4,4 +4,11 @@ const Wrapper = styled.section`
   margin-top: 15vh;
 `;
 
-export { Wrapper };
+const Logo = styled.img`
+  width: 6rem;
+  height: auto;
+  margin: auto;
+  display: block;
+`;
+
+export { Wrapper, Logo, };

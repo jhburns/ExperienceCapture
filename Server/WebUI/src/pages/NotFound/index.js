@@ -5,11 +5,14 @@ import { Link } from 'react-router-dom';
 
 import { Container, Row, Col, } from '@bootstrap-styled/v4';
 
+import Menu from 'components/Menu';
+
 class NotFound extends Component {
   render() {
     return (
       <Wrapper>
-        <Container>
+        <Container className="p-0">
+          <Menu />
           <Row className="mt-5 mb-3">
             <Col>
               <h1>Page Not Found</h1>
@@ -17,12 +20,12 @@ class NotFound extends Component {
             </Col>
           </Row>
           <Row className="justify-content-center">
-            <Col xs={6}>
+            <Col xs={6} md={5} xl={3}>
               <Link
                 to="/"
                 className="btn btn-outline-dark btn-block"
               >
-                Try Login
+                Try Logging In
               </Link>
             </Col>
           </Row>
