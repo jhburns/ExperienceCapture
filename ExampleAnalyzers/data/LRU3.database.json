@@ -1,0 +1,17 @@
+{
+  "_id" : { "$oid" : "5e41da8997f6fc00011a9e68" },
+  "isOpen" : false,
+  "isExported" : false,
+  "isPending" : true,
+  "user" : {
+    "fullname" : "Smitty Jensens",
+    "firstname" : "Smitty",
+    "lastname" : "Jensens",
+    "email" : "smitty@jenkins.com",
+    "createdAt" : { "$date" : 1580169485875 },
+    "id" : "123456789109876543210"
+  },
+  "createdAt" : { "$date" : 1581374089686 },
+  "tags" : [],
+  "id" : "LRU3"
+}
