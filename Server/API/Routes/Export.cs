@@ -57,7 +57,7 @@ namespace Carter.App.Route.Export
                     Image = ExporterImageName,
                     #pragma warning disable SA1515
                     // Don't bother using wait-for since this API also needs the same resources
-                    Cmd = new List<string>(){ "dotnet", "Exporter.dll" },
+                    Cmd = new List<string>() { "dotnet", "Exporter.dll" },
                     #pragma warning restore SA1515
                     Tty = true,
                     AttachStdin = true,
