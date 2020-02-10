@@ -7,7 +7,7 @@ WORKDIR /deploy
 
 RUN apk update \
     && apk add --no-cache \
-    ansible>2.7.16-r0 \
+    ansible=2.7.16-r0 \
     rsync=3.1.3-r1 \
     openssh-client=7.9_p1-r6 \
     && rm -rf /tmp/* \
