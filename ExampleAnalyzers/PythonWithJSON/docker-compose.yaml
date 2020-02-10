@@ -3,6 +3,6 @@ version: '3.5'
 
 services:
   processor:
-      build: .
-      volumes:
-        - ../data:/app/data
+    build: .
+    volumes:
+      - ../data:/app/data
