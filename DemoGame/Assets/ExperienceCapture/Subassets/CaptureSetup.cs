@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System;
@@ -10,8 +8,6 @@ using UnityEngine.UI;
 using System.IO;
 
 using Network;
-
-using InputStructure;
 
 public class CaptureSetup : MonoBehaviour
 {
@@ -23,7 +19,7 @@ public class CaptureSetup : MonoBehaviour
 
     [Tooltip("Label the game version before releasing.")]
     public string gameVersion;
-    public const string clientVersionLocked = "1.1.4";
+    public const string clientVersionLocked = "1.1.6";
     [Tooltip("Don't edit, is readonly and only informational.")]
     public string clientVersion;
 
@@ -72,7 +68,7 @@ public class CaptureSetup : MonoBehaviour
 
     private void setupDefaults()
     {
-        // In case it doesn't exist in client
+        // In case an event system doesn't exist in client
         if (GameObject.Find("EventSystem") == null)
         {
             Instantiate(eventSystem);
@@ -93,6 +89,7 @@ public class CaptureSetup : MonoBehaviour
 
         urlInput.text = defaultUrl;
 
+        // Just too coincidental 
         nameInput.text = "Boyd";
 
         sessionInfo.gameObject.SetActive(false);
@@ -102,8 +99,8 @@ public class CaptureSetup : MonoBehaviour
         openingInfo.gameObject.SetActive(false);
         connectionInfo.gameObject.SetActive(false);
 
+        // Function wrappers since otherwise they would be trigged immediately
         newSession.onClick.AddListener(delegate () { onLoginClick(); });
-
         start.onClick.AddListener(delegate () { onStartClick(); });
 
         clientVersion = clientVersionLocked;
@@ -117,7 +114,9 @@ public class CaptureSetup : MonoBehaviour
 
         connectionInfo.gameObject.SetActive(true);
 
+        // Content of the body is ignored
         string emptyBody = new {}.ToString();
+
         StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/users/claims/", emptyBody,
             (responce) => {
                 openingInfo.gameObject.SetActive(true);
@@ -148,7 +147,7 @@ public class CaptureSetup : MonoBehaviour
     }
 
     private void pollClaim(string claimToken)
-{
+    {
         StartCoroutine(HTTPHelpers.pollGet(urlInput.text + "/api/v1/users/claims/", claimToken, 
             (responce) => {
                 store = new SecretStorage(responce);
@@ -164,8 +163,7 @@ public class CaptureSetup : MonoBehaviour
         byte[] emptyBody = Serial.toBSON(new {});
 
         StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/sessions?bson=true", emptyBody, store.accessToken,
-            (data) =>
-            {
+            (data) => {
                 sessionInfo.gameObject.SetActive(true);
                 sessionBackground.gameObject.SetActive(true);
                 openingInfo.gameObject.SetActive(false);
@@ -190,8 +188,7 @@ public class CaptureSetup : MonoBehaviour
                     Debug.Log(e);
                     newSession.gameObject.SetActive(true);
                 }
-            }, (error) =>
-            {
+            }, (error) => {
                 sessionInfo.text = error;
 
                 sessionInfo.gameObject.SetActive(true);
@@ -206,6 +203,7 @@ public class CaptureSetup : MonoBehaviour
     private void onStartClick()
     {
         InputStructure.SpecificPair[] pairs;
+
         try 
         {
             pairs = parseSpecific();
@@ -232,6 +230,7 @@ public class CaptureSetup : MonoBehaviour
         }
     }
 
+    // All of this is since Unity only supports 1D arrays in the editor
     private InputStructure.SpecificPair[] parseSpecific() {
         InputStructure.SpecificPair[] tempPairs = new InputStructure.SpecificPair[limitOutputToSpecified.Length];
 
@@ -258,12 +257,12 @@ public class CaptureSetup : MonoBehaviour
         return tempPairs;
     }
 
-    private void createHandler(string url, string id, string username, InputStructure.SpecificPair[] pairs)
+    private void createHandler(string url, string id, string playerName, InputStructure.SpecificPair[] pairs)
     {
         HandleCapturing newHandler = Instantiate(handler);
 
         newHandler.url = url;
-        newHandler.username = username;
+        newHandler.playerName = playerName;
         newHandler.id = id;
 
         newHandler.captureRate = captureRate;
@@ -276,10 +275,11 @@ public class CaptureSetup : MonoBehaviour
 
         newHandler.store = store;
 
+        // extraInfo can be used to capture arbitrary data
         newHandler.extraInfo = new
         {
             clientVersion = clientVersionLocked,
-            gameVersion = gameVersion,
+            gameVersion,
         };
 
         newHandler.isIgnoringNotFound = doNotThrowNotFound;
@@ -290,14 +290,14 @@ public class CaptureSetup : MonoBehaviour
 
 }
 
+// Minimally validated,
+// More data is returned from the server but is never used
 internal class SessionData
 {
     public string id;
-    public bool isOpen;
 
     public SessionData(string i, bool o)
     {
         id = i;
-        isOpen = o;
     }
 }

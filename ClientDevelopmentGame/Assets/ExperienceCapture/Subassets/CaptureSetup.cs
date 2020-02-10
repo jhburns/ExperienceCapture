@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System;
@@ -10,8 +8,6 @@ using UnityEngine.UI;
 using System.IO;
 
 using Network;
-
-using InputStructure;
 
 public class CaptureSetup : MonoBehaviour
 {
