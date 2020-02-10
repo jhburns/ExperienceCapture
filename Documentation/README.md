@@ -25,6 +25,8 @@ The WebUI supports Chrome version 79. Other platforms may work, but aren't teste
 
 Coming soon...
 
+In-depth information on how the exported data is laid out [here](Export-Format.md).
+
 ## Cloud Deploy
 
 Cloud Deploys can happen at two levels, a full setup or a partial redeploy. You'll likely want
