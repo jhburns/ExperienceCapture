@@ -14,7 +14,7 @@ with open(capturesFilename) as f:
 
 	responceTimes = []
 
-    # Looks only of unique keys of responceTime
+    # Looks for unique keys of responceTime key
 	for d in data:
 		current = d["gameObjects"]["UIController"]
 		if current["responceTime"] not in responceTimes and current["isResponding"] == False:
