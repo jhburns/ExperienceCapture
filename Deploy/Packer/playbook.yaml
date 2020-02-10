@@ -145,6 +145,9 @@
     - name: Prune non-production Docker images so the AMI uses less space
       command: docker system prune --all --force
 
+    - name: Pulling exporter image because it work be downloaded by the api on export
+      command: docker pull 127.0.0.1:5000/ec-exporter
+
     - name: Create other infrastructure services
       command: |
                docker stack deploy \
