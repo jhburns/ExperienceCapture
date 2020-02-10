@@ -18,7 +18,7 @@ public class HandleCapturing : MonoBehaviour
     public string url { get; set; }
     public string sessionPath;
 
-    public string username { get; set; }
+    public string playerName { get; set; }
 
     private List<ICapturable> allCapturable;
 
@@ -52,6 +52,8 @@ public class HandleCapturing : MonoBehaviour
 
     void Awake()
     {
+        // Setting itself to not be destroyed is easier to manage
+        // as act more like a property of the object
         DontDestroyOnLoad(this.gameObject);
     }
 
@@ -60,11 +62,13 @@ public class HandleCapturing : MonoBehaviour
         frameCount = 0;
         openRequests = 0;
         averageOpenRequests = 1f;
+        // Start not capturing so the Setup scene isn't captured
         isCapturing = false;
         isFirst = true;
         responceCount = 0;
 
-        minResponceTime = int.MaxValue; //Some impossibly large value
+        // These values mean measurements aren't perfect, but it is good enough
+        minResponceTime = int.MaxValue;
         averageResponceTime = 1f;
         maxResponceTime = -1f;
     }
@@ -76,6 +80,7 @@ public class HandleCapturing : MonoBehaviour
         printExtraInfo();
     }
 
+    // OnEnable and OnDisable are boilerplate to an OnSceneLoaded event
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -114,15 +119,17 @@ public class HandleCapturing : MonoBehaviour
             findCapturable();
         }
 
+        // Dictionaries used for easier manipulation
         Dictionary<string, object> captureData = new Dictionary<string, object>();
         Dictionary<string, object> gameObjects = new Dictionary<string, object>();
 
+        // Loop through and gather captures for every object
         if (allCapturable != null)
+        {
+            for (int i = 0; i < allCapturable.Count; i++)
             {
-                for (int i = 0; i < allCapturable.Count; i++)
-                {
-                    gameObjects.Add(capturableNames[i], allCapturable[i].GetCapture());
-                }
+                gameObjects.Add(capturableNames[i], allCapturable[i].GetCapture());
+            }
         }
 
         TimeCapture info = new TimeCapture();
@@ -132,12 +139,15 @@ public class HandleCapturing : MonoBehaviour
         sendCaptures(captureData, gameObjects);
     }
 
+    // sendCaptures overload exits for any data that isn't in-game data
+    // Like scene or data about the session
     private void sendCaptures(object data) {
         serializeCaptures(data);
     }
 
     private void sendCaptures(Dictionary<string, object> data, Dictionary<string, object> gameData)
     {
+        // Logic to try and find gameObject, key values
         if (pairs.Length != 0) {
             Dictionary<string, object> tempData = new Dictionary<string, object>();
 
@@ -164,6 +174,8 @@ public class HandleCapturing : MonoBehaviour
                     throw new SpecificPairsNotFoundException("Lacking key", name, key);
                 }
 
+                // Reflection has to be used here as object type is unknown
+                // But should be safe as it is checked above
                 tempData.Add(key, currentCapture.GetType().GetProperty(key).GetValue(currentCapture, null));
             }
 
@@ -206,11 +218,13 @@ public class HandleCapturing : MonoBehaviour
 
                 averageOpenRequests = (averageOpenRequests * responceCount + openRequests) / (responceCount + 1);
 
-                if (responceTime < minResponceTime) {
+                if (responceTime < minResponceTime)
+                {
                     minResponceTime = responceTime;
                 }
 
-                if (responceTime > maxResponceTime) {
+                if (responceTime > maxResponceTime)
+                {
                     maxResponceTime = responceTime;
                 }
             }, 
@@ -271,6 +285,7 @@ public class HandleCapturing : MonoBehaviour
 
     private void findCapturable()
     {
+        // Apparently slow, use FindObjectsOfType, but hasn't been a problem so far
         var capturableQuery = FindObjectsOfType<MonoBehaviour>().OfType<ICapturable>();
         allCapturable = capturableQuery.Cast<ICapturable>().ToList();
 
@@ -283,7 +298,8 @@ public class HandleCapturing : MonoBehaviour
         List<MonoBehaviour> monoCaptures = new List<MonoBehaviour>();
         foreach (ICapturable c in allCapturable)
         {
-            MonoBehaviour monoCapture = (MonoBehaviour)c; // All found objects are also MonoBenavior type
+            // Safe because found objects are also MonoBenavior type
+            MonoBehaviour monoCapture = (MonoBehaviour)c;
             capturableNames.Add(monoCapture.name);
             monoCaptures.Add(monoCapture);
         }
@@ -305,6 +321,8 @@ public class HandleCapturing : MonoBehaviour
         {
             if (repeatNames[i]) {
                 MonoBehaviour monoCapture = monoCaptures[i];
+                // GetInstanceID is guaranteed to be unique
+                // May be different between plays, so be careful
                 capturableNames[i] = monoCapture.name + "-" + monoCapture.GetInstanceID();
             }
         }
@@ -324,7 +342,9 @@ public class HandleCapturing : MonoBehaviour
                 extraInfo,
                 special = true,
                 Application.targetFrameRate,
-                username,
+                playerName,
+                // Negative numbers used because although there is no meaningful
+                // timestamp associated with this data, it makes exporting easier
                 frameInfo = new TimeCapture(-1f, -1f, -1f)
             };
 

@@ -19,8 +19,7 @@ namespace Network
                 request.SetRequestHeader("Content-Type", "application/bson");
                 request.SetRequestHeader("Accept", "application/bson");
                 request.SetRequestHeader("Cookie", "ExperienceCapture-Access-Token=" + token);
-
-                request.timeout = 3;
+                request.timeout = 3; // 3 seconds
 
                 yield return request.SendWebRequest();
 
@@ -43,7 +42,7 @@ namespace Network
                 request.method = UnityWebRequest.kHttpVerbPOST;
                 request.SetRequestHeader("Content-Type", "application/bson");
                 request.SetRequestHeader("Accept", "application/bson");
-                request.timeout = 3;
+                request.timeout = 3; // 3 seconds
 
                 yield return request.SendWebRequest();
 
@@ -61,18 +60,20 @@ namespace Network
         static public IEnumerator pollGet(string url, string token, System.Action<string> onSuccess, System.Action<string> onError)
         {
             bool isNotReady = true;
+            
             while(isNotReady)
             {
                 using (UnityWebRequest request = UnityWebRequest.Get(url))
                 {
                     request.SetRequestHeader("Accept", "application/text");
                     request.SetRequestHeader("Cookie", "ExperienceCapture-Claim-Token=" + token);
-                    request.timeout = 3;
+                    request.timeout = 3; // 3 seconds
 
                     yield return request.SendWebRequest();
 
                     if (request.isNetworkError || request.isHttpError)
                     {
+                        // Should continue to poll even after error
                         onError(request.error);
                     }
                     else
