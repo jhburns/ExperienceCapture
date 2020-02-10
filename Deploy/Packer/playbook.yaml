@@ -145,7 +145,12 @@
     - name: Prune non-production Docker images so the AMI uses less space
       command: docker system prune --all --force
 
-    - name: Pulling exporter image because it work be downloaded by the api on export
+    # More details: when the api service tries to create the exporter container
+    # It may fail. That is due to the exporter image not being on the computer locally.
+    # So it has to be pulled ahead of time, or pulled the first time the api service
+    # Tries to create an exporter container. The second way would likely take to long,
+    # to do each time so instead pulling is done preemptively.
+    - name: Pulling exporter image because it won't be downloaded by the api on export
       command: docker pull 127.0.0.1:5000/ec-exporter
 
     - name: Create other infrastructure services
