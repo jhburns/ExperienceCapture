@@ -101,7 +101,7 @@ For example given the following scenes being loaded/played in a game:
 ```json
 Menu -> Main -> GameOver -> Main
 ```
-The following files would be exported, with the session ID EXEX/:
+The following files would be exported, with the session ID EXEX:
 ```json
 EXEX.byScene.Menu.0.csv
 EXEX.byScene.Main.1.csv
