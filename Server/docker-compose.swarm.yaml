@@ -15,6 +15,7 @@ services:
       - ./API/appsettings.production.json:/app/appsettings.js
     environment:
       - exporter_image_name=127.0.0.1:5000/ec-exporter
+      - ec_network_name=ec_ec-network
     healthcheck:
       test: wget --quiet --tries=1 -O /dev/null http://localhost/health/ || exit 1
       interval: 1m30s
@@ -45,6 +46,12 @@ services:
 
   exporter:
     image: 127.0.0.1:5000/ec-exporter
+    deploy:
+      restart_policy:
+        # Exporter should only be started by the API service
+        # So it shouldn't be restarted on failure which will always happen
+        # When started without exporter_session_id
+        condition: none
 
   rp:
     # Leaving this here in case of a rate limit

@@ -83,7 +83,7 @@ class SessionTable extends Component {
         </table>
         
         {isEmpty() &&
-          <Row className="justify-content-center">
+          <Row className="justify-content-center mb-2">
             <Col>
               <P className="text-center">{this.props.emptyMessage}</P>
             </Col>
