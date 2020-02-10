@@ -14,5 +14,5 @@ export AWS_ACCESS_KEY_ID=$aws_backupper_access_id \
     AWS_SECRET_ACCESS_KEY=$aws_backupper_secret_key \
     AWS_DEFAULT_REGION=$aws_region_name
 
-aws2 s3 cp "$1" - \
+aws s3 cp "$1" - \
     |  /usr/bin/mongorestore --host $HOST --archive --gzip
