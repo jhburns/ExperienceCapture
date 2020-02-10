@@ -90,7 +90,8 @@
     "gameObjects",
     "onlyCaptures",
     "SampleScene",
-    "csv"
+    "csv",
+    "LRU3"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
