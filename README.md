@@ -20,6 +20,7 @@ Briefly, the main strength of this game analytics platform is to capture all dat
 ## Folders
 
 - `DemoGame/` is an demo game showing an example of how to use the client.
+- `ExampleAnalyzers/` is a a bunch of examples of how to analyze the exported data.
 - `ClientDevelopmentGame/` is the game used to develop the client.
 - `Server/` is a collection of back-end services for collection and processing data.
 - `Deploy/` is an automated system to deploy the server to AWS in a repeatable way.
