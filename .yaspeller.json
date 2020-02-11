@@ -91,7 +91,9 @@
     "onlyCaptures",
     "SampleScene",
     "csv",
-    "LRU3"
+    "LRU3",
+    "Rlang",
+    "Colaboratory"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true

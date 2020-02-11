@@ -19,13 +19,13 @@
 Version 1.0.0 of the Experience Capture client is designed
 to be compatible with [Unity 2018.2.11](https://unity3d.com/get-unity/download/archive) on Windows 10. Docker/Docker-compose versions
 are defined in the Ansible playbook located in `Deploy/Packer/` folder and supports Linux/Windows 10.
-The WebUI supports Chrome version 79. Other platforms may work, but aren't tested.
+The WebUI supports Chrome version 79. Other platforms may work, but haven't been tested.
 
 ## Data Analysis
 
-Coming soon...
+[Explore some example analyzers, in Python and Rlang](ExampleAnalyzers/README.md).
 
-In-depth information on how the exported data is laid out [here](Export-Format.md).
+[In-depth information on how the data is formatted](Export-Format.md).
 
 ## Cloud Deploy
 
@@ -36,4 +36,4 @@ For someone who is setting up the cloud service for the first time, [follow this
 
 ## Contributing
 
-Information on contributing [here](Contributing.md).
+[Information on contributing](Contributing.md).
