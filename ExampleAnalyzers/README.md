@@ -6,4 +6,7 @@ The captured data (session ID LRU3) has already been unzipped into the `ExampleA
 
 ## Formats
 
-- Python, JSON format: `ExampleAnalyzers/PythonWithJson`
+Any language can be used to do analysis, but the following are examples are in Python and R.
+
+- Python, JSON format: `ExampleAnalyzers/PythonWithJSON`
+- Python, with CSV format: `ExampleAnalyzers/PythonWithCSV`

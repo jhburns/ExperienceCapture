@@ -1,26 +1,26 @@
 import os
 import json
 
-aboutFilename = "./data/LRU3.sessionInfo.json"
-capturesFilename = "./data/LRU3.onlyCaptures.json"
+about_filename = "./data/LRU3.sessionInfo.json"
+captures_filename = "./data/LRU3.onlyCaptures.json"
 
-with open(aboutFilename) as f:
+with open(about_filename) as f:
     data = json.load(f)
     print("Analyzing data from user: {}".format(data[0]["playerName"]))
     print("---")
 
-with open(capturesFilename) as f:
+with open(captures_filename) as f:
 	data = json.load(f)
 
-	responceTimes = []
+	responce_times = []
 
     # Looks for unique keys of responceTime key
 	for d in data:
 		current = d["gameObjects"]["UIController"]
-		if current["responceTime"] not in responceTimes and current["isResponding"] == False:
-			responceTimes.append(current["responceTime"])
+		if current["responceTime"] not in responce_times and current["isResponding"] == False:
+			responce_times.append(current["responceTime"])
 
-	responceTimes.remove(0.0) # cleaning up data, initial state is discarded 
+	responce_times.remove(0.0) # cleaning up data, initial state is discarded 
 
-	print("Every responce time (sec): {}".format(responceTimes))
-	print("Mean reaction time is: {}".format(sum(responceTimes) / len(responceTimes))) 
+	print("Every responce time (sec): {}".format(responce_times))
+	print("Mean reaction time is: {}".format(sum(responce_times) / len(responce_times))) 
