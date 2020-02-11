@@ -22,5 +22,5 @@ for (filename in filenames) {
 # Cleaning up data, initial state is discarded 
 responce_times_cleaned <- responce_times[2:length(responce_times)]
 
-print(paste(c("Every responce time (sec): ", responce_times_cleaned), collapse=", "))
+print(paste(c("Every responce time (sec):", responce_times_cleaned), collapse=" "))
 print(paste("Mean reaction time is: ", mean(responce_times_cleaned)))
