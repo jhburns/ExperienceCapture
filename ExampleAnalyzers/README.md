@@ -4,3 +4,6 @@ The following data analyzers uses some pre-captured data from the Demo Game. The
 
 The captured data (session ID LRU3) has already been unzipped into the `ExampleAnalyzers/data` folder.
 
+## Formats
+
+- Python, JSON format: `ExampleAnalyzers/PythonWithJson`
