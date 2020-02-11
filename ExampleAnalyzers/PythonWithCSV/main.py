@@ -23,7 +23,7 @@ for filepath in csv_filepaths:
 			if responce_time not in responce_times and row[ir_key] == "False":
 				responce_times.append(responce_time)
 
-responce_times.remove(Decimal(0.0)) # cleaning up data, initial state is discarded 
+responce_times.remove(Decimal(0.0)) # Cleaning up data, initial state is discarded 
 
 responce_times_str = list(map(float, responce_times)) # Change decimals to strings so they print correctly
 
