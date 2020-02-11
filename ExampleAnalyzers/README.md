@@ -15,7 +15,9 @@ Any language can be used to do analysis, but the examples in Python and R.
 
 ## Analytics Online
 
-Colaboratory is a cool platform for doing analytics that works like Google Docs, but for data. Only the Python, JSON format is available as an example, but the others can easily be adapted for Colaboratory.
+[comment]: <> (Source: https://research.google.com/colaboratory/faq.html)
+
+Colaboratory is a free platform for doing analytics that works like Google Docs, but for data. Only the Python, JSON format is available as an example, but any Python code can be adapted for Colaboratory. Rlang/Other languages are not supported yet.
 
 How to use:
 
