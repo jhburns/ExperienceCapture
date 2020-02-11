@@ -6,7 +6,7 @@ Sample captured data (session ID LRU3) has already been unzipped into the `Examp
 
 ## Formats
 
-Any language can be used to do analysis, but the following are examples are in Python and R.
+Any language can be used to do analysis, but the examples in Python and R.
 
 - Python, JSON format: `ExampleAnalyzers/PythonWithJSON`
 - Python, with CSV format: `ExampleAnalyzers/PythonWithCSV`
@@ -15,7 +15,7 @@ Any language can be used to do analysis, but the following are examples are in P
 
 ## Analytics Online
 
-Colaboratory is a cool platform for doing analytics that works like Google Docs, but for data. Only the Python, JSON format is available as an example, but the other can easily be adapted for Colaboratory.
+Colaboratory is a cool platform for doing analytics that works like Google Docs, but for data. Only the Python, JSON format is available as an example, but the others can easily be adapted for Colaboratory.
 
 How to use:
 
