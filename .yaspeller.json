@@ -92,7 +92,8 @@
     "SampleScene",
     "csv",
     "LRU3",
-    "Rlang"
+    "Rlang",
+    "Colaboratory"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
