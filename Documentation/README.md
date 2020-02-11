@@ -23,7 +23,7 @@ The WebUI supports Chrome version 79. Other platforms may work, but aren't teste
 
 ## Data Analysis
 
-Explore some example analyzers, in Python and Rlang [here](ExampleAnalyzers/README.md).
+Explore some example analyzers, in Python and Rlang [here](/ExampleAnalyzers/README.md).
 
 In-depth information on how the exported data is laid out [here](Export-Format.md).
 
