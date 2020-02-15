@@ -47,6 +47,7 @@ class SessionsPage extends Component {
                 lacksTag={"archived"}
                 isRenderingDate={true}
                 emptyMessage="No unarchived sessions."
+                title="Completed Sessions"
               />
             </Col>
           </Row>

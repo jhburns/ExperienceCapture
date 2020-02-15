@@ -47,6 +47,7 @@ class ArchivedSessionsPage extends Component {
                 hasTag={"archived"}
                 isRenderingDate={true}
                 emptyMessage="No archived sessions."
+                title="Archived Sessions"
               />
             </Col>
           </Row>

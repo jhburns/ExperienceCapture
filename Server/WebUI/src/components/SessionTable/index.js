@@ -66,6 +66,9 @@ class SessionTable extends Component {
 
     return (
       <Wrapper>
+        <h2 className="mb-3 pl-3 pl-lg-0">
+          {this.props.title}
+        </h2>
         <table className="table mb-5">
           <thead className="thead-dark">
             <tr>

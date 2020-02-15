@@ -28,7 +28,7 @@ class Menu extends Component {
   render() {
     return (
       <Wrapper>
-        <Navbar color="faded" light toggleable="lg" className="mt-3 mb-3 mb-xl-5">
+        <Navbar color="faded" light toggleable="lg" className="mt-3 mb-3 mb-xl-4">
           <Container>
             <NavbarBrand tag={Brand} to="/home" className="mr-3" />
             <NavbarToggler
