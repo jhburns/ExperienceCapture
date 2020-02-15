@@ -16,7 +16,7 @@ class HomePage extends Component {
           <Row className="pr-0 justify-content-center">
             <Col lg={10} className="pr-0 pl-xl-0">
               <SessionTable
-                sessionsQuery={"createdWithin=1800&isOpen=true"} /* 30 minutes */
+                sessionsQuery={"isOngoing=true"}
                 isRenderingDate={false}
                 emptyMessage="No active sessions right now."
                 title="Ongoing Sessions"

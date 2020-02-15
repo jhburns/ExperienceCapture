@@ -2,6 +2,7 @@ namespace Carter.App.Route.Sessions
 {
     using System;
     using System.IO;
+    using System.Linq;
 
     using Carter;
 
@@ -68,6 +69,7 @@ namespace Carter.App.Route.Sessions
 
                 await sessions.InsertOneAsync(bsonDoc);
                 bsonDoc.Remove("_id");
+                bsonDoc.Add("isOngoing", true); // isOngoing is a proxy variable and will always start out as true
 
                 var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
 
@@ -99,26 +101,28 @@ namespace Carter.App.Route.Sessions
                 var builder = Builders<BsonDocument>.Filter;
                 FilterDefinition<BsonDocument> filter = builder.Empty;
 
+                var range = new BsonDateTime(DateTime.Now.AddSeconds(-120)); // Two minutes
+
                 // TODO: add a way to query based on tag
 
                 // Three potential options: null, true, or false
-                if (req.Query.As<string>("isOpen") != null)
+                if (req.Query.As<bool?>("isOngoing") != null)
                 {
-                    if (req.Query.As<bool>("isOpen"))
+                    bool isOngoing = req.Query.As<bool>("isOngoing");
+                    filter &= builder.Eq("isOpen", isOngoing);
+
+                    if (isOngoing)
                     {
-                        filter = filter & builder.Eq("isOpen", true);
+                        filter &= (builder.Exists("lastCaptureAt", false)
+                            & builder.Gt("createdAt", range))
+                            | builder.Gt("lastCaptureAt", range);
                     }
                     else
                     {
-                        filter = filter & builder.Eq("isOpen", false);
+                        filter |= (builder.Exists("lastCaptureAt", false)
+                            & builder.Lt("createdAt", range))
+                            | builder.Lt("lastCaptureAt", range);
                     }
-                }
-
-                if (req.Query.As<int?>("createdWithin") != null)
-                {
-                    int seconds = req.Query.As<int?>("createdWithin") ?? default(int); // Should never be default to to check above
-                    var range = new BsonDateTime(DateTime.Now.AddSeconds(-seconds));
-                    filter = filter & builder.Gt("createdAt", range);
                 }
 
                 var sorter = Builders<BsonDocument>.Sort.Descending("createdAt");
@@ -128,9 +132,37 @@ namespace Carter.App.Route.Sessions
                     .Sort(sorter)
                     .ToListAsync();
 
+                var sessionsDocsWithOngoing = sessionDocs.Select((s) =>
+                {
+                    bool isStarted = false;
+                    if (s.GetValue("lastCaptureAt", null) != null)
+                    {
+                        isStarted = true;
+                    }
+
+                    bool isOngoing;
+                    if (s["isOpen"].AsBoolean)
+                    {
+                        isOngoing = range.CompareTo(s["createdAt"]) < 0
+                            || (isStarted
+                            && range.CompareTo(s["lastCaptureAt"]) < 0);
+                    }
+                    else
+                    {
+                        isOngoing = range.CompareTo(s["createdAt"]) > 0
+                            && (isStarted
+                            && range.CompareTo(s["lastCaptureAt"]) > 0);
+                    }
+
+                    s.Add("isOngoing", isOngoing);
+
+                    return s;
+                });
+
                 var clientValues = new
                 {
-                    contentArray = sessionDocs, // Bson documents can't start with an array like Json, so a wrapping object is used instead
+                    // Bson documents can't start with an array like Json, so a wrapping object is used instead
+                    contentArray = sessionsDocsWithOngoing,
                 };
                 var clientDoc = clientValues.ToBsonDocument();
 
@@ -149,7 +181,8 @@ namespace Carter.App.Route.Sessions
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string uniqueID = req.RouteValues.As<string>("id");
-                var sessionDoc = await sessions.FindEqAsync("id", uniqueID);
+                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
@@ -181,9 +214,15 @@ namespace Carter.App.Route.Sessions
 
                 var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
 
-                // This one call not awaitted for max performance
-                // Error propagation be darned
+                // These calls not awaitted for max performance
+                // Error propagation is ignored
                 _ = sessionCollection.InsertOneAsync(document);
+
+                // This property is undefined on the session document until the first call of this endpoint
+                var update = Builders<BsonDocument>.Update
+                    .Set("lastCaptureAt", new BsonDateTime(DateTime.Now));
+
+                _ = sessions.UpdateOneAsync(filter, update);
 
                 // TODO: replace with BasicResponce
                 res.ContentType = "application/text; charset=utf-8";
@@ -205,6 +244,30 @@ namespace Carter.App.Route.Sessions
 
                 // TODO: replace with projection
                 sessionDoc.Remove("_id");
+
+                var range = new BsonDateTime(DateTime.Now.AddSeconds(-120)); // Two minutes
+                bool isStarted = false;
+
+                if (sessionDoc.GetValue("lastCaptureAt", null) != null)
+                {
+                    isStarted = true;
+                }
+
+                bool isOngoing;
+                if (sessionDoc["isOpen"].AsBoolean)
+                {
+                    isOngoing = range.CompareTo(sessionDoc["createdAt"]) < 0
+                        || (isStarted
+                        && range.CompareTo(sessionDoc["lastCaptureAt"]) < 0);
+                }
+                else
+                {
+                    isOngoing = range.CompareTo(sessionDoc["createdAt"]) > 0
+                        && (isStarted
+                        && range.CompareTo(sessionDoc["lastCaptureAt"]) > 0);
+                }
+
+                sessionDoc.Add("isOngoing", isOngoing);
 
                 string json = JsonQuery.FulfilEncoding(req.Query, sessionDoc);
                 if (json != null)
