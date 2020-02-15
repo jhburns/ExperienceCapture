@@ -102,23 +102,9 @@ namespace Carter.App.Route.Sessions
                 // TODO: add a way to query based on tag
 
                 // Three potential options: null, true, or false
-                if (req.Query.As<string>("isOpen") != null)
+                if (req.Query.As<bool?>("isOngoing") != null)
                 {
-                    if (req.Query.As<bool>("isOpen"))
-                    {
-                        filter = filter & builder.Eq("isOpen", true);
-                    }
-                    else
-                    {
-                        filter = filter & builder.Eq("isOpen", false);
-                    }
-                }
-
-                if (req.Query.As<int?>("createdWithin") != null)
-                {
-                    int seconds = req.Query.As<int?>("createdWithin") ?? default(int); // Should never be default to to check above
-                    var range = new BsonDateTime(DateTime.Now.AddSeconds(-seconds));
-                    filter = filter & builder.Gt("createdAt", range);
+                    filter &= builder.Eq("isOpen", req.Query.As<bool>("isOngoing"));
                 }
 
                 var sorter = Builders<BsonDocument>.Sort.Descending("createdAt");
@@ -130,7 +116,8 @@ namespace Carter.App.Route.Sessions
 
                 var clientValues = new
                 {
-                    contentArray = sessionDocs, // Bson documents can't start with an array like Json, so a wrapping object is used instead
+                    // Bson documents can't start with an array like Json, so a wrapping object is used instead
+                    contentArray = sessionDocs,
                 };
                 var clientDoc = clientValues.ToBsonDocument();
 
