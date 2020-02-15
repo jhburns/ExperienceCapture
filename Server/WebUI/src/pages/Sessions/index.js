@@ -38,7 +38,7 @@ class SessionsPage extends Component {
           <Row className="pr-0 justify-content-center">
             <Col lg={10} className="pr-0 pl-xl-0">
               <SessionTable
-                sessionsQuery={""}
+                sessionsQuery={"isOngoing=false"}
                 buttonData={{
                   onClick: this.archiveCallback,
                   body: "Archive",
