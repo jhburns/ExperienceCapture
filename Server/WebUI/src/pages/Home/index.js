@@ -19,6 +19,7 @@ class HomePage extends Component {
                 sessionsQuery={"createdWithin=1800&isOpen=true"} /* 30 minutes */
                 isRenderingDate={false}
                 emptyMessage="No active sessions right now."
+                title="Open Sessions"
               />
             </Col>
           </Row>
