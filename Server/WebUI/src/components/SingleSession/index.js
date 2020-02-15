@@ -12,6 +12,7 @@ import { Wrapper } from 'components/SingleSession/style';
 class SingleSession extends Component {
   render() {
     const isExportDisabled = this.props.sessionData.isPending || this.props.sessionData.isExported;
+    const isDownloadDisabled = !this.props.sessionData.isExported;
 
     return (
       <Wrapper>
@@ -29,14 +30,20 @@ class SingleSession extends Component {
             >
               Export
             </button>
-            <Link
-              to={`/api/v1/sessions/${this.props.sessionData.id}/export/`}
-              target="_blank"
-              download
-              className="btn btn-outline-dark"
-            >
-              Download
-        </Link>
+            {isDownloadDisabled ?
+              <button className="btn btn-outline-dark" disabled>
+                Download
+              </button>
+            :
+              <Link
+                to={`/api/v1/sessions/${this.props.sessionData.id}/export/`}
+                target="_blank"
+                download
+                className="btn btn-outline-dark"
+              >
+                Download
+              </Link>
+            }
           </Col>
         </Row>
       </Wrapper>
