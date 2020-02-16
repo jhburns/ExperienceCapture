@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import Menu from 'components/Menu';
-import Session from "components/SingleSession";
+import SingleSession from "components/SingleSession";
 
 import { getData, postData, pollGet, } from "libs/fetchExtra";
 
@@ -38,6 +38,8 @@ class SessionPage extends Component {
       createdAt: sessionsData.createdAt.$date,
       isExported: sessionsData.isExported,
       isPending: sessionsData.isPending,
+      isOpen: sessionsData.isOpen,
+      isOngoing: sessionsData.isOngoing
     }
 
     this.setState({
@@ -90,7 +92,7 @@ class SessionPage extends Component {
             <Menu />
             <Row className="mb-3 p-5">
               <Col>
-                <Session
+                <SingleSession
                   sessionData={this.state.session}
                   onExport={this.exportCallback}
                 />

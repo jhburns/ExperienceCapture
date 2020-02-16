@@ -7,6 +7,10 @@
   <img src="Documentation/images/logo.png" />
 </p>
 
+<p align="center">
+  <b>A video game to spreadsheet converter.</b>
+</p>
+
 # Experience Capture
 
 This project is a custom video game analytics platform that is designed to support research needs. The four main parts are:

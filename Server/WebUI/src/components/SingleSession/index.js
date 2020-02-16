@@ -11,8 +11,13 @@ import { Wrapper } from 'components/SingleSession/style';
 
 class SingleSession extends Component {
   render() {
-    const isExportDisabled = this.props.sessionData.isPending || this.props.sessionData.isExported;
+    const isExportDisabled = this.props.sessionData.isPending 
+      || this.props.sessionData.isExported
+      || this.props.sessionData.isOngoing;
+
     const isDownloadDisabled = !this.props.sessionData.isExported;
+
+    const statuses = ["Ongoing", "Completed", "Closed Unexpectedly"];
 
     return (
       <Wrapper>
@@ -23,6 +28,15 @@ class SingleSession extends Component {
             <h5 className="mb-4">
               {moment(this.props.sessionData.createdAt).format("MMM Do YY hh:mm a")}
             </h5>
+            <h5>Status: {
+              !this.props.sessionData.isOpen ?
+                statuses[1]
+              :
+                this.props.sessionData.isOngoing ?
+                  statuses[0]
+                :
+                  statuses[2]
+              }</h5>
             <button
               onClick={this.props.onExport}
               disabled={isExportDisabled}
