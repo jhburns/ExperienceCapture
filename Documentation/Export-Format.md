@@ -12,7 +12,7 @@ Here is an example of this file type, with annotations:
 ```
 {
   "_id" : { "$oid" : "5e3350fb774b120001aefa93" }, // Data base key, not important
-  "isOpen" : true,
+  "isOpen" : true, // Whether the session was properly closed by the client
   "isExported" : false,
   "isPending" : true,
   "user" : { // The user who logged into the service, NOT the player
@@ -25,7 +25,11 @@ Here is an example of this file type, with annotations:
   },
   "createdAt" : { "$date" : 1580421371319 },
   "tags" : ["archived"], // Flexible properties on the data
-  "id" : "RUE6" // Unique ID
+  "id" : "RUE6" // Unique ID,
+  "lastCaptureAt": {
+    "$date": 1581809189357 // Timestamp of when the last capture was recorded
+  },
+  "isOngoing": false // A proxy of isOpen and lastCaptureAt. True when data has recently been added to the session
 }
 ```
 
