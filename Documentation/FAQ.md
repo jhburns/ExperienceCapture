@@ -34,4 +34,4 @@ They represent about 83 milliseconds, assuming the game is running at 60 fps, so
 
 ## How can I delete sessions?
 
-It is impossible to delete session, or any data for that matter. However, sessions can be archived so hide them in the normal UI. Near full data retentions is a policy designed to protect crucial data from human accidents.
+It is impossible to delete a session, or any data for that matter. However, sessions can be archived to hide them, which works like a delete. Near full data retentions is a policy adopted by Experience Capture to protect crucial data from human or tech based accidents.
