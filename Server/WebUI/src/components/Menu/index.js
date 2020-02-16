@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
 
-import { Link }from 'react-router-dom';
-
 import { Wrapper } from 'components/Menu/style';
 
 import {
   Nav,
-  NavItem,
-  NavLink,
   Navbar,
   Container,
   Collapse,
@@ -16,6 +12,10 @@ import {
 } from "@bootstrap-styled/v4";
 
 import Brand from 'components/Brand';
+
+import { withRouter } from "react-router";
+
+import MenuLink from "components/MenuLink";
 
 class Menu extends Component {
   constructor(props) {
@@ -26,32 +26,22 @@ class Menu extends Component {
   }
 
   render() {
+    const { location } = this.props;
+
     return (
       <Wrapper>
         <Navbar color="faded" light toggleable="lg" className="mt-3 mb-3 mb-xl-4">
           <Container>
-            <NavbarBrand tag={Brand} to="/home" className="mr-3" />
+            <NavbarBrand tag={Brand} to="/home/start" className="mr-3" />
             <NavbarToggler
               onClick={() => this.setState({ isOpen: !this.state.isOpen })}
               className="ml-auto"
             />
             <Collapse navbar isOpen={this.state.isOpen}>
               <Nav navbar className="mr-auto">
-                <NavItem>
-                  <NavLink active tag={Link} to="/home">
-                    Home
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink active tag={Link} to="/home/sessions">
-                    Sessions
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink active tag={Link} to="/home/settings">
-                    Settings
-                  </NavLink>
-                </NavItem>
+                <MenuLink locationPath={location.pathname} to="/home/start" linkText="Home" />
+                <MenuLink locationPath={location.pathname} to="/home/sessions" linkText="Sessions" />
+                <MenuLink locationPath={location.pathname} to="/home/settings" linkText="Settings" />
               </Nav>
             </Collapse>
           </Container>
@@ -60,4 +50,7 @@ class Menu extends Component {
     )
   }
 }
-export default Menu;
+
+const MenuWithRouter = withRouter(Menu);
+
+export default MenuWithRouter;
