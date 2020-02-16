@@ -6,9 +6,7 @@ import { NavLink, NavItem, } from "@bootstrap-styled/v4";
 class MenuLink extends Component {
   render() {
     const sameLengthPath = this.props.locationPath.substring(0, this.props.to.length);
-    const isActive = this.props.to == sameLengthPath;
-
-    console.log(sameLengthPath);
+    const isActive = this.props.to === sameLengthPath;
 
     return (
       <NavItem>
