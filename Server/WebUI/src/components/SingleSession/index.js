@@ -26,7 +26,7 @@ class SingleSession extends Component {
             <h5 className="mb-4">
               {moment(this.props.sessionData.createdAt).format("MMM Do YY hh:mm a")}
             </h5>
-            <h5>Status: {
+            <h5 className="mb-4">Status: {
               !this.props.sessionData.isOpen ?
                 "Completed"
               :
@@ -34,7 +34,8 @@ class SingleSession extends Component {
                   "Ongoing"
                 :
                   "Closed Unexpectedly"
-              }</h5>
+              }
+            </h5>
             <button
               onClick={this.props.onExport}
               disabled={isExportDisabled}

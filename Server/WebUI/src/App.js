@@ -35,11 +35,11 @@ function App() {
             <Route exact path="/" component={NormalSignInPage}/>
             <Route exact path="/signUp" component={SignUpPage} />
             <Route exact path="/signInFor" component={ClaimPage} />
-            <Route exact path="/home" component={HomePage} />
+            <Route exact path="/home/start" component={HomePage} />
             <Route exact path="/home/sessions" component={SessionsPage} />
             <Route exact path="/home/sessions/:id" component={SessionPage} />
             <Route exact path="/home/settings" component={SettingsPage} />
-            <Route exact path="/home/archived" component={ArchivePage} />
+            <Route exact path="/home/sessions/archived" component={ArchivePage} />
             <Route exact path="/admin" component={AdminPage} />
             <Route path="*" component={NotFoundPage} /> {/* 404 page */}
           </Switch>
