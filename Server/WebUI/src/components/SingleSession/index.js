@@ -17,8 +17,6 @@ class SingleSession extends Component {
 
     const isDownloadDisabled = !this.props.sessionData.isExported;
 
-    const statuses = ["Ongoing", "Completed", "Closed Unexpectedly"];
-
     return (
       <Wrapper>
         <Row>
@@ -30,12 +28,12 @@ class SingleSession extends Component {
             </h5>
             <h5>Status: {
               !this.props.sessionData.isOpen ?
-                statuses[1]
+                "Completed"
               :
                 this.props.sessionData.isOngoing ?
-                  statuses[0]
+                  "Ongoing"
                 :
-                  statuses[2]
+                  "Closed Unexpectedly"
               }</h5>
             <button
               onClick={this.props.onExport}
