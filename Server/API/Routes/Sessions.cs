@@ -224,9 +224,7 @@ namespace Carter.App.Route.Sessions
 
                 _ = sessions.UpdateOneAsync(filter, update);
 
-                // TODO: replace with BasicResponce
-                res.ContentType = "application/text; charset=utf-8";
-                await res.WriteAsync("OK");
+                BasicResponce.Send(res);
             });
 
             this.Get("/{id}", async (req, res) =>
