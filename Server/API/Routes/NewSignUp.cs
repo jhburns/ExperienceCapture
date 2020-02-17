@@ -19,6 +19,7 @@ namespace Carter.App.Route.NewSignUp
         public NewSignUp(IMongoDatabase db)
             : base("/users")
         {
+            // TODO: only allow admins to create sign-up tokens, or another restriction
             this.Before += PreSecurity.GetSecurityCheck(db);
 
             this.Post("/signUp/", async (req, res) =>

@@ -3,7 +3,6 @@ namespace Carter.App.Lib.Generate
     using System;
     using System.Linq;
     using System.Security.Cryptography;
-    using System.Text;
 
     public class Generate
     {

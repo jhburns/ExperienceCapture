@@ -10,6 +10,8 @@ import { Wrapper, Info, Google } from 'components/GoogleSignIn/style';
 
 import { P, Row, Col, } from '@bootstrap-styled/v4';
 
+// TODO: Consider using a state machine to model sign-in
+// Maybe this: https://xstate.js.org/
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +32,7 @@ class SignIn extends Component {
   }
 
   getContent() {
+    // TODO: refactor to a reusable architecture
   	if (this.state.isUnableToSignIn) {
       return (
         <Wrapper>

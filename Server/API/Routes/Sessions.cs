@@ -15,8 +15,6 @@ namespace Carter.App.Route.Sessions
 
     using Carter.Request;
 
-    using Microsoft.AspNetCore.Http;
-
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization;
     using MongoDB.Driver;

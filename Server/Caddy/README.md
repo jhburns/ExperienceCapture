@@ -10,4 +10,6 @@ See: https://caddyserver.com/v1/docs for documentation.
 
 There are two different configurations used, one for local development, `Caddyfile`,
 and one for production, `Caddyfile.production`. Routing should behave the same between
-both, with the main difference being SSL setup as it isn't feasible for local development. 
+both, with the main difference being SSL setup as it isn't feasible for local development.
+
+[comment]: <> (TODO: add rate-limiting, only in production)
