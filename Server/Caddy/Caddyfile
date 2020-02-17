@@ -1,4 +1,4 @@
-*:2015 # TODO: check that this also works on Windows docker
+*:2015
 
 log stdout
 
@@ -16,3 +16,5 @@ proxy / web:3000 {
 	websocket
 	transparent
 }
+
+# TODO: add security headers here too

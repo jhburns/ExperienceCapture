@@ -1,3 +1,4 @@
+# TODO: change to Ubuntu version 18.04
 FROM ubuntu:xenial-20191024
 
 WORKDIR /keys

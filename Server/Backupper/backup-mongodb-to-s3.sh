@@ -4,6 +4,8 @@
 # https://gist.github.com/eladnava/96bd9771cd2e01fb4427230563991c8d#file-mongodb-s3-backup-sh-L42 
 # https://gist.github.com/caraboides/7679bb73f4f13e36fc2b9dbded3c24c0
 
+# TODO: add expiration to copied backup
+
 set -e
 HOST=db
 DB=ec
