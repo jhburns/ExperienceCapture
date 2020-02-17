@@ -10,6 +10,8 @@
     packer_debug: "{{ lookup('env','packer_debug_option') }}"
     aws_target: "{{ lookup('env','aws_deploy_target') }}"
 
+  # TODO: make faster/working in parallel
+  # Currently takes ~13 minutes for a build
   tasks:
 
     # Needed because the Ubuntu AMI does not come with python2
@@ -150,6 +152,7 @@
     # So it has to be pulled ahead of time, or pulled the first time the api service
     # Tries to create an exporter container. The second way would likely take to long,
     # to do each time so instead pulling is done preemptively.
+    # TODO: fix this somehow
     - name: Pulling exporter image because it won't be downloaded by the api on export
       command: docker pull 127.0.0.1:5000/ec-exporter
 
@@ -162,6 +165,8 @@
       args:
         chdir: /srv
 
+
+    # TODO: find some way to bootstrap on restart, don't rely on timing
     # Waits so that that services don't start before the instance is stopped
     - name: Create production Docker Swarm services
       at:

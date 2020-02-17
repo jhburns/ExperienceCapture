@@ -1,10 +1,6 @@
 FROM hashicorp/packer:1.4.5 as builder
 
-# Prevents pip from complaining about being out of date
-ENV BINDIR=/usr/local/bin
-
 WORKDIR /deploy
-
 RUN apk update \
     && apk add --no-cache \
     ansible=2.7.16-r0 \
