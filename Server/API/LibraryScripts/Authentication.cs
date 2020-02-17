@@ -15,7 +15,7 @@ namespace Carter.App.Lib.Authentication
     {
         // TODO: make following default to empty string
         private static readonly string SkipValidation = Environment.GetEnvironmentVariable("unsafe_do_no_validate_user");
-        
+
         // TODO: make app throw exception when following not defined
         private static readonly string Audience = Environment.GetEnvironmentVariable("gcp_client_id");
 
