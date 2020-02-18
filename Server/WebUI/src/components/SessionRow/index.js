@@ -9,9 +9,8 @@ class Session extends Component {
   render() {
     return (
       <Wrapper>
-        <tr>
           <th scope="row">
-            <Link to={`/home/sessions/${this.props.sessionData.id}/`}>
+            <Link to={`/home/sessions/id/${this.props.sessionData.id}/`}>
               {this.props.sessionData.id}
             </Link>
           </th>
@@ -31,7 +30,6 @@ class Session extends Component {
               </button>
             </td>
           }
-        </tr>
       </Wrapper>
     )
   }
