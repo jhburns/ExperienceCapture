@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-const Wrapper = styled.section`
+const Wrapper = styled.tr`
 
 `;
 

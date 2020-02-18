@@ -37,7 +37,7 @@ function App() {
             <Route exact path="/signInFor" component={ClaimPage} />
             <Route exact path="/home/start" component={HomePage} />
             <Route exact path="/home/sessions" component={SessionsPage} />
-            <Route exact path="/home/sessions/:id" component={SessionPage} />
+            <Route exact path="/home/sessions/id/:id" component={SessionPage} />
             <Route exact path="/home/settings" component={SettingsPage} />
             <Route exact path="/home/sessions/archived" component={ArchivePage} />
             <Route exact path="/admin" component={AdminPage} />
