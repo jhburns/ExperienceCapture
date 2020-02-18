@@ -38,12 +38,16 @@ public class HandleCapturing : MonoBehaviour
     private List<string> capturableNames;
 
     public object extraInfo { get; set; }
+
     private int openRequests;
+    private float averageOpenRequests;
+    private int minOpenRequests;
+    private int maxOpenRequests;
+
     private float minResponceTime;
     private float averageResponceTime;
     private float maxResponceTime;
     private int responceCount;
-    private float averageOpenRequests;
 
     public bool isIgnoringNotFound { get; set; }
     public SpecificPair[] pairs { get; set; }
@@ -60,15 +64,19 @@ public class HandleCapturing : MonoBehaviour
     void Start()
     {
         frameCount = 0;
+
         openRequests = 0;
+        minOpenRequests = int.MaxValue;
         averageOpenRequests = 1f;
+        maxOpenRequests = -1;
+
         // Start not capturing so the Setup scene isn't captured
         isCapturing = false;
         isFirst = true;
         responceCount = 0;
 
         // These values mean measurements aren't perfect, but it is good enough
-        minResponceTime = int.MaxValue;
+        minResponceTime = float.MaxValue;
         averageResponceTime = 1f;
         maxResponceTime = -1f;
     }
@@ -218,6 +226,16 @@ public class HandleCapturing : MonoBehaviour
 
                 averageOpenRequests = (averageOpenRequests * responceCount + openRequests) / (responceCount + 1);
 
+                if (openRequests < minOpenRequests)
+                {
+                    minOpenRequests = openRequests;
+                }
+
+                if (openRequests > maxOpenRequests)
+                {
+                    maxOpenRequests = openRequests;
+                }
+
                 if (responceTime < minResponceTime)
                 {
                     minResponceTime = responceTime;
@@ -247,8 +265,11 @@ public class HandleCapturing : MonoBehaviour
                 extra += "Capturable objects: " + allCapturable.Count + "\n";
             }
 
-            extra += "Open requests: " + openRequests + "\n";
-            extra += "Average open requests: " + averageOpenRequests + "\n";
+            extra += "Open requests: current=" + openRequests;
+            extra += " min=" + minOpenRequests;
+            extra += " mean=" + averageOpenRequests;
+            extra += " max=" + maxOpenRequests + "\n";
+
             extra += "Request response time: min=" +  minResponceTime;
             extra += " mean=" + averageResponceTime;
             extra += " max=" + maxResponceTime + "\n";
