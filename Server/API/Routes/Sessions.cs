@@ -47,10 +47,14 @@ namespace Carter.App.Route.Sessions
                 var accessTokenDoc = await accessTokens.FindEqAsync("hash", PasswordHasher.Hash(token));
 
                 var users = db.GetCollection<BsonDocument>("users");
-                var user = await users.FindEqAsync("_id", accessTokenDoc["user"].AsObjectId);
 
-                // TODO: replace this line with a project
-                user.Remove("_id");
+                var projection = Builders<BsonDocument>.Projection.Exclude("_id");
+                var filterUser = Builders<BsonDocument>.Filter.Eq("_id", accessTokenDoc["user"].AsObjectId);
+
+                var user = await users
+                    .Find(filterUser)
+                    .Project(projection)
+                    .FirstOrDefaultAsync();
 
                 var sessionDoc = new
                 {
@@ -230,16 +234,19 @@ namespace Carter.App.Route.Sessions
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string uniqueID = req.RouteValues.As<string>("id");
-                var sessionDoc = await sessions.FindEqAsync("id", uniqueID);
+                var projection = Builders<BsonDocument>.Projection.Exclude("_id");
+                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+
+                var sessionDoc = await sessions
+                    .Find(filter)
+                    .Project(projection)
+                    .FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
                     res.StatusCode = 404;
                     return;
                 }
-
-                // TODO: replace with projection
-                sessionDoc.Remove("_id");
 
                 var range = new BsonDateTime(DateTime.Now.AddSeconds(-120)); // Two minutes
                 bool isStarted = false;

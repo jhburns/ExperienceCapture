@@ -7,6 +7,7 @@ import SessionRow from 'components/SessionRow';
 import { P, Row, Col, } from '@bootstrap-styled/v4';
 import { Wrapper } from 'components/SessionTable/style';
 
+// TODO: fix this so selecting archive/unarchive results in state/page refresh
 class SessionTable extends Component {
   constructor(props) {
     super(props)

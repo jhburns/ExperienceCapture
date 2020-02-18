@@ -3,6 +3,7 @@ import { gapi } from 'gapi-script';
 import { postData } from 'libs/fetchExtra';
 import { createCookie } from 'libs/cookieExtra';
 
+// TODO: refactor this to reduce repetition
 async function submitUser(isMock=false, user, onError, options={ signUpToken: undefined, claimToken: undefined }, onDuplicate) {
 	if (options.signUpToken !== undefined) {
 		await signUpUser(isMock, user, options.signUpToken, onError, onDuplicate);
