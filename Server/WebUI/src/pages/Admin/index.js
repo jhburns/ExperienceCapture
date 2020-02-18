@@ -4,6 +4,8 @@ import queryString from 'query-string';
 import { postData } from 'libs/fetchExtra';
 import { Redirect } from 'react-router-dom';
 
+import { Wrapper } from 'pages/Admin/style';
+
 class Admin extends Component {
 
   constructor(props) {
@@ -57,20 +59,20 @@ class Admin extends Component {
   render() {
     if (this.state.isWaiting) {
       return (
-        <div>
+        <Wrapper>
           <p>One sec...</p>
-        </div>
-      );
+        </Wrapper>
+      )
     } else if (this.state.isError) {
       return (
-        <div>
+        <Wrapper>
           <p>Password is Invalid</p>
           <p>Check console</p>
-        </div>
-      );
+        </Wrapper>
+      )
     } else {
       return (
-        <div>
+        <Wrapper>
           <p>Redirecting...</p>
           <Redirect
             to={{
@@ -78,8 +80,8 @@ class Admin extends Component {
               search: queryString.stringify({signUpToken: this.state.accessToken}),
             }}
           />
-        </div>
-      );
+        </Wrapper>
+      )
     }
   }
 }
