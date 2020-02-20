@@ -25,7 +25,7 @@ services:
   web:
     build:
       context: ./WebUI
-      dockerfile: integration.Dockerfile
+      dockerfile: production.Dockerfile
     command: ["caddy"]
     image: 127.0.0.1:5000/ec-web
     deploy:
