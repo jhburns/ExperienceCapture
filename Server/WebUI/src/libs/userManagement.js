@@ -1,4 +1,4 @@
-import { gapi } from 'gapi-script';
+/* global gapi */
 
 import { postData } from 'libs/fetchExtra';
 import { createCookie } from 'libs/cookieExtra';
