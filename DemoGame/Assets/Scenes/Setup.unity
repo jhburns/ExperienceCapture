@@ -113,7 +113,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &1323029855
+--- !u!1001 &1811397536
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -154,13 +154,8 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 114200459607850046, guid: 04a02c01c26ed9f4ea973bef42eb2fab,
         type: 2}
-      propertyPath: offlineMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114200459607850046, guid: 04a02c01c26ed9f4ea973bef42eb2fab,
-        type: 2}
-      propertyPath: gameVersion
-      value: 1.1.6
+      propertyPath: defaultUrl
+      value: https://expcap2.xyz
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04a02c01c26ed9f4ea973bef42eb2fab, type: 2}
