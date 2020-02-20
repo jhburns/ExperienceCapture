@@ -170,7 +170,7 @@ class SignIn extends Component {
       isSignedOut: true,
       isDuplicateSignIn: false,
       isUnableToSignIn: false,
-    }, () => window.gapi.load('signin2', this.renderLoginCallback));
+    }, () => gapi.load('signin2', this.renderLoginCallback));
   }
 
   async onSuccess(user) {
@@ -210,13 +210,13 @@ class SignIn extends Component {
   }
 
   componentDidMount() {
-    window.gapi.load('auth2', () => {
+    gapi.load('auth2', () => {
       this.auth2 = gapi.auth2.init({
         client_id: this.props.clientId,
       });
 
 	    this.auth2.then(() => {}, this.invalidCallback);
-      window.gapi.load('signin2', this.renderLoginCallback);
+      gapi.load('signin2', this.renderLoginCallback);
     });
   }
 
