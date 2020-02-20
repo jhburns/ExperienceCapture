@@ -12,7 +12,7 @@ COPY public ./public
 COPY src ./src
 
 RUN npm run lint
-RUN npm run test.withIgnore
+RUN npm run test
 RUN npm run build
 
 # production environment

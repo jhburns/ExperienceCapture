@@ -20,12 +20,16 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint \"**/*.js\" --max-warnings=0",
-    "test.withIgnore": "npm test -- --transformIgnorePatterns \"node_modules/(?!(gapi-script|bootstrap)/)\""
+    "lint": "eslint \"**/*.js\" --max-warnings=0"
   },
   "eslintConfig": {
     "extends": [
       "react-app"
+    ]
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(bootstrap)/)"
     ]
   },
   "browserslist": {
@@ -44,6 +48,8 @@
     "@typescript-eslint/eslint-plugin": "^2.7.0",
     "@typescript-eslint/parser": "^2.13.0",
     "babel-eslint": "^10.0.3",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^6.6.0",
     "eslint-config-react-app": "^5.1.0",
     "eslint-plugin-flowtype": "^3.13.0",
