@@ -1,12 +1,13 @@
+/* global gapi */
+
 import React, { Component } from 'react';
-import { gapi } from 'gapi-script';
 
 import { submitUser, signOutUser, } from "libs/userManagement";
 import SignOutButton from "components/SignOutButton"
 
 import HomeButton from 'components/HomeButton';
 
-import { Wrapper, Info, Google } from 'components/GoogleSignIn/style';
+import { Wrapper, Info, Google, } from 'components/GoogleSignIn/style';
 
 import { P, Row, Col, } from '@bootstrap-styled/v4';
 

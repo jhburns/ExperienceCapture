@@ -6,7 +6,6 @@
     "@bootstrap-styled/provider": "^2.0.2",
     "@bootstrap-styled/v4": "^3.3.0",
     "bootstrap": "^4.4.1",
-    "gapi-script": "^1.0.1",
     "moment": "^2.24.0",
     "query-string": "^6.9.0",
     "react": "^16.12.0",
