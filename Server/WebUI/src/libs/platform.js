@@ -7,6 +7,7 @@ var gapi = window.gapi = window.gapi || {}; gapi._bs = new Date().getTime(); (fu
 /*
   From: https://apis.google.com/js/platform.js
   DO NOT EDIT, this is a copy of the CDN file from Google
+  Needed so that tests can see it as a globla
 
   When updating to lastest version of platform.js
   Delete everything besides the eslint-disable comment,
