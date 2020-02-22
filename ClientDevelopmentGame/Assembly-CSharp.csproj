@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ExperienceCapture\Subassets\Capture.cs" />
+    <Compile Include="Assets\ExperienceCapture\Subassets\CaptureExtra.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\CaptureSetup.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\HandleCapturing.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\InputStructure.cs" />
