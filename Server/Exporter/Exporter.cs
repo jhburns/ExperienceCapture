@@ -8,7 +8,6 @@ namespace Export.App.Main
     using System.IO.Compression;
     using System.Linq;
 
-    // String Builder is basically required or things will be super slow
     using System.Text;
     using System.Threading.Tasks;
 
@@ -72,24 +71,20 @@ namespace Export.App.Main
             {
                 string outFolder = $".{Seperator}exported{Seperator}";
                 string zipFolder = $".{Seperator}zipped{Seperator}";
-                string csvFolder = $".{Seperator}exported{Seperator}CSVs{Seperator}";
 
-                await CreateFolder(outFolder);
-                await CreateFolder(zipFolder);
-                await CreateFolder(csvFolder);
-
+                Directory.CreateDirectory(outFolder);
+                Directory.CreateDirectory(zipFolder);
+                Directory.CreateDirectory($".{Seperator}exported{Seperator}CSVs{Seperator}");
                 Console.WriteLine("Made folders: " + GetTimePassed());
 
                 await ExportSession();
 
                 string outLocation = zipFolder + $"{SessionId}_session_exported.zip";
                 ZipFolder(outFolder, outLocation);
-
                 Console.WriteLine("Zipped: " + GetTimePassed());
 
                 await Upload(outLocation);
                 await UpdateDoc();
-
                 Console.WriteLine("Uploaded: " + GetTimePassed());
             }
             catch (Exception e)
@@ -194,6 +189,7 @@ namespace Export.App.Main
         {
             StringBuilder docsTotal = new StringBuilder();
             docsTotal.Append("[");
+
             foreach (BsonDocument d in sessionDocs)
             {
                 string json = d.ToJson(GetJsonWriterSettings());
@@ -331,7 +327,6 @@ namespace Export.App.Main
         private static async Task CreateReadme()
         {
             string source = System.IO.File.ReadAllText($".{Seperator}Templates{Seperator}README.txt.handlebars");
-
             var template = Handlebars.Compile(source);
 
             var data = new
@@ -339,9 +334,7 @@ namespace Export.App.Main
                 id = SessionId,
             };
 
-            var result = template(data);
-
-            await OutputToFile(result, "README.txt");
+            await OutputToFile(template(data), "README.txt");
         }
 
         private static async Task OutputToFile(string content, string filename, string path = "")
@@ -362,11 +355,6 @@ namespace Export.App.Main
             }
 
             return;
-        }
-
-        private static async Task CreateFolder(string location)
-        {
-            await Task.Run(() => Directory.CreateDirectory(location));
         }
 
         private static void ZipFolder(string location, string outName)
