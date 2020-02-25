@@ -23,4 +23,32 @@ namespace Capture
             };
         }
     }
+
+    public static class VisionExtra
+    {
+        public static float AngleWith(this MonoBehaviour origin, MonoBehaviour destination, bool isDraw = false)
+        {
+            // First, make a vector that goes in the direction the origin is looking at
+            Vector3 facing = origin.transform.forward;
+            Vector3 originPosition = origin.transform.position;
+
+            if (isDraw)
+            {
+                Debug.DrawRay(originPosition, facing * 800, Color.red);
+            }
+
+            // Use destination position to get a vector from the origin to the destination
+            Vector3 destinationPos = destination.transform.position;
+            Vector3 originToDestination = destinationPos - originPosition;
+
+            if (isDraw)
+            {
+                Debug.DrawRay(originPosition, originToDestination, Color.blue);
+            }
+
+            // Calculate the angle between these vectors
+            // Which will give origin angle relative to destination
+            return Vector3.Angle(originToDestination, facing);
+        }
+    }
 }

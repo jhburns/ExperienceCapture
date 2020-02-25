@@ -118,3 +118,5 @@ Additionally because csv is a table format, all properties are flattened. So, an
 ## [Session ID].raw.json
 
 The data without any processing. Only useful if the data was exported improperly. This is the only JSON data that isn't formatted, to save space.
+
+[comment]: <> (TODO: update this to be correct to new export format)
