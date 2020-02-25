@@ -382,7 +382,6 @@ namespace Export.App.Main
 
                 // Upload a file to bucket.
                 await OS.PutObjectAsync(bucketName, objectName, filePath, contentType);
-                Console.WriteLine("Successfully uploaded " + objectName);
             }
             catch (MinioException e)
             {
