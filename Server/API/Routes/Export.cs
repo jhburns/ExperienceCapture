@@ -120,7 +120,7 @@ namespace Carter.App.Route.Export
                 }
 
                 string bucketName = "sessions.exported";
-                string objectName = $"{id}.exported.zip";
+                string objectName = $"{id}_session_exported.zip";
                 byte[] body = await os.GetBytesAsync(bucketName, objectName);
 
                 var about = new ContentDisposition { FileName = objectName };

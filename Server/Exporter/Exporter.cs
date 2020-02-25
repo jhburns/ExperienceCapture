@@ -66,17 +66,21 @@ namespace Export.App.Main
 
         private static async Task MainAsync(string[] args)
         {
+            try
+            {
             string outFolder = $".{Seperator}exported{Seperator}";
             string zipFolder = $".{Seperator}zipped{Seperator}";
+            string csvFolder = $".{Seperator}exported{Seperator}CSVs{Seperator}";
 
             await CreateFolder(outFolder);
             await CreateFolder(zipFolder);
+            await CreateFolder(csvFolder);
 
             Console.WriteLine("Made folders: " + GetTimePassed());
 
             await ExportSession();
 
-            string outLocation = zipFolder + $"{SessionId}.exported.zip";
+            string outLocation = zipFolder + $"{SessionId}_session_exported.zip";
             ZipFolder(outFolder, outLocation);
 
             Console.WriteLine("Zipped: " + GetTimePassed());
@@ -85,6 +89,11 @@ namespace Export.App.Main
             await UpdateDoc();
 
             Console.WriteLine("Uploaded: " + GetTimePassed());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
             // System.Threading.Thread.Sleep(100000000); // To make it so the program doesn't exist immediately
             return;
@@ -111,7 +120,7 @@ namespace Export.App.Main
             await ToJson(scenes, "onlyCaptures", ws);
             Console.WriteLine("Only Captures: " + GetTimePassed());
 
-            await ToCsv(scenes, "byScene");
+            await ToCsv(scenes, "sceneName");
             Console.WriteLine("To CSV: " + GetTimePassed());
 
             return;
@@ -267,7 +276,8 @@ namespace Export.App.Main
                 string json = ToFlatJson(scene.Docs);
                 string csv = JsonToCsv(json, ",");
 
-                await OutputToFile(csv, $"{SessionId}.{about}.{scene.Name}.{i}.csv");
+                string path = $".{Seperator}exported{Seperator}CSVs{Seperator}";
+                await OutputToFile(csv, $"{SessionId}.{about}.{scene.Name}.{i}.csv", path);
             }
         }
 
@@ -313,11 +323,19 @@ namespace Export.App.Main
             return csvString.ToString();
         }
 
-        private static async Task OutputToFile(string content, string filename)
+        private static async Task OutputToFile(string content, string filename, string path = "")
         {
-            string path = $".{Seperator}exported{Seperator}{filename}";
+            string fullpath;
+            if (path == string.Empty)
+            {
+                fullpath = $".{Seperator}exported{Seperator}{filename}";
+            }
+            else
+            {
+                fullpath = $"{path}{filename}";
+            }
 
-            using (var sw = new StreamWriter(path))
+            using (var sw = new StreamWriter(fullpath))
             {
                 await sw.WriteAsync(content);
             }
@@ -340,7 +358,7 @@ namespace Export.App.Main
         {
             var bucketName = "sessions.exported";
             var location = "us-west-1";
-            var objectName = $"{SessionId}.exported.zip";
+            var objectName = $"{SessionId}_session_exported.zip";
             var filePath = fileLocation;
             var contentType = "application/zip";
 
