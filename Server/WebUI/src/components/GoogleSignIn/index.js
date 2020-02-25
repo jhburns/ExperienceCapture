@@ -67,7 +67,7 @@ class SignIn extends Component {
             </Col>
           </Row>
           <Row className="justify-content-center">
-            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
+            <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
               <HomeButton />
             </Col>
           </Row>
