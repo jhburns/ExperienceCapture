@@ -70,27 +70,27 @@ namespace Export.App.Main
         {
             try
             {
-            string outFolder = $".{Seperator}exported{Seperator}";
-            string zipFolder = $".{Seperator}zipped{Seperator}";
-            string csvFolder = $".{Seperator}exported{Seperator}CSVs{Seperator}";
+                string outFolder = $".{Seperator}exported{Seperator}";
+                string zipFolder = $".{Seperator}zipped{Seperator}";
+                string csvFolder = $".{Seperator}exported{Seperator}CSVs{Seperator}";
 
-            await CreateFolder(outFolder);
-            await CreateFolder(zipFolder);
-            await CreateFolder(csvFolder);
+                await CreateFolder(outFolder);
+                await CreateFolder(zipFolder);
+                await CreateFolder(csvFolder);
 
-            Console.WriteLine("Made folders: " + GetTimePassed());
+                Console.WriteLine("Made folders: " + GetTimePassed());
 
-            await ExportSession();
+                await ExportSession();
 
-            string outLocation = zipFolder + $"{SessionId}_session_exported.zip";
-            ZipFolder(outFolder, outLocation);
+                string outLocation = zipFolder + $"{SessionId}_session_exported.zip";
+                ZipFolder(outFolder, outLocation);
 
-            Console.WriteLine("Zipped: " + GetTimePassed());
+                Console.WriteLine("Zipped: " + GetTimePassed());
 
-            await Upload(outLocation);
-            await UpdateDoc();
+                await Upload(outLocation);
+                await UpdateDoc();
 
-            Console.WriteLine("Uploaded: " + GetTimePassed());
+                Console.WriteLine("Uploaded: " + GetTimePassed());
             }
             catch (Exception e)
             {
@@ -363,9 +363,9 @@ namespace Export.App.Main
             return;
         }
 
-        private static async Task CreateFolder(string location)
+        private static Task CreateFolder(string location)
         {
-            await Task.Run(() => Directory.CreateDirectory(location));
+            Task.Run(() => Directory.CreateDirectory(location));
         }
 
         private static void ZipFolder(string location, string outName)
