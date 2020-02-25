@@ -18,6 +18,8 @@ namespace Export.App.Main
     using Exporter.App.CustomExceptions;
     using Exporter.App.JsonHelper;
 
+    using HandlebarsDotNet;
+
     using Minio;
     using Minio.Exceptions;
 
@@ -95,7 +97,7 @@ namespace Export.App.Main
                 Console.WriteLine(e);
             }
 
-            // System.Threading.Thread.Sleep(100000000); // To make it so the program doesn't exist immediately
+            // System.Threading.Thread.Sleep(100000000); // To make it so the program stays open
             return;
         }
 
@@ -122,6 +124,8 @@ namespace Export.App.Main
 
             await ToCsv(scenes, "sceneName");
             Console.WriteLine("To CSV: " + GetTimePassed());
+
+            await CreateReadme();
 
             return;
         }
@@ -321,6 +325,22 @@ namespace Export.App.Main
             }
 
             return csvString.ToString();
+        }
+
+        private static async Task CreateReadme()
+        {
+            string source = System.IO.File.ReadAllText($".{Seperator}Templates{Seperator}README.txt.handlebars");
+
+            var template = Handlebars.Compile(source);
+
+            var data = new
+            {
+                id = SessionId,
+            };
+
+            var result = template(data);
+
+            await OutputToFile(result, "README.txt");
         }
 
         private static async Task OutputToFile(string content, string filename, string path = "")
