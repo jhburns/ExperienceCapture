@@ -126,6 +126,7 @@ namespace Export.App.Main
             Console.WriteLine("To CSV: " + GetTimePassed());
 
             await CreateReadme();
+            Console.WriteLine("Created README: " + GetTimePassed());
 
             return;
         }
@@ -363,9 +364,9 @@ namespace Export.App.Main
             return;
         }
 
-        private static Task CreateFolder(string location)
+        private static async Task CreateFolder(string location)
         {
-            Task.Run(() => Directory.CreateDirectory(location));
+            await Task.Run(() => Directory.CreateDirectory(location));
         }
 
         private static void ZipFolder(string location, string outName)
