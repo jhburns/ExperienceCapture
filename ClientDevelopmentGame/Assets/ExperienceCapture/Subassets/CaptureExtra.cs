@@ -1,5 +1,7 @@
 namespace Capture
 {
+    using System.Linq;
+
     using UnityEngine;
 
     public static class TypesExtra
@@ -49,6 +51,22 @@ namespace Capture
             // Calculate the angle between these vectors
             // Which will give origin angle relative to destination
             return Vector3.Angle(originToDestination, facing);
+        }
+    }
+
+    public class CaptureConfig
+    {
+        private static KeyCode cleanupKey = KeyCode.Q;
+
+        // Basic getters/setters because default values means no { get; set; }
+        public static void OverrideCleanupKey(KeyCode key)
+        {
+            cleanupKey = key;
+        }
+
+        public static KeyCode GetCleanupKey()
+        {
+            return cleanupKey;
         }
     }
 }
