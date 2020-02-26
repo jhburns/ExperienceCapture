@@ -57,7 +57,7 @@ namespace Network
             }
         }
 
-        static public IEnumerator pollGet(string url, string token, System.Action<string> onSuccess, System.Action<string> onError)
+        static public IEnumerator pollGet(string url, string token, System.Action<byte[]> onSuccess, System.Action<string> onError)
         {
             bool isNotReady = true;
             
@@ -67,7 +67,7 @@ namespace Network
                 {
                     request.SetRequestHeader("Accept", "application/text");
                     request.SetRequestHeader("Cookie", "ExperienceCapture-Claim-Token=" + token);
-                    request.timeout = 3; // 3 seconds
+                    request.timeout = 1; // 1 second
 
                     yield return request.SendWebRequest();
 

@@ -6,6 +6,7 @@ namespace Carter.App.Route.NewSignUp
 
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
+    using Carter.App.Lib.Network;
 
     using Carter.App.Route.PreSecurity;
 
@@ -37,6 +38,21 @@ namespace Carter.App.Route.NewSignUp
                 await signUpTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
 
                 await res.WriteAsync(newToken);
+
+                var responce = new
+                {
+                    signUpToken = newToken,
+                };
+                var responceDoc = responce.ToBsonDocument();
+
+                string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
+                if (json != null)
+                {
+                    JsonResponce.FromString(res, json);
+                    return;
+                }
+
+                BsonResponse.FromDoc(res, responceDoc);
             });
         }
     }

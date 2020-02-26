@@ -20,9 +20,9 @@ class Admin extends Component {
 	  this.errorCallback = this.onError.bind(this);
   }
 
-  onSuccess(token) {
+  onSuccess(response) {
     this.setState({
-      accessToken: token,
+      accessToken: response.claimToken,
       isWaiting: false
     });
   }
@@ -45,7 +45,7 @@ class Admin extends Component {
       const reply = await postData("/api/v1/users/signUp/admin/", data);
 
       if (reply.ok) {
-        this.successCallback(await reply.text());
+        this.successCallback(await reply.json());
       } else {
         this.errorCallback();
         throw Error(reply.error);
