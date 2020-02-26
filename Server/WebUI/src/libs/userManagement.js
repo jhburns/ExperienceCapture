@@ -103,8 +103,8 @@ async function signInUser(isMock=true, user, onError) {
 			throw Error(replyData.status);
 		}
 
-		const token = await replyData.text();
-		createCookie("ExperienceCapture-Access-Token", token);
+		const response = await replyData.json();
+		createCookie("ExperienceCapture-Access-Token", response.accessToken);
 	} catch (error) {
 		console.error(error);
 		onError();

@@ -117,7 +117,7 @@ public class CaptureSetup : MonoBehaviour
         // Content of the body is ignored
         string emptyBody = new {}.ToString();
 
-        StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/users/claims/", emptyBody,
+        StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/users/claims?bson=true", emptyBody,
             (responce) => {
                 openingInfo.gameObject.SetActive(true);
                 connectionInfo.gameObject.SetActive(false);
@@ -149,9 +149,32 @@ public class CaptureSetup : MonoBehaviour
     private void pollClaim(string claimToken)
     {
         StartCoroutine(HTTPHelpers.pollGet(urlInput.text + "/api/v1/users/claims/", claimToken, 
-            (responce) => {
-                store = new SecretStorage(responce);
-                createSession();
+            (data) => {
+                try
+                {
+                    MemoryStream memStream = new MemoryStream(data);
+                    SessionData responce = Serial.fromBSON<ClaimData>(memStream);
+                    
+                    store = new SecretStorage(responce.claimToken);
+                    createSession();
+                }
+                catch (Exception e)
+                {
+                    sessionInfo.text = "Error deserializing BSON response: " + e;
+                    Debug.Log(error);
+
+                    sessionInfo.text = error;
+
+                    connectionInfo.gameObject.SetActive(false);
+
+                    sessionInfo.gameObject.SetActive(true);
+                    sessionBackground.gameObject.SetActive(true);
+
+                    urlTitle.gameObject.SetActive(true);
+                    urlInput.gameObject.SetActive(true);
+
+                    newSession.gameObject.SetActive(true);
+                }
             }, (error) => {
                 Debug.Log(error);
             })
@@ -184,7 +207,7 @@ public class CaptureSetup : MonoBehaviour
                 }
                 catch (Exception e)
                 {
-                    sessionInfo.text = "Error deserializing JSON response: " + e;
+                    sessionInfo.text = "Error deserializing BSON response: " + e;
                     Debug.Log(e);
                     newSession.gameObject.SetActive(true);
                 }
@@ -295,9 +318,9 @@ public class CaptureSetup : MonoBehaviour
 internal class SessionData
 {
     public string id;
+}
 
-    public SessionData(string i, bool o)
-    {
-        id = i;
-    }
+internal class ClaimData
+{
+    public string claimToken;
 }

@@ -24,8 +24,8 @@ class GetSignUpLink extends Component {
       throw new Error(signUpRequest.status);
     }
 
-    const signUpToken = await signUpRequest.text();
-    const query = queryString.stringify({ signUpToken: signUpToken });
+    const request = await signUpRequest.json();
+    const query = queryString.stringify({ signUpToken: request.signUpToken });
 
     this.setState({
       // Convert https to http manually when working locally

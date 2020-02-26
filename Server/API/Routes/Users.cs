@@ -167,7 +167,20 @@ namespace Carter.App.Route.Users
                 }
                 else
                 {
-                    BasicResponce.Send(res, newToken);
+                    var responce = new
+                    {
+                        accessToken = newToken,
+                    };
+                    var responceDoc = responce.ToBsonDocument();
+
+                    string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
+                    if (json != null)
+                    {
+                        JsonResponce.FromString(res, json);
+                        return;
+                    }
+
+                    BsonResponse.FromDoc(res, responceDoc);
                 }
             });
 
@@ -188,7 +201,20 @@ namespace Carter.App.Route.Users
 
                 await accessTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
 
-                BasicResponce.Send(res, newToken);
+                var responce = new
+                {
+                    claimToken = newToken,
+                };
+                var responceDoc = responce.ToBsonDocument();
+
+                string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
+                if (json != null)
+                {
+                    JsonResponce.FromString(res, json);
+                    return;
+                }
+
+                BsonResponse.FromDoc(res, responceDoc);
             });
 
             this.Get("/claims/", async (req, res) =>
@@ -234,7 +260,20 @@ namespace Carter.App.Route.Users
 
                 await claimTokens.UpdateOneAsync(filter, update);
 
-                BasicResponce.Send(res, claimDoc["accessToken"].AsString);
+                var responce = new
+                {
+                    accessToken = claimDoc["accessToken"].AsString,
+                };
+                var responceDoc = responce.ToBsonDocument();
+
+                string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
+                if (json != null)
+                {
+                    JsonResponce.FromString(res, json);
+                    return;
+                }
+
+                BsonResponse.FromDoc(res, responceDoc);
             });
 
             this.Post("/signUp/admin/", async (req, res) =>
@@ -264,7 +303,20 @@ namespace Carter.App.Route.Users
 
                 await signUpTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
 
-                BasicResponce.Send(res, newToken);
+                var responce = new
+                {
+                    claimToken = newToken,
+                };
+                var responceDoc = responce.ToBsonDocument();
+
+                string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
+                if (json != null)
+                {
+                    JsonResponce.FromString(res, json);
+                    return;
+                }
+
+                BsonResponse.FromDoc(res, responceDoc);
             });
         }
     }
