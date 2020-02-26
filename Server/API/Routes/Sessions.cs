@@ -103,7 +103,8 @@ namespace Carter.App.Route.Sessions
                 var builder = Builders<BsonDocument>.Filter;
                 FilterDefinition<BsonDocument> filter = builder.Empty;
 
-                var range = new BsonDateTime(DateTime.Now.AddSeconds(-120)); // Two minutes
+                var startRange = new BsonDateTime(DateTime.Now.AddSeconds(-300)); // 5 minutes
+                var closeRange = new BsonDateTime(DateTime.Now.AddSeconds(-5)); // 5 seconds
 
                 // TODO: add a way to query based on tag
 
@@ -116,14 +117,14 @@ namespace Carter.App.Route.Sessions
                     if (isOngoing)
                     {
                         filter &= (builder.Exists("lastCaptureAt", false)
-                            & builder.Gt("createdAt", range))
-                            | builder.Gt("lastCaptureAt", range);
+                            & builder.Gt("createdAt", startRange))
+                            | builder.Gt("lastCaptureAt", closeRange);
                     }
                     else
                     {
                         filter |= (builder.Exists("lastCaptureAt", false)
-                            & builder.Lt("createdAt", range))
-                            | builder.Lt("lastCaptureAt", range);
+                            & builder.Lt("createdAt", startRange))
+                            | builder.Lt("lastCaptureAt", closeRange);
                     }
                 }
 
@@ -145,15 +146,15 @@ namespace Carter.App.Route.Sessions
                     bool isOngoing;
                     if (s["isOpen"].AsBoolean)
                     {
-                        isOngoing = range.CompareTo(s["createdAt"]) < 0
+                        isOngoing = startRange.CompareTo(s["createdAt"]) < 0
                             || (isStarted
-                            && range.CompareTo(s["lastCaptureAt"]) < 0);
+                            && closeRange.CompareTo(s["lastCaptureAt"]) < 0);
                     }
                     else
                     {
-                        isOngoing = range.CompareTo(s["createdAt"]) > 0
+                        isOngoing = startRange.CompareTo(s["createdAt"]) > 0
                             && (isStarted
-                            && range.CompareTo(s["lastCaptureAt"]) > 0);
+                            && closeRange.CompareTo(s["lastCaptureAt"]) > 0);
                     }
 
                     s.Add("isOngoing", isOngoing);
@@ -248,7 +249,8 @@ namespace Carter.App.Route.Sessions
                     return;
                 }
 
-                var range = new BsonDateTime(DateTime.Now.AddSeconds(-120)); // Two minutes
+                var startRange = new BsonDateTime(DateTime.Now.AddSeconds(-300)); // 5 minutes
+                var closeRange = new BsonDateTime(DateTime.Now.AddSeconds(-5)); // 5 seconds
                 bool isStarted = false;
 
                 if (sessionDoc.GetValue("lastCaptureAt", null) != null)
@@ -259,15 +261,15 @@ namespace Carter.App.Route.Sessions
                 bool isOngoing;
                 if (sessionDoc["isOpen"].AsBoolean)
                 {
-                    isOngoing = range.CompareTo(sessionDoc["createdAt"]) < 0
+                    isOngoing = startRange.CompareTo(sessionDoc["createdAt"]) < 0
                         || (isStarted
-                        && range.CompareTo(sessionDoc["lastCaptureAt"]) < 0);
+                        && closeRange.CompareTo(sessionDoc["lastCaptureAt"]) < 0);
                 }
                 else
                 {
-                    isOngoing = range.CompareTo(sessionDoc["createdAt"]) > 0
+                    isOngoing = startRange.CompareTo(sessionDoc["createdAt"]) > 0
                         && (isStarted
-                        && range.CompareTo(sessionDoc["lastCaptureAt"]) > 0);
+                        && closeRange.CompareTo(sessionDoc["lastCaptureAt"]) > 0);
                 }
 
                 sessionDoc.Add("isOngoing", isOngoing);
