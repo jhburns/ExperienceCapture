@@ -291,6 +291,13 @@ public class CaptureSetup : MonoBehaviour
 
         newHandler.captureRate = captureRate;
         newHandler.sendToConsole = offlineMode;
+
+        #if UNITY_EDITOR
+            newHandler.sendToConsole = offlineMode;
+        #else
+            newHandler.sendToConsole = false;
+        #endif
+
         newHandler.isCapturing = false;
         newHandler.isFindingOften = findObjectsInEachFrame;
 
