@@ -54,7 +54,7 @@ namespace Capture
         }
     }
 
-    public class CaptureConfig : MonoBehaviour
+    public class CaptureConfig
     {
         private static KeyCode cleanupKey = KeyCode.Q;
 
