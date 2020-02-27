@@ -16,7 +16,7 @@ Annotated example:
 ```
 [{
   "gameObjects" : {
-    "player": { // Arbitrary data exported by the developer
+    "player": { // Example data exported by the developer
         "positionX": 45
     }
   },
@@ -26,7 +26,7 @@ Annotated example:
     "unscaledDeltaTime" : 0.016727924346923828 // time between frames
   }
 },{
-    ... Rest of the captures
+    // ... Rest of the captures
 ```
 
 ## [Session ID].sessionInfo.json
@@ -57,7 +57,8 @@ Only the non-gameObjects frames, annotated example:
     "realtimeSinceStartup" : 50.620361328125,
     "timeSinceLevelLoad" : 0.0,
     "unscaledDeltaTime" : 0.016727924346923828
-  }
+},{
+  // ... Rest of the scene load events
 }]
 ```
 
@@ -122,5 +123,3 @@ In addition, all of the nested keys starting with a dollar sign, `$`, are [exten
 ## [Session ID].raw.json
 
 The capture data without any processing. Only useful if the data was exported improperly. This is the only JSON data that isn't formatted, to save space.
-
-[comment]: <> (TODO: update this to be correct to new export format)
