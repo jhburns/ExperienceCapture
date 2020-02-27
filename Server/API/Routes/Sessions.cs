@@ -146,15 +146,14 @@ namespace Carter.App.Route.Sessions
                     bool isOngoing;
                     if (s["isOpen"].AsBoolean)
                     {
-                        isOngoing = startRange.CompareTo(s["createdAt"]) < 0
+                        isOngoing = (!isStarted
+                            && startRange.CompareTo(s["createdAt"]) < 0)
                             || (isStarted
                             && closeRange.CompareTo(s["lastCaptureAt"]) < 0);
                     }
                     else
                     {
-                        isOngoing = startRange.CompareTo(s["createdAt"]) > 0
-                            && (isStarted
-                            && closeRange.CompareTo(s["lastCaptureAt"]) > 0);
+                        isOngoing = false;
                     }
 
                     s.Add("isOngoing", isOngoing);
@@ -217,13 +216,16 @@ namespace Carter.App.Route.Sessions
 
                 var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
 
-                // These calls not awaitted for max performance
+                // These calls not awaited for max performance
                 // Error propagation is ignored
                 _ = sessionCollection.InsertOneAsync(document);
 
-                // This property is undefined on the session document until the first call of this endpoint
+                // This lastCaptureAt is undefined on the session document until the first call of this endpoint
+                // Export flags are reset so the session can be re-exported
                 var update = Builders<BsonDocument>.Update
-                    .Set("lastCaptureAt", new BsonDateTime(DateTime.Now));
+                    .Set("lastCaptureAt", new BsonDateTime(DateTime.Now))
+                    .Set("isExported", false)
+                    .Set("isPending", false);
 
                 _ = sessions.UpdateOneAsync(filter, update);
 
@@ -253,6 +255,7 @@ namespace Carter.App.Route.Sessions
                 var closeRange = new BsonDateTime(DateTime.Now.AddSeconds(-5)); // 5 seconds
                 bool isStarted = false;
 
+                // Check if key exists
                 if (sessionDoc.GetValue("lastCaptureAt", null) != null)
                 {
                     isStarted = true;
@@ -261,15 +264,14 @@ namespace Carter.App.Route.Sessions
                 bool isOngoing;
                 if (sessionDoc["isOpen"].AsBoolean)
                 {
-                    isOngoing = startRange.CompareTo(sessionDoc["createdAt"]) < 0
+                    isOngoing = (!isStarted
+                        && startRange.CompareTo(sessionDoc["createdAt"]) < 0)
                         || (isStarted
                         && closeRange.CompareTo(sessionDoc["lastCaptureAt"]) < 0);
                 }
                 else
                 {
-                    isOngoing = startRange.CompareTo(sessionDoc["createdAt"]) > 0
-                        && (isStarted
-                        && closeRange.CompareTo(sessionDoc["lastCaptureAt"]) > 0);
+                    isOngoing = false;
                 }
 
                 sessionDoc.Add("isOngoing", isOngoing);

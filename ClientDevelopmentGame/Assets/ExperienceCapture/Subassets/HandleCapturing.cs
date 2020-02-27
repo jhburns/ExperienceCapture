@@ -228,6 +228,7 @@ public class HandleCapturing : MonoBehaviour
 
                 averageOpenRequests = (averageOpenRequests * responceCount + openRequests) / (responceCount + 1);
 
+                // TODO: Just no
                 if (openRequests < minOpenRequests)
                 {
                     minOpenRequests = openRequests;
@@ -250,6 +251,7 @@ public class HandleCapturing : MonoBehaviour
             }, 
             (error) =>
             {
+                openRequests--;
                 Debug.Log(error);
             })
         );
@@ -422,8 +424,9 @@ public class HandleCapturing : MonoBehaviour
             else
             {
                 Debug.Log("Finished cleanup, exiting for you.");
-                quit();
             }
+
+            quit();
         }
     }
 

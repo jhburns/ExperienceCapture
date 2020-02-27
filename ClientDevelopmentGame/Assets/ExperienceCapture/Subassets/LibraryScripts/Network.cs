@@ -35,7 +35,7 @@ namespace Network
             }
         }
 
-        static public IEnumerator post(string url, string data, System.Action<string> onSuccess, System.Action<string> onError)
+        static public IEnumerator post(string url, string data, System.Action<byte[]> onSuccess, System.Action<string> onError)
         {
             using (UnityWebRequest request = UnityWebRequest.Put(url, data))
             {
@@ -48,11 +48,12 @@ namespace Network
 
                 if (request.isNetworkError || request.isHttpError)
                 {
+                    Debug.Log(request.responseCode);
                     onError(request.error);
                 }
                 else
                 {
-                    onSuccess(request.downloadHandler.text);
+                    onSuccess(request.downloadHandler.data);
                 }
             }
         }
@@ -74,12 +75,13 @@ namespace Network
                     if (request.isNetworkError || request.isHttpError)
                     {
                         // Should continue to poll even after error
+                        Debug.Log(request.responseCode);
                         onError(request.error);
                     }
                     else
                     {
                         if (request.responseCode == 200) {
-                            onSuccess(request.downloadHandler.text);
+                            onSuccess(request.downloadHandler.data);
                             isNotReady = false;
                         }
                     }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System;
@@ -125,14 +126,9 @@ public class CaptureSetup : MonoBehaviour
                 try
                 {
                     MemoryStream memStream = new MemoryStream(data);
-                    SessionData responce = Serial.fromBSON<ClaimData>(memStream);
+                    ClaimData responce = Serial.fromBSON<ClaimData>(memStream);
 
-                    string claimSanitized = UnityWebRequest.EscapeURL(responce);
-                    string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
-
-                    Application.OpenURL(url);
-
-                    pollClaim(responce);
+                    StartCoroutine(WaitThenOpen(responce));
                 }
                 catch (Exception e)
                 {
@@ -158,6 +154,18 @@ public class CaptureSetup : MonoBehaviour
         );
     }
 
+    private IEnumerator WaitThenOpen(ClaimData responce)
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        string claimSanitized = UnityWebRequest.EscapeURL(responce.claimToken);
+        string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
+
+        Application.OpenURL(url);
+
+        pollClaim(responce.claimToken);
+    }
+
     private void pollClaim(string claimToken)
     {
         StartCoroutine(HTTPHelpers.pollGet(urlInput.text + "/api/v1/users/claims?bson=true", claimToken, 
@@ -165,7 +173,7 @@ public class CaptureSetup : MonoBehaviour
                 try
                 {
                     MemoryStream memStream = new MemoryStream(data);
-                    SessionData responce = Serial.fromBSON<AccessData>(memStream);
+                    AccessData responce = Serial.fromBSON<AccessData>(memStream);
                     
                     store = new SecretStorage(responce.accessToken);
                     createSession();
@@ -326,14 +334,29 @@ public class CaptureSetup : MonoBehaviour
 internal class SessionData
 {
     public string id;
+
+    public SessionData(string i)
+    {
+        id = i;
+    }
 }
 
 internal class ClaimData
 {
     public string claimToken;
+
+    public ClaimData(string c)
+    {
+        claimToken = c;
+    }
 }
 
 internal class AccessData
 {
     public string accessToken;
+
+    public AccessData(string a)
+    {
+        accessToken = a;
+    }
 }

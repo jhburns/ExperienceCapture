@@ -37,8 +37,6 @@ namespace Carter.App.Route.NewSignUp
 
                 await signUpTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
 
-                await res.WriteAsync(newToken);
-
                 var responce = new
                 {
                     signUpToken = newToken,
