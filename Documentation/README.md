@@ -11,8 +11,7 @@
 
 ### Updating Unity Client
 
-- [In general.](Updating.md)
-- [Migrating breaking changes for versions 1.0.0 => 1.1.0.](Updating-To-1.1.0.md)
+- [To the latest version.](Updating.md)
 
 ### Compatibility
 
