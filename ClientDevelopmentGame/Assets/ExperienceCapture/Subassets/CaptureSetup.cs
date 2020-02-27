@@ -125,14 +125,14 @@ public class CaptureSetup : MonoBehaviour
                 try
                 {
                     MemoryStream memStream = new MemoryStream(data);
-                    SessionData responce = Serial.fromBSON<ClaimData>(memStream);
+                    ClaimData responce = Serial.fromBSON<ClaimData>(memStream);
 
-                    string claimSanitized = UnityWebRequest.EscapeURL(responce);
+                    string claimSanitized = UnityWebRequest.EscapeURL(responce.claimToken);
                     string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
 
                     Application.OpenURL(url);
 
-                    pollClaim(responce);
+                    pollClaim(responce.claimToken);
                 }
                 catch (Exception e)
                 {
@@ -165,7 +165,7 @@ public class CaptureSetup : MonoBehaviour
                 try
                 {
                     MemoryStream memStream = new MemoryStream(data);
-                    SessionData responce = Serial.fromBSON<AccessData>(memStream);
+                    AccessData responce = Serial.fromBSON<AccessData>(memStream);
                     
                     store = new SecretStorage(responce.accessToken);
                     createSession();
@@ -326,14 +326,29 @@ public class CaptureSetup : MonoBehaviour
 internal class SessionData
 {
     public string id;
+
+    public SessionData(string i)
+    {
+        id = i;
+    }
 }
 
 internal class ClaimData
 {
     public string claimToken;
+
+    public ClaimData(string c)
+    {
+        claimToken = c;
+    }
 }
 
 internal class AccessData
 {
     public string accessToken;
+
+    public AccessData(string a)
+    {
+        accessToken = a;
+    }
 }
