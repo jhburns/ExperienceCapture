@@ -261,13 +261,15 @@ namespace Carter.App.Route.Sessions
                 bool isOngoing;
                 if (sessionDoc["isOpen"].AsBoolean)
                 {
-                    isOngoing = startRange.CompareTo(sessionDoc["createdAt"]) < 0
+                    isOngoing = (!isStarted
+                        && startRange.CompareTo(sessionDoc["createdAt"]) < 0)
                         || (isStarted
                         && closeRange.CompareTo(sessionDoc["lastCaptureAt"]) < 0);
                 }
                 else
                 {
-                    isOngoing = startRange.CompareTo(sessionDoc["createdAt"]) > 0
+                    isOngoing = (!isStarted
+                        && startRange.CompareTo(sessionDoc["createdAt"]) > 0)
                         && (isStarted
                         && closeRange.CompareTo(sessionDoc["lastCaptureAt"]) > 0);
                 }
