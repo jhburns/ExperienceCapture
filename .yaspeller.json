@@ -91,7 +91,6 @@
     "onlyCaptures",
     "SampleScene",
     "csv",
-    "LRU3",
     "Rlang",
     "Colaboratory",
     "capturable",
@@ -102,7 +101,8 @@
     "angleWith",
     "TODO",
     "md",
-    "Vector2"
+    "Vector2",
+    "FHEB"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
