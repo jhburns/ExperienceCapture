@@ -1,3 +1,5 @@
+### ⭐ Latest Client Version: 1.2.0 ⭐ [Get](Setup.md) or [Update](Updating.md)
+
 # Documentation
 
 (For client/server versions 1.x.x)
@@ -11,14 +13,14 @@
 
 ### Updating Unity Client
 
-- [To the latest version.](Updating.md)
+- [Update to the latest version.](Updating.md)
 
 ### Compatibility
 
 Version 1.0.0 of the Experience Capture client is designed
 to be compatible with [Unity 2018.2.11](https://unity3d.com/get-unity/download/archive) on Windows 10. Docker/Docker-compose versions
 are defined in the Ansible playbook located in `Deploy/Packer/` folder and supports Linux/Windows 10.
-The WebUI supports Chrome version 79. Other platforms may work, but haven't been tested.
+The WebUI supports Chrome version 79. Other platforms may work and these solutions are designed to be cross-platform, but haven't been tested.
 
 ## Data Analysis
 
