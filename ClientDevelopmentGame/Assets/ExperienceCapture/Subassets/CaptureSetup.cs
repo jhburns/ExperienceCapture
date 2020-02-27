@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System;
@@ -127,12 +128,7 @@ public class CaptureSetup : MonoBehaviour
                     MemoryStream memStream = new MemoryStream(data);
                     ClaimData responce = Serial.fromBSON<ClaimData>(memStream);
 
-                    string claimSanitized = UnityWebRequest.EscapeURL(responce.claimToken);
-                    string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
-
-                    Application.OpenURL(url);
-
-                    pollClaim(responce.claimToken);
+                    StartCoroutine(WaitThenOpen(responce));
                 }
                 catch (Exception e)
                 {
@@ -156,6 +152,18 @@ public class CaptureSetup : MonoBehaviour
                 newSession.gameObject.SetActive(true);
             })
         );
+    }
+
+    private IEnumerator WaitThenOpen(ClaimData responce)
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        string claimSanitized = UnityWebRequest.EscapeURL(responce.claimToken);
+        string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
+
+        Application.OpenURL(url);
+
+        pollClaim(responce.claimToken);
     }
 
     private void pollClaim(string claimToken)

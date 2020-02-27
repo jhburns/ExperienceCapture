@@ -162,6 +162,39 @@ Prefab:
       propertyPath: m_Text
       value: Start Session
       objectReference: {fileID: 0}
+    - target: {fileID: 114200459607850046, guid: 04a02c01c26ed9f4ea973bef42eb2fab,
+        type: 2}
+      propertyPath: offlineMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114776212624388914, guid: 04a02c01c26ed9f4ea973bef42eb2fab,
+        type: 2}
+      propertyPath: m_Text
+      value: 'Opening URL in browser to authenticate.
+
+
+        Waiting on external login...'
+      objectReference: {fileID: 0}
+    - target: {fileID: 224395989744381470, guid: 04a02c01c26ed9f4ea973bef42eb2fab,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -91.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224395989744381470, guid: 04a02c01c26ed9f4ea973bef42eb2fab,
+        type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 305.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 224395989744381470, guid: 04a02c01c26ed9f4ea973bef42eb2fab,
+        type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224395989744381470, guid: 04a02c01c26ed9f4ea973bef42eb2fab,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 773.1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04a02c01c26ed9f4ea973bef42eb2fab, type: 2}
   m_IsPrefabAsset: 0
