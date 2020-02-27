@@ -88,7 +88,7 @@ Data is serialized to [JSON]((https://developer.mozilla.org/en-US/docs/Web/JavaS
 - Boolean (`bool`)
 - Number (`int`, `float`, etc.)
 - String (`string`)
-- Objects (ie `new { ... }`)
+- Objects (like `new { ... }`)
 
 It is not recommend to use strings when exporting numbers. Nested objects are fine. This is what can NOT be exported directly:
 - Vector3 (See next section for how to capture)

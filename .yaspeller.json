@@ -97,7 +97,12 @@
     "capturable",
     "CSVs",
     "realtimeSinceStartup",
-    "timeSinceLevelLoad"
+    "timeSinceLevelLoad",
+    "Vector2s",
+    "angleWith",
+    "TODO",
+    "md",
+    "Vector2"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
