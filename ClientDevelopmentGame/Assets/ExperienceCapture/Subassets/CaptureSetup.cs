@@ -118,16 +118,28 @@ public class CaptureSetup : MonoBehaviour
         string emptyBody = new {}.ToString();
 
         StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/users/claims?bson=true", emptyBody,
-            (responce) => {
+            (data) => {
                 openingInfo.gameObject.SetActive(true);
                 connectionInfo.gameObject.SetActive(false);
 
-                string claimSanitized = UnityWebRequest.EscapeURL(responce);
-                string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
+                try
+                {
+                    MemoryStream memStream = new MemoryStream(data);
+                    ClaimData responce = Serial.fromBSON<ClaimData>(memStream);
 
-                Application.OpenURL(url);
+                    string claimSanitized = UnityWebRequest.EscapeURL(responce.claimToken);
+                    string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
 
-                pollClaim(responce);
+                    Application.OpenURL(url);
+
+                    pollClaim(responce.claimToken);
+                }
+                catch (Exception e)
+                {
+                    sessionInfo.text = "Error deserializing BSON response: " + e;
+                    Debug.Log(e);
+                    newSession.gameObject.SetActive(true);
+                }                
             }, (error) => {
                 Debug.Log(error);
 
@@ -148,31 +160,20 @@ public class CaptureSetup : MonoBehaviour
 
     private void pollClaim(string claimToken)
     {
-        StartCoroutine(HTTPHelpers.pollGet(urlInput.text + "/api/v1/users/claims/", claimToken, 
+        StartCoroutine(HTTPHelpers.pollGet(urlInput.text + "/api/v1/users/claims?bson=true", claimToken, 
             (data) => {
                 try
                 {
                     MemoryStream memStream = new MemoryStream(data);
-                    SessionData responce = Serial.fromBSON<ClaimData>(memStream);
+                    AccessData responce = Serial.fromBSON<AccessData>(memStream);
                     
-                    store = new SecretStorage(responce.claimToken);
+                    store = new SecretStorage(responce.accessToken);
                     createSession();
                 }
                 catch (Exception e)
                 {
                     sessionInfo.text = "Error deserializing BSON response: " + e;
-                    Debug.Log(error);
-
-                    sessionInfo.text = error;
-
-                    connectionInfo.gameObject.SetActive(false);
-
-                    sessionInfo.gameObject.SetActive(true);
-                    sessionBackground.gameObject.SetActive(true);
-
-                    urlTitle.gameObject.SetActive(true);
-                    urlInput.gameObject.SetActive(true);
-
+                    Debug.Log(e);
                     newSession.gameObject.SetActive(true);
                 }
             }, (error) => {
@@ -290,6 +291,13 @@ public class CaptureSetup : MonoBehaviour
 
         newHandler.captureRate = captureRate;
         newHandler.sendToConsole = offlineMode;
+
+        #if UNITY_EDITOR
+            newHandler.sendToConsole = offlineMode;
+        #else
+            newHandler.sendToConsole = false;
+        #endif
+
         newHandler.isCapturing = false;
         newHandler.isFindingOften = findObjectsInEachFrame;
 
@@ -318,9 +326,29 @@ public class CaptureSetup : MonoBehaviour
 internal class SessionData
 {
     public string id;
+
+    public SessionData(string i)
+    {
+        id = i;
+    }
 }
 
 internal class ClaimData
 {
     public string claimToken;
+
+    public ClaimData(string c)
+    {
+        claimToken = c;
+    }
+}
+
+internal class AccessData
+{
+    public string accessToken;
+
+    public AccessData(string a)
+    {
+        accessToken = a;
+    }
 }

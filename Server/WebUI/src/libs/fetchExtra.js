@@ -56,6 +56,12 @@ async function pollGet(url ='') {
     try {
       const poll = await getData(url);
 
+	  // Required in case session is expectantly closed
+	  // Then reopened and so it has to be re-exported
+	  if (poll.status === 404) {
+	  	  return null;
+	  }
+
       if (!poll.ok) {
         throw Error(poll.status);
       }
