@@ -86,6 +86,8 @@ public class HandleCapturing : MonoBehaviour
         collectCaptures();
 
         printExtraInfo();
+
+        checkCleanup();
     }
 
     // OnEnable and OnDisable are boilerplate to an OnSceneLoaded event
@@ -142,8 +144,8 @@ public class HandleCapturing : MonoBehaviour
 
         TimeCapture info = new TimeCapture();
 
-        captureData.Add("gameObjects", gameObjects);
         captureData.Add("frameInfo", info);
+        captureData.Add("gameObjects", gameObjects);
         sendCaptures(captureData, gameObjects);
     }
 
@@ -226,6 +228,7 @@ public class HandleCapturing : MonoBehaviour
 
                 averageOpenRequests = (averageOpenRequests * responceCount + openRequests) / (responceCount + 1);
 
+                // TODO: Just no
                 if (openRequests < minOpenRequests)
                 {
                     minOpenRequests = openRequests;
@@ -248,6 +251,7 @@ public class HandleCapturing : MonoBehaviour
             }, 
             (error) =>
             {
+                openRequests--;
                 Debug.Log(error);
             })
         );
@@ -280,7 +284,7 @@ public class HandleCapturing : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name != "Cleanup")
+        if (scene.name != "CleanupEC")
         {
             isCapturing = true;
             findCapturable();
@@ -357,6 +361,9 @@ public class HandleCapturing : MonoBehaviour
 
             object firstInfo = new
             {
+                // Negative numbers used because although there is no meaningful
+                // timestamp associated with this data, it makes exporting easier
+                frameInfo = new TimeCapture(-1f, -1f, -1f),
                 dateTime = DateTime.UtcNow.ToString("o"), // ISO 8601 datetime
                 description = "Session Started",
                 captureRate,
@@ -364,9 +371,6 @@ public class HandleCapturing : MonoBehaviour
                 special = true,
                 Application.targetFrameRate,
                 playerName,
-                // Negative numbers used because although there is no meaningful
-                // timestamp associated with this data, it makes exporting easier
-                frameInfo = new TimeCapture(-1f, -1f, -1f)
             };
 
             sendCaptures(firstInfo);
@@ -377,13 +381,21 @@ public class HandleCapturing : MonoBehaviour
     {
         object sceneLoadInfo = new
         {
+            frameInfo = new TimeCapture(),
             description = "Scene Loaded",
             sceneName = scene.name,
             special = true,
-            frameInfo = new TimeCapture()
         };
 
         sendCaptures(sceneLoadInfo);
+    }
+
+    private void checkCleanup()
+    {
+        if (Input.GetKeyDown(CaptureConfig.GetCleanupKey()))
+        {
+            SceneManager.LoadScene("CleanupEC");
+        }
     }
 
     private IEnumerator sendDelete()
@@ -412,8 +424,9 @@ public class HandleCapturing : MonoBehaviour
             else
             {
                 Debug.Log("Finished cleanup, exiting for you.");
-                quit();
             }
+
+            quit();
         }
     }
 

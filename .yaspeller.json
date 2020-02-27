@@ -91,13 +91,18 @@
     "onlyCaptures",
     "SampleScene",
     "csv",
-    "LRU3",
     "Rlang",
     "Colaboratory",
     "capturable",
     "CSVs",
     "realtimeSinceStartup",
-    "timeSinceLevelLoad"
+    "timeSinceLevelLoad",
+    "Vector2s",
+    "angleWith",
+    "TODO",
+    "md",
+    "Vector2",
+    "FHEB"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true

@@ -1,4 +1,4 @@
-filenames <- list.files(path="./data", patter="*.csv", full.names = TRUE)
+filenames <- list.files(path="./data/CSVs", patter="*.csv", full.names = TRUE)
 
 responce_times <- numeric(0)
 

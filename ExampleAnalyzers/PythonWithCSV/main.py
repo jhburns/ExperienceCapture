@@ -4,9 +4,9 @@ from decimal import Decimal
 
 # Find all files that end with *.csv
 csv_filepaths = []
-for file in os.listdir("./data"):
+for file in os.listdir("./data/CSVs/"):
     if file.endswith(".csv"):
-        csv_filepaths.append(os.path.join("./data", file))
+        csv_filepaths.append(os.path.join("./data/CSVs", file))
 
 responce_times = []
 rt_key = "gameObjects.UIController.responceTime"
