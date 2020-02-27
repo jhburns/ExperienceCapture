@@ -1,5 +1,5 @@
 {
-  "_id" : { "$oid" : "5e41da8997f6fc00011a9e68" },
+  "_id" : { "$oid" : "5e584375855353000120a4f7" },
   "isOpen" : false,
   "isExported" : false,
   "isPending" : true,
@@ -8,10 +8,11 @@
     "firstname" : "Smitty",
     "lastname" : "Jensens",
     "email" : "smitty@jenkins.com",
-    "createdAt" : { "$date" : 1580169485875 },
+    "createdAt" : { "$date" : 1581808611425 },
     "id" : "123456789109876543210"
   },
-  "createdAt" : { "$date" : 1581374089686 },
+  "createdAt" : { "$date" : 1582842741064 },
   "tags" : [],
-  "id" : "LRU3"
+  "id" : "FHEB",
+  "lastCaptureAt" : { "$date" : 1582842762024 }
 }

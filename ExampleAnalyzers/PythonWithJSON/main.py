@@ -1,8 +1,8 @@
 import os
 import json
 
-about_filename = "./data/LRU3.sessionInfo.json"
-captures_filename = "./data/LRU3.onlyCaptures.json"
+about_filename = "./data/FHEB.sessionInfo.json"
+captures_filename = "./data/FHEB.onlyCaptures.json"
 
 with open(about_filename) as f:
     data = json.load(f)

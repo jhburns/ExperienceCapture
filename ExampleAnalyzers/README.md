@@ -2,7 +2,7 @@
 
 The following data analyzers uses some pre-captured data from the Demo Game. The Demo Game is a basic test your reaction type game, play it form more information.
 
-Sample captured data (session ID LRU3) has already been unzipped into the `ExampleAnalyzers/data` folder.
+Sample captured data (session ID FHEB) has already been unzipped into the `ExampleAnalyzers/data` folder.
 
 ## Formats
 
@@ -23,7 +23,7 @@ How to use:
 
 - [Open the notebook](https://colab.research.google.com/drive/1qRGDUrbBuMuix6RU0Kd4fGJs2J5lowXo).
 - File > Save a copy in Drive.
-- Press 'play' on the first code block, and select the `LRU3.onlyCaptures.json` locally to upload.
+- Press 'play' on the first code block, and select the `FHEB.onlyCaptures.json` locally to upload.
 - Press 'play' on the second code block.
 
 [comment]: <> (TODO: Update to latest exporter version)
