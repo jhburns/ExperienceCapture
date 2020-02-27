@@ -424,8 +424,9 @@ public class HandleCapturing : MonoBehaviour
             else
             {
                 Debug.Log("Finished cleanup, exiting for you.");
-                quit();
             }
+
+            quit();
         }
     }
 
