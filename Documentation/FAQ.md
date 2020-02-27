@@ -35,3 +35,7 @@ They represent about 83 milliseconds, assuming the game is running at 60 fps, so
 ## How can I delete sessions?
 
 It is impossible to delete a session, or any data for that matter. However, sessions can be archived to hide them, which works like a delete. Near full data retentions is a policy adopted by Experience Capture to protect crucial data from human or tech based accidents.
+
+## How to find all capturable objects?
+
+`Ctrl-Shift-F` and then search for `ICapturable` across the whole project.

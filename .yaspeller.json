@@ -93,7 +93,11 @@
     "csv",
     "LRU3",
     "Rlang",
-    "Colaboratory"
+    "Colaboratory",
+    "capturable",
+    "CSVs",
+    "realtimeSinceStartup",
+    "timeSinceLevelLoad"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
