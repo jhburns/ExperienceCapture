@@ -1,12 +1,12 @@
 # Updating Client
 
-Instructions for going from 1.0.0 client to 1.1.0.
+Instructions for upgrading the in-game client.
 
 ## Download Asset Package
 
 Get the latest client from [here](https://github.com/jhburns/ExperienceCapture/releases).
 
-Click on the first link 'ExperienceCaptureClient.unitypackage' to download it, no extraction needed.
+Click on the link 'ExperienceCaptureClient.unitypackage' link to download it.
 
 ## Reimport Into Unity Game
 

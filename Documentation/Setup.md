@@ -1,12 +1,10 @@
 # Setup
 
-This is assuming the Unity game doesn't have Experience Capture in it already, an
-upgrade guide will come later. The *SetupTestGame/* folder has an example 
-game that can have the client integrated into it for reference.
+This is assuming the Unity game doesn't have already Experience Capture installed.
 
 ## Download Asset Package
 
-Get the client [here](https://github.com/jhburns/ExperienceCapture/releases/tag/client.1.1.10).
+Get the latest client [here](https://github.com/jhburns/ExperienceCapture/releases/tag/client.1.2.0).
 
 Click on the first link 'ExperienceCaptureClient.unitypackage' to download it, no extraction needed.
 
