@@ -1,6 +1,4 @@
-# Setup
-
-This is assuming the Unity game doesn't have already Experience Capture installed.
+# Installation
 
 ## Download Asset Package
 

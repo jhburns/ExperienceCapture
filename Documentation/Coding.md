@@ -131,4 +131,6 @@ Which is the same as the following code.
 
 ## Next Part
 
-If all the checks are fine, everything should be setup. Next Section: [How Your Data is Captured (optional).](About-Capture.md)
+If all the checks are fine, everything should be setup. Next Section: [How Your Data is Captured (optional).](About-Capture.md).
+
+Additionally, there is [extra documentation on configuration (optional).](Configure.md)
