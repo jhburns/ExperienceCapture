@@ -34,6 +34,11 @@ You should now have a pop-up with all of the assets selected by default. Install
 **Check:** Pressing the Start Session button in the 'SetupEC' scene should load the scene you provided.
 There should also be a game object with the name `HandleCapturing` under the 'DontDestroyOnLoad' portion of the Unity Hierarchy.
 
+### Close Game
+
+Close the game by pressing `Q` on your keyboard. Please do not normally close the game, and instead use
+this shortcut, or load the 'CleanupEC' scene instead.
+
 ## Add Scenes To Build
 
 Open the two scenes in `ExperienceCapture/`, 'SetupEC' and 'CleanupEC'. Then click on File > Build Settings > Add Open Scenes for each.

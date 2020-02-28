@@ -23,7 +23,7 @@ Readonly, the version of the client installed.
 
 ## Default Url
 
-The URL that the client opens with. Recommended to be https://expcap.xyz.
+The URL that the client starts with. Recommended to be https://expcap.xyz.
 
 ## Offline Mode
 
@@ -60,3 +60,19 @@ Player:positionX
 This entry would ignore every key except `positionX` on the `Player` game object.
 
 # API
+
+The exporter exposes an API for additional configuring, but be warned it is experimental.
+
+## Exit Key
+
+This will override the default cleanup key of `Q` to the key `W`:
+
+```csharp
+CaptureConfig.OverrideCleanupKey(KeyCode.W);
+```
+
+This gets the current cleanup key:
+
+```csharp
+KeyCode cleanupKey = CaptureConfig.GetCleanupKey();
+```
