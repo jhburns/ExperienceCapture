@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.Networking;
 using System;
@@ -117,17 +118,24 @@ public class CaptureSetup : MonoBehaviour
         // Content of the body is ignored
         string emptyBody = new {}.ToString();
 
-        StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/users/claims/", emptyBody,
-            (responce) => {
+        StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/users/claims?bson=true", emptyBody,
+            (data) => {
                 openingInfo.gameObject.SetActive(true);
                 connectionInfo.gameObject.SetActive(false);
 
-                string claimSanitized = UnityWebRequest.EscapeURL(responce);
-                string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
+                try
+                {
+                    MemoryStream memStream = new MemoryStream(data);
+                    ClaimData responce = Serial.fromBSON<ClaimData>(memStream);
 
-                Application.OpenURL(url);
-
-                pollClaim(responce);
+                    StartCoroutine(WaitThenOpen(responce));
+                }
+                catch (Exception e)
+                {
+                    sessionInfo.text = "Error deserializing BSON response: " + e;
+                    Debug.Log(e);
+                    newSession.gameObject.SetActive(true);
+                }                
             }, (error) => {
                 Debug.Log(error);
 
@@ -146,12 +154,36 @@ public class CaptureSetup : MonoBehaviour
         );
     }
 
+    private IEnumerator WaitThenOpen(ClaimData responce)
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        string claimSanitized = UnityWebRequest.EscapeURL(responce.claimToken);
+        string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
+
+        Application.OpenURL(url);
+
+        pollClaim(responce.claimToken);
+    }
+
     private void pollClaim(string claimToken)
     {
-        StartCoroutine(HTTPHelpers.pollGet(urlInput.text + "/api/v1/users/claims/", claimToken, 
-            (responce) => {
-                store = new SecretStorage(responce);
-                createSession();
+        StartCoroutine(HTTPHelpers.pollGet(urlInput.text + "/api/v1/users/claims?bson=true", claimToken, 
+            (data) => {
+                try
+                {
+                    MemoryStream memStream = new MemoryStream(data);
+                    AccessData responce = Serial.fromBSON<AccessData>(memStream);
+                    
+                    store = new SecretStorage(responce.accessToken);
+                    createSession();
+                }
+                catch (Exception e)
+                {
+                    sessionInfo.text = "Error deserializing BSON response: " + e;
+                    Debug.Log(e);
+                    newSession.gameObject.SetActive(true);
+                }
             }, (error) => {
                 Debug.Log(error);
             })
@@ -184,7 +216,7 @@ public class CaptureSetup : MonoBehaviour
                 }
                 catch (Exception e)
                 {
-                    sessionInfo.text = "Error deserializing JSON response: " + e;
+                    sessionInfo.text = "Error deserializing BSON response: " + e;
                     Debug.Log(e);
                     newSession.gameObject.SetActive(true);
                 }
@@ -267,6 +299,13 @@ public class CaptureSetup : MonoBehaviour
 
         newHandler.captureRate = captureRate;
         newHandler.sendToConsole = offlineMode;
+
+        #if UNITY_EDITOR
+            newHandler.sendToConsole = offlineMode;
+        #else
+            newHandler.sendToConsole = false;
+        #endif
+
         newHandler.isCapturing = false;
         newHandler.isFindingOften = findObjectsInEachFrame;
 
@@ -296,8 +335,28 @@ internal class SessionData
 {
     public string id;
 
-    public SessionData(string i, bool o)
+    public SessionData(string i)
     {
         id = i;
+    }
+}
+
+internal class ClaimData
+{
+    public string claimToken;
+
+    public ClaimData(string c)
+    {
+        claimToken = c;
+    }
+}
+
+internal class AccessData
+{
+    public string accessToken;
+
+    public AccessData(string a)
+    {
+        accessToken = a;
     }
 }
