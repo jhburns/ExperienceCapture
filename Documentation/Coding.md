@@ -65,7 +65,7 @@ Now run the Setup scene, and you should see a [JSON](https://www.newtonsoft.com/
 being printed to console. It should have an info key, and a key called the same name as the
 object this script is attached too.
 
-![Example console](images/console.png)
+![Example console](images/console.png) REPLACE
 
 ##### Example of console output, although with different names and values. 
 

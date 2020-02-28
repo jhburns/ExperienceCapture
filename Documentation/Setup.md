@@ -19,39 +19,22 @@ is downloaded and open it.
 
 ![Importing package](images/import_menu.png)
 
-You should now have a pop-up with all of the assets selected by default, click on 
-'Import' to add the package. (This may take a while)
+You should now have a pop-up with all of the assets selected by default. Install **everything** by clicking on
+'Import' to add the package.
 
-**Check:** If everything worked, there should be a new folder called *ExperienceCapture/* in your assets folder.
+**Check:** If everything worked, there should be a new folder called `ExperienceCapture/` inside your assets folder.
 
-## Create Setup Scene
+## Configure Setup Scene
 
-![Making a new scene](images/new_scene.png)
+- Go into the `ExperienceCapture/` folder.
+- Select the called 'SetupEC'.
+- Click on the `SetupCapture` object in the Unity Hierarchy.
+- Change the `Scene To Load` value to whatever scene you want loaded first.
 
-In the Unity Editor's file-browser, create a new scene. It is recommended to call it 'Setup', but
-isn't required. 
+![Scene to load](images/scene_to_load.png)
 
-Next, delete everything in the new Setup scene. 
-
-![Dragging in prefab](images/prefab.png)
-
-Drag the 'CaptureSetup' prefab in the root of the *ExperienceCapture/* folder into the empty scene.
-(Fix the Camera on the prefab by selecting 'Solid Color' if that matters)
-
-Change the 'Scene To Load' variable on the prefab to be the name of the first scene in your 
-game. 
-
-**Check:** Pressing start in the Unity Editor from the Setup scene should instantly load the first scene.
-It should also have a 'DontDestroyOnLoad' portion with the HandleCapturing clone in it.
-
-## Create Cleanup Scene
-
-Create a new scene, with the name 'Cleanup' and unlike the Setup scene, the scene name
-is required to be 'Cleanup'. Load the Cleanup scene when the game is done, which
-is dependent on how the game is structured. DON'T close/terminate the application,
-the Cleanup scene will do that for you automatically when loaded. 
-
-**Check:** While playing does the game exit after loading the Cleanup scene?
+**Check:** Pressing the Start Session button in the 'SetupEC' scene should load the scene you provided.
+There should also be a game object with the name `HandleCapturing` under the 'DontDestroyOnLoad' portion of the Unity Hierarchy.
 
 ## Next Part
 
