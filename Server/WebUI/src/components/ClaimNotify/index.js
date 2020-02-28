@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Wrapper, Message } from 'components/ClaimNotify/style';
 
-import { Row, Col, P, } from '@bootstrap-styled/v4';
+import { Row, Col, } from '@bootstrap-styled/v4';
 
 class ClaimNotify extends Component {
   render() {
@@ -11,7 +11,9 @@ class ClaimNotify extends Component {
       <Wrapper>
         <Row className="justify-content-center">
           <Col className="text-center">
-            <h3>✔️ You've authenticated the session</h3>
+            <h3>
+              <span role="img" aria-label="confirmation">✔️</span> You've authenticated the session
+            </h3>
             <Message>Return to the game, or <Link to="/">sign in.</Link></Message>
           </Col>
         </Row>
