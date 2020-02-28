@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -90,7 +88,7 @@ public class UIController : MonoBehaviour, ICapturable
     
     public void nextScene()
     {
-        SceneManager.LoadScene("Cleanup");
+        SceneManager.LoadScene("CleanupEC");
     }
 
     public object GetCapture()

@@ -1,19 +1,20 @@
-### ⭐ Latest Client Version: 1.2.0 ⭐ [Get](Setup.md) or [Update](Updating.md)
+### ⭐ Latest Client Version: 1.2.0 ⭐ [Install](Setup.md) or [Update](Updating.md)
 
 # Documentation
 
 ## Unity Client Setup
 
-1. [Download and setup the client asset package.](Setup.md)
+1. [Download and install the client asset package.](Setup.md)
 1. [Learn how to add data capturing code to the Unity game.](Coding.md)
 1. [How your data is captured (optional).](About-Capture.md)
+1. [Additional ways to configure the client (optional).](Configure.md)
 1. Additionally see the [FAQ](FAQ.md) and if that doesn't help join the `#experience-capture` channel and ask.
 
-### Updating Unity Client
+## Updating Unity Client
 
 - [Update to the latest version (1.2.0).](Updating.md)
 
-### Compatibility Info
+## Compatibility Info
 
 The Experience Capture client is designed to be compatible with [Unity version 2018.2.11](https://unity3d.com/get-unity/download/archive) on Windows 10. Docker/Docker-compose versions are defined in the Ansible playbook located in `Deploy/Packer/` folder and supports Linux/Windows 10. The WebUI supports Chrome version 79. Other platforms may work because these solutions are designed to be cross-platform, but haven't been tested yet.
 
