@@ -4,4 +4,10 @@ const Wrapper = styled.section`
 
 `;
 
-export { Wrapper, };
+const Disabled = styled.button`
+  &:hover {
+    cursor: not-allowed;
+  }
+`;
+
+export { Wrapper, Disabled, };
