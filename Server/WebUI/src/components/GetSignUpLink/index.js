@@ -26,10 +26,10 @@ class GetSignUpLink extends Component {
 
     const request = await signUpRequest.json();
     const query = queryString.stringify({ signUpToken: request.signUpToken });
+    const source = window.location.origin;
 
     this.setState({
-      // Convert https to http manually when working locally
-      link: `https://${window.location.host}/signUp?${query}`
+      link: `${source}/signUp?${query}`
     });
   }
 

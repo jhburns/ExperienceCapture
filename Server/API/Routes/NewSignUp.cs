@@ -10,8 +10,6 @@ namespace Carter.App.Route.NewSignUp
 
     using Carter.App.Route.PreSecurity;
 
-    using Microsoft.AspNetCore.Http;
-
     using MongoDB.Bson;
     using MongoDB.Driver;
 

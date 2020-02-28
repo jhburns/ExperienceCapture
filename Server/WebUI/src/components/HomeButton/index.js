@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 
+import { Wrapper } from 'components/HomeButton/style';
+
 class HomeButton extends Component {
   render() {
     return (
-      <Link to="/home/start" className="btn btn-dark btn-block">
-        Go Home
-      </Link>
+      <Wrapper>
+        <Link to="/home/start" className="btn btn-dark btn-block">
+          Go Home
+        </Link>
+      </Wrapper>
 	  )
   }
 }

@@ -61,7 +61,7 @@ class SignIn extends Component {
             <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
               <Info className="rounded align-middle">
                 <h5 className="mt-0 mb-0">
-                  You've Already Signed Up
+                  You're Already Signed Up
                 </h5>
               </Info>
             </Col>

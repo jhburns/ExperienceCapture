@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
-const Button = styled.button`
+const Wrapper = styled.section`
 
 `;
 
-export { Button };
+export { Wrapper };
