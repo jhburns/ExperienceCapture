@@ -1,4 +1,4 @@
-### ⭐ Latest Client Version: 1.2.0 ⭐ [Get](Setup.md) or [Update](Updating.md)
+### ⭐ Latest Client Version: 1.2.0 ⭐ [Install](Setup.md) or [Update](Updating.md)
 
 # Documentation
 

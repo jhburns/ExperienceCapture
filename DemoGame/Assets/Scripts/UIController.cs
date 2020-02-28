@@ -88,7 +88,7 @@ public class UIController : MonoBehaviour, ICapturable
     
     public void nextScene()
     {
-        SceneManager.LoadScene("Cleanup");
+        SceneManager.LoadScene("CleanupEC");
     }
 
     public object GetCapture()

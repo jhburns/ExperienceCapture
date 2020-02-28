@@ -165,7 +165,7 @@ Prefab:
     - target: {fileID: 114200459607850046, guid: 04a02c01c26ed9f4ea973bef42eb2fab,
         type: 2}
       propertyPath: offlineMode
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114776212624388914, guid: 04a02c01c26ed9f4ea973bef42eb2fab,
         type: 2}

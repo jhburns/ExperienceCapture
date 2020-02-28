@@ -10,9 +10,9 @@ Click on the first link 'ExperienceCaptureClient.unitypackage' to download it, n
 
 ## Import Into Unity Game
 
-![Opening asset menu](images/import_package.png)
-
 In the Unity Editor, go to Assets -> Import Package -> Custom Package... and select it.
+
+![Opening asset menu](images/import_package.png)
 
 That will open a file-browser so you can navigate to where 'ExperienceCaptureClient.unitypackage'
 is downloaded and open it. 
@@ -27,7 +27,7 @@ You should now have a pop-up with all of the assets selected by default. Install
 ## Configure Setup Scene
 
 - Go into the `ExperienceCapture/` folder.
-- Select the called 'SetupEC'.
+- Select the scene called 'SetupEC'.
 - Click on the `SetupCapture` object in the Unity Hierarchy.
 - Change the `Scene To Load` value to whatever scene you want loaded first.
 
@@ -35,6 +35,10 @@ You should now have a pop-up with all of the assets selected by default. Install
 
 **Check:** Pressing the Start Session button in the 'SetupEC' scene should load the scene you provided.
 There should also be a game object with the name `HandleCapturing` under the 'DontDestroyOnLoad' portion of the Unity Hierarchy.
+
+## Add Scenes To Build
+
+Open the two scenes in `ExperienceCapture/`, 'SetupEC' and 'CleanupEC'. Then click on File > Build Settings > Add Open Scenes for each.
 
 ## Next Part
 
