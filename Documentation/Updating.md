@@ -1,6 +1,6 @@
 # Updating Client
 
-Instructions for going from 1.0.0 client to 1.1.0.
+Instructions for upgrading the in-game client.
 
 ## Download Asset Package
 

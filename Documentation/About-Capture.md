@@ -2,8 +2,8 @@
 
 There are two different options for capturing data, based on the "Find Objects In Each Frame" flag
 on the prefab. Keep in mind there is a difference between *capturing* data 
-and *sending* data. Meaning the exact same data is captured, but is sent either to the
-console locally in "Offline Mode" or to a server normally.
+and *sending* data. Meaning that data is captured the **exact same**, but is sent either to the
+console locally in "Offline Mode" or to a server normally. In other words, the data printed to the console is the **exact same** same as the data that shows up in session's zip.
 
 ## Static GameObject Capturing
 
