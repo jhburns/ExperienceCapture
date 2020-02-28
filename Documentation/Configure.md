@@ -15,7 +15,7 @@ The name of the scene to load when pressing the "Start Session" button.
 
 ## Game Version
 
-Version of your game, useful for matching up captured data with specific games versions.
+String version of your game, useful for matching up captured data with specific games versions.
 
 ## Client Version
 
@@ -49,7 +49,7 @@ Useful when a game creates/destroys objects dynamically.
 
 ## Limit Output To Specified
 
-This allows you to ignore every property exported under `GetCapture()` except those specified. When list size is zero, nothing happend.
+This allows you to ignore every property exported under `GetCapture()` except those specified. When list size is zero, nothing happened.
 
 Separate object names from key using a colon, `:`, for example:
 
@@ -63,7 +63,7 @@ This entry would ignore every key except `positionX` on the `Player` game object
 
 The exporter exposes an API for additional configuring, but be warned it is experimental.
 
-## Exit Key
+## Cleanup Key
 
 This will override the default cleanup key of `Q` to the key `W`:
 

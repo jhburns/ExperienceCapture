@@ -102,7 +102,9 @@
     "TODO",
     "md",
     "Vector2",
-    "FHEB"
+    "FHEB",
+	"SetupEC",
+	"CleanupEC"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
