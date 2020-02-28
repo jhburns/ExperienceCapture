@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 
 import { submitUser, signOutUser, } from "libs/userManagement";
 import SignOutButton from "components/SignOutButton"
+import ClaimNotify from "components/ClaimNotify";
 
 import HomeButton from 'components/HomeButton';
 
@@ -79,29 +80,35 @@ class SignIn extends Component {
         </Wrapper>
 	    )
     } else if (this.state.isSignedIn) {
-      return (
-        <Wrapper>
-          <Row className="justify-content-center">
-            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
-              <Info className="rounded align-middle">
-                <h5 className="mt-0 mb-0">
-                  You're Signed In
-                </h5>
-              </Info>
-            </Col>
-          </Row>
-          <Row className="justify-content-center">
-            <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
-              <HomeButton />
-            </Col>        
-          </Row>
-          <Row className="justify-content-center">
-            <Col xs={6} sm={5} md={4} lg={3}>
-              <SignOutButton onClickCallback={this.signOutCallback} />
-            </Col>
-          </Row>
-        </Wrapper>
-	    )
+      if (this.props.claimToken === undefined) {
+        return (
+          <Wrapper>
+            <Row className="justify-content-center">
+              <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
+                <Info className="rounded align-middle">
+                  <h5 className="mt-0 mb-0">
+                    You're Signed In
+                  </h5>
+                </Info>
+              </Col>
+            </Row>
+            <Row className="justify-content-center">
+              <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
+                <HomeButton />
+              </Col>
+            </Row>
+            <Row className="justify-content-center">
+              <Col xs={6} sm={5} md={4} lg={3}>
+                <SignOutButton onClickCallback={this.signOutCallback} />
+              </Col>
+            </Row>
+          </Wrapper>
+        )
+      } else {
+        return (
+          <ClaimNotify />
+        )
+      }
 	  } else if (this.state.isSignedOut) {
 	    return (
         <Wrapper>

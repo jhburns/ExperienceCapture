@@ -74,8 +74,6 @@ async function fulfillClaim(isMock=true, user, claimToken, onError) {
 		if (!replyData.ok) {
 			throw Error(replyData.status);
 		}
-
-		await signInUser(isMock, user, onError);
 	} catch (error) {
 		console.error(error);
 		onError();

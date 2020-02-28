@@ -5,6 +5,7 @@ import { Wrapper, Info, } from 'components/Tutorial/style';
 class Tutorial extends Component {
   render() {
     const source = window.location.origin;
+    console.log(source);
 
     return (
       <Wrapper>
