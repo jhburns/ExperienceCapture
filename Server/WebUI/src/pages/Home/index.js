@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Menu from 'components/Menu';
 import SessionTable from 'components/SessionTable';
+import Tutorial from 'components/Tutorial';
 
 import { Container, Row, Col, } from '@bootstrap-styled/v4';
 
@@ -21,6 +22,11 @@ class HomePage extends Component {
                 emptyMessage="No active sessions right now."
                 title="Ongoing Sessions"
               />
+            </Col>
+          </Row>
+          <Row className="pr-0 justify-content-center">
+            <Col lg={10} className="pr-0 pl-xl-0">
+              <Tutorial />
             </Col>
           </Row>
         </Container>

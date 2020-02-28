@@ -6,8 +6,9 @@ import { Link } from 'react-router-dom';
 
 import { Row, Col, } from '@bootstrap-styled/v4';
 
-import { Wrapper } from 'components/SingleSession/style';
+import { Wrapper, Disabled, } from 'components/SingleSession/style';
 
+import About from "components/About";
 
 class SingleSession extends Component {
   render() {
@@ -44,9 +45,9 @@ class SingleSession extends Component {
               Export
             </button>
             {isDownloadDisabled ?
-              <button className="btn btn-outline-dark" disabled>
+              <Disabled className="btn btn-outline-dark" disabled>
                 Download
-              </button>
+              </Disabled>
             :
               <Link
                 to={`/api/v1/sessions/${this.props.sessionData.id}/export/`}
@@ -57,6 +58,7 @@ class SingleSession extends Component {
                 Download
               </Link>
             }
+            <About message="Sessions have to be exported first, so that they can be converted to flat files."/>
           </Col>
         </Row>
       </Wrapper>
