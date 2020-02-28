@@ -53,8 +53,8 @@ With everything setup, data to be captured can now be added. The basic format is
     {
         return new
         {
-            positionX = transform.position.x, // <- separate properties with a comma 
-            propertyName = gameObject.value
+            positionX = transform.position.x, // separate properties with a comma 
+            propertyName = gameObject.value, // trailing comma recommend
         };
     }
 ```
@@ -80,41 +80,37 @@ game object over specific intervals. The capture rate can be set as often or lit
 as wanted through the prefab, and is based on frame-rate. Additional information 
 about the frame is also included automatically, like timestamps. This can be called 
 an 'eventless' data capture system, which is designed to be easier to use than
-an event based one like Unity Analytics. 
+an event based one like Unity Analytics. For more information see [About-Capture.md]
 
-## Common Data Examples
+## Valid Data Types 
 
-Here is how to capture various common properties.
+Data is serialized to [JSON]((https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures) which has a limited number of data types, mainly:
+- Boolean (`bool`)
+- Number (`int`, `float`, etc.)
+- String (`string`)
+- Objects (ie `new { ... }`)
 
-#### If a GameObject is active
+It is not recommend to use strings when exporting numbers. Nested objects are fine. This is what can NOT be exported directly:
+- Vector3 (See next section for how to capture)
+- MonoBehavior (Get specific values from each game object)
 
-```csharp
-    public object GetCapture()
-    {
-        return new
-        {
-            objectIsActive = objectName.IsActive()
-        };
-    }
-```
+#### Vector3
 
-#### Rotation
-
+[Vector3s](https://docs.unity3d.com/ScriptReference/Vector3.html), like position in this example can't be directly serialized to JSON.
+Instead, you can use the [extension method](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods) `.ToAnonymousType()` like so.
 
 ```csharp
     public object GetCapture()
     {
         return new
         {
-            rotation = transform.eulerAngles.z
+            position = this.transform.position.ToAnonymousType(),
         };
     }
 ```
 
-#### Any Vector3
+Which is the same as the following code.
 
-Vector3s, like position in this example can't be directly serialized to JSON.
-Instead, use a nested anonymous typed object to store each value clearly like below.  
 
 ```csharp
     public object GetCapture()
@@ -123,13 +119,19 @@ Instead, use a nested anonymous typed object to store each value clearly like be
         {
             position = new
             {
-                transform.position.x,
-                transform.position.y,
-                transform.position.z,
+                this.transform.position.x,
+                this.transform.position.y,
+                this.transform.position.z,
             }
         };
     }
 ```
+
+### Vector2
+
+[Vector2s](https://docs.unity3d.com/ScriptReference/Vector2.html) work the same way as Vector3s, with `ToAnonymousType()`.
+
+[comment]: <> (TODO: Add angleWith( ) documentation)
 
 ## Next Part
 
