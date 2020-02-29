@@ -2,6 +2,16 @@
 
 tls off
 
+# Rewrite every request as root
 rewrite {
 	to {path} {path}/ /
+}
+
+# Root (/) has to come first or else it won't be matched second
+header / {
+	Cache-Control "no-cache"
+}
+
+header /static {
+	Cache-Control "max-age=31536000"
 }
