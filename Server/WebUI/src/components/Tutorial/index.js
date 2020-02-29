@@ -4,9 +4,6 @@ import { Wrapper, Info, } from 'components/Tutorial/style';
 
 class Tutorial extends Component {
   render() {
-    const source = window.location.origin;
-    console.log(source);
-
     return (
       <Wrapper>
         <Info className="rounded align-middle">
@@ -28,7 +25,7 @@ class Tutorial extends Component {
             <li>
               Input the URL for this website,{' '}
               <a href={source} target="_blank" rel="noopener noreferrer">
-                {source}
+                {window.location.origin}
               </a>
               , and click "New Session".
             </li>
