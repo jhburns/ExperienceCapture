@@ -193,8 +193,6 @@ class SignIn extends Component {
   }
 
   onFailure() {
-    console.log("Error signing user in.");
-
     this.setState({
 	    isUnableToSignIn: true
     });
@@ -202,7 +200,6 @@ class SignIn extends Component {
 
   onInvalidRequest(err) {
     console.log("Site is running locally, using mock data");
-    console.log(err);
 
     const options = {
       signUpToken: this.props.signUpToken,
@@ -213,7 +210,9 @@ class SignIn extends Component {
   	this.setState({
 	    isSignedIn: true,
 	    isMock: true,
-	  });
+    });
+    
+    console.log(err);
   }
 
   componentDidMount() {
