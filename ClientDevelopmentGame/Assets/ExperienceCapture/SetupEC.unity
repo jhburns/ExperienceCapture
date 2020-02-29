@@ -152,6 +152,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114200459607850046, guid: 04a02c01c26ed9f4ea973bef42eb2fab,
+        type: 2}
+      propertyPath: defaultUrl
+      value: https://expcap2.xyz
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 04a02c01c26ed9f4ea973bef42eb2fab, type: 2}
   m_IsPrefabAsset: 0
