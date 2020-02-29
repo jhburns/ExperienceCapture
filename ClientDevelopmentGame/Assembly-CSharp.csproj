@@ -67,6 +67,7 @@
     <Compile Include="Assets\ExperienceCapture\Subassets\HandleCapturing.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\InputStructure.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\LibraryScripts\Network.cs" />
+    <Compile Include="Assets\Scripts\OutputCatcher.cs" />
     <Compile Include="Assets\Scripts\Scenery.cs" />
     <Compile Include="Assets\Scripts\Tester.cs" />
     <Compile Include="Assets\Scripts\TestSetup.cs" />
