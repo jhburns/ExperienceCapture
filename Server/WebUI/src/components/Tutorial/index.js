@@ -24,7 +24,7 @@ class Tutorial extends Component {
             <li>Uncheck "Offline Mode" on the "SetupCapture" object.</li>
             <li>
               Input the URL for this website,{' '}
-              <a href={window.location,origin} target="_blank" rel="noopener noreferrer">
+              <a href={window.location.origin} target="_blank" rel="noopener noreferrer">
                 {window.location.origin}
               </a>
               , and click "New Session".
