@@ -5,3 +5,11 @@ tls off
 rewrite {
 	to {path} {path}/ /
 }
+
+header / {
+	Cache-Control "no-cache"
+}
+
+header /static {
+	Cache-Control "max-age=31536000"
+}
