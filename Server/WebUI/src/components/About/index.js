@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { Wrapper, Prompt, } from 'components/About/style';
 
-import { Tooltip, } from '@bootstrap-styled/v4';
+import { Tooltip } from '@bootstrap-styled/v4';
 
 class About extends Component {
   constructor(props) {

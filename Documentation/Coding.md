@@ -127,7 +127,18 @@ Which is the same as the following code.
 
 [Vector2s](https://docs.unity3d.com/ScriptReference/Vector2.html) work the same way as Vector3s, with `ToAnonymousType()`.
 
-[comment]: <> (TODO: Add angleWith( ) documentation)
+
+## Helpers
+
+### Calculate the angle between two game objects.
+
+```csharp
+firstObject.AngleWith(secondObject);
+```
+Also draw lines for debugging:
+```csharp
+firstObject.AngleWith(secondObject, true);
+```
 
 ## Next Part
 
