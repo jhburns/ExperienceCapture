@@ -130,7 +130,7 @@ Which is the same as the following code.
 
 ## Helpers
 
-### Calulate the angle between two game objects.
+### Calculate the angle between two game objects.
 
 ```csharp
 firstObject.AngleWith(secondObject);
