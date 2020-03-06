@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import Menu from 'components/Menu';
 import SessionTable from 'components/SessionTable';
 
-import { deleteData } from 'libs/fetchExtra';
-
 import { Link } from 'react-router-dom';
 
 import { Wrapper } from 'pages/ArchivedSessions/style';
@@ -12,24 +10,6 @@ import { Wrapper } from 'pages/ArchivedSessions/style';
 import { Container, Row, Col, } from '@bootstrap-styled/v4';
 
 class ArchivedSessionsPage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.archiveCallback = this.onArchive.bind(this);
-  }
-
-  async onArchive(id) {
-    try {
-      const dearchiveRequest = await deleteData(`/api/v1/sessions/${id}/tags/archived`);
-
-      if (!dearchiveRequest.ok) {
-        throw Error(dearchiveRequest.status);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
   render() {
     return (
       <Wrapper>
@@ -40,7 +20,7 @@ class ArchivedSessionsPage extends Component {
               <SessionTable
                 sessionsQuery={"isOngoing=false"}
                 buttonData={{
-                  onClick: this.archiveCallback,
+                  isAdd: false,
                   body: "Unarchive",
                   header: ""
                 }}

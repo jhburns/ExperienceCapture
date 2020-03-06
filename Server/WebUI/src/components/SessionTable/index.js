@@ -7,6 +7,8 @@ import SessionRow from 'components/SessionRow';
 import { P, Row, Col, } from '@bootstrap-styled/v4';
 import { Wrapper } from 'components/SessionTable/style';
 
+import { postData, deleteData, wait, } from 'libs/fetchExtra';
+
 // TODO: fix this so selecting archive/unarchive results in state/page refresh
 class SessionTable extends Component {
   constructor(props) {
@@ -15,9 +17,53 @@ class SessionTable extends Component {
     this.state = {
       sessions: [],
     }
+
+    this.tagCallback = this.onTag.bind(this);
+    this.getSessionCallback = this.onSession.bind(this);
+    this.poll = this.pollSessions.bind(this);
   }
 
-  async componentDidMount() {
+  async onTag(id) {
+    try {
+      let archiveRequest;
+      if (this.props.buttonData.isAdd) {
+        archiveRequest = await postData(`/api/v1/sessions/${id}/tags/archived`);
+      } else {
+        archiveRequest = await deleteData(`/api/v1/sessions/${id}/tags/archived`);
+      }
+
+      if (!archiveRequest.ok) {
+        throw Error(archiveRequest.status);
+      }
+
+      const sessionsUpdated = this.state.sessions.filter((session) => {
+        return session.id !== id;
+      });
+
+      this.setState({
+        sessions: sessionsUpdated
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async pollSessions() {
+    while (true) {
+      const currentSessions = await this.getSessionCallback();
+
+      // Very hacky, but easiest way to do abstract comparisons
+      if (JSON.stringify(currentSessions) !== JSON.stringify(this.state.sessions)) {
+        this.setState({
+          sessions: currentSessions
+        });
+      }
+
+      await wait(5000); // 5 seconds
+    }
+  }
+
+  async onSession() {
     const url = `/api/v1/sessions?${this.props.sessionsQuery}&ugly=true`;
     const getSessions = await getData(url);
     const sessionsData = await getSessions.json();
@@ -44,12 +90,19 @@ class SessionTable extends Component {
         id: s.id,
         fullname: s.user.fullname,
         createdAt: s.createdAt.$date
-      } 
+      }
     });
-    
+
+    return sessionsConverted;
+  }
+
+  async componentDidMount() {
+    const firstSessions = await this.getSessionCallback();
     this.setState({
-      sessions: sessionsConverted
+      sessions: firstSessions
     });
+
+    this.poll();
   }
 
   render() {
@@ -60,7 +113,10 @@ class SessionTable extends Component {
       items.push(<SessionRow 
         key={index}
         sessionData={value} 
-        buttonData={this.props.buttonData}
+        buttonData={{
+          body: this.props.buttonData.body,
+          onClick: this.tagCallback
+        }}
         isRenderingDate={this.props.isRenderingDate}
       />)
     }
