@@ -6,17 +6,16 @@ import { Link } from 'react-router-dom';
 
 import { Row, Col, } from '@bootstrap-styled/v4';
 
-import { Wrapper, Disabled, } from 'components/SingleSession/style';
+import { Wrapper } from 'components/SingleSession/style';
 
 import About from "components/About";
 
 class SingleSession extends Component {
   render() {
     const isExportDisabled = this.props.sessionData.isPending 
-      || this.props.sessionData.isExported
       || this.props.sessionData.isOngoing;
 
-    const isDownloadDisabled = !this.props.sessionData.isExported;
+    const isNotExported = !this.props.sessionData.isExported;
 
     return (
       <Wrapper>
@@ -37,17 +36,17 @@ class SingleSession extends Component {
                   "Closed Unexpectedly"
               }
             </h5>
-            <button
-              onClick={this.props.onExport}
-              disabled={isExportDisabled}
-              className="btn btn-dark mr-2"
-            >
-              Export
-            </button>
-            {isDownloadDisabled ?
-              <Disabled className="btn btn-outline-dark" disabled>
-                Download
-              </Disabled>
+            {isNotExported ?
+              <div>
+                <button
+                  onClick={this.props.onExport}
+                  disabled={isExportDisabled}
+                  className="btn btn-outline-dark"
+                >
+                  Export
+                </button>
+                <About message="Sessions have to be exported first, so that they can be converted to flat files." />
+              </div>
             :
               <Link
                 to={`/api/v1/sessions/${this.props.sessionData.id}/export/`}
@@ -58,7 +57,6 @@ class SingleSession extends Component {
                 Download
               </Link>
             }
-            <About message="Sessions have to be exported first, so that they can be converted to flat files."/>
           </Col>
         </Row>
       </Wrapper>
