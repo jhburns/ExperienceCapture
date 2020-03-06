@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import Menu from 'components/Menu';
 import SessionTable from 'components/SessionTable';
 
-import { postData } from 'libs/fetchExtra';
-
 import { Link } from 'react-router-dom';
 
 import { Container, Row, Col, } from '@bootstrap-styled/v4';
@@ -12,24 +10,6 @@ import { Container, Row, Col, } from '@bootstrap-styled/v4';
 import { Wrapper } from 'pages/Sessions/style';
 
 class SessionsPage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.archiveCallback = this.onArchive.bind(this);
-  }
-
-  async onArchive(id) {
-    try {
-      const archiveRequest = await postData(`/api/v1/sessions/${id}/tags/archived`);
-
-      if (!archiveRequest.ok) {
-        throw Error(archiveRequest.status);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
   render() {
     return (
       <Wrapper>
@@ -40,7 +20,7 @@ class SessionsPage extends Component {
               <SessionTable
                 sessionsQuery={"isOngoing=false"}
                 buttonData={{
-                  onClick: this.archiveCallback,
+                  isAdd: true,
                   body: "Archive",
                   header: ""
                 }}
