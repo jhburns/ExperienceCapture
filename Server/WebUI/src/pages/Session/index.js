@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Menu from 'components/Menu';
 import SingleSession from "components/SingleSession";
 
-import { getData, postData, pollGet, } from "libs/fetchExtra";
+import { getData, postData, } from "libs/fetchExtra";
 
 import { Container, Row, Col, } from '@bootstrap-styled/v4';
 
@@ -15,12 +15,11 @@ class SessionPage extends Component {
 
     this.state = {
       session: null,
-      isExported: false
     }
 
     this.exportCallback = this.onExport.bind(this);
     this.sessionCallback = this.getSession.bind(this);
-    this.pollingCallback = this.pollExport.bind(this);
+    this.poll = this.pollSession.bind(this);
   }
 
   async getSession()
@@ -42,9 +41,7 @@ class SessionPage extends Component {
       isOngoing: sessionsData.isOngoing
     }
 
-    this.setState({
-      session: cleanedSession,
-    });
+    return cleanedSession;
   }
 
   async onExport() {
@@ -57,30 +54,42 @@ class SessionPage extends Component {
       if (!exportRequest.ok) {
         throw Error(exportRequest.status);
       }
-
-      this.pollingCallback();
       
-      this.sessionCallback();
+      const currentSession = await this.sessionCallback();
+      this.setState({
+        session: currentSession,
+      });
     } catch (err) {
       throw Error(err);
     }
   }
 
-  async pollExport() {
-    const { id } = this.props.match.params;
-    const url = `/api/v1/sessions/${id}/export/`;
-    await pollGet(url);
 
-    this.sessionCallback();
+  async pollSession() {
+    const currentSession = await this.getSession();
+
+    // Very hacky, but easiest way to do abstract comparisons
+    if (JSON.stringify(currentSession) !== JSON.stringify(this.state.session)) {
+      this.setState({
+        session: currentSession
+      });
+    }
   }
 
   async componentDidMount()
   {
-    await this.getSession();
+    const firstSessions = await this.getSession();
 
-    if (this.state.session.isPending) {
-      await this.pollingCallback();
-    }
+    this.setState({
+      session: firstSessions,
+    });
+
+    this.poller = setInterval(() => this.poll(), 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.poller);
+    this.poller = null;
   }
 
   render() {

@@ -7,7 +7,7 @@ import SessionRow from 'components/SessionRow';
 import { P, Row, Col, } from '@bootstrap-styled/v4';
 import { Wrapper } from 'components/SessionTable/style';
 
-import { postData, deleteData, wait, } from 'libs/fetchExtra';
+import { postData, deleteData, } from 'libs/fetchExtra';
 
 // TODO: fix this so selecting archive/unarchive results in state/page refresh
 class SessionTable extends Component {
@@ -16,6 +16,7 @@ class SessionTable extends Component {
 
     this.state = {
       sessions: [],
+      isAllowedToPoll: true
     }
 
     this.tagCallback = this.onTag.bind(this);
@@ -49,7 +50,6 @@ class SessionTable extends Component {
   }
 
   async pollSessions() {
-    while (true) {
       const currentSessions = await this.getSessionCallback();
 
       // Very hacky, but easiest way to do abstract comparisons
@@ -58,9 +58,6 @@ class SessionTable extends Component {
           sessions: currentSessions
         });
       }
-
-      await wait(5000); // 5 seconds
-    }
   }
 
   async onSession() {
@@ -102,7 +99,12 @@ class SessionTable extends Component {
       sessions: firstSessions
     });
 
-    this.poll();
+    this.poller = setInterval(() => this.poll(), 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.poller);
+    this.poller = null;
   }
 
   render() {
@@ -113,10 +115,10 @@ class SessionTable extends Component {
       items.push(<SessionRow 
         key={index}
         sessionData={value} 
-        buttonData={{
+        buttonData={this.props.buttonData !== undefined ? {
           body: this.props.buttonData.body,
           onClick: this.tagCallback
-        }}
+        } : undefined}
         isRenderingDate={this.props.isRenderingDate}
       />)
     }
