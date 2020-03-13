@@ -51,6 +51,7 @@ class SingleSession extends Component {
               <Link
                 to={`/api/v1/sessions/${this.props.sessionData.id}/export/`}
                 target="_blank"
+                rel="noopener noreferrer"
                 download
                 className="btn btn-outline-dark"
               >
