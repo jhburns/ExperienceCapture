@@ -6,6 +6,8 @@ import GoogleSignIn from "components/GoogleSignIn";
 import { Container, Row, Col, } from '@bootstrap-styled/v4';
 import { Wrapper, Logo, } from 'pages/NormalSignIn/style';
 
+import Footer from "components/Footer";
+
 class NormalSignInPage extends Component {
   render() {
     return (
@@ -28,6 +30,7 @@ class NormalSignInPage extends Component {
               <GoogleSignIn clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} />
             </Col>
           </Row>
+          <Footer />
         </Container>
       </Wrapper>
     );

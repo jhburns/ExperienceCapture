@@ -9,6 +9,8 @@ import { Wrapper } from 'pages/ArchivedSessions/style';
 
 import { Container, Row, Col, } from '@bootstrap-styled/v4';
 
+import Footer from "components/Footer";
+
 class ArchivedSessionsPage extends Component {
   render() {
     return (
@@ -38,6 +40,7 @@ class ArchivedSessionsPage extends Component {
               </Link>
             </Col>
           </Row>
+          <Footer />
         </Container>
       </Wrapper>
     );

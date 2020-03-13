@@ -9,6 +9,8 @@ import { Container, Row, Col, } from '@bootstrap-styled/v4';
 
 import { Wrapper } from 'pages/Session/style';
 
+import Footer from "components/Footer";
+
 class SessionPage extends Component {
   constructor(props) {
     super(props)
@@ -114,6 +116,7 @@ class SessionPage extends Component {
                 }
               </Col>
             </Row>
+            <Footer />
           </Container>
         </Wrapper>
       )
@@ -130,6 +133,7 @@ class SessionPage extends Component {
                 </h3>
               </Col>
             </Row>
+            <Footer />
           </Container>
         </Wrapper>
       )
