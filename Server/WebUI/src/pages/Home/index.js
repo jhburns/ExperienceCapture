@@ -8,6 +8,8 @@ import { Container, Row, Col, } from '@bootstrap-styled/v4';
 
 import { Wrapper } from 'pages/Home/style';
 
+import Footer from "components/Footer";
+
 class HomePage extends Component {
   render() {
     return (
@@ -29,6 +31,7 @@ class HomePage extends Component {
               <Tutorial />
             </Col>
           </Row>
+          <Footer />
         </Container>
       </Wrapper>
     );

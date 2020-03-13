@@ -8,6 +8,8 @@ import { Wrapper, Logo, } from 'pages/NormalSignIn/style';
 
 import queryString from 'query-string';
 
+import Footer from "components/Footer";
+
 class ClaimPage extends Component {
   constructor(props) {
     super(props);
@@ -48,6 +50,7 @@ class ClaimPage extends Component {
               />
             </Col>
           </Row>
+          <Footer />
         </Container>
       </Wrapper>
     )

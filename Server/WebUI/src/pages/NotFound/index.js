@@ -7,6 +7,8 @@ import { Container, Row, Col, } from '@bootstrap-styled/v4';
 
 import Menu from 'components/Menu';
 
+import Footer from "components/Footer";
+
 class NotFound extends Component {
   render() {
     return (
@@ -29,6 +31,7 @@ class NotFound extends Component {
               </Link>
             </Col>
           </Row>
+          <Footer />
         </Container>
       </Wrapper>
     );

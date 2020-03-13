@@ -10,6 +10,8 @@ import { Container, Row, Col, } from '@bootstrap-styled/v4';
 
 import { Wrapper } from 'components/SingleSession/style';
 
+import Footer from "components/Footer";
+
 class SettingsPage extends Component {
   constructor(props) {
     super(props)
@@ -37,6 +39,7 @@ class SettingsPage extends Component {
               <SignOutButton onClickCallback={this.signOutCallback} />
             </Col>
           </Row>
+          <Footer />
         </Container>
       </Wrapper>
     );
