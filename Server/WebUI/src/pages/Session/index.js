@@ -86,7 +86,7 @@ class SessionPage extends Component {
       session: firstSessions,
     });
 
-    this.poller = setInterval(() => this.poll(), 5000);
+    this.poller = setInterval(() => this.poll(), 10000); // 10 seconds
   }
 
   componentWillUnmount() {
