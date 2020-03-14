@@ -18,7 +18,7 @@ class ArchivedSessionsPage extends Component {
         <Container className="p-0">
           <Menu />
           <Row className="justify-content-center">
-            <Col lg={10} className="pr-0 pl-xl-0">
+            <Col lg={10} className="pr-0">
               <SessionTable
                 sessionsQuery={"isOngoing=false"}
                 buttonData={{
