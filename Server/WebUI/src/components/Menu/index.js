@@ -32,7 +32,7 @@ class Menu extends Component {
       <Wrapper>
         <Navbar color="faded" light toggleable="lg" className="mt-3 mb-3 mb-xl-4">
           <Container>
-            <NavbarBrand tag={Brand} to="/home/start" className="mr-3" />
+            <NavbarBrand tag={Brand} to="/home/start" />
             <NavbarToggler
               onClick={() => this.setState({ isOpen: !this.state.isOpen })}
               className="ml-auto"

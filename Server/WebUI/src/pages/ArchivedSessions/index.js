@@ -17,7 +17,7 @@ class ArchivedSessionsPage extends Component {
       <Wrapper>
         <Container className="p-0">
           <Menu />
-          <Row className="pr-0 justify-content-center">
+          <Row className="justify-content-center">
             <Col lg={10} className="pr-0 pl-xl-0">
               <SessionTable
                 sessionsQuery={"isOngoing=false"}
@@ -33,7 +33,7 @@ class ArchivedSessionsPage extends Component {
               />
             </Col>
           </Row>
-          <Row className="mt-3 mb-5">
+          <Row className="m-0 mt-3 mb-5">
             <Col className="text-center">
               <Link to="/home/sessions" className="btn btn-outline-dark">
                 Back

@@ -9,7 +9,7 @@ class Footer extends Component {
     // Because adding consistent bottom spacing would be harder to maintain
     return (
       <Wrapper className="mt-5">
-        <Row>
+        <Row className="m-0">
           <Col className="text-center">
             <Item
               href="https://github.com/jhburns/ExperienceCapture/tree/master/Documentation#documentation"
