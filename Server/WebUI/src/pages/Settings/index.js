@@ -29,12 +29,12 @@ class SettingsPage extends Component {
       <Wrapper>
         <Container className="p-0">
           <Menu />
-          <Row className="justify-content-center mb-3">
+          <Row className="m-0 justify-content-center mb-3">
             <Col xs={7} md={4} xl={3}>
               <GetSignUpLink />
             </Col>
           </Row>
-          <Row className="justify-content-center">
+          <Row className="m-0 justify-content-center">
             <Col xs={7} md={4} xl={3}>
               <SignOutButton onClickCallback={this.signOutCallback} />
             </Col>

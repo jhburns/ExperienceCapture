@@ -17,8 +17,8 @@ class SessionsPage extends Component {
       <Wrapper>
         <Container className="p-0">
           <Menu />
-          <Row className="pr-0 justify-content-center">
-            <Col lg={10} className="pr-0 pl-xl-0">
+          <Row className="mr-0 pr-0 justify-content-center">
+            <Col lg={10} className="pr-0">
               <SessionTable
                 sessionsQuery={"isOngoing=false"}
                 buttonData={{
@@ -33,7 +33,7 @@ class SessionsPage extends Component {
               />
             </Col>
           </Row>
-          <Row className="mt-3 mb-5">
+          <Row className="m-0 mt-3 mb-5">
             <Col className="text-center">
               <Link to="/home/sessions/archived" className="btn btn-outline-dark">
                 Archived

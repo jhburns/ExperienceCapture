@@ -16,8 +16,8 @@ class HomePage extends Component {
       <Wrapper>
         <Container className="p-0">
           <Menu />
-          <Row className="pr-0 justify-content-center">
-            <Col lg={10} className="pr-0 pl-xl-0">
+          <Row className="mr-0 ml-0 pr-0 justify-content-center">
+            <Col lg={10} className="pr-0 pl-0">
               <SessionTable
                 sessionsQuery={"isOngoing=true"}
                 isRenderingDate={false}
@@ -26,8 +26,8 @@ class HomePage extends Component {
               />
             </Col>
           </Row>
-          <Row className="pr-0 justify-content-center">
-            <Col lg={10} className="pr-0 pl-xl-0">
+          <Row className="m-0 justify-content-center">
+            <Col lg={10} className="p-0">
               <Tutorial />
             </Col>
           </Row>
