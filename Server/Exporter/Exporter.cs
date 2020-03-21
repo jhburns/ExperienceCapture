@@ -38,8 +38,9 @@ namespace Export.App.Main
 
         private static Stopwatch timer;
 
-        private static string currentSceneName;
         private static int currentSceneIndex;
+        private static string currentSceneName;
+        private static List<string> currentHeader;
 
         public static void Main(string[] args)
         {
@@ -103,6 +104,7 @@ namespace Export.App.Main
 
         private static async Task ExportSession()
         {
+            currentHeader = new List<string>();
             var workloads = await GetWorkloads();
 
             var ws = new JsonWriterSettings()
@@ -130,14 +132,26 @@ namespace Export.App.Main
                 {
                     ToJson(otherCaptures, "sessionInfo", isFirst);
                 }
-                
+
                 foreach (var block in sceneBlocks)
                 {
                     ToJson(block.Docs, "onlyCaptures", isFirst);
                     isFirst = false;
-                }
 
-                // ToCsv(scenes, "sceneName");
+                    if (block.Index != currentSceneIndex)
+                    {
+                        CopyCsv(block, "sceneName");
+
+                        currentSceneIndex = block.Index;
+                        currentSceneName = block.Name;
+                        ToCsv(block, "sceneName");
+                    }
+                    else
+                    {
+                        // Write to temp
+                        ToCsv(block, "sceneName");
+                    }
+                }
             }
 
             ToJsonEnd("raw");
@@ -218,7 +232,7 @@ namespace Export.App.Main
                 docsTotal.AppendFormat("{0}{1}", ",", d.ToJson(ws ?? JsonWriterSettings.Defaults));
             }
 
-            // Remove first comma
+            // Remove leading comma
             if (isFirst)
             {
                 docsTotal.Remove(0, 1);
@@ -273,6 +287,16 @@ namespace Export.App.Main
             };
         }
 
+        private static Configuration GetConfiguration()
+        {
+            return new Configuration
+            {
+                ShouldSkipRecord = (record) => record.All(string.IsNullOrEmpty),
+                MissingFieldFound = (record, index, context) => record.All(string.IsNullOrEmpty),
+                Delimiter = ",",
+            };
+        }
+
         private static (List<BsonDocument> otherCaptures, List<SceneBlock> scenes) ProcessScenes(List<BsonDocument> sessionDocs)
         {
             var sceneDocs = sessionDocs.FindAll(d => d.Contains("sceneName"));
@@ -296,7 +320,7 @@ namespace Export.App.Main
             if (sceneMap.Count == 0)
             {
                 return (
-                    otherCaptures, 
+                    otherCaptures,
                     new List<SceneBlock>()
                     {
                         new SceneBlock()
@@ -330,42 +354,25 @@ namespace Export.App.Main
             return (otherCaptures, sceneMap);
         }
 
-        /*
-        private static void ToCsv(List<BsonDocument> scenes, string about)
+        private static void ToCsv(SceneBlock block, string about)
         {
-            for (int i = 0; i < scenes.Count; i++)
+            for (int i = 0; i < block.Docs.Count; i++)
             {
-                string json = ToFlatJson(scenes);
-                string csv = JsonToCsv(json, ",");
+                string json = ToFlatJson(block.Docs);
+                string csv = JsonToCsv(json);
 
                 string path = $".{Seperator}exported{Seperator}CSVs{Seperator}";
-                AppendToFile(csv, $"{SessionId}.{about}.{scene.Name}.{i}.csv", path);
+                AppendToFile(csv, $"{SessionId}.{about}.{block.Name}.{i}.csv", path);
             }
         }
-        */
 
-        /*
-        // https://stackoverflow.com/a/36348017
-        private static DataTable JsonToTable(string jsonContent)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<DataTable>(jsonContent);
-        }
-        */
-
-        /*
-        private static string JsonToCsv(string jsonContent, string delimiter)
+        private static string JsonToCsv(string jsonContent)
         {
             StringWriter csvString = new StringWriter();
-            var config = new Configuration
-            {
-                ShouldSkipRecord = (record) => record.All(string.IsNullOrEmpty),
-                MissingFieldFound = (record, index, context) => record.All(string.IsNullOrEmpty),
-                Delimiter = delimiter,
-            };
 
-            using (var csv = new CsvWriter(csvString, config))
+            using (var csv = new CsvWriter(csvString, GetConfiguration()))
             {
-                using (var dt = JsonToTable(jsonContent))
+                using (var dt = JsonHelper.JsonToTable(jsonContent))
                 {
                     foreach (DataColumn column in dt.Columns)
                     {
@@ -388,7 +395,14 @@ namespace Export.App.Main
 
             return csvString.ToString();
         }
-        */
+
+        private static void CopyCsv(SceneBlock block, string about)
+        {
+            // Write old scene headers to final file
+            // Copy temp contents to final file
+
+            currentHeader = new List<string>();
+        }
 
         private static void CreateReadme()
         {
