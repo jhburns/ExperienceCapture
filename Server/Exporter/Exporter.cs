@@ -40,15 +40,46 @@ namespace Export.App.Main
 
         public static void Main(string[] args)
         {
-            // Stopwatch is only used to track time between steps,
-            // Not total
+            // Stopwatch is used to track total time
             timer = new Stopwatch();
             timer.Start();
 
             MainAsync(args).GetAwaiter().GetResult();
         }
 
-        public static string GetTimePassed()
+        private static async Task MainAsync(string[] args)
+        {
+            try
+            {
+                string outFolder = $".{Seperator}exported{Seperator}";
+                string zipFolder = $".{Seperator}zipped{Seperator}";
+
+                Directory.CreateDirectory(outFolder);
+                Directory.CreateDirectory(zipFolder);
+                Directory.CreateDirectory($".{Seperator}exported{Seperator}CSVs{Seperator}");
+
+                ConfigureJsonWriter();
+                await ExportSession();
+
+                string outLocation = zipFolder + $"{SessionId}_session_exported.zip";
+                ZipFolder(outFolder, outLocation);
+
+                await Upload(outLocation);
+                await UpdateDoc();
+
+                PrintFinishTime();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+
+            // Uncomment to make it so the program stays open, for debugging
+            // System.Threading.Thread.Sleep(100000000);
+            return;
+        }
+
+        private static void PrintFinishTime()
         {
             timer.Stop();
             var span = timer.Elapsed;
@@ -62,66 +93,31 @@ namespace Export.App.Main
             timer.Reset();
             timer.Start();
 
-            return elapsed;
-        }
-
-        private static async Task MainAsync(string[] args)
-        {
-            try
-            {
-                string outFolder = $".{Seperator}exported{Seperator}";
-                string zipFolder = $".{Seperator}zipped{Seperator}";
-
-                Directory.CreateDirectory(outFolder);
-                Directory.CreateDirectory(zipFolder);
-                Directory.CreateDirectory($".{Seperator}exported{Seperator}CSVs{Seperator}");
-                Console.WriteLine("Made folders: " + GetTimePassed());
-
-                await ExportSession();
-
-                string outLocation = zipFolder + $"{SessionId}_session_exported.zip";
-                ZipFolder(outFolder, outLocation);
-                Console.WriteLine("Zipped: " + GetTimePassed());
-
-                await Upload(outLocation);
-                await UpdateDoc();
-                Console.WriteLine("Uploaded: " + GetTimePassed());
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-
-            // System.Threading.Thread.Sleep(100000000); // To make it so the program stays open
-            return;
+            Console.WriteLine("Completed in: " + elapsed);
         }
 
         private static async Task ExportSession()
         {
             List<BsonDocument> sessionSorted = await SortSession();
-            Console.WriteLine("Sorted: " + GetTimePassed());
 
-            await ToJson(sessionSorted, "raw");
+            var ws = new JsonWriterSettings()
+            {
+                Indent = false,
+                OutputMode = JsonOutputMode.Strict,
+            };
+            await ToJson(sessionSorted, "raw", ws);
 
             await ToJson(await GetSessionInfo(), "database");
-            Console.WriteLine("To Json: " + GetTimePassed());
 
             var (about, scenes) = ProcessScenes(sessionSorted);
-            Console.WriteLine("Processed Scenes: " + GetTimePassed());
 
-            var ws = new JsonWriterSettings();
-            ws.Indent = true;
-            await ToJson(about, "sessionInfo", ws);
-            Console.WriteLine("Session Info: " + GetTimePassed());
+            await ToJson(about, "sessionInfo");
 
-            await ToJson(scenes, "onlyCaptures", ws);
-            Console.WriteLine("Only Captures: " + GetTimePassed());
+            await ToJson(scenes, "onlyCaptures");
 
             await ToCsv(scenes, "sceneName");
-            Console.WriteLine("To CSV: " + GetTimePassed());
 
             await CreateReadme();
-            Console.WriteLine("Created README: " + GetTimePassed());
 
             return;
         }
@@ -162,7 +158,7 @@ namespace Export.App.Main
 
             foreach (BsonDocument d in sessionDocs)
             {
-                docsTotal.AppendFormat("{0}{1}", d.ToJson(ws ?? GetJsonWriterSettings()), ",");
+                docsTotal.AppendFormat("{0}{1}", d.ToJson(ws ?? JsonWriterSettings.Defaults), ",");
             }
 
             docsTotal.Length--; // Remove trailing comma
@@ -176,11 +172,8 @@ namespace Export.App.Main
 
         private static async Task ToJson(BsonDocument sessionDocs, string about)
         {
-            JsonWriterSettings settings = GetJsonWriterSettings();
-            settings.Indent = true;
-
             string filename = $"{SessionId}.{about}.json";
-            await OutputToFile(sessionDocs.ToJson(settings), filename);
+            await OutputToFile(sessionDocs.ToJson(JsonWriterSettings.Defaults), filename);
 
             return;
         }
@@ -192,7 +185,7 @@ namespace Export.App.Main
 
             foreach (BsonDocument d in sessionDocs)
             {
-                string json = d.ToJson(GetJsonWriterSettings());
+                string json = d.ToJson(JsonWriterSettings.Defaults);
                 var dict = JsonHelper.DeserializeAndFlatten(json);
                 string flat = Newtonsoft.Json.JsonConvert.SerializeObject(dict);
 
@@ -205,14 +198,13 @@ namespace Export.App.Main
             return docsTotal.ToString();
         }
 
-        // Acts a way to generate default JsonWriterSettings
-        private static JsonWriterSettings GetJsonWriterSettings()
+        private static void ConfigureJsonWriter()
         {
-            JsonWriterSettings settings = new JsonWriterSettings();
-            settings.Indent = false;
-            settings.OutputMode = JsonOutputMode.Strict;
-
-            return settings;
+            JsonWriterSettings.Defaults = new JsonWriterSettings()
+            {
+                Indent = true,
+                OutputMode = JsonOutputMode.Strict,
+            };
         }
 
         private static (List<BsonDocument> otherCaptures, List<SceneBlock> scenes) ProcessScenes(List<BsonDocument> sessionDocs)
@@ -254,7 +246,7 @@ namespace Export.App.Main
             return (otherCaptures, sceneMap);
         }
 
-        private static async Task ToJson(List<SceneBlock> scenes, string about, JsonWriterSettings ws = null)
+        private static async Task ToJson(List<SceneBlock> scenes, string about)
         {
             var demapped = new List<BsonDocument>();
             foreach (var s in scenes)
@@ -265,7 +257,7 @@ namespace Export.App.Main
                 }
             }
 
-            await ToJson(demapped, about, ws);
+            await ToJson(demapped, about);
         }
 
         private static async Task ToCsv(List<SceneBlock> scenes, string about)
