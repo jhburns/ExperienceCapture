@@ -26,6 +26,7 @@ services:
     volumes:
       - ./Caddy/Caddyfile:/etc/Caddyfile
 
+  # Remove this and replace with command override for api service
   new_password:
     build:
       context: ./API
