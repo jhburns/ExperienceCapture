@@ -45,6 +45,7 @@ namespace Export.App.Main
         public static void Main(string[] args)
         {
             // Stopwatch is used to track total time
+            // So started first
             timer = new Stopwatch();
             timer.Start();
 
@@ -57,7 +58,7 @@ namespace Export.App.Main
             {
                 string outFolder = $".{Seperator}exported{Seperator}";
                 string zipFolder = $".{Seperator}zipped{Seperator}";
-                string tempFolder = $".{Seperator}temp{Seperator}CSVs{Seperator}";
+                string tempFolder = $".{Seperator}temporary{Seperator}CSVs{Seperator}";
 
                 Directory.CreateDirectory(outFolder);
                 Directory.CreateDirectory($"{outFolder}CSVs{Seperator}");
@@ -82,7 +83,7 @@ namespace Export.App.Main
             }
 
             // Uncomment to make it so the program stays open, for debugging
-            // System.Threading.Thread.Sleep(100000000);
+            System.Threading.Thread.Sleep(100000000);
         }
 
         private static void PrintFinishTime()
@@ -105,6 +106,8 @@ namespace Export.App.Main
         private static async Task ExportSession()
         {
             currentHeader = new List<string>();
+            currentSceneIndex = -1; // Negative one to play well with ProcessScenes
+
             var workloads = await GetWorkloads();
 
             var ws = new JsonWriterSettings()
@@ -151,6 +154,12 @@ namespace Export.App.Main
                         // Write to temp
                         ToCsv(block, "sceneName");
                     }
+                }
+
+                // Copy the last block
+                if (i == workloads.Count - 1)
+                {
+                    CopyCsv(sceneBlocks[sceneBlocks.Count - 1], "sceneName");
                 }
             }
 
@@ -356,14 +365,11 @@ namespace Export.App.Main
 
         private static void ToCsv(SceneBlock block, string about)
         {
-            for (int i = 0; i < block.Docs.Count; i++)
-            {
-                string json = ToFlatJson(block.Docs);
-                string csv = JsonToCsv(json);
+            string json = ToFlatJson(block.Docs);
+            string csv = JsonToCsv(json);
 
-                string path = $".{Seperator}exported{Seperator}CSVs{Seperator}";
-                AppendToFile(csv, $"{SessionId}.{about}.{block.Name}.{i}.csv", path);
-            }
+            string path = $".{Seperator}temporary{Seperator}CSVs{Seperator}";
+            AppendToFile(csv, $"{SessionId}.{about}.{block.Name}.{block.Index}.csv", path);
         }
 
         private static string JsonToCsv(string jsonContent)
@@ -374,12 +380,14 @@ namespace Export.App.Main
             {
                 using (var dt = JsonHelper.JsonToTable(jsonContent))
                 {
+                    /*
                     foreach (DataColumn column in dt.Columns)
                     {
                         csv.WriteField(column.ColumnName);
                     }
 
                     csv.NextRecord();
+                    */
 
                     foreach (DataRow row in dt.Rows)
                     {
@@ -431,7 +439,7 @@ namespace Export.App.Main
 
             using (var sw = File.AppendText(fullpath))
             {
-                sw.WriteLine(content);
+                sw.Write(content);
             }
         }
 

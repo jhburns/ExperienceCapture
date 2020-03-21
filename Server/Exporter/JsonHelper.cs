@@ -12,7 +12,7 @@ namespace Exporter.App.JsonHelper
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<DataTable>(jsonContent);
         }
-        
+
         // https://stackoverflow.com/a/32800161
         public static Dictionary<string, object> DeserializeAndFlatten(string json)
         {

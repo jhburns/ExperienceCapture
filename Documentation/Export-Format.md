@@ -14,8 +14,7 @@ This contains all of the data that was produced by the client calling `GetCaptur
 
 Annotated example:
 ```
-[
-{
+[{
   "gameObjects" : {
     "player": { // Example data exported by the developer
         "positionX": 45
@@ -34,8 +33,7 @@ Annotated example:
 
 Only the non-gameObjects frames, annotated example:
 ```
-[
-{
+[{
   "dateTime" : "2020-01-30T21:56:41.6282480Z", // UTC time generated on the client
   "description" : "Session Started",
   "captureRate" : 1, // How often a capture is taken, 1 = every frame
@@ -97,8 +95,7 @@ This data is a [MongoDB document](https://docs.mongodb.com/manual/core/document/
 
 Here is an example of this file type, with annotations:
 ```
-[
-{
+[{
   "_id" : { "$oid" : "5e3350fb774b120001aefa93" }, // Data base key, not important
   "isOpen" : true, // Whether the session was properly closed by the client
   "isExported" : false,
@@ -118,8 +115,7 @@ Here is an example of this file type, with annotations:
     "$date": 1581809189357 // Timestamp of when the last capture was recorded
   },
   "isOngoing": false // A proxy of isOpen and lastCaptureAt. True when data has recently been added to the session
-}
-]
+}]
 ```
 
 In addition, all of the nested keys starting with a dollar sign, `$`, are [extended JSON properties used by MongoDB](https://docs.mongodb.com/manual/reference/mongodb-extended-json/).
