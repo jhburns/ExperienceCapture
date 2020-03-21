@@ -198,7 +198,6 @@ namespace Export.App.Main
             return docsTotal.ToString();
         }
 
-        // Acts a way to generate default JsonWriterSettings
         private static void ConfigureJsonWriter()
         {
             JsonWriterSettings.Defaults = new JsonWriterSettings()
