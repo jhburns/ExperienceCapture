@@ -102,6 +102,16 @@ namespace Export.App.Main
         {
             var workloads = await GetWorkloads();
 
+            var ws = new JsonWriterSettings()
+            {
+                Indent = false,
+                OutputMode = JsonOutputMode.Strict,
+            };
+
+            ToJsonStart("raw");
+            ToJsonStart("sessionInfo");
+            ToJsonStart("onlyCaptures");
+
             for (int i = 0; i < workloads.Count; i++)
             {
                 // Step should be any of the workloads, except the last
@@ -109,14 +119,8 @@ namespace Export.App.Main
                 int offset = (int)(workloads[0] * i);
                 List<BsonDocument> sessionSorted = await SortSession((int)workloads[i], offset);
 
-                var ws = new JsonWriterSettings()
-                {
-                    Indent = false,
-                    OutputMode = JsonOutputMode.Strict,
-                };
-                ToJson(sessionSorted, "raw", ws);
-
-                ToJson(await GetSessionInfo(), "database");
+                bool isLast = i == workloads.Count - 1;
+                ToJson(sessionSorted, "raw", isLast, ws);
 
                 //var (about, scenes) = ProcessScenes(sessionSorted);
                 //ToJson(about, "sessionInfo");
@@ -124,6 +128,14 @@ namespace Export.App.Main
 
                 // ToCsv(scenes, "sceneName");
             }
+
+            ToJsonEnd("raw");
+            ToJsonEnd("sessionInfo");
+            ToJsonEnd("onlyCaptures");
+
+            ToJsonStart("database");
+            ToJson(await GetSessionInfo(), "database");
+            ToJsonEnd("database");
 
             CreateReadme();
         }
@@ -186,21 +198,32 @@ namespace Export.App.Main
                 .FirstOrDefaultAsync();
         }
 
-        private static void ToJson(List<BsonDocument> sessionDocs, string about, JsonWriterSettings ws = null)
+        private static void ToJson(List<BsonDocument> sessionDocs, string about, bool isLast = false, JsonWriterSettings ws = null)
         {
             StringBuilder docsTotal = new StringBuilder();
-            docsTotal.Append("[");
 
             foreach (BsonDocument d in sessionDocs)
             {
                 docsTotal.AppendFormat("{0}{1}", d.ToJson(ws ?? JsonWriterSettings.Defaults), ",");
             }
 
-            docsTotal.Length--; // Remove trailing comma
-            docsTotal.Append("]");
+            if (isLast)
+            {
+                docsTotal.Length--;
+            }
 
             string filename = $"{SessionId}.{about}.json";
             AppendToFile(docsTotal.ToString(), filename);
+        }
+
+        private static void ToJsonStart(string about)
+        {
+            AppendToFile("[", $"{SessionId}.{about}.json");
+        }
+
+        private static void ToJsonEnd(string about)
+        {
+            AppendToFile("]", $"{SessionId}.{about}.json");
         }
 
         private static void ToJson(BsonDocument sessionDocs, string about)
