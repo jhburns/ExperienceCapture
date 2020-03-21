@@ -79,7 +79,7 @@ namespace Export.App.Main
             return;
         }
 
-        public static void PrintFinishTime()
+        private static void PrintFinishTime()
         {
             timer.Stop();
             var span = timer.Elapsed;
