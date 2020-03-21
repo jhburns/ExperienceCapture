@@ -38,6 +38,9 @@ namespace Export.App.Main
 
         private static Stopwatch timer;
 
+        private static string currentSceneName;
+        private static int currentSceneIndex;
+
         public static void Main(string[] args)
         {
             // Stopwatch is used to track total time
@@ -119,12 +122,20 @@ namespace Export.App.Main
                 int offset = (int)(workloads[0] * i);
                 List<BsonDocument> sessionSorted = await SortSession((int)workloads[i], offset);
 
-                bool isLast = i == workloads.Count - 1;
-                ToJson(sessionSorted, "raw", isLast, ws);
+                bool isFirst = i == 0;
+                ToJson(sessionSorted, "raw", isFirst, ws);
 
-                //var (about, scenes) = ProcessScenes(sessionSorted);
-                //ToJson(about, "sessionInfo");
-                //ToJson(scenes, "onlyCaptures");
+                var (otherCaptures, sceneBlocks) = ProcessScenes(sessionSorted);
+                if (otherCaptures.Count > 0)
+                {
+                    ToJson(otherCaptures, "sessionInfo", isFirst);
+                }
+                
+                foreach (var block in sceneBlocks)
+                {
+                    ToJson(block.Docs, "onlyCaptures", isFirst);
+                    isFirst = false;
+                }
 
                 // ToCsv(scenes, "sceneName");
             }
@@ -149,7 +160,7 @@ namespace Export.App.Main
             var filter = Builders<BsonDocument>.Filter.Empty;
             long docCount = await sessionCollection.CountDocumentsAsync(filter);
 
-            long groupCount = 100;
+            long groupCount = 9;
             int workloadCount = (int)(docCount / groupCount);
             var workloads = new List<long>();
 
@@ -198,18 +209,19 @@ namespace Export.App.Main
                 .FirstOrDefaultAsync();
         }
 
-        private static void ToJson(List<BsonDocument> sessionDocs, string about, bool isLast = false, JsonWriterSettings ws = null)
+        private static void ToJson(List<BsonDocument> sessionDocs, string about, bool isFirst, JsonWriterSettings ws = null)
         {
             StringBuilder docsTotal = new StringBuilder();
 
             foreach (BsonDocument d in sessionDocs)
             {
-                docsTotal.AppendFormat("{0}{1}", d.ToJson(ws ?? JsonWriterSettings.Defaults), ",");
+                docsTotal.AppendFormat("{0}{1}", ",", d.ToJson(ws ?? JsonWriterSettings.Defaults));
             }
 
-            if (isLast)
+            // Remove first comma
+            if (isFirst)
             {
-                docsTotal.Length--;
+                docsTotal.Remove(0, 1);
             }
 
             string filename = $"{SessionId}.{about}.json";
@@ -226,10 +238,10 @@ namespace Export.App.Main
             AppendToFile("]", $"{SessionId}.{about}.json");
         }
 
-        private static void ToJson(BsonDocument sessionDocs, string about)
+        private static void ToJson(BsonDocument sessionDoc, string about)
         {
             string filename = $"{SessionId}.{about}.json";
-            AppendToFile(sessionDocs.ToJson(JsonWriterSettings.Defaults), filename);
+            AppendToFile(sessionDoc.ToJson(JsonWriterSettings.Defaults), filename);
         }
 
         private static string ToFlatJson(List<BsonDocument> sessionDocs)
@@ -264,34 +276,52 @@ namespace Export.App.Main
         private static (List<BsonDocument> otherCaptures, List<SceneBlock> scenes) ProcessScenes(List<BsonDocument> sessionDocs)
         {
             var sceneDocs = sessionDocs.FindAll(d => d.Contains("sceneName"));
+            int sceneIndex = currentSceneIndex;
 
             List<SceneBlock> sceneMap = sceneDocs.Select((scene) =>
             {
+                sceneIndex++;
                 return new SceneBlock()
                 {
                     StartTime = scene["frameInfo"]["realtimeSinceStartup"].AsDouble,
                     Name = scene["sceneName"].AsString,
+                    Index = sceneIndex,
                     Docs = new List<BsonDocument>(),
                 };
             }).ToList();
 
-            var normalCaptures = sessionDocs.FindAll(d => d.Contains("gameObjects"));
             var otherCaptures = sessionDocs.FindAll(d => !d.Contains("gameObjects"));
+            var normalCaptures = sessionDocs.FindAll(d => d.Contains("gameObjects"));
 
-            int sceneIndex = 0;
-            var currentScene = sceneMap[sceneIndex];
+            if (sceneMap.Count == 0)
+            {
+                return (
+                    otherCaptures, 
+                    new List<SceneBlock>()
+                    {
+                        new SceneBlock()
+                        {
+                            Name = currentSceneName,
+                            Index = sceneIndex,
+                            Docs = normalCaptures,
+                        },
+                    });
+            }
+
+            int index = 0;
+            var currentScene = sceneMap[index];
 
             for (int i = 0; i < normalCaptures.Count; i++)
             {
                 var currentDoc = normalCaptures[i];
                 var currentTimestamp = currentDoc["frameInfo"]["realtimeSinceStartup"].AsDouble;
-                var tempIndex = sceneIndex + 1;
+                int tempIndex = sceneIndex + 1;
 
                 if (tempIndex < sceneMap.Count
                     && currentTimestamp > sceneMap[tempIndex].StartTime)
                 {
-                    sceneIndex++;
-                    currentScene = sceneMap[sceneIndex];
+                    index++;
+                    currentScene = sceneMap[index];
                 }
 
                 currentScene.Docs.Add(currentDoc);
@@ -300,40 +330,29 @@ namespace Export.App.Main
             return (otherCaptures, sceneMap);
         }
 
-        private static void ToJson(List<SceneBlock> scenes, string about)
-        {
-            var demapped = new List<BsonDocument>();
-            foreach (var s in scenes)
-            {
-                foreach (var d in s.Docs)
-                {
-                    demapped.Add(d);
-                }
-            }
-
-            ToJson(demapped, about);
-        }
-
-        private static void ToCsv(List<SceneBlock> scenes, string about)
+        /*
+        private static void ToCsv(List<BsonDocument> scenes, string about)
         {
             for (int i = 0; i < scenes.Count; i++)
             {
-                var scene = scenes[i];
-
-                string json = ToFlatJson(scene.Docs);
+                string json = ToFlatJson(scenes);
                 string csv = JsonToCsv(json, ",");
 
                 string path = $".{Seperator}exported{Seperator}CSVs{Seperator}";
                 AppendToFile(csv, $"{SessionId}.{about}.{scene.Name}.{i}.csv", path);
             }
         }
+        */
 
+        /*
         // https://stackoverflow.com/a/36348017
         private static DataTable JsonToTable(string jsonContent)
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<DataTable>(jsonContent);
         }
+        */
 
+        /*
         private static string JsonToCsv(string jsonContent, string delimiter)
         {
             StringWriter csvString = new StringWriter();
@@ -369,6 +388,7 @@ namespace Export.App.Main
 
             return csvString.ToString();
         }
+        */
 
         private static void CreateReadme()
         {
@@ -454,6 +474,7 @@ namespace Export.App.Main
         #pragma warning disable SA1516, SA1300
         public string Name { get; set; }
         public double StartTime { get; set; }
+        public int Index { get; set; }
         public List<BsonDocument> Docs { get; set; }
         #pragma warning restore SA151, SA1300
     }
