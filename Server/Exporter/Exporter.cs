@@ -78,7 +78,7 @@ namespace Export.App.Main
             }
 
             // Uncomment to make it so the program stays open, for debugging
-            System.Threading.Thread.Sleep(100000000);
+            // System.Threading.Thread.Sleep(100000000);
         }
 
         private static void PrintFinishTime()
@@ -100,26 +100,32 @@ namespace Export.App.Main
 
         private static async Task ExportSession()
         {
-            List<BsonDocument> sessionSorted = await SortSession();
+            var workloads = await GetWorkloads();
 
-            var ws = new JsonWriterSettings()
+            for (int i = 0; i < workloads.Count; i++)
             {
-                Indent = false,
-                OutputMode = JsonOutputMode.Strict,
-            };
-            ToJson(sessionSorted, "raw", ws);
+                // Step should be any of the workloads, except the last
+                // First used because if it isn't a step then offset is zero anyway
+                int offset = (int)(workloads[0] * i);
+                List<BsonDocument> sessionSorted = await SortSession((int)workloads[i], offset);
 
-            ToJson(await GetSessionInfo(), "database");
+                var ws = new JsonWriterSettings()
+                {
+                    Indent = false,
+                    OutputMode = JsonOutputMode.Strict,
+                };
+                ToJson(sessionSorted, "raw", ws);
 
-            var (about, scenes) = ProcessScenes(sessionSorted);
-            ToJson(about, "sessionInfo");
-            ToJson(scenes, "onlyCaptures");
+                ToJson(await GetSessionInfo(), "database");
 
-            ToCsv(scenes, "sceneName");
+                //var (about, scenes) = ProcessScenes(sessionSorted);
+                //ToJson(about, "sessionInfo");
+                //ToJson(scenes, "onlyCaptures");
+
+                // ToCsv(scenes, "sceneName");
+            }
 
             CreateReadme();
-
-            await GetWorkloads();
         }
 
         /*
@@ -149,7 +155,7 @@ namespace Export.App.Main
             return workloads;
         }
 
-        private static async Task<List<BsonDocument>> SortSession()
+        private static async Task<List<BsonDocument>> SortSession(int workload, int offset)
         {
             var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{SessionId}");
 
@@ -161,6 +167,8 @@ namespace Export.App.Main
 
             return await sessionCollection
                 .Find(filter)
+                .Skip(offset)
+                .Limit(workload)
                 .Sort(sorter)
                 .Project(projection)
                 .ToListAsync();
