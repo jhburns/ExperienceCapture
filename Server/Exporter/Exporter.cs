@@ -53,10 +53,13 @@ namespace Export.App.Main
             {
                 string outFolder = $".{Seperator}exported{Seperator}";
                 string zipFolder = $".{Seperator}zipped{Seperator}";
+                string tempFolder = $".{Seperator}temp{Seperator}CSVs{Seperator}";
 
                 Directory.CreateDirectory(outFolder);
+                Directory.CreateDirectory($"{outFolder}CSVs{Seperator}");
+
                 Directory.CreateDirectory(zipFolder);
-                Directory.CreateDirectory($".{Seperator}exported{Seperator}CSVs{Seperator}");
+                Directory.CreateDirectory(tempFolder);
 
                 ConfigureJsonWriter();
                 await ExportSession();
@@ -75,7 +78,7 @@ namespace Export.App.Main
             }
 
             // Uncomment to make it so the program stays open, for debugging
-            // System.Threading.Thread.Sleep(100000000);
+            System.Threading.Thread.Sleep(100000000);
         }
 
         private static void PrintFinishTime()
