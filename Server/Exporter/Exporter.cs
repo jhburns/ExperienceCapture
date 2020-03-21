@@ -53,10 +53,13 @@ namespace Export.App.Main
             {
                 string outFolder = $".{Seperator}exported{Seperator}";
                 string zipFolder = $".{Seperator}zipped{Seperator}";
+                string tempFolder = $".{Seperator}temp{Seperator}CSVs{Seperator}";
 
                 Directory.CreateDirectory(outFolder);
+                Directory.CreateDirectory($"{outFolder}CSVs{Seperator}");
+
                 Directory.CreateDirectory(zipFolder);
-                Directory.CreateDirectory($".{Seperator}exported{Seperator}CSVs{Seperator}");
+                Directory.CreateDirectory(tempFolder);
 
                 ConfigureJsonWriter();
                 await ExportSession();
@@ -75,8 +78,7 @@ namespace Export.App.Main
             }
 
             // Uncomment to make it so the program stays open, for debugging
-            // System.Threading.Thread.Sleep(100000000);
-            return;
+            System.Threading.Thread.Sleep(100000000);
         }
 
         private static void PrintFinishTime()
@@ -105,21 +107,46 @@ namespace Export.App.Main
                 Indent = false,
                 OutputMode = JsonOutputMode.Strict,
             };
-            await ToJson(sessionSorted, "raw", ws);
+            ToJson(sessionSorted, "raw", ws);
 
-            await ToJson(await GetSessionInfo(), "database");
+            ToJson(await GetSessionInfo(), "database");
 
             var (about, scenes) = ProcessScenes(sessionSorted);
+            ToJson(about, "sessionInfo");
+            ToJson(scenes, "onlyCaptures");
 
-            await ToJson(about, "sessionInfo");
+            ToCsv(scenes, "sceneName");
 
-            await ToJson(scenes, "onlyCaptures");
+            CreateReadme();
 
-            await ToCsv(scenes, "sceneName");
+            await GetWorkloads();
+        }
 
-            await CreateReadme();
+        /*
+         * Returns: Task<List<long>> of a broken down count of all the documents in a session
+         */
+        private static async Task<List<long>> GetWorkloads()
+        {
+            var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{SessionId}");
+            var filter = Builders<BsonDocument>.Filter.Empty;
+            long docCount = await sessionCollection.CountDocumentsAsync(filter);
 
-            return;
+            long groupCount = 100;
+            int workloadCount = (int)(docCount / groupCount);
+            var workloads = new List<long>();
+
+            for (int i = 0; i < workloadCount; i++)
+            {
+                workloads.Add(groupCount);
+            }
+
+            // Add leftover, if it exists
+            if (docCount % groupCount != 0)
+            {
+                workloads.Add(docCount - (groupCount * workloadCount));
+            }
+
+            return workloads;
         }
 
         private static async Task<List<BsonDocument>> SortSession()
@@ -151,7 +178,7 @@ namespace Export.App.Main
                 .FirstOrDefaultAsync();
         }
 
-        private static async Task ToJson(List<BsonDocument> sessionDocs, string about, JsonWriterSettings ws = null)
+        private static void ToJson(List<BsonDocument> sessionDocs, string about, JsonWriterSettings ws = null)
         {
             StringBuilder docsTotal = new StringBuilder();
             docsTotal.Append("[");
@@ -165,17 +192,13 @@ namespace Export.App.Main
             docsTotal.Append("]");
 
             string filename = $"{SessionId}.{about}.json";
-            await OutputToFile(docsTotal.ToString(), filename);
-
-            return;
+            AppendToFile(docsTotal.ToString(), filename);
         }
 
-        private static async Task ToJson(BsonDocument sessionDocs, string about)
+        private static void ToJson(BsonDocument sessionDocs, string about)
         {
             string filename = $"{SessionId}.{about}.json";
-            await OutputToFile(sessionDocs.ToJson(JsonWriterSettings.Defaults), filename);
-
-            return;
+            AppendToFile(sessionDocs.ToJson(JsonWriterSettings.Defaults), filename);
         }
 
         private static string ToFlatJson(List<BsonDocument> sessionDocs)
@@ -246,7 +269,7 @@ namespace Export.App.Main
             return (otherCaptures, sceneMap);
         }
 
-        private static async Task ToJson(List<SceneBlock> scenes, string about)
+        private static void ToJson(List<SceneBlock> scenes, string about)
         {
             var demapped = new List<BsonDocument>();
             foreach (var s in scenes)
@@ -257,10 +280,10 @@ namespace Export.App.Main
                 }
             }
 
-            await ToJson(demapped, about);
+            ToJson(demapped, about);
         }
 
-        private static async Task ToCsv(List<SceneBlock> scenes, string about)
+        private static void ToCsv(List<SceneBlock> scenes, string about)
         {
             for (int i = 0; i < scenes.Count; i++)
             {
@@ -270,7 +293,7 @@ namespace Export.App.Main
                 string csv = JsonToCsv(json, ",");
 
                 string path = $".{Seperator}exported{Seperator}CSVs{Seperator}";
-                await OutputToFile(csv, $"{SessionId}.{about}.{scene.Name}.{i}.csv", path);
+                AppendToFile(csv, $"{SessionId}.{about}.{scene.Name}.{i}.csv", path);
             }
         }
 
@@ -316,7 +339,7 @@ namespace Export.App.Main
             return csvString.ToString();
         }
 
-        private static async Task CreateReadme()
+        private static void CreateReadme()
         {
             string source = System.IO.File.ReadAllText($".{Seperator}Templates{Seperator}README.txt.handlebars");
             var template = Handlebars.Compile(source);
@@ -326,10 +349,10 @@ namespace Export.App.Main
                 id = SessionId,
             };
 
-            await OutputToFile(template(data), "README.txt");
+            AppendToFile(template(data), "README.txt");
         }
 
-        private static async Task OutputToFile(string content, string filename, string path = "")
+        private static void AppendToFile(string content, string filename, string path = "")
         {
             string fullpath;
             if (path == string.Empty)
@@ -341,12 +364,10 @@ namespace Export.App.Main
                 fullpath = $"{path}{filename}";
             }
 
-            using (var sw = new StreamWriter(fullpath))
+            using (var sw = File.AppendText(fullpath))
             {
-                await sw.WriteAsync(content);
+                sw.WriteLine(content);
             }
-
-            return;
         }
 
         private static void ZipFolder(string location, string outName)
@@ -393,7 +414,6 @@ namespace Export.App.Main
                 .Set("isPending", false);
 
             await sessions.UpdateOneAsync(filter, update);
-            return;
         }
     }
 
