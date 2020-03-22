@@ -95,7 +95,7 @@ This data is a [MongoDB document](https://docs.mongodb.com/manual/core/document/
 
 Here is an example of this file type, with annotations:
 ```
-{
+[{
   "_id" : { "$oid" : "5e3350fb774b120001aefa93" }, // Data base key, not important
   "isOpen" : true, // Whether the session was properly closed by the client
   "isExported" : false,
@@ -115,7 +115,7 @@ Here is an example of this file type, with annotations:
     "$date": 1581809189357 // Timestamp of when the last capture was recorded
   },
   "isOngoing": false // A proxy of isOpen and lastCaptureAt. True when data has recently been added to the session
-}
+}]
 ```
 
 In addition, all of the nested keys starting with a dollar sign, `$`, are [extended JSON properties used by MongoDB](https://docs.mongodb.com/manual/reference/mongodb-extended-json/).

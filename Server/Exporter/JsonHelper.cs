@@ -1,12 +1,19 @@
 namespace Exporter.App.JsonHelper
 {
     using System.Collections.Generic;
+    using System.Data;
 
     using Newtonsoft.Json.Linq;
 
-    // https://stackoverflow.com/a/32800161
     public class JsonHelper
     {
+        // https://stackoverflow.com/a/36348017
+        public static DataTable JsonToTable(string jsonContent)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<DataTable>(jsonContent);
+        }
+
+        // https://stackoverflow.com/a/32800161
         public static Dictionary<string, object> DeserializeAndFlatten(string json)
         {
             Dictionary<string, object> dict = new Dictionary<string, object>();

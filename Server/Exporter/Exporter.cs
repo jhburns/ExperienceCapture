@@ -38,9 +38,15 @@ namespace Export.App.Main
 
         private static Stopwatch timer;
 
+        private static int currentSceneIndex;
+        private static string currentSceneName;
+        private static List<string> currentHeader;
+
+        // TODO: use file-path strings more structured
         public static void Main(string[] args)
         {
             // Stopwatch is used to track total time
+            // So started first
             timer = new Stopwatch();
             timer.Start();
 
@@ -53,7 +59,7 @@ namespace Export.App.Main
             {
                 string outFolder = $".{Seperator}exported{Seperator}";
                 string zipFolder = $".{Seperator}zipped{Seperator}";
-                string tempFolder = $".{Seperator}temp{Seperator}CSVs{Seperator}";
+                string tempFolder = $".{Seperator}temporary{Seperator}CSVs{Seperator}";
 
                 Directory.CreateDirectory(outFolder);
                 Directory.CreateDirectory($"{outFolder}CSVs{Seperator}");
@@ -78,7 +84,7 @@ namespace Export.App.Main
             }
 
             // Uncomment to make it so the program stays open, for debugging
-            System.Threading.Thread.Sleep(100000000);
+            // System.Threading.Thread.Sleep(100000000);
         }
 
         private static void PrintFinishTime()
@@ -100,26 +106,85 @@ namespace Export.App.Main
 
         private static async Task ExportSession()
         {
-            List<BsonDocument> sessionSorted = await SortSession();
+            currentHeader = new List<string>();
+            currentSceneIndex = -1; // To play nice with the proccessing code
+
+            var workloads = await GetWorkloads();
 
             var ws = new JsonWriterSettings()
             {
                 Indent = false,
                 OutputMode = JsonOutputMode.Strict,
             };
-            ToJson(sessionSorted, "raw", ws);
 
+            ToJsonStart("raw");
+            ToJsonStart("sessionInfo");
+            ToJsonStart("onlyCaptures");
+
+            for (int i = 0; i < workloads.Count; i++)
+            {
+                // Step should be any of the workloads, except the last
+                // First used because if it isn't a step then offset is zero anyway
+                int offset = (int)(workloads[0] * i);
+                List<BsonDocument> sessionSorted = await SortSession((int)workloads[i], offset);
+
+                bool isFirst = i == 0;
+                ToJson(sessionSorted, "raw", isFirst, ws);
+
+                var (otherCaptures, sceneBlocks) = ProcessScenes(sessionSorted);
+                if (otherCaptures.Count > 0)
+                {
+                    ToJson(otherCaptures, "sessionInfo", isFirst);
+                }
+
+                foreach (var block in sceneBlocks)
+                {
+                    ToJson(block.Docs, "onlyCaptures", isFirst);
+                    isFirst = false;
+
+                    if (currentSceneIndex == -1)
+                    {
+                        currentSceneIndex = block.Index;
+                        currentSceneName = block.Name;
+
+                        ToCsv(block, "sceneName");
+                    }
+                    else if (block.Index != currentSceneIndex)
+                    {
+                        CopyCsv(
+                            new SceneBlock()
+                            {
+                                Name = currentSceneName,
+                                Index = currentSceneIndex,
+                            }, "sceneName");
+
+                        currentSceneIndex = block.Index;
+                        currentSceneName = block.Name;
+
+                        ToCsv(block, "sceneName");
+                    }
+                    else
+                    {
+                        ToCsv(block, "sceneName");
+                    }
+                }
+
+                // Copy the last block
+                if (i == workloads.Count - 1)
+                {
+                    CopyCsv(sceneBlocks[sceneBlocks.Count - 1], "sceneName");
+                }
+            }
+
+            ToJsonEnd("raw");
+            ToJsonEnd("sessionInfo");
+            ToJsonEnd("onlyCaptures");
+
+            ToJsonStart("database");
             ToJson(await GetSessionInfo(), "database");
-
-            var (about, scenes) = ProcessScenes(sessionSorted);
-            ToJson(about, "sessionInfo");
-            ToJson(scenes, "onlyCaptures");
-
-            ToCsv(scenes, "sceneName");
+            ToJsonEnd("database");
 
             CreateReadme();
-
-            await GetWorkloads();
         }
 
         /*
@@ -131,7 +196,7 @@ namespace Export.App.Main
             var filter = Builders<BsonDocument>.Filter.Empty;
             long docCount = await sessionCollection.CountDocumentsAsync(filter);
 
-            long groupCount = 100;
+            long groupCount = 1800; // 20 seconds worth of frames from a game running @90fps
             int workloadCount = (int)(docCount / groupCount);
             var workloads = new List<long>();
 
@@ -149,7 +214,7 @@ namespace Export.App.Main
             return workloads;
         }
 
-        private static async Task<List<BsonDocument>> SortSession()
+        private static async Task<List<BsonDocument>> SortSession(int workload, int offset)
         {
             var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{SessionId}");
 
@@ -161,6 +226,8 @@ namespace Export.App.Main
 
             return await sessionCollection
                 .Find(filter)
+                .Skip(offset)
+                .Limit(workload)
                 .Sort(sorter)
                 .Project(projection)
                 .ToListAsync();
@@ -178,27 +245,39 @@ namespace Export.App.Main
                 .FirstOrDefaultAsync();
         }
 
-        private static void ToJson(List<BsonDocument> sessionDocs, string about, JsonWriterSettings ws = null)
+        private static void ToJson(List<BsonDocument> sessionDocs, string about, bool isFirst, JsonWriterSettings ws = null)
         {
             StringBuilder docsTotal = new StringBuilder();
-            docsTotal.Append("[");
 
             foreach (BsonDocument d in sessionDocs)
             {
-                docsTotal.AppendFormat("{0}{1}", d.ToJson(ws ?? JsonWriterSettings.Defaults), ",");
+                docsTotal.AppendFormat("{0}{1}", ",", d.ToJson(ws ?? JsonWriterSettings.Defaults));
             }
 
-            docsTotal.Length--; // Remove trailing comma
-            docsTotal.Append("]");
+            // Remove leading comma
+            if (isFirst)
+            {
+                docsTotal.Remove(0, 1);
+            }
 
             string filename = $"{SessionId}.{about}.json";
             AppendToFile(docsTotal.ToString(), filename);
         }
 
-        private static void ToJson(BsonDocument sessionDocs, string about)
+        private static void ToJsonStart(string about)
+        {
+            AppendToFile("[", $"{SessionId}.{about}.json");
+        }
+
+        private static void ToJsonEnd(string about)
+        {
+            AppendToFile("]", $"{SessionId}.{about}.json");
+        }
+
+        private static void ToJson(BsonDocument sessionDoc, string about)
         {
             string filename = $"{SessionId}.{about}.json";
-            AppendToFile(sessionDocs.ToJson(JsonWriterSettings.Defaults), filename);
+            AppendToFile(sessionDoc.ToJson(JsonWriterSettings.Defaults), filename);
         }
 
         private static string ToFlatJson(List<BsonDocument> sessionDocs)
@@ -230,37 +309,65 @@ namespace Export.App.Main
             };
         }
 
+        private static Configuration GetConfiguration()
+        {
+            return new Configuration
+            {
+                ShouldSkipRecord = (record) => record.All(string.IsNullOrEmpty),
+                MissingFieldFound = (record, index, context) => record.All(string.IsNullOrEmpty),
+                Delimiter = ",",
+            };
+        }
+
         private static (List<BsonDocument> otherCaptures, List<SceneBlock> scenes) ProcessScenes(List<BsonDocument> sessionDocs)
         {
             var sceneDocs = sessionDocs.FindAll(d => d.Contains("sceneName"));
+            int sceneIndex = currentSceneIndex;
 
             List<SceneBlock> sceneMap = sceneDocs.Select((scene) =>
             {
+                sceneIndex++;
                 return new SceneBlock()
                 {
                     StartTime = scene["frameInfo"]["realtimeSinceStartup"].AsDouble,
                     Name = scene["sceneName"].AsString,
+                    Index = sceneIndex,
                     Docs = new List<BsonDocument>(),
                 };
             }).ToList();
 
-            var normalCaptures = sessionDocs.FindAll(d => d.Contains("gameObjects"));
             var otherCaptures = sessionDocs.FindAll(d => !d.Contains("gameObjects"));
+            var normalCaptures = sessionDocs.FindAll(d => d.Contains("gameObjects"));
 
-            int sceneIndex = 0;
-            var currentScene = sceneMap[sceneIndex];
+            if (sceneMap.Count == 0)
+            {
+                return (
+                    otherCaptures,
+                    new List<SceneBlock>()
+                    {
+                        new SceneBlock()
+                        {
+                            Name = currentSceneName,
+                            Index = sceneIndex,
+                            Docs = normalCaptures,
+                        },
+                    });
+            }
+
+            int index = 0;
+            var currentScene = sceneMap[index];
 
             for (int i = 0; i < normalCaptures.Count; i++)
             {
                 var currentDoc = normalCaptures[i];
                 var currentTimestamp = currentDoc["frameInfo"]["realtimeSinceStartup"].AsDouble;
-                var tempIndex = sceneIndex + 1;
+                int tempIndex = sceneIndex + 1;
 
                 if (tempIndex < sceneMap.Count
                     && currentTimestamp > sceneMap[tempIndex].StartTime)
                 {
-                    sceneIndex++;
-                    currentScene = sceneMap[sceneIndex];
+                    index++;
+                    currentScene = sceneMap[index];
                 }
 
                 currentScene.Docs.Add(currentDoc);
@@ -269,74 +376,95 @@ namespace Export.App.Main
             return (otherCaptures, sceneMap);
         }
 
-        private static void ToJson(List<SceneBlock> scenes, string about)
+        private static void ToCsv(SceneBlock block, string about)
         {
-            var demapped = new List<BsonDocument>();
-            foreach (var s in scenes)
-            {
-                foreach (var d in s.Docs)
-                {
-                    demapped.Add(d);
-                }
-            }
+            string json = ToFlatJson(block.Docs);
+            string csv = JsonToCsv(json);
 
-            ToJson(demapped, about);
+            string path = $".{Seperator}temporary{Seperator}CSVs{Seperator}";
+            AppendToFile(csv, $"{SessionId}.{about}.{block.Name}.{block.Index}.csv", path);
         }
 
-        private static void ToCsv(List<SceneBlock> scenes, string about)
-        {
-            for (int i = 0; i < scenes.Count; i++)
-            {
-                var scene = scenes[i];
-
-                string json = ToFlatJson(scene.Docs);
-                string csv = JsonToCsv(json, ",");
-
-                string path = $".{Seperator}exported{Seperator}CSVs{Seperator}";
-                AppendToFile(csv, $"{SessionId}.{about}.{scene.Name}.{i}.csv", path);
-            }
-        }
-
-        // https://stackoverflow.com/a/36348017
-        private static DataTable JsonToTable(string jsonContent)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<DataTable>(jsonContent);
-        }
-
-        private static string JsonToCsv(string jsonContent, string delimiter)
+        private static string JsonToCsv(string jsonContent)
         {
             StringWriter csvString = new StringWriter();
-            var config = new Configuration
-            {
-                ShouldSkipRecord = (record) => record.All(string.IsNullOrEmpty),
-                MissingFieldFound = (record, index, context) => record.All(string.IsNullOrEmpty),
-                Delimiter = delimiter,
-            };
 
-            using (var csv = new CsvWriter(csvString, config))
+            using (var csv = new CsvWriter(csvString, GetConfiguration()))
             {
-                using (var dt = JsonToTable(jsonContent))
+                var dt = JsonHelper.JsonToTable(jsonContent);
+                dt = AlignHeaders(dt);
+
+                foreach (DataRow row in dt.Rows)
                 {
-                    foreach (DataColumn column in dt.Columns)
+                    for (var i = 0; i < dt.Columns.Count; i++)
                     {
-                        csv.WriteField(column.ColumnName);
+                        csv.WriteField(row[i]);
                     }
 
                     csv.NextRecord();
-
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        for (var i = 0; i < dt.Columns.Count; i++)
-                        {
-                            csv.WriteField(row[i]);
-                        }
-
-                        csv.NextRecord();
-                    }
                 }
             }
 
             return csvString.ToString();
+        }
+
+        private static void CopyCsv(SceneBlock block, string about)
+        {
+            StringWriter csvString = new StringWriter();
+
+            using (var csv = new CsvWriter(csvString, GetConfiguration()))
+            {
+                foreach (string key in currentHeader)
+                {
+                    csv.WriteField(key);
+                }
+
+                csv.NextRecord();
+            }
+
+            string path = $".{Seperator}exported{Seperator}CSVs{Seperator}";
+            string filename = $"{SessionId}.{about}.{block.Name}.{block.Index}.csv";
+            AppendToFile(csvString.ToString(), filename, path);
+
+            string temporaryLocation = $".{Seperator}temporary{Seperator}CSVs{Seperator}{filename}";
+            File.AppendAllText($"{path}{filename}", File.ReadAllText(temporaryLocation));
+
+            currentHeader = new List<string>();
+        }
+
+        // TODO: make less magic
+        // TODO: check this works for any data
+        private static DataTable AlignHeaders(DataTable dt)
+        {
+            var header = dt.Columns.Cast<DataColumn>()
+                        .Select(col => col.ColumnName)
+                        .ToList();
+
+            if (!header.SequenceEqual(currentHeader))
+            {
+                foreach (string h in header)
+                {
+                    if (!currentHeader.Contains(h))
+                    {
+                        currentHeader.Add(h);
+                    }
+                }
+
+                foreach (string h in currentHeader)
+                {
+                    if (!header.Contains(h))
+                    {
+                        dt.Columns.Add(h);
+                    }
+                }
+            }
+
+            for (int i = 0; i < currentHeader.Count; i++)
+            {
+                dt.Columns[currentHeader[i]].SetOrdinal(i);
+            }
+
+            return dt;
         }
 
         private static void CreateReadme()
@@ -366,7 +494,7 @@ namespace Export.App.Main
 
             using (var sw = File.AppendText(fullpath))
             {
-                sw.WriteLine(content);
+                sw.Write(content);
             }
         }
 
@@ -423,6 +551,7 @@ namespace Export.App.Main
         #pragma warning disable SA1516, SA1300
         public string Name { get; set; }
         public double StartTime { get; set; }
+        public int Index { get; set; }
         public List<BsonDocument> Docs { get; set; }
         #pragma warning restore SA151, SA1300
     }
