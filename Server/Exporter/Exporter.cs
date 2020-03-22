@@ -142,6 +142,7 @@ namespace Export.App.Main
                     ToJson(block.Docs, "onlyCaptures", isFirst);
                     isFirst = false;
 
+                    // First scene shouldn't reqult in a previous scene being copied
                     if (currentSceneIndex == -1)
                     {
                         currentSceneIndex = block.Index;
@@ -149,6 +150,7 @@ namespace Export.App.Main
 
                         ToCsv(block, "sceneName");
                     }
+                    // If at a new scene > 0, then copy the previous
                     else if (block.Index != currentSceneIndex)
                     {
                         CopyCsv(
@@ -188,6 +190,7 @@ namespace Export.App.Main
         }
 
         /*
+         * Breaks the session collection into blocks, of a constant size or less
          * Returns: Task<List<long>> of a broken down count of all the documents in a session
          */
         private static async Task<List<long>> GetWorkloads()
@@ -206,6 +209,7 @@ namespace Export.App.Main
             }
 
             // Add leftover, if it exists
+            // Leftover is always less than groupCount to prevent high memory usage
             if (docCount % groupCount != 0)
             {
                 workloads.Add(docCount - (groupCount * workloadCount));
@@ -339,6 +343,7 @@ namespace Export.App.Main
             var otherCaptures = sessionDocs.FindAll(d => !d.Contains("gameObjects"));
             var normalCaptures = sessionDocs.FindAll(d => d.Contains("gameObjects"));
 
+            // If there are no scene captures, return a default block
             if (sceneMap.Count == 0)
             {
                 return (
@@ -354,6 +359,7 @@ namespace Export.App.Main
                     });
             }
 
+            // Otherwise, process each block by scene
             int index = 0;
             var currentScene = sceneMap[index];
 
@@ -429,6 +435,7 @@ namespace Export.App.Main
             string temporaryLocation = $".{Seperator}temporary{Seperator}CSVs{Seperator}{filename}";
             File.AppendAllText($"{path}{filename}", File.ReadAllText(temporaryLocation));
 
+            // Reset the headers, because a new scene will likely have differerent headers
             currentHeader = new List<string>();
         }
 
@@ -442,6 +449,7 @@ namespace Export.App.Main
 
             if (!header.SequenceEqual(currentHeader))
             {
+                // Store all new headers in the global header var
                 foreach (string h in header)
                 {
                     if (!currentHeader.Contains(h))
@@ -450,6 +458,7 @@ namespace Export.App.Main
                     }
                 }
 
+                // Add all headers the current block lacks into it
                 foreach (string h in currentHeader)
                 {
                     if (!header.Contains(h))
@@ -459,6 +468,7 @@ namespace Export.App.Main
                 }
             }
 
+            // Order headers for the current block
             for (int i = 0; i < currentHeader.Count; i++)
             {
                 dt.Columns[currentHeader[i]].SetOrdinal(i);
@@ -507,6 +517,7 @@ namespace Export.App.Main
         private static async Task Upload(string fileLocation)
         {
             var bucketName = "sessions.exported";
+            // Regions shouldn't really matter because the zip is uploaded to local minio anyway
             var location = "us-west-1";
             var objectName = $"{SessionId}_session_exported.zip";
             var filePath = fileLocation;
