@@ -42,6 +42,7 @@ namespace Export.App.Main
         private static string currentSceneName;
         private static List<string> currentHeader;
 
+        // TODO: use file-path strings more structured
         public static void Main(string[] args)
         {
             // Stopwatch is used to track total time
@@ -83,7 +84,7 @@ namespace Export.App.Main
             }
 
             // Uncomment to make it so the program stays open, for debugging
-            System.Threading.Thread.Sleep(100000000);
+            // System.Threading.Thread.Sleep(100000000);
         }
 
         private static void PrintFinishTime()
@@ -106,7 +107,7 @@ namespace Export.App.Main
         private static async Task ExportSession()
         {
             currentHeader = new List<string>();
-            currentSceneIndex = -1; // Negative one to play well with ProcessScenes
+            currentSceneIndex = -1; // To play nice with the proccessing code
 
             var workloads = await GetWorkloads();
 
@@ -143,10 +144,14 @@ namespace Export.App.Main
 
                     if (block.Index != currentSceneIndex)
                     {
-                        CopyCsv(block, "sceneName");
-
                         currentSceneIndex = block.Index;
                         currentSceneName = block.Name;
+
+                        if (currentSceneIndex != 0)
+                        {
+                            CopyCsv(block, "sceneName");
+                        }
+
                         ToCsv(block, "sceneName");
                     }
                     else
@@ -183,7 +188,7 @@ namespace Export.App.Main
             var filter = Builders<BsonDocument>.Filter.Empty;
             long docCount = await sessionCollection.CountDocumentsAsync(filter);
 
-            long groupCount = 9;
+            long groupCount = 1800; // 20 seconds worth of frames from a game running @90fps
             int workloadCount = (int)(docCount / groupCount);
             var workloads = new List<long>();
 
@@ -378,26 +383,17 @@ namespace Export.App.Main
 
             using (var csv = new CsvWriter(csvString, GetConfiguration()))
             {
-                using (var dt = JsonHelper.JsonToTable(jsonContent))
+                var dt = JsonHelper.JsonToTable(jsonContent);
+                dt = AlignHeaders(dt);
+
+                foreach (DataRow row in dt.Rows)
                 {
-                    /*
-                    foreach (DataColumn column in dt.Columns)
+                    for (var i = 0; i < dt.Columns.Count; i++)
                     {
-                        csv.WriteField(column.ColumnName);
+                        csv.WriteField(row[i]);
                     }
 
                     csv.NextRecord();
-                    */
-
-                    foreach (DataRow row in dt.Rows)
-                    {
-                        for (var i = 0; i < dt.Columns.Count; i++)
-                        {
-                            csv.WriteField(row[i]);
-                        }
-
-                        csv.NextRecord();
-                    }
                 }
             }
 
@@ -406,10 +402,55 @@ namespace Export.App.Main
 
         private static void CopyCsv(SceneBlock block, string about)
         {
-            // Write old scene headers to final file
-            // Copy temp contents to final file
+            StringWriter csvString = new StringWriter();
+
+            using (var csv = new CsvWriter(csvString, GetConfiguration()))
+            {
+                foreach (string key in currentHeader)
+                {
+                    csv.WriteField(key);
+                }
+
+                csv.NextRecord();
+            }
+
+            string path = $".{Seperator}exported{Seperator}CSVs{Seperator}";
+            string filename = $"{SessionId}.{about}.{block.Name}.{block.Index}.csv";
+            AppendToFile(csvString.ToString(), filename, path);
+
+            string temporaryLocation = $".{Seperator}temporary{Seperator}CSVs{Seperator}{filename}";
+            File.AppendAllText($"{path}{filename}", File.ReadAllText(temporaryLocation));
 
             currentHeader = new List<string>();
+        }
+
+        // TODO: make less magic
+        // TODO: check this works for any data
+        private static DataTable AlignHeaders(DataTable dt)
+        {
+            var header = dt.Columns.Cast<DataColumn>()
+                        .Select(x => x.ColumnName)
+                        .ToList();
+
+            if (header.Count < currentHeader.Count)
+            {
+                foreach (string h in header)
+                {
+                    dt.Columns.Add(h);
+                }
+            }
+
+            for (int i = 0; i < currentHeader.Count; i++)
+            {
+                dt.Columns[currentHeader[i]].SetOrdinal(i);
+            }
+
+            if (header.Count > currentHeader.Count)
+            {
+                currentHeader = header;
+            }
+
+            return dt;
         }
 
         private static void CreateReadme()
