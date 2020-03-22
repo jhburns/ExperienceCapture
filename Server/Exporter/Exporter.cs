@@ -142,21 +142,29 @@ namespace Export.App.Main
                     ToJson(block.Docs, "onlyCaptures", isFirst);
                     isFirst = false;
 
-                    if (block.Index != currentSceneIndex)
+                    if (currentSceneIndex == -1)
                     {
                         currentSceneIndex = block.Index;
                         currentSceneName = block.Name;
 
-                        if (currentSceneIndex != 0)
-                        {
-                            CopyCsv(block, "sceneName");
-                        }
+                        ToCsv(block, "sceneName");
+                    }
+                    else if (block.Index != currentSceneIndex)
+                    {
+                        CopyCsv(
+                            new SceneBlock()
+                            {
+                                Name = currentSceneName,
+                                Index = currentSceneIndex,
+                            }, "sceneName");
+
+                        currentSceneIndex = block.Index;
+                        currentSceneName = block.Name;
 
                         ToCsv(block, "sceneName");
                     }
                     else
                     {
-                        // Write to temp
                         ToCsv(block, "sceneName");
                     }
                 }
@@ -429,25 +437,31 @@ namespace Export.App.Main
         private static DataTable AlignHeaders(DataTable dt)
         {
             var header = dt.Columns.Cast<DataColumn>()
-                        .Select(x => x.ColumnName)
+                        .Select(col => col.ColumnName)
                         .ToList();
 
-            if (header.Count < currentHeader.Count)
+            if (!header.SequenceEqual(currentHeader))
             {
                 foreach (string h in header)
                 {
-                    dt.Columns.Add(h);
+                    if (!currentHeader.Contains(h))
+                    {
+                        currentHeader.Add(h);
+                    }
+                }
+
+                foreach (string h in currentHeader)
+                {
+                    if (!header.Contains(h))
+                    {
+                        dt.Columns.Add(h);
+                    }
                 }
             }
 
             for (int i = 0; i < currentHeader.Count; i++)
             {
                 dt.Columns[currentHeader[i]].SetOrdinal(i);
-            }
-
-            if (header.Count > currentHeader.Count)
-            {
-                currentHeader = header;
             }
 
             return dt;
