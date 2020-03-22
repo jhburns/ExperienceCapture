@@ -17,6 +17,9 @@ class SingleSession extends Component {
 
     const isNotExported = !this.props.sessionData.isExported;
 
+    const about = "Sessions have to be exported, so that they can be converted to flat files. "
+      + (isExportDisabled ? "Ongoing sessions can't be exported." : "");
+
     return (
       <Wrapper>
         <Row>
@@ -45,7 +48,7 @@ class SingleSession extends Component {
                 >
                   Export
                 </button>
-                <About message="Sessions have to be exported first, so that they can be converted to flat files." />
+                <About message={about} />
               </div>
             :
               <Link
