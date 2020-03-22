@@ -150,6 +150,7 @@ namespace Export.App.Main
 
                         ToCsv(block, "sceneName");
                     }
+
                     // If at a new scene > 0, then copy the previous
                     else if (block.Index != currentSceneIndex)
                     {
@@ -517,6 +518,7 @@ namespace Export.App.Main
         private static async Task Upload(string fileLocation)
         {
             var bucketName = "sessions.exported";
+            
             // Regions shouldn't really matter because the zip is uploaded to local minio anyway
             var location = "us-west-1";
             var objectName = $"{SessionId}_session_exported.zip";
