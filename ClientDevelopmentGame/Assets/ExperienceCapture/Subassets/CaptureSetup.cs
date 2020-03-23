@@ -121,8 +121,9 @@ public class CaptureSetup : MonoBehaviour
 
         // Content of the body is ignored
         string emptyBody = new {}.ToString();
-
-        StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/users/claims?bson=true", emptyBody,
+        url = urlInput.text.Trim('/');
+ 
+        StartCoroutine(HTTPHelpers.post(url + "/api/v1/users/claims?bson=true", emptyBody,
             (data) => {
                 openingInfo.gameObject.SetActive(true);
                 connectionInfo.gameObject.SetActive(false);
@@ -163,16 +164,16 @@ public class CaptureSetup : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         string claimSanitized = UnityWebRequest.EscapeURL(responce.claimToken);
-        string url = urlInput.text + "/signInFor?claimToken=" + claimSanitized;
+        string openUrl = url + "/signInFor?claimToken=" + claimSanitized;
 
-        Application.OpenURL(url);
+        Application.OpenURL(openUrl);
 
         pollClaim(responce.claimToken);
     }
 
     private void pollClaim(string claimToken)
     {
-        StartCoroutine(HTTPHelpers.pollGet(urlInput.text + "/api/v1/users/claims?bson=true", claimToken, 
+        StartCoroutine(HTTPHelpers.pollGet(url + "/api/v1/users/claims?bson=true", claimToken, 
             (data) => {
                 try
                 {
@@ -198,7 +199,7 @@ public class CaptureSetup : MonoBehaviour
     {
         byte[] emptyBody = Serial.toBSON(new {});
 
-        StartCoroutine(HTTPHelpers.post(urlInput.text + "/api/v1/sessions?bson=true", emptyBody, store.accessToken,
+        StartCoroutine(HTTPHelpers.post(url + "/api/v1/sessions?bson=true", emptyBody, store.accessToken,
             (data) => {
                 sessionInfo.gameObject.SetActive(true);
                 sessionBackground.gameObject.SetActive(true);
@@ -213,7 +214,6 @@ public class CaptureSetup : MonoBehaviour
                     SessionData responce = Serial.fromBSON<SessionData>(memStream);
 
                     sessionInfo.text = sessionInfoSave + responce.id;
-                    url = urlInput.text;
                     sessionID = responce.id;
 
                     start.gameObject.SetActive(true);
