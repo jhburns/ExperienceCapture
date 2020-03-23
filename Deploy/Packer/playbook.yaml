@@ -12,6 +12,9 @@
 
   # TODO: make faster/working in parallel
   # Currently takes ~13 minutes for a build
+
+  # TODO: use less direct shell scripting
+  # See: https://docs.ansible.com/ansible/latest/modules/docker_stack_module.html
   tasks:
 
     # Needed because the Ubuntu AMI does not come with python2
