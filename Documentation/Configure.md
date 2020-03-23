@@ -5,9 +5,10 @@ Options are in order.
 
 ## Capture Rate 
 
-Basically how often the `GetCapture()` function is called, respecting frame rate.
+The rate is how often the `GetCapture()` function is called, with respect to frame rate.
 A value of 1 means `GetCapture()` is called every frame. A value of 2 means `GetCapture()`
-is called every other frame.
+is called every other frame. Two games with different framerates and the same value for this
+will result in one capturing more often than the other.
 
 ## Scene To Load
 
@@ -59,9 +60,9 @@ Player:positionX
 
 This entry would ignore every key except `positionX` on the `Player` game object.
 
-# API
+# Configuration API
 
-The exporter exposes an API for additional configuring, but be warned it is experimental.
+The capturer exposes an API for additional configuration, but be warned it is experimental.
 
 ## Cleanup Key
 
