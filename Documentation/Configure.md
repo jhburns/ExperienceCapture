@@ -7,7 +7,7 @@ Options are in order.
 
 The rate is how often the `GetCapture()` function is called, with respect to frame rate.
 A value of 1 means `GetCapture()` is called every frame. A value of 2 means `GetCapture()`
-is called every other frame. Two games with different framerates and the same value for this
+is called every other frame. Two games with different frame rates and the same value for this
 will result in one capturing more often than the other.
 
 ## Scene To Load

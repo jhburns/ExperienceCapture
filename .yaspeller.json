@@ -103,8 +103,9 @@
     "md",
     "Vector2",
     "FHEB",
-	"SetupEC",
-	"CleanupEC"
+	  "SetupEC",
+    "CleanupEC",
+    "capturer"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
