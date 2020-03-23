@@ -73,7 +73,6 @@ namespace Carter.App.Route.Export
                     HostConfig = new HostConfig()
                     {
                         Memory = 500000000, // ~0.5 Gigabytes
-                        CPUPercent = 10, // 10%
                     },
                 });
 
