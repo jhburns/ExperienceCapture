@@ -43,6 +43,7 @@ namespace Carter.App.Lib.Network
         }
     }
 
+    // TODO: Refactor to use extension methods instead
     public class BsonResponse
     {
         public static async void FromDoc(HttpResponse response, BsonDocument doc)

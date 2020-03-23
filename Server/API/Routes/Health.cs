@@ -5,6 +5,8 @@ namespace Carter.App.Route.Health
 
     public class Health : CarterModule
     {
+
+        // TODO refactor to use BasicResponce
         public Health()
         {
             this.Get("/", async (req, res) =>
