@@ -5,7 +5,6 @@ namespace Carter.App.Route.Health
 
     public class Health : CarterModule
     {
-
         // TODO refactor to use BasicResponce
         public Health()
         {
