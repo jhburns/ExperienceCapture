@@ -43,7 +43,6 @@ namespace Carter.App.Hosting
             MinioClient os = new MinioClient("os:9000", minioUsername, minioPassword);
             services.AddSingleton<MinioClient>(os);
 
-            // TODO: Check if this work on Docker for Windows
             DockerClient docker = new DockerClientConfiguration(
                 new Uri("unix:///var/run/docker.sock"))
                 .CreateClient();
