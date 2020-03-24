@@ -34,16 +34,16 @@ Briefly, the main strength of this game analytics platform is to capture all dat
 
 ## Setup Games
 
-All of the games only need Unity [2018.2.11f](https://unity3d.com/unity/whatsnew/unity-2018.2.11), which can be installed through Unity Hub.
+All of the games need Unity version [2018.2.11f](https://unity3d.com/unity/whatsnew/unity-2018.2.11), which can be installed through Unity Hub.
 
 ## Other Setup
 
-The other services (server, deploy, ...) require the following installed:
+The other parts (Server, Deploy, ...) require the following installed:
 
 - [Docker](https://docs.docker.com/install/), Linux version only please.
 - [Docker Compose](https://docs.docker.com/compose/install/) which may come with docker.
     
-For deploys, having various cloud services is needed, [see here](Documentation/Cloud-Deploy.md). See the README in each folder and sub-folder for more information on each service.
+To deploys, having various cloud services is needed, [see here](Documentation/Cloud-Deploy.md). Additionally, see the README in each folder and sub-folder for more information on each service.
 
 ## License
 
