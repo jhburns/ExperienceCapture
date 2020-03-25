@@ -13,24 +13,24 @@
 
 # Experience Capture
 
-This project is a custom video game analytics platform that is designed to support research needs. The four main parts are:
+This is a video game analytics platform oriented towards capturing as much data from a play-session as possible. Unlike traditional data analytics solutions, Experience Capture lacks the concept of events and instead gathers data from every frame. The benefits of avoiding events are making this easier to integrate a game, higher data output, and analytics can be done after a play-session using whatever language is preferred. For more info see the [documentation](Documentation/README.md).
+
+The major subparts of this project are:
   - [Unity asset package](https://docs.unity3d.com/Manual/AssetPackages.html) client that integrates into any Unity game.
   - Back-end server that receives, stores, and processes captured data from play-sessions.
-  - Front-end client that coordinates authentication and allows users to manage data.
-  - Deploy system that allows repeatable and automated deploys of the service to [Amazon Web Services (AWS)](https://aws.amazon.com/).
+  - Front-end client for the server that authenticates and allows users to manage play session data.
+  - Infrastructure setup that builds the server and deploys it to [Amazon Web Services (AWS)](https://aws.amazon.com/).
 
-Briefly, the main strength of this game analytics platform is to capture all data each frame, instead of using an event-based model. As a result, it is both easier to capture large amounts of data, hence the name, and perform arbitrary analytics work after a play-session. More on this in the [documentation](Documentation/README.md).
+## Folder Breakdown
 
-## Folders
-
-- `DemoGame/` is an demo game showing an example of how to use the client.
-- `ExampleAnalyzers/` is a bunch of examples of how to analyze the exported data.
+- `DemoGame/` is a basic 'test your reaction time' game showing off the technology.
+- `ExampleAnalyzers/` is examples in different languages of how to analyze the exported data.
 - `ClientDevelopmentGame/` is the game used to develop the client.
 - `Server/` is a collection of back-end services for collection and processing data.
-- `Deploy/` is an automated system to deploy the server to AWS in a repeatable way.
-- `SetupTestGame/` is a game for testing if it is possible to integrate the client asset into a new game.
-- `Documentation/` has most of the documentation of course.
-- `.github/` Contains the workflow files, defining [Github Actions](https://github.com/features/actions).
+- `Deploy/` is an automated system to build and deploy the server to AWS.
+- `SetupTestGame/` is a game used for testing the Unity client integration.
+- `Documentation/` is documentation.
+- `.github/` Contains the workflow files, for CI.
 
 ## Setup Games
 
@@ -38,12 +38,12 @@ All of the games need Unity version [2018.2.11f](https://unity3d.com/unity/whats
 
 ## Other Setup
 
-The other parts (Server, Deploy, ...) require the following installed:
+The other parts (`Server/`, `Deploy/`) require the following installed:
 
-- [Docker](https://docs.docker.com/install/), Linux version only please.
-- [Docker Compose](https://docs.docker.com/compose/install/) which may come with docker.
+- [Docker](https://docs.docker.com/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
     
-To deploys, having various cloud services is needed, [see here](Documentation/Cloud-Deploy.md). Additionally, see the README in each folder and sub-folder for more information on each service.
+In order to deploy having various cloud services is needed, [see here](Documentation/Cloud-Deploy.md).
 
 ## License
 
