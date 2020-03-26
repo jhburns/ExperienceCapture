@@ -2,4 +2,4 @@
 
 # Pulumi
 
-Uses [Pulumi](https://www.pulumi.com/docs/intro/languages/dotnet/) to manage cloud resources.
+Uses [Pulumi](https://www.pulumi.com/docs/intro/languages/dotnet/) to manage cloud resources. That means creating, updating, and destroying resources like Virtual Machines, Security Groups, and more.

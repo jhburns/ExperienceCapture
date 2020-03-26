@@ -3,4 +3,4 @@
 # Packer
 
 Builds images with Packer (see relevant [docs](https://www.packer.io/intro/getting-started/build-image.html)) and uses [Ansible](https://www.packer.io/docs/provisioners/ansible.html)
-as a provisioner, meaning to configure the [EC2](https://aws.amazon.com/ec2/) virtual machine.
+as a provisioner, which means it configures the [EC2](https://aws.amazon.com/ec2/) virtual machine.

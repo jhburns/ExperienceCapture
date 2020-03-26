@@ -105,7 +105,9 @@
     "FHEB",
 	  "SetupEC",
     "CleanupEC",
-    "capturer"
+    "capturer",
+    "subparts",
+    "endpoints"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
