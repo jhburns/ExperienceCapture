@@ -106,7 +106,8 @@
 	  "SetupEC",
     "CleanupEC",
     "capturer",
-    "subparts"
+    "subparts",
+    "endpoints"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
