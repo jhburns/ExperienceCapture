@@ -39,10 +39,11 @@ All of the games need Unity version [2018.2.11f](https://unity3d.com/unity/whats
 ## Other Setup
 
 The other parts (`Server/`, `Deploy/`) require the following installed:
-
+[comment]: <> (/* yaspeller ignore:start */)
 - [Docker](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
-    
+[comment]: <> (/* yaspeller ignore:end */)
+
 In order to deploy having various cloud services is needed, [see here](Documentation/Cloud-Deploy.md).
 
 ## License
