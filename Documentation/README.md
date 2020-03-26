@@ -32,6 +32,8 @@ a partial redeploy, so [follow this guide](Partial-Deploy.md).
 
 For someone who is setting up the cloud service for the first time, [follow this one instead.](Full-Deploy.md)
 
+Additionally see [the architecture overview](Architecture.md) for more information about how everything interacts. 
+
 ## Contributing
 
 [Information on contributing.](Contributing.md)
