@@ -33,10 +33,10 @@ In order to change deploy targets (`staging` or `production`) follow these steps
 - Update `aws_host_ssh_address` if you want ssh access.
 - Rebuild and redeploy using the above commands.
 
-### Staging vs. Production Difference
+### Staging versus Production
 
 It is important for testing to keep the staging as close to production as possible, but they have the following differences:
 
 - They use different [Elastic IP Addresses](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html) due to having different domains.
-- The `staging` version has significantly less storage allocated for it than `production`.
+- The `staging` version has significantly less storage space allocated for it than `production`.
 - They back-up MongoDB to different folders in the S3 bucket.
