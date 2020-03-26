@@ -11,4 +11,11 @@ Written in .Net Core (C#) and has the following dependencies:
 - [FluentValidation](https://fluentvalidation.net/)
 - [Google APIs client](https://developers.google.com/api-client-library/dotnet)
 
-This is the bulk of the logic in the application.
+This is the bulk of the logic in the application. Also, this will start the exporter from an api call.
+
+## Folder Breakdown
+
+- `LibraryScripts/` a collection of common logic.
+- `Routes/` the endpoints of the API, which is comprised of logic to be preformed based on the on the calling path.
+- `UsageHelpers/` an [Insomnia](https://insomnia.rest/) file that makes it easy to develope the API.
+- `Validators/` bindings for data received for each applicable route.
