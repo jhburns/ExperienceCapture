@@ -16,5 +16,5 @@ Outline of how data flows through the server, some notes:
 ![Deploying diagram](images/deploying.png)
 
 Outline of the deployment process, some notes:
-- EC1 and EBS refer to [AWS Services.](https://aws.amazon.com/)
+- EC2 and EBS refer to [AWS Services.](https://aws.amazon.com/)
 - Storage is only ever created, never destroyed, which allows it to persist between deploys.

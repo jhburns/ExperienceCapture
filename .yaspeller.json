@@ -107,7 +107,9 @@
     "CleanupEC",
     "capturer",
     "subparts",
-    "endpoints"
+    "endpoints",
+    "Stateful",
+    "EBS"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
