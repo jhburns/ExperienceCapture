@@ -84,7 +84,6 @@ services:
       - db
     environment:
       aws_deploy_target: development
-      aws_backup_bucket_name: experiencecapture-ec-db-backups
     env_file:
       - .env
     networks:
