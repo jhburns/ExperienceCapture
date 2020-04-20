@@ -18,3 +18,13 @@ Outline of how data flows through the server, some notes:
 Outline of the deployment process, some notes:
 - EC2 and EBS refer to [AWS Services.](https://aws.amazon.com/)
 - Storage is only ever created, never destroyed, which allows it to persist between deploys.
+
+## Infrastructure
+
+
+![Infrastructure diagram](images/infrastructure.png)
+
+Outline of what happens inside of the server, besides dataflow, some notes:
+- The garbage collector's main duty is to cleanup the exporter, but it deletes everything including itself that is stopped.
+- Continuous means a server shouldn't stop under normal circumstances, not that it never will.
+- AWS S# refers to [this service](https://aws.amazon.com/s3/).
