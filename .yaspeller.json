@@ -109,7 +109,8 @@
     "subparts",
     "endpoints",
     "Stateful",
-    "EBS"
+    "EBS",
+    "namespaced"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true

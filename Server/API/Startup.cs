@@ -18,7 +18,7 @@ namespace Carter.App.Hosting
     {
         private readonly AppConfiguration appconfig;
 
-        // TODO: CHeck/fix config so OpenAPI is customizable
+        // TODO: Check/fix config so OpenAPI is customizable
         public Startup(IConfiguration config)
         {
             this.appconfig = new AppConfiguration();
