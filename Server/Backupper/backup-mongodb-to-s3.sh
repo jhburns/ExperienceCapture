@@ -30,6 +30,6 @@ EXPIRE=$(date --date='30 days' --iso-8601=seconds)
     | aws s3 cp --storage-class="STANDARD_IA" - "$S3PATH" --expires $EXPIRE
 
 # Also copy latest dump to permanent storage
-S3_PERMANENET_PATH="s3://${aws_backup_bucket_name}/${aws_deploy_target}/latest/${FILENAME}"
+S3_PERMANENET_PATH="s3://${aws_backup_bucket_name}/${aws_deploy_target}/latest/latest-dump.gz"
 /usr/bin/mongodump --archive --gzip -d $DB -h $HOST \
     | aws s3 cp --storage-class="STANDARD_IA" - "$S3_PERMANENET_PATH"

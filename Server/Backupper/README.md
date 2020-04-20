@@ -4,6 +4,15 @@ This is just two scripts, one for backup and one for restore. Uses MongoDB and A
 
 `docker-compose run bu` will backup the MongoDB instance to S3. The backup gets dumped into the same bucket for development, staging, and production, but different folders for each.
 
+## Policy
+
+The current backup policy is as follows:
+- Backup at 2AM PST everyday, to avoid impacting service
+- Delete backups after about a month (30 days) to reduce costs.
+- The latest backup shouldn't expire.
+
+## Restore
+
 [comment]: <> (TODO: get this working/have examples in production)
 Run the restore script with:
 ```bash
