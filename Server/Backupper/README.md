@@ -7,7 +7,7 @@ This is just two scripts, one for backup and one for restore. Uses MongoDB and A
 ## Policy
 
 The current backup policy is as follows:
-- Backup at 2AM PST everyday, to avoid impacting service
+- Backup at 2 AM Pacific Standard Time everyday, to avoid impacting service
 - Delete backups after about a month (30 days) to reduce costs.
 - The latest backup shouldn't expire.
 

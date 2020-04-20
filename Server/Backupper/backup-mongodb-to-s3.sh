@@ -9,7 +9,7 @@
 set -e
 HOST=db
 DB=ec
-TIME=$(/bin/date --utc +%FT%TZ) # ISO8601 UTC timestamp
+TIME=$(/bin/date --utc --iso-8601=seconds) # ISO8601 UTC timestamp
 # shellcheck disable=SC2154
 FILENAME="${TIME}.gz"
 
@@ -22,12 +22,12 @@ export AWS_ACCESS_KEY_ID=$aws_backupper_access_id \
 S3PATH="s3://${aws_backup_bucket_name}/${aws_deploy_target}/${FILENAME}"
 
 # Set to expire 30 days in the future
-EXPIRE=$(date --date='30 days' --iso-8601=seconds)
+EXPIRE=$(/bin/date --date='30 days' --utc --iso-8601=seconds)
 
 # Storage Class is Infrequently Accessed, multiple zones
 # See: https://docs.aws.amazon.com/AmazonS3/latest/dev/storage-class-intro.html
 /usr/bin/mongodump --archive --gzip -d $DB -h $HOST \
-    | aws s3 cp --storage-class="STANDARD_IA" - "$S3PATH" --expires $EXPIRE
+    | aws s3 cp --storage-class="STANDARD_IA" - "$S3PATH" --expires "$EXPIRE"
 
 # Also copy latest dump to permanent storage
 S3_PERMANENET_PATH="s3://${aws_backup_bucket_name}/${aws_deploy_target}/latest/latest-dump.gz"
