@@ -324,33 +324,33 @@ namespace Carter.App.Route.Users
     public class PersonSchema
     {
         #pragma warning disable SA1516, SA1300
-        public string Fullname { get; set; }
-        public string Firstname { get; set; }
-        public string Lastname { get; set; }
-        public string Email { get; set; }
-        public BsonDateTime CreatedAt { get; set; }
+        public string fullname { get; set; }
+        public string firstname { get; set; }
+        public string lastname { get; set; }
+        public string email { get; set; }
+        public BsonDateTime createdAt { get; set; }
         #pragma warning restore SA151, SA1300
     }
 
     public class AccessTokenSchema
     {
         #pragma warning disable SA1516, SA1300
-        public string NewHash { get; set; }
-        public BsonObjectId User { get; set; }
-        public int ExpirationSeconds { get; set; }
-        public BsonDateTime CreatedAt { get; set; }
+        public string newHash { get; set; }
+        public BsonObjectId user { get; set; }
+        public int expirationSeconds { get; set; }
+        public BsonDateTime createdAt { get; set; }
         #pragma warning restore SA151, SA1300
     }
 
     public class ClaimTokenSchema
     {
         #pragma warning disable SA1516, SA1300
-        public string Hash { get; set; }
-        public string AccessToken { get; set; }
-        public int ExpirationSeconds { get; set; }
-        public bool IsPending { get; set; }
-        public bool IsExisting { get; set; }
-        public BsonDateTime CreatedAt { get; set; }
+        public string hash { get; set; }
+        public string accessToken { get; set; }
+        public int expirationSeconds { get; set; }
+        public bool isPending { get; set; }
+        public bool isExisting { get; set; }
+        public BsonDateTime createdAt { get; set; }
         #pragma warning restore SA151, SA1300
     }
 }

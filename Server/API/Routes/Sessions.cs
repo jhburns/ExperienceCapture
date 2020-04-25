@@ -312,15 +312,15 @@ namespace Carter.App.Route.Sessions
     public class SessionSchema
     {
         #pragma warning disable SA1516, SA1300
-        public bool IsOpen { get; set; }
-        public bool IsExported { get; set; }
-        public bool IsPending { get; set; }
+        public bool isOpen { get; set; }
+        public bool isExported { get; set; }
+        public bool isPending { get; set; }
 
         // Copying user data instead of referencing so it can never change with the session
         // Also so that it is easy to include when exporting
-        public PersonSchema User { get; set; }
-        public BsonDateTime CreatedAt { get; set; }
-        public List<string> Tags { get; set; }
+        public PersonSchema user { get; set; }
+        public BsonDateTime createdAt { get; set; }
+        public List<string> tags { get; set; }
         #pragma warning restore SA151, SA1300
     }
 }
