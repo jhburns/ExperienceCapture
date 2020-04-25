@@ -23,8 +23,6 @@ namespace Carter.App.Route.Users
     using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
 
-    using Carter.App.Lib.DebugExtra;
-
     public class Users : CarterModule
     {
         private static readonly string PasswordHash = Environment.GetEnvironmentVariable("admin_password_hash")
