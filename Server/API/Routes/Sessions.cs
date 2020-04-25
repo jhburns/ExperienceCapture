@@ -1,6 +1,7 @@
 namespace Carter.App.Route.Sessions
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
 
@@ -12,6 +13,7 @@ namespace Carter.App.Route.Sessions
     using Carter.App.Lib.Network;
 
     using Carter.App.Route.PreSecurity;
+    using Carter.App.Route.Users;
 
     using Carter.Request;
 
@@ -305,5 +307,20 @@ namespace Carter.App.Route.Sessions
                 BasicResponce.Send(res);
             });
         }
+    }
+
+    public class SessionSchema
+    {
+        #pragma warning disable SA1516, SA1300
+        public bool IsOpen { get; set; }
+        public bool IsExported { get; set; }
+        public bool IsPending { get; set; }
+
+        // Copying user data instead of referencing so it can never change with the session
+        // Also so that it is easy to include when exporting
+        public PersonSchema User { get; set; }
+        public BsonDateTime CreatedAt { get; set; }
+        public List<string> Tags { get; set; }
+        #pragma warning restore SA151, SA1300
     }
 }
