@@ -221,7 +221,6 @@ namespace Carter.App.Route.Sessions
                     || !document["frameInfo"].AsBsonDocument.Contains("realtimeSinceStartup")
                     || document["frameInfo"]["realtimeSinceStartup"].BsonType != BsonType.Double)
                 {
-                    DebugExtra.PrintPls((!document.Contains("frameInfo.realtimeSinceStartup")).ToString());
                     res.StatusCode = 400;
                     return;
                 }
