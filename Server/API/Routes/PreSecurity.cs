@@ -16,11 +16,11 @@ namespace Carter.App.Route.PreSecurity
 
     public static class PreSecurity
     {
-        public static Func<HttpRequest, HttpResponse, Task<bool>> GetSecurityCheck(IMongoDatabase db)
-        {
-            return async (req, res) =>
+        public static Func<HttpContext, Task<bool>> GetSecurityCheck(IMongoDatabase db)
+        {   
+            Func<HttpRequest, HttpResponse, Task<bool>> check = async (req, res) =>
             {
-                var accessTokens = db.GetCollection<BsonDocument>(AccessTokenSchema.CollectionName);
+                var accessTokens = db.GetCollection<AccessTokenSchema>(AccessTokenSchema.CollectionName);
 
                 string token = req.Cookies["ExperienceCapture-Access-Token"];
                 if (token == null)
@@ -29,15 +29,24 @@ namespace Carter.App.Route.PreSecurity
                     return false;
                 }
 
-                var accessDoc = await accessTokens.FindEqAsync("hash", PasswordHasher.Hash(token));
+                var accessTokenDoc = await (await accessTokens.FindAsync(
+                    Builders<AccessTokenSchema>
+                        .Filter
+                        .Where(a => a.Hash == PasswordHasher.Hash(token))))
+                        .FirstOrDefaultAsync();
 
-                if (accessDoc == null || accessDoc["createdAt"].IsAfter(accessDoc["expirationSeconds"]))
+                if (accessTokenDoc == null 
+                    || accessTokenDoc.CreatedAt.IsAfter(accessTokenDoc.ExpirationSeconds))
                 {
                     res.StatusCode = 401;
                     return false;
                 }
 
                 return true;
+            };
+
+            return async (ctx) => {
+                return await check(ctx.Request, ctx.Response);
             };
         }
     }
