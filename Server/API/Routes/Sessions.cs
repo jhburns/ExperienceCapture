@@ -21,8 +21,6 @@ namespace Carter.App.Route.Sessions
     using MongoDB.Bson.Serialization;
     using MongoDB.Driver;
 
-    using Carter.App.Lib.DebugExtra;
-
     public class Sessions : CarterModule
     {
         public Sessions(IMongoDatabase db)
