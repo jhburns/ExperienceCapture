@@ -96,7 +96,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var newAccessRequest = await req.BindAndValidate<AccessTokenRequest>();
+                var newAccessRequest = await req.BindAndValidate<AccessToken>();
                 if (!newAccessRequest.ValidationResult.IsValid)
                 {
                     res.StatusCode = 400;
@@ -254,7 +254,7 @@ namespace Carter.App.Route.Users
                     .Set("isExisting", false)
                     #pragma warning disable SA1515
                     // Removes the access token from the database
-                    // Important to increase secuirty
+                    // Important to increase security
                     #pragma warning restore SA1515
                     .Unset("accessToken");
 
@@ -319,5 +319,38 @@ namespace Carter.App.Route.Users
                 BsonResponse.FromDoc(res, responceDoc);
             });
         }
+    }
+
+    public class PersonSchema
+    {
+        #pragma warning disable SA1516, SA1300
+        public string fullname { get; set; }
+        public string firstname { get; set; }
+        public string lastname { get; set; }
+        public string email { get; set; }
+        public BsonDateTime createdAt { get; set; }
+        #pragma warning restore SA151, SA1300
+    }
+
+    public class AccessTokenSchema
+    {
+        #pragma warning disable SA1516, SA1300
+        public string newHash { get; set; }
+        public BsonObjectId user { get; set; }
+        public int expirationSeconds { get; set; }
+        public BsonDateTime createdAt { get; set; }
+        #pragma warning restore SA151, SA1300
+    }
+
+    public class ClaimTokenSchema
+    {
+        #pragma warning disable SA1516, SA1300
+        public string hash { get; set; }
+        public string accessToken { get; set; }
+        public int expirationSeconds { get; set; }
+        public bool isPending { get; set; }
+        public bool isExisting { get; set; }
+        public BsonDateTime createdAt { get; set; }
+        #pragma warning restore SA151, SA1300
     }
 }

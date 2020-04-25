@@ -2,7 +2,7 @@ namespace Carter.App.Validation.AccessTokenRequest
 {
     using FluentValidation;
 
-    public class AccessTokenRequest
+    public class AccessToken
     {
         #pragma warning disable SA1516, SA1300
         public string idToken { get; set; }
@@ -10,9 +10,9 @@ namespace Carter.App.Validation.AccessTokenRequest
         #pragma warning restore SA151, SA1300
     }
 
-    public class AccessTokenRequestValidator : AbstractValidator<AccessTokenRequest>
+    public class AccessTokenValidator : AbstractValidator<AccessToken>
     {
-        public AccessTokenRequestValidator()
+        public AccessTokenValidator()
         {
             this.RuleFor(x => x.idToken).NotEmpty();
         }

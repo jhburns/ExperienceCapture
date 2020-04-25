@@ -52,4 +52,13 @@ namespace Carter.App.Route.NewSignUp
             });
         }
     }
+
+    public class SignUpTokenSchema
+    {
+        #pragma warning disable SA1516, SA1300
+        public string hash { get; set; }
+        public int expirationSeconds { get; set; }
+        public BsonDateTime createdAt { get; set; }
+        #pragma warning restore SA151, SA1300
+    }
 }

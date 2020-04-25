@@ -4,6 +4,7 @@ namespace Carter.App.Lib.DebugExtra
 
     public static class DebugExtra
     {
+        // TODO: replace this with actual logging, using DI
         public static void PrintPls(string output)
         {
             Console.WriteLine(output);

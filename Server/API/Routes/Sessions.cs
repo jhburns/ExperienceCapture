@@ -1,6 +1,7 @@
 namespace Carter.App.Route.Sessions
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
 
@@ -12,6 +13,7 @@ namespace Carter.App.Route.Sessions
     using Carter.App.Lib.Network;
 
     using Carter.App.Route.PreSecurity;
+    using Carter.App.Route.Users;
 
     using Carter.Request;
 
@@ -214,10 +216,18 @@ namespace Carter.App.Route.Sessions
                     document = BsonDocument.Parse(json);
                 }
 
+                if (!document.Contains("frameInfo")
+                    || document["frameInfo"].BsonType != BsonType.Document
+                    || !document["frameInfo"].AsBsonDocument.Contains("realtimeSinceStartup")
+                    || document["frameInfo"]["realtimeSinceStartup"].BsonType != BsonType.Double)
+                {
+                    res.StatusCode = 400;
+                    return;
+                }
+
                 var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
 
                 // These calls not awaited for max performance
-                // Error propagation is ignored
                 _ = sessionCollection.InsertOneAsync(document);
 
                 // This lastCaptureAt is undefined on the session document until the first call of this endpoint
@@ -305,5 +315,20 @@ namespace Carter.App.Route.Sessions
                 BasicResponce.Send(res);
             });
         }
+    }
+
+    public class SessionSchema
+    {
+        #pragma warning disable SA1516, SA1300
+        public bool isOpen { get; set; }
+        public bool isExported { get; set; }
+        public bool isPending { get; set; }
+
+        // Copying user data instead of referencing so it can never change with the session
+        // Also so that it is easy to include when exporting
+        public PersonSchema user { get; set; }
+        public BsonDateTime createdAt { get; set; }
+        public List<string> tags { get; set; }
+        #pragma warning restore SA151, SA1300
     }
 }
