@@ -16,16 +16,16 @@ namespace Carter.App.Route.PreSecurity
 
     public static class PreSecurity
     {
-        public static Func<HttpContext, Task<bool>> GetSecurityCheck(IMongoDatabase db)
+        public static Func<HttpRequest, HttpResponse, Task<bool>> GetSecurityCheck(IMongoDatabase db)
         {
-            return async (ctx) =>
+            return async (req, res) =>
             {
                 var accessTokens = db.GetCollection<BsonDocument>(AccessTokenSchema.CollectionName);
 
-                string token = ctx.Request.Cookies["ExperienceCapture-Access-Token"];
+                string token = req.Cookies["ExperienceCapture-Access-Token"];
                 if (token == null)
                 {
-                    ctx.Response.StatusCode = 400;
+                    res.StatusCode = 400;
                     return false;
                 }
 
@@ -33,7 +33,7 @@ namespace Carter.App.Route.PreSecurity
 
                 if (accessDoc == null || accessDoc["createdAt"].IsAfter(accessDoc["expirationSeconds"]))
                 {
-                    ctx.Response.StatusCode = 401;
+                    res.StatusCode = 401;
                     return false;
                 }
 
