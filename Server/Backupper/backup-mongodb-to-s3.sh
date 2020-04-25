@@ -22,7 +22,7 @@ export AWS_ACCESS_KEY_ID=$aws_backupper_access_id \
 S3PATH="s3://${aws_backup_bucket_name}/${aws_deploy_target}/${FILENAME}"
 
 # Set to expire 30 days in the future
-EXPIRE=$(/bin/date --date='30 days' --utc --iso-8601=seconds)
+EXPIRE=$(/bin/date --date='60 days' --utc --iso-8601=seconds)
 
 # Storage Class is Infrequently Accessed, multiple zones
 # See: https://docs.aws.amazon.com/AmazonS3/latest/dev/storage-class-intro.html
