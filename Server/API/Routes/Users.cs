@@ -49,12 +49,17 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var signUpTokens = db.GetCollection<BsonDocument>(SignUpTokenSchema.CollectionName);
+                var signUpTokens = db.GetCollection<SignUpTokenSchema>(SignUpTokenSchema.CollectionName);
 
-                var signUpDoc = await signUpTokens.FindEqAsync("hash", PasswordHasher.Hash(newPerson.Data.signUpToken));
+                var signUpDoc = await signUpTokens
+                    .Find(
+                        Builders<SignUpTokenSchema>
+                        .Filter
+                        .Where(t => t.Hash == PasswordHasher.Hash(newPerson.Data.signUpToken)))
+                        .FirstOrDefaultAsync();
 
                 // 401 returned twice which may make interpretting the code harder for a client
-                if (signUpDoc == null || signUpDoc["createdAt"].IsAfter(signUpDoc["expirationSeconds"]))
+                if (signUpDoc == null || signUpDoc.CreatedAt.IsAfter(signUpDoc.ExpirationSeconds))
                 {
                     res.StatusCode = 401;
                     return;
@@ -94,10 +99,14 @@ namespace Carter.App.Route.Users
             // TODO: refactor this section
             this.Post("/{id}/tokens/", async (req, res) =>
             {
-                var users = db.GetCollection<BsonDocument>(PersonSchema.CollectionName);
+                var users = db.GetCollection<PersonSchema>(PersonSchema.CollectionName);
 
                 string userID = req.RouteValues.As<string>("id");
-                var userDoc = await users.FindEqAsync("id", userID);
+                var userDoc = await users.Find(
+                    Builders<PersonSchema>
+                        .Filter
+                        .Where(p => p.Id == userID))
+                        .FirstOrDefaultAsync();
 
                 if (userDoc == null)
                 {
@@ -127,47 +136,46 @@ namespace Carter.App.Route.Users
 
                 string newToken = Generate.GetRandomToken();
                 string newHash = PasswordHasher.Hash(newToken);
-                var accessTokens = db.GetCollection<BsonDocument>(AccessTokenSchema.CollectionName);
+                var accessTokens = db.GetCollection<AccessTokenSchema>(AccessTokenSchema.CollectionName);
 
-                var tokenObject = new
+                var tokenObject = new AccessTokenSchema
                 {
-                    hash = newHash,
-                    user = userDoc["_id"],
-                    expirationSeconds = 259200, // Three days
-                    createdAt = new BsonDateTime(DateTime.Now),
+                    InternalId = ObjectId.GenerateNewId(),
+                    Hash = newHash,
+                    User = userDoc.InternalId,
+                    ExpirationSeconds = 259200, // Three days
+                    CreatedAt = new BsonDateTime(DateTime.Now),
                 };
 
-                BsonDocument tokenDoc = tokenObject.ToBsonDocument();
-
-                await accessTokens.InsertOneAsync(tokenDoc);
+                await accessTokens.InsertOneAsync(tokenObject);
 
                 if (newAccessRequest.Data.claimToken != null)
                 {
-                    var claimTokens = db.GetCollection<BsonDocument>(ClaimTokenSchema.CollectionName);
+                    var claimTokens = db.GetCollection<ClaimTokenSchema>(ClaimTokenSchema.CollectionName);
 
-                    var filterClaims = Builders<BsonDocument>.Filter
-                        .Eq("hash", PasswordHasher.Hash(newAccessRequest.Data.claimToken));
+                    var filterClaims = Builders<ClaimTokenSchema>.Filter
+                        .Where(c => c.Hash == PasswordHasher.Hash(newAccessRequest.Data.claimToken));
 
                     var claimDoc = await claimTokens.Find(filterClaims).FirstOrDefaultAsync();
 
                     // 401 returned twice, which may be hard for the client to interpret
-                    if (claimDoc == null || claimDoc["createdAt"].IsAfter(claimDoc["expirationSeconds"]))
+                    if (claimDoc == null || claimDoc.CreatedAt.IsAfter(claimDoc.ExpirationSeconds))
                     {
                         res.StatusCode = 401;
                         return;
                     }
 
                     // Don't allow overwriting an access token
-                    if (claimDoc["isPending"].AsBoolean && claimDoc["isExisting"].AsBoolean)
+                    if (claimDoc.IsPending && claimDoc.IsExisting)
                     {
-                        var update = Builders<BsonDocument>.Update
-                            .Set("isPending", false)
-                            .Set("access", tokenDoc["_id"])
+                        var update = Builders<ClaimTokenSchema>.Update
+                            .Set(c => c.IsPending, false)
+                            .Set(c => c.Access, tokenObject.InternalId)
                             #pragma warning disable SA1515
                             // Unfortunately claim access tokens have to be saved to the database
                             // So that state can be communicated between clients
                             #pragma warning restore SA1515
-                            .Set("accessToken", newToken);
+                            .Set(c => c.AccessToken, newToken);
 
                         await claimTokens.UpdateOneAsync(filterClaims, update);
                     }
@@ -197,18 +205,16 @@ namespace Carter.App.Route.Users
             {
                 string newToken = Generate.GetRandomToken();
                 string newHash = PasswordHasher.Hash(newToken);
-                var accessTokens = db.GetCollection<BsonDocument>(ClaimTokenSchema.CollectionName);
+                var accessTokens = db.GetCollection<ClaimTokenSchema>(ClaimTokenSchema.CollectionName);
 
-                var tokenDoc = new
+                var tokenDoc = new ClaimTokenSchema
                 {
-                    hash = newHash,
-                    expirationSeconds = 3600, // One hour
-                    isPending = true,
-                    isExisting = true,
-                    createdAt = new BsonDateTime(DateTime.Now),
+                    InternalId = ObjectId.GenerateNewId(),
+                    Hash = newHash,
+                    CreatedAt = new BsonDateTime(DateTime.Now),
                 };
 
-                await accessTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
+                await accessTokens.InsertOneAsync(tokenDoc);
 
                 var responce = new
                 {
@@ -235,8 +241,9 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var claimTokens = db.GetCollection<BsonDocument>(ClaimTokenSchema.CollectionName);
-                var filter = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(claimToken));
+                var claimTokens = db.GetCollection<ClaimTokenSchema>(ClaimTokenSchema.CollectionName);
+                var filter = Builders<ClaimTokenSchema>.Filter
+                    .Where(c => c.Hash == PasswordHasher.Hash(claimToken));
                 var claimDoc = await claimTokens.Find(filter).FirstOrDefaultAsync();
 
                 if (claimDoc == null)
@@ -246,32 +253,32 @@ namespace Carter.App.Route.Users
                 }
 
                 // 404 returned twice, may be hard for client to understand
-                if (!claimDoc["isExisting"].AsBoolean || claimDoc["createdAt"].IsAfter(claimDoc["expirationSeconds"]))
+                if (!claimDoc.IsExisting || claimDoc.CreatedAt.IsAfter(claimDoc.ExpirationSeconds))
                 {
                     res.StatusCode = 404;
                     return;
                 }
 
-                if (claimDoc["isPending"].AsBoolean)
+                if (claimDoc.IsPending)
                 {
                     res.StatusCode = 202;
                     BasicResponce.Send(res, "PENDING");
                     return;
                 }
 
-                var update = Builders<BsonDocument>.Update
-                    .Set("isExisting", false)
+                var update = Builders<ClaimTokenSchema>.Update
+                    .Set(c => c.IsExisting, false)
                     #pragma warning disable SA1515
                     // Removes the access token from the database
                     // Important to increase security
                     #pragma warning restore SA1515
-                    .Unset("accessToken");
+                    .Unset(c => c.AccessToken);
 
                 await claimTokens.UpdateOneAsync(filter, update);
 
                 var responce = new
                 {
-                    accessToken = claimDoc["accessToken"].AsString,
+                    accessToken = claimDoc.AccessToken,
                 };
                 var responceDoc = responce.ToBsonDocument();
 
@@ -301,16 +308,16 @@ namespace Carter.App.Route.Users
                 }
 
                 string newToken = Generate.GetRandomToken();
-                var signUpTokens = db.GetCollection<BsonDocument>(ClaimTokenSchema.CollectionName);
+                var signUpTokens = db.GetCollection<ClaimTokenSchema>(ClaimTokenSchema.CollectionName);
 
-                var tokenDoc = new
+                var tokenDoc = new ClaimTokenSchema
                 {
-                    hash = PasswordHasher.Hash(newToken),
-                    expirationSeconds = 3600, // One hour
-                    createdAt = new BsonDateTime(DateTime.Now),
+                    InternalId = ObjectId.GenerateNewId(),
+                    Hash = PasswordHasher.Hash(newToken),
+                    CreatedAt = new BsonDateTime(DateTime.Now),
                 };
 
-                await signUpTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
+                await signUpTokens.InsertOneAsync(tokenDoc);
 
                 var responce = new
                 {
@@ -395,7 +402,10 @@ namespace Carter.App.Route.Users
         public string Hash { get; set; }
 
         [BsonElement("accessToken")]
-        public string AccessToken { get; set; }
+        public string AccessToken { get; set; } = null;
+
+        [BsonElement("Access")]
+        public BsonObjectId Access { get; set; } = null;
 
         [BsonElement("expirationSeconds")]
         public int ExpirationSeconds { get; set; } = 3600; // One hour
