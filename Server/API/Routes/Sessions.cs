@@ -269,12 +269,10 @@ namespace Carter.App.Route.Sessions
                 var sessions = db.GetCollection<BsonDocument>("sessions");
 
                 string uniqueID = req.RouteValues.As<string>("id");
-                var projection = Builders<BsonDocument>.Projection.Exclude("_id");
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
 
                 var sessionDoc = await sessions
                     .Find(filter)
-                    .Project(projection)
                     .FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
@@ -347,6 +345,9 @@ namespace Carter.App.Route.Sessions
     public class SessionSchema
     {
         #pragma warning disable SA1516
+        [BsonIgnore]
+        public const string CollectionName = "sessions";
+
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
