@@ -270,7 +270,7 @@ Set `aws_domain_name` variable in the `Server/.env` file to whichever domain is 
 
 ## Generate Password
 
-Run `docker-compose up new_password` and copy the Hash value into the `admin_password_hash` variable in the `Server/.env`file. This is used to bootstrap the website by visiting, `http://[your domain]/admin?password=[Password for URL value]` in the browser. 
+Run `docker-compose run api dotnet API.dll --passwordGenerate` and copy the 'Hash' value into the `admin_password_hash` variable in the `Server/.env`file. This is used to bootstrap the website by visiting, `http://[your domain]/admin?password=[Password for URL value]` in the browser, two preformatted versions are print for convenience.
 
 ## Optional Environmental Variables
 
@@ -290,6 +290,3 @@ In `Deploy/.env`:
 ## Sharing and Deploying
 
 Everything should be setup now. This setup is designed so that these files can be shared with other developers. Test that everything is working by [following a normal deploy](Partial-Deploy.md).
-
-[comment]: <> (TODO: add info about renaming S3 bucket since those are globally namespaced)
-[comment]: <> (Or fix the backupper so a prefix is used)

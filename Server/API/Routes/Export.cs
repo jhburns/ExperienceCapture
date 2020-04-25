@@ -9,9 +9,10 @@ namespace Carter.App.Route.Export
     using Carter;
 
     using Carter.App.Lib.CustomExceptions;
-    using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Network;
+
     using Carter.App.Route.PreSecurity;
+    using Carter.App.Route.Sessions;
 
     using Carter.Request;
     using Carter.Response;
@@ -21,7 +22,6 @@ namespace Carter.App.Route.Export
 
     using Minio;
 
-    using MongoDB.Bson;
     using MongoDB.Driver;
 
     public class Export : CarterModule
@@ -39,11 +39,11 @@ namespace Carter.App.Route.Export
 
             this.Post("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>("sessions");
+                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
                 string id = req.RouteValues.As<string>("id");
-                var filter = Builders<BsonDocument>.Filter
-                    .Eq("id", id);
+                var filter = Builders<SessionSchema>.Filter
+                    .Where(s => s.Id == id);
 
                 var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
 
@@ -83,8 +83,8 @@ namespace Carter.App.Route.Export
 
                 await docker.Containers.StartContainerAsync(exporter.ID, new ContainerStartParameters());
 
-                var update = Builders<BsonDocument>.Update
-                    .Set("isPending", true);
+                var update = Builders<SessionSchema>.Update
+                    .Set(s => s.IsPending, true);
 
                 await sessions.UpdateOneAsync(filter, update);
 
@@ -95,10 +95,14 @@ namespace Carter.App.Route.Export
             // The normal GET /session/{id}/ endpoint contains the same data
             this.Get("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>("sessions");
+                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
                 string id = req.RouteValues.As<string>("id");
-                var sessionDoc = await sessions.FindEqAsync("id", id);
+                var sessionDoc = await sessions.Find(
+                    Builders<SessionSchema>
+                        .Filter
+                        .Where(s => s.Id == id))
+                        .FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
@@ -106,7 +110,7 @@ namespace Carter.App.Route.Export
                     return;
                 }
 
-                if (sessionDoc["isPending"].AsBoolean)
+                if (sessionDoc.IsPending)
                 {
                     res.StatusCode = 202;
                     BasicResponce.Send(res, "PENDING");
@@ -114,7 +118,7 @@ namespace Carter.App.Route.Export
                 }
 
                 // Export job hasn't been created, so return not found
-                if (!sessionDoc["isExported"].AsBoolean)
+                if (!sessionDoc.IsExported)
                 {
                     res.StatusCode = 404;
                     return;

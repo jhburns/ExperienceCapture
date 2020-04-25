@@ -4,40 +4,48 @@ namespace Carter.App.Route.PreSecurity
     using System.Threading.Tasks;
 
     using Carter.App.Lib.Authentication;
-    using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Timer;
 
     using Carter.App.Route.Users;
 
     using Microsoft.AspNetCore.Http;
 
-    using MongoDB.Bson;
     using MongoDB.Driver;
 
     public static class PreSecurity
     {
         public static Func<HttpContext, Task<bool>> GetSecurityCheck(IMongoDatabase db)
         {
-            return async (ctx) =>
+            Func<HttpRequest, HttpResponse, Task<bool>> check = async (req, res) =>
             {
-                var accessTokens = db.GetCollection<BsonDocument>(AccessTokenSchema.CollectionName);
+                var accessTokens = db.GetCollection<AccessTokenSchema>(AccessTokenSchema.CollectionName);
 
-                string token = ctx.Request.Cookies["ExperienceCapture-Access-Token"];
+                string token = req.Cookies["ExperienceCapture-Access-Token"];
                 if (token == null)
                 {
-                    ctx.Response.StatusCode = 400;
+                    res.StatusCode = 400;
                     return false;
                 }
 
-                var accessDoc = await accessTokens.FindEqAsync("hash", PasswordHasher.Hash(token));
+                var accessTokenDoc = await accessTokens.Find(
+                    Builders<AccessTokenSchema>
+                        .Filter
+                        .Where(a => a.Hash == PasswordHasher.Hash(token)))
+                        .FirstOrDefaultAsync();
 
-                if (accessDoc == null || accessDoc["createdAt"].IsAfter(accessDoc["expirationSeconds"]))
+                if (accessTokenDoc == null
+                    || accessTokenDoc.CreatedAt.IsAfter(accessTokenDoc.ExpirationSeconds))
                 {
-                    ctx.Response.StatusCode = 401;
+                    res.StatusCode = 401;
                     return false;
                 }
 
                 return true;
+            };
+
+            return async (ctx) =>
+            {
+                return await check(ctx.Request, ctx.Response);
             };
         }
     }

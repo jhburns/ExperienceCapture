@@ -55,6 +55,9 @@ namespace Carter.App.Lib.Authentication
 
     public class PasswordHasher
     {
+        // TODO: make app throw exception when following not defined
+        private static readonly string Domain = Environment.GetEnvironmentVariable("aws_domain_name");
+
         public static string Hash(string password)
         {
             try
@@ -101,8 +104,9 @@ namespace Carter.App.Lib.Authentication
             string urlPassword = WebUtility.UrlEncode(password);
             string hash = Hash(password);
             Console.WriteLine($"Password: {password}");
-            Console.WriteLine($"Password for URL: {urlPassword}");
-            Console.WriteLine($"Hash: {hash}");
+            Console.WriteLine($"Example login URL for localhost: http://localhost:8090/admin?password={urlPassword}");
+            Console.WriteLine($"Example login URL for domain: https://{Domain}/admin?password={urlPassword}");
+            Console.WriteLine($"Hash (for .env file): {hash}");
         }
     }
 }

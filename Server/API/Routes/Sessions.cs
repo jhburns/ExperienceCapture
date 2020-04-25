@@ -46,17 +46,17 @@ namespace Carter.App.Route.Sessions
                 var accessTokens = db.GetCollection<AccessTokenSchema>(AccessTokenSchema.CollectionName);
                 string token = req.Cookies["ExperienceCapture-Access-Token"]; // Has to exist due to PreSecurity Check
 
-                var accessTokenDoc = await (await accessTokens.FindAsync(
+                var accessTokenDoc = await accessTokens.Find(
                     Builders<AccessTokenSchema>
                         .Filter
-                        .Where(a => a.Hash == PasswordHasher.Hash(token))))
+                        .Where(a => a.Hash == PasswordHasher.Hash(token)))
                         .FirstOrDefaultAsync();
 
                 var users = db.GetCollection<PersonSchema>(PersonSchema.CollectionName);
                 var filterUser = Builders<PersonSchema>.Filter.Where(p => p.InternalId == accessTokenDoc.User);
 
-                var user = await (await users
-                    .FindAsync(filterUser))
+                var user = await users
+                    .Find(filterUser)
                     .FirstOrDefaultAsync();
 
                 var sessionDoc = new SessionSchema
@@ -66,13 +66,13 @@ namespace Carter.App.Route.Sessions
                     User = user, // Copying user data instead of referencing so it can never change with the session
                     CreatedAt = new BsonDateTime(DateTime.Now),
                     Tags = new List<string>(),
-                    LastCaptureAt = new BsonDateTime(DateTime.Now),
                 };
 
                 await sessions.InsertOneAsync(sessionDoc);
 
                 // isOngoing is a proxy variable and will always start out as true
                 sessionDoc.IsOngoing = true;
+                sessionDoc.InternalId = null;
 
                 var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
 
@@ -98,11 +98,10 @@ namespace Carter.App.Route.Sessions
 
             this.Get("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>(SessionSchema.CollectionName);
-                var projection = Builders<BsonDocument>.Projection.Exclude("_id");
+                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
-                var builder = Builders<BsonDocument>.Filter;
-                FilterDefinition<BsonDocument> filter = builder.Empty;
+                var builder = Builders<SessionSchema>.Filter;
+                FilterDefinition<SessionSchema> filter = builder.Empty;
 
                 var startRange = new BsonDateTime(DateTime.Now.AddSeconds(-300)); // 5 minutes
                 var closeRange = new BsonDateTime(DateTime.Now.AddSeconds(-5)); // 5 seconds
@@ -113,52 +112,50 @@ namespace Carter.App.Route.Sessions
                 if (req.Query.As<bool?>("isOngoing") != null)
                 {
                     bool isOngoing = req.Query.As<bool>("isOngoing");
-                    filter &= builder.Eq("isOpen", isOngoing);
+                    filter &= builder.Where(s => s.IsOpen == isOngoing);
 
                     if (isOngoing)
                     {
-                        filter &= (builder.Exists("lastCaptureAt", false)
-                            & builder.Gt("createdAt", startRange))
-                            | builder.Gt("lastCaptureAt", closeRange);
+                        filter &= (builder.Where(s => s.LastCaptureAt == null)
+                            & builder.Where(s => s.CreatedAt > startRange))
+                            | builder.Where(s => s.LastCaptureAt > closeRange);
                     }
                     else
                     {
-                        filter |= (builder.Exists("lastCaptureAt", false)
-                            & builder.Lt("createdAt", startRange))
-                            | builder.Lt("lastCaptureAt", closeRange);
+                        filter |= (builder.Where(s => s.LastCaptureAt == null)
+                            & builder.Where(s => s.CreatedAt < startRange))
+                            | builder.Where(s => s.LastCaptureAt < closeRange);
                     }
                 }
 
-                var sorter = Builders<BsonDocument>.Sort.Descending("createdAt");
+                var sorter = Builders<SessionSchema>.Sort.Descending(s => s.CreatedAt);
                 var sessionDocs = await sessions
                     .Find(filter)
-                    .Project(projection)
                     .Sort(sorter)
                     .ToListAsync();
 
                 var sessionsDocsWithOngoing = sessionDocs.Select((s) =>
                 {
                     bool isStarted = false;
-                    if (s.GetValue("lastCaptureAt", null) != null)
+                    if (s.LastCaptureAt != null)
                     {
                         isStarted = true;
                     }
 
                     bool isOngoing;
-                    if (s["isOpen"].AsBoolean)
+                    if (s.IsOpen)
                     {
                         isOngoing = (!isStarted
-                            && startRange.CompareTo(s["createdAt"]) < 0)
+                            && startRange.CompareTo(s.CreatedAt) < 0)
                             || (isStarted
-                            && closeRange.CompareTo(s["lastCaptureAt"]) < 0);
+                            && closeRange.CompareTo(s.LastCaptureAt) < 0);
                     }
                     else
                     {
                         isOngoing = false;
                     }
 
-                    s.Add("isOngoing", isOngoing);
-
+                    s.IsOngoing = isOngoing;
                     return s;
                 });
 
@@ -167,16 +164,15 @@ namespace Carter.App.Route.Sessions
                     // Bson documents can't start with an array like Json, so a wrapping object is used instead
                     contentArray = sessionsDocsWithOngoing,
                 };
-                var clientDoc = clientValues.ToBsonDocument();
 
-                string json = JsonQuery.FulfilEncoding(req.Query, clientDoc);
+                string json = JsonQuery.FulfilEncoding(req.Query, clientValues);
                 if (json != null)
                 {
                     JsonResponce.FromString(res, json);
                     return;
                 }
 
-                BsonResponse.FromDoc(res, clientDoc.ToBsonDocument());
+                BsonResponse.ToBson(res, clientValues);
             });
 
             this.Post("/{id}", async (req, res) =>
@@ -187,8 +183,8 @@ namespace Carter.App.Route.Sessions
                 var filter = Builders<SessionSchema>.Filter.
                     Where(s => s.Id == uniqueID);
 
-                var sessionDoc = await (await sessions
-                    .FindAsync(filter))
+                var sessionDoc = await sessions
+                    .Find(filter)
                     .FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
@@ -268,10 +264,10 @@ namespace Carter.App.Route.Sessions
 
             this.Get("/{id}", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>(SessionSchema.CollectionName);
+                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
+                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
 
                 var sessionDoc = await sessions
                     .Find(filter)
@@ -288,25 +284,25 @@ namespace Carter.App.Route.Sessions
                 bool isStarted = false;
 
                 // Check if key exists
-                if (sessionDoc.GetValue("lastCaptureAt", null) != null)
+                if (sessionDoc.LastCaptureAt != null)
                 {
                     isStarted = true;
                 }
 
                 bool isOngoing;
-                if (sessionDoc["isOpen"].AsBoolean)
+                if (sessionDoc.IsOpen)
                 {
                     isOngoing = (!isStarted
-                        && startRange.CompareTo(sessionDoc["createdAt"]) < 0)
+                        && startRange.CompareTo(sessionDoc.CreatedAt) < 0)
                         || (isStarted
-                        && closeRange.CompareTo(sessionDoc["lastCaptureAt"]) < 0);
+                        && closeRange.CompareTo(sessionDoc.LastCaptureAt) < 0);
                 }
                 else
                 {
                     isOngoing = false;
                 }
 
-                sessionDoc.Add("isOngoing", isOngoing);
+                sessionDoc.IsOngoing = isOngoing;
 
                 string json = JsonQuery.FulfilEncoding(req.Query, sessionDoc);
                 if (json != null)
@@ -315,7 +311,7 @@ namespace Carter.App.Route.Sessions
                     return;
                 }
 
-                BsonResponse.FromDoc(res, sessionDoc);
+                BsonResponse.ToBson(res, sessionDoc);
             });
 
             this.Delete("/{id}", async (req, res) =>
@@ -325,8 +321,8 @@ namespace Carter.App.Route.Sessions
                 var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
                 var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
-                var sessionDoc = await (await sessions
-                    .FindAsync(filter))
+                var sessionDoc = await sessions
+                    .Find(filter)
                     .FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
@@ -350,6 +346,7 @@ namespace Carter.App.Route.Sessions
         [BsonIgnore]
         public const string CollectionName = "sessions";
 
+        [BsonIgnoreIfNull]
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
@@ -359,7 +356,7 @@ namespace Carter.App.Route.Sessions
         [BsonElement("isOpen")]
         public bool IsOpen { get; set; } = true;
 
-        [BsonElement("IsExported")]
+        [BsonElement("isExported")]
         public bool IsExported { get; set; } = false;
 
         [BsonElement("isPending")]
@@ -381,7 +378,7 @@ namespace Carter.App.Route.Sessions
         public bool? IsOngoing { get; set; } = null;
 
         [BsonElement("lastCaptureAt")]
-        public BsonDateTime LastCaptureAt { get; set; }
+        public BsonDateTime LastCaptureAt { get; set; } = null;
         #pragma warning restore SA151, SA1300
     }
 }
