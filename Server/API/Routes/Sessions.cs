@@ -233,6 +233,7 @@ namespace Carter.App.Route.Sessions
                     }
                     catch
                     {
+                        // TODO: print exception to debug
                         res.StatusCode = 400;
                         return;
                     }
