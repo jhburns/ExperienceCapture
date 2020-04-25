@@ -13,7 +13,7 @@ namespace Carter.App.Lib.Network
 
     public class JsonQuery
     {
-        public static string FulfilEncoding(IQueryCollection query, BsonDocument document)
+        public static string FulfilEncoding<T>(IQueryCollection query, T document)
         {
             if (query.As<bool>("bson"))
             {
@@ -47,6 +47,16 @@ namespace Carter.App.Lib.Network
     public class BsonResponse
     {
         public static async void FromDoc(HttpResponse response, BsonDocument doc)
+        {
+            byte[] clientBson = doc.ToBson();
+
+            using (var mystream = new MemoryStream(clientBson))
+            {
+                await response.FromStream(mystream, "application/bson");
+            }
+        }
+
+        public static async void ToBson<T>(HttpResponse response, T doc)
         {
             byte[] clientBson = doc.ToBson();
 

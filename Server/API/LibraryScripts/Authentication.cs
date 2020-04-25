@@ -86,8 +86,6 @@ namespace Carter.App.Lib.Authentication
                     newHash = sha.ComputeHash(passwordDecoded);
                 }
 
-                Console.WriteLine(hash);
-                Console.WriteLine(Convert.ToBase64String(newHash));
                 return Convert.FromBase64String(hash).SequenceEqual(newHash);
             }
             catch (FormatException e)
