@@ -361,10 +361,10 @@ namespace Carter.App.Route.Users
 
     public class AccessTokenSchema
     {
+        #pragma warning disable SA1516
         [BsonIgnore]
         public const string CollectionName = "persons.tokens.accesses";
 
-        #pragma warning disable SA1516
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
