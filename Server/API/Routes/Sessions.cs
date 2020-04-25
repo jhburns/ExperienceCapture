@@ -69,15 +69,15 @@ namespace Carter.App.Route.Sessions
                 };
 
                 await sessions.InsertOneAsync(sessionDoc);
-                var bsonDoc = sessionDoc.ToBsonDocument();
-                bsonDoc.Remove("_id");
-                bsonDoc.Add("isOngoing", true); // isOngoing is a proxy variable and will always start out as true
+                
+                // isOngoing is a proxy variable and will always start out as true
+                sessionDoc.isOngoing = true;
 
                 var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
 
                 // Secondary index or else Mongo will fail on large queries
                 // It has a limit for max number of documents on properties
-                // Without an index
+                // Without an index, see https://docs.mongodb.com/manual/reference/limits/#Sort-Operations
                 var index = Builders<BsonDocument>.IndexKeys;
                 var key = index.Ascending("frameInfo.realtimeSinceStartup");
                 var options = new CreateIndexOptions();
@@ -85,14 +85,14 @@ namespace Carter.App.Route.Sessions
                 var model = new CreateIndexModel<BsonDocument>(key, options);
                 await sessionCollection.Indexes.CreateOneAsync(model);
 
-                string json = JsonQuery.FulfilEncoding(req.Query, bsonDoc);
+                string json = JsonQuery.FulfilEncoding(req.Query, sessionDoc);
                 if (json != null)
                 {
                     JsonResponce.FromString(res, json);
                     return;
                 }
 
-                BsonResponse.FromDoc(res, bsonDoc);
+                BsonResponse.ToBson(res, sessionDoc);
             });
 
             this.Get("/", async (req, res) =>
@@ -326,16 +326,13 @@ namespace Carter.App.Route.Sessions
         public string Id { get; set; }
 
         [BsonElement("isOpen")]
-        [BsonDefaultValue(true)]
-        public bool IsOpen { get; set; }
+        public bool IsOpen { get; set; } = true;
 
         [BsonElement("IsExported")]
-        [BsonDefaultValue(false)]
-        public bool IsExported { get; set; }
+        public bool IsExported { get; set; } = false;
 
         [BsonElement("isPending")]
-        [BsonDefaultValue(false)]
-        public bool IsPending { get; set; }
+        public bool IsPending { get; set; } = false;
 
         // Copying user data instead of referencing so it can never change with the session
         // Also so that it is easy to include when exporting
@@ -347,6 +344,9 @@ namespace Carter.App.Route.Sessions
 
         [BsonElement("tags")]
         public List<string> Tags { get; set; }
+
+        [BsonIgnoreIfNull]
+        public bool? isOngoing { get; set; } = null;
         #pragma warning restore SA151, SA1300
     }
 }

@@ -64,8 +64,7 @@ namespace Carter.App.Route.NewSignUp
         public string Hash { get; set; }
 
         [BsonElement("expirationSeconds")]
-        [BsonDefaultValue(86400)] // One day
-        public int ExpirationSeconds { get; set; }
+        public int ExpirationSeconds { get; set; } = 86400; // One day
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }

@@ -367,8 +367,7 @@ namespace Carter.App.Route.Users
         public BsonObjectId User { get; set; }
 
         [BsonElement("expirationSeconds")]
-        [BsonDefaultValue(259200)] // Three days
-        public int ExpirationSeconds { get; set; }
+        public int ExpirationSeconds { get; set; } = 259200; // Three days
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
@@ -388,16 +387,13 @@ namespace Carter.App.Route.Users
         public string AccessToken { get; set; }
 
         [BsonElement("expirationSeconds")]
-        [BsonDefaultValue(3600)] // One hour
-        public int ExpirationSeconds { get; set; }
+        public int ExpirationSeconds { get; set; } = 3600; // One hour
 
         [BsonElement("isPending")]
-        [BsonDefaultValue(false)]
-        public bool IsPending { get; set; }
+        public bool IsPending { get; set; } = false;
 
         [BsonElement("isExisting")]
-        [BsonDefaultValue(true)]
-        public bool IsExisting { get; set; }
+        public bool IsExisting { get; set; } = true;
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
