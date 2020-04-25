@@ -210,13 +210,31 @@ namespace Carter.App.Route.Sessions
                     {
                         await req.Body.CopyToAsync(ms);
                         ms.Position = 0;
-                        document = BsonSerializer.Deserialize<BsonDocument>(ms);
+
+                        try
+                        {
+                            document = BsonSerializer.Deserialize<BsonDocument>(ms);
+                        }
+                        catch // TODO: print exception to debug
+                        {
+                            res.StatusCode = 400;
+                            return;
+                        }
                     }
                 }
                 else
                 {
                     string json = await req.Body.AsStringAsync();
-                    document = BsonDocument.Parse(json);
+
+                    try
+                    {
+                        document = BsonDocument.Parse(json);
+                    }
+                    catch
+                    {
+                        res.StatusCode = 400;
+                        return;
+                    }
                 }
 
                 // Manual validation, because Fluent Validation would remove extra properties
