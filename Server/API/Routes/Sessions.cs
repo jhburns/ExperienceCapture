@@ -30,7 +30,7 @@ namespace Carter.App.Route.Sessions
 
             this.Post("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>("sessions");
+                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
                 string uniqueID = Generate.GetRandomId(4);
                 var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
@@ -43,7 +43,7 @@ namespace Carter.App.Route.Sessions
                     filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
                 }
 
-                var accessTokens = db.GetCollection<AccessTokenSchema>("users.tokens.access");
+                var accessTokens = db.GetCollection<AccessTokenSchema>(AccessTokenSchema.CollectionName);
                 string token = req.Cookies["ExperienceCapture-Access-Token"]; // Has to exist due to PreSecurity Check
 
                 var accessTokenDoc = await (await accessTokens.FindAsync(
@@ -52,7 +52,7 @@ namespace Carter.App.Route.Sessions
                         .Where(a => a.Hash == PasswordHasher.Hash(token))))
                         .FirstOrDefaultAsync();
 
-                var users = db.GetCollection<PersonSchema>("users");
+                var users = db.GetCollection<PersonSchema>(PersonSchema.CollectionName);
                 var filterUser = Builders<PersonSchema>.Filter.Where(p => p.InternalId == accessTokenDoc.User);
 
                 var user = await (await users
@@ -98,7 +98,7 @@ namespace Carter.App.Route.Sessions
 
             this.Get("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>("sessions");
+                var sessions = db.GetCollection<BsonDocument>(SessionSchema.CollectionName);
                 var projection = Builders<BsonDocument>.Projection.Exclude("_id");
 
                 var builder = Builders<BsonDocument>.Filter;
@@ -181,7 +181,7 @@ namespace Carter.App.Route.Sessions
 
             this.Post("/{id}", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>("sessions");
+                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
                 string uniqueID = req.RouteValues.As<string>("id");
                 var filter = Builders<SessionSchema>.Filter.
@@ -268,7 +268,7 @@ namespace Carter.App.Route.Sessions
 
             this.Get("/{id}", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>("sessions");
+                var sessions = db.GetCollection<BsonDocument>(SessionSchema.CollectionName);
 
                 string uniqueID = req.RouteValues.As<string>("id");
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
@@ -322,7 +322,7 @@ namespace Carter.App.Route.Sessions
             {
                 string uniqueID = req.RouteValues.As<string>("id");
 
-                var sessions = db.GetCollection<SessionSchema>("sessions");
+                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
                 var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
                 var sessionDoc = await (await sessions

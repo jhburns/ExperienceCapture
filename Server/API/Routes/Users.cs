@@ -11,6 +11,8 @@ namespace Carter.App.Route.Users
     using Carter.App.Lib.Network;
     using Carter.App.Lib.Timer;
 
+    using Carter.App.Route.NewSignUp;
+
     using Carter.App.Validation.AccessTokenRequest;
     using Carter.App.Validation.AdminPassword;
     using Carter.App.Validation.Person;
@@ -47,7 +49,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var signUpTokens = db.GetCollection<BsonDocument>("users.tokens.signUp");
+                var signUpTokens = db.GetCollection<BsonDocument>(SignUpTokenSchema.CollectionName);
 
                 var signUpDoc = await signUpTokens.FindEqAsync("hash", PasswordHasher.Hash(newPerson.Data.signUpToken));
 
@@ -92,7 +94,7 @@ namespace Carter.App.Route.Users
             // TODO: refactor this section
             this.Post("/{id}/tokens/", async (req, res) =>
             {
-                var users = db.GetCollection<BsonDocument>("users");
+                var users = db.GetCollection<BsonDocument>(PersonSchema.CollectionName);
 
                 string userID = req.RouteValues.As<string>("id");
                 var userDoc = await users.FindEqAsync("id", userID);
@@ -125,7 +127,7 @@ namespace Carter.App.Route.Users
 
                 string newToken = Generate.GetRandomToken();
                 string newHash = PasswordHasher.Hash(newToken);
-                var accessTokens = db.GetCollection<BsonDocument>("users.tokens.access");
+                var accessTokens = db.GetCollection<BsonDocument>(AccessTokenSchema.CollectionName);
 
                 var tokenObject = new
                 {
@@ -141,7 +143,7 @@ namespace Carter.App.Route.Users
 
                 if (newAccessRequest.Data.claimToken != null)
                 {
-                    var claimTokens = db.GetCollection<BsonDocument>("users.tokens.claim");
+                    var claimTokens = db.GetCollection<BsonDocument>(ClaimTokenSchema.CollectionName);
 
                     var filterClaims = Builders<BsonDocument>.Filter
                         .Eq("hash", PasswordHasher.Hash(newAccessRequest.Data.claimToken));
@@ -195,7 +197,7 @@ namespace Carter.App.Route.Users
             {
                 string newToken = Generate.GetRandomToken();
                 string newHash = PasswordHasher.Hash(newToken);
-                var accessTokens = db.GetCollection<BsonDocument>("users.tokens.claim");
+                var accessTokens = db.GetCollection<BsonDocument>(ClaimTokenSchema.CollectionName);
 
                 var tokenDoc = new
                 {
@@ -233,7 +235,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var claimTokens = db.GetCollection<BsonDocument>("users.tokens.claim");
+                var claimTokens = db.GetCollection<BsonDocument>(ClaimTokenSchema.CollectionName);
                 var filter = Builders<BsonDocument>.Filter.Eq("hash", PasswordHasher.Hash(claimToken));
                 var claimDoc = await claimTokens.Find(filter).FirstOrDefaultAsync();
 
@@ -299,7 +301,7 @@ namespace Carter.App.Route.Users
                 }
 
                 string newToken = Generate.GetRandomToken();
-                var signUpTokens = db.GetCollection<BsonDocument>("users.tokens.signUp");
+                var signUpTokens = db.GetCollection<BsonDocument>(ClaimTokenSchema.CollectionName);
 
                 var tokenDoc = new
                 {

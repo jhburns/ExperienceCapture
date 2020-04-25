@@ -7,6 +7,8 @@ namespace Carter.App.Route.PreSecurity
     using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Timer;
 
+    using Carter.App.Route.Users;
+
     using Microsoft.AspNetCore.Http;
 
     using MongoDB.Bson;
@@ -18,7 +20,7 @@ namespace Carter.App.Route.PreSecurity
         {
             return async (ctx) =>
             {
-                var accessTokens = db.GetCollection<BsonDocument>("users.tokens.access");
+                var accessTokens = db.GetCollection<BsonDocument>(AccessTokenSchema.CollectionName);
 
                 string token = ctx.Request.Cookies["ExperienceCapture-Access-Token"];
                 if (token == null)

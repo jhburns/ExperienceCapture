@@ -5,6 +5,8 @@ namespace Carter.App.Route.Tags
     using Carter.App.Lib.Network;
     using Carter.App.Route.PreSecurity;
 
+    using Carter.App.Route.Sessions;
+
     using Carter.Request;
 
     using MongoDB.Bson;
@@ -19,7 +21,7 @@ namespace Carter.App.Route.Tags
 
             this.Post("/{tagName}", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>("sessions");
+                var sessions = db.GetCollection<BsonDocument>(SessionSchema.CollectionName);
 
                 string uniqueID = req.RouteValues.As<string>("id");
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
@@ -49,7 +51,7 @@ namespace Carter.App.Route.Tags
 
             this.Delete("/{tagName}", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>("sessions");
+                var sessions = db.GetCollection<BsonDocument>(SessionSchema.CollectionName);
 
                 string uniqueID = req.RouteValues.As<string>("id");
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
