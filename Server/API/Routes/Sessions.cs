@@ -219,7 +219,6 @@ namespace Carter.App.Route.Sessions
                 var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
 
                 // These calls not awaited for max performance
-                // Error propagation is ignored
                 _ = sessionCollection.InsertOneAsync(document);
 
                 // This lastCaptureAt is undefined on the session document until the first call of this endpoint

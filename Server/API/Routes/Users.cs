@@ -96,7 +96,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var newAccessRequest = await req.BindAndValidate<AccessTokenRequest>();
+                var newAccessRequest = await req.BindAndValidate<AccessToken>();
                 if (!newAccessRequest.ValidationResult.IsValid)
                 {
                     res.StatusCode = 400;
