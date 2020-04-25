@@ -69,9 +69,9 @@ namespace Carter.App.Route.Sessions
                 };
 
                 await sessions.InsertOneAsync(sessionDoc);
-                
+
                 // isOngoing is a proxy variable and will always start out as true
-                sessionDoc.isOngoing = true;
+                sessionDoc.IsOngoing = true;
 
                 var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
 
@@ -346,7 +346,8 @@ namespace Carter.App.Route.Sessions
         public List<string> Tags { get; set; }
 
         [BsonIgnoreIfNull]
-        public bool? isOngoing { get; set; } = null;
+        [BsonElement("isOngoing")]
+        public bool? IsOngoing { get; set; } = null;
         #pragma warning restore SA151, SA1300
     }
 }
