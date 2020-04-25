@@ -9,7 +9,6 @@ namespace Carter.App.Route.Export
     using Carter;
 
     using Carter.App.Lib.CustomExceptions;
-    using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Network;
 
     using Carter.App.Route.PreSecurity;
@@ -23,7 +22,6 @@ namespace Carter.App.Route.Export
 
     using Minio;
 
-    using MongoDB.Bson;
     using MongoDB.Driver;
 
     public class Export : CarterModule
@@ -97,7 +95,7 @@ namespace Carter.App.Route.Export
             // The normal GET /session/{id}/ endpoint contains the same data
             this.Get("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>("sessions");
+                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
                 string id = req.RouteValues.As<string>("id");
                 var sessionDoc = await sessions.Find(

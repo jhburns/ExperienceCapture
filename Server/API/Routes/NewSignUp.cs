@@ -11,7 +11,6 @@ namespace Carter.App.Route.NewSignUp
     using Carter.App.Route.PreSecurity;
 
     using MongoDB.Bson;
-    using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
 
@@ -32,7 +31,6 @@ namespace Carter.App.Route.NewSignUp
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = PasswordHasher.Hash(newToken),
-                    ExpirationSeconds = 86400, // One day
                     CreatedAt = new BsonDateTime(DateTime.Now),
                 };
 
@@ -60,7 +58,7 @@ namespace Carter.App.Route.NewSignUp
     {
         #pragma warning disable SA1516
         [BsonIgnore]
-        public const string CollectionName = "users.tokens.signUps";
+        public const string CollectionName = "persons.tokens.signUps";
 
         [BsonId]
         public BsonObjectId InternalId { get; set; }

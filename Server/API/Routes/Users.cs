@@ -7,7 +7,6 @@ namespace Carter.App.Route.Users
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.CustomExceptions;
     using Carter.App.Lib.Generate;
-    using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Network;
     using Carter.App.Lib.Timer;
 
@@ -23,6 +22,8 @@ namespace Carter.App.Route.Users
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
+
+    using Carter.App.Lib.DebugExtra;
 
     public class Users : CarterModule
     {
@@ -51,21 +52,19 @@ namespace Carter.App.Route.Users
 
                 var signUpTokens = db.GetCollection<SignUpTokenSchema>(SignUpTokenSchema.CollectionName);
 
-                var signUpDoc = await signUpTokens
-                    .Find(
-                        Builders<SignUpTokenSchema>
+                var signUpDoc = await signUpTokens.Find(
+                    Builders<SignUpTokenSchema>
                         .Filter
                         .Where(t => t.Hash == PasswordHasher.Hash(newPerson.Data.signUpToken)))
                         .FirstOrDefaultAsync();
 
-                // 401 returned twice which may make interpretting the code harder for a client
                 if (signUpDoc == null || signUpDoc.CreatedAt.IsAfter(signUpDoc.ExpirationSeconds))
                 {
                     res.StatusCode = 401;
                     return;
                 }
 
-                var users = db.GetCollection<PersonSchema>("users");
+                var users = db.GetCollection<PersonSchema>(PersonSchema.CollectionName);
 
                 var existingPerson = await users.Find(
                     Builders<PersonSchema>
@@ -143,11 +142,11 @@ namespace Carter.App.Route.Users
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = newHash,
                     User = userDoc.InternalId,
-                    ExpirationSeconds = 259200, // Three days
                     CreatedAt = new BsonDateTime(DateTime.Now),
                 };
 
                 await accessTokens.InsertOneAsync(tokenObject);
+                DebugExtra.PrintPls(newHash);
 
                 if (newAccessRequest.Data.claimToken != null)
                 {
@@ -166,10 +165,9 @@ namespace Carter.App.Route.Users
                     }
 
                     // Don't allow overwriting an access token
-                    if (claimDoc.IsPending && claimDoc.IsExisting)
+                    if (claimDoc.Access == null && claimDoc.IsExisting)
                     {
                         var update = Builders<ClaimTokenSchema>.Update
-                            .Set(c => c.IsPending, false)
                             .Set(c => c.Access, tokenObject.InternalId)
                             #pragma warning disable SA1515
                             // Unfortunately claim access tokens have to be saved to the database
@@ -205,7 +203,7 @@ namespace Carter.App.Route.Users
             {
                 string newToken = Generate.GetRandomToken();
                 string newHash = PasswordHasher.Hash(newToken);
-                var accessTokens = db.GetCollection<ClaimTokenSchema>(ClaimTokenSchema.CollectionName);
+                var claimTokens = db.GetCollection<ClaimTokenSchema>(ClaimTokenSchema.CollectionName);
 
                 var tokenDoc = new ClaimTokenSchema
                 {
@@ -214,7 +212,7 @@ namespace Carter.App.Route.Users
                     CreatedAt = new BsonDateTime(DateTime.Now),
                 };
 
-                await accessTokens.InsertOneAsync(tokenDoc);
+                await claimTokens.InsertOneAsync(tokenDoc);
 
                 var responce = new
                 {
@@ -252,14 +250,13 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                // 404 returned twice, may be hard for client to understand
                 if (!claimDoc.IsExisting || claimDoc.CreatedAt.IsAfter(claimDoc.ExpirationSeconds))
                 {
                     res.StatusCode = 404;
                     return;
                 }
 
-                if (claimDoc.IsPending)
+                if (claimDoc.Access == null)
                 {
                     res.StatusCode = 202;
                     BasicResponce.Send(res, "PENDING");
@@ -272,7 +269,7 @@ namespace Carter.App.Route.Users
                     // Removes the access token from the database
                     // Important to increase security
                     #pragma warning restore SA1515
-                    .Unset(c => c.AccessToken);
+                    .Set(c => c.AccessToken, null);
 
                 await claimTokens.UpdateOneAsync(filter, update);
 
@@ -308,9 +305,9 @@ namespace Carter.App.Route.Users
                 }
 
                 string newToken = Generate.GetRandomToken();
-                var signUpTokens = db.GetCollection<ClaimTokenSchema>(ClaimTokenSchema.CollectionName);
+                var signUpTokens = db.GetCollection<SignUpTokenSchema>(SignUpTokenSchema.CollectionName);
 
-                var tokenDoc = new ClaimTokenSchema
+                var tokenDoc = new SignUpTokenSchema
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = PasswordHasher.Hash(newToken),
@@ -409,9 +406,6 @@ namespace Carter.App.Route.Users
 
         [BsonElement("expirationSeconds")]
         public int ExpirationSeconds { get; set; } = 3600; // One hour
-
-        [BsonElement("isPending")]
-        public bool IsPending { get; set; } = false;
 
         [BsonElement("isExisting")]
         public bool IsExisting { get; set; } = true;

@@ -165,14 +165,14 @@ namespace Carter.App.Route.Sessions
                     contentArray = sessionsDocsWithOngoing,
                 };
 
-                string json = JsonQuery.FulfilEncoding(req.Query, sessionsDocsWithOngoing);
+                string json = JsonQuery.FulfilEncoding(req.Query, clientValues);
                 if (json != null)
                 {
                     JsonResponce.FromString(res, json);
                     return;
                 }
 
-                BsonResponse.ToBson(res, sessionsDocsWithOngoing);
+                BsonResponse.ToBson(res, clientValues);
             });
 
             this.Post("/{id}", async (req, res) =>
@@ -356,7 +356,7 @@ namespace Carter.App.Route.Sessions
         [BsonElement("isOpen")]
         public bool IsOpen { get; set; } = true;
 
-        [BsonElement("IsExported")]
+        [BsonElement("isExported")]
         public bool IsExported { get; set; } = false;
 
         [BsonElement("isPending")]

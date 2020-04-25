@@ -5,11 +5,10 @@ namespace Carter.App.Lib.Timer
 
     public static class CheckExpire
     {
-        public static bool IsAfter(this BsonValue start, BsonValue expirationTime)
+        public static bool IsAfter(this BsonDateTime start, int expirationTime)
         {
-            int seconds = expirationTime.AsInt32;
-            BsonDateTime endTime = new BsonDateTime(DateTime.Now.AddSeconds(-seconds));
-            return start.AsBsonDateTime.CompareTo(endTime) < 0;
+            BsonDateTime endTime = new BsonDateTime(DateTime.Now.AddSeconds(-expirationTime));
+            return start.CompareTo(endTime) < 0;
         }
     }
 }
