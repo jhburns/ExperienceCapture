@@ -53,7 +53,7 @@ namespace Carter.App.Route.Sessions
                         .FirstOrDefaultAsync();
 
                 var users = db.GetCollection<PersonSchema>("users");
-                var filterUser = Builders<PersonSchema>.Filter.Where(u => u.InternalId == accessTokenDoc.User);
+                var filterUser = Builders<PersonSchema>.Filter.Where(p => p.InternalId == accessTokenDoc.User);
 
                 var user = await (await users
                     .FindAsync(filterUser))
@@ -66,6 +66,7 @@ namespace Carter.App.Route.Sessions
                     User = user, // Copying user data instead of referencing so it can never change with the session
                     CreatedAt = new BsonDateTime(DateTime.Now),
                     Tags = new List<string>(),
+                    LastCaptureAt = new BsonDateTime(DateTime.Now),
                 };
 
                 await sessions.InsertOneAsync(sessionDoc);
@@ -180,11 +181,15 @@ namespace Carter.App.Route.Sessions
 
             this.Post("/{id}", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>("sessions");
+                var sessions = db.GetCollection<SessionSchema>("sessions");
 
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
-                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+                var filter = Builders<SessionSchema>.Filter.
+                    Where(s => s.Id == uniqueID);
+
+                var sessionDoc = await (await sessions
+                    .FindAsync(filter))
+                    .FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
@@ -192,7 +197,7 @@ namespace Carter.App.Route.Sessions
                     return;
                 }
 
-                if (!sessionDoc["isOpen"].AsBoolean)
+                if (!sessionDoc.IsOpen)
                 {
                     res.StatusCode = 400;
                     return;
@@ -231,10 +236,10 @@ namespace Carter.App.Route.Sessions
 
                 // This lastCaptureAt is undefined on the session document until the first call of this endpoint
                 // Export flags are reset so the session can be re-exported
-                var update = Builders<BsonDocument>.Update
-                    .Set("lastCaptureAt", new BsonDateTime(DateTime.Now))
-                    .Set("isExported", false)
-                    .Set("isPending", false);
+                var update = Builders<SessionSchema>.Update
+                    .Set(s => s.LastCaptureAt, new BsonDateTime(DateTime.Now))
+                    .Set(s => s.IsExported, false)
+                    .Set(s => s.IsPending, false);
 
                 _ = sessions.UpdateOneAsync(filter, update);
 
@@ -297,18 +302,23 @@ namespace Carter.App.Route.Sessions
 
             this.Delete("/{id}", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>("sessions");
-
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
-                var update = Builders<BsonDocument>.Update.Set("isOpen", false);
-                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+
+                var sessions = db.GetCollection<SessionSchema>("sessions");
+
+                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
+                var sessionDoc = await (await sessions
+                    .FindAsync(filter))
+                    .FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
                     res.StatusCode = 404;
                     return;
                 }
+
+                var update = Builders<SessionSchema>.Update
+                    .Set(s => s.IsOpen, false);
 
                 await sessions.UpdateOneAsync(filter, update);
                 BasicResponce.Send(res);
@@ -348,6 +358,9 @@ namespace Carter.App.Route.Sessions
         [BsonIgnoreIfNull]
         [BsonElement("isOngoing")]
         public bool? IsOngoing { get; set; } = null;
+
+        [BsonElement("lastCaptureAt")]
+        public BsonDateTime LastCaptureAt { get; set; }
         #pragma warning restore SA151, SA1300
     }
 }
