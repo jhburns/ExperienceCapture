@@ -270,7 +270,7 @@ Set `aws_domain_name` variable in the `Server/.env` file to whichever domain is 
 
 ## Generate Password
 
-Run `docker-compose up new_password` and copy the Hash value into the `admin_password_hash` variable in the `Server/.env`file. This is used to bootstrap the website by visiting, `http://[your domain]/admin?password=[Password for URL value]` in the browser. 
+Run `docker-compose run api dotnet API.dll --passwordGenerate` and copy the 'Hash' value into the `admin_password_hash` variable in the `Server/.env`file. This is used to bootstrap the website by visiting, `http://[your domain]/admin?password=[Password for URL value]` in the browser, two preformatted versions are print for convenience.
 
 ## Optional Environmental Variables
 
