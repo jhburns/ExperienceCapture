@@ -392,9 +392,11 @@ namespace Carter.App.Route.Users
         public int ExpirationSeconds { get; set; }
 
         [BsonElement("isPending")]
+        [BsonDefaultValue(false)]
         public bool IsPending { get; set; }
 
         [BsonElement("isExisting")]
+        [BsonDefaultValue(true)]
         public bool IsExisting { get; set; }
 
         [BsonElement("createdAt")]

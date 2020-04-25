@@ -63,9 +63,6 @@ namespace Carter.App.Route.Sessions
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Id = uniqueID,
-                    IsOpen = true,
-                    IsExported = false,
-                    IsPending = false,
                     User = user, // Copying user data instead of referencing so it can never change with the session
                     CreatedAt = new BsonDateTime(DateTime.Now),
                     Tags = new List<string>(),
@@ -329,12 +326,15 @@ namespace Carter.App.Route.Sessions
         public string Id { get; set; }
 
         [BsonElement("isOpen")]
+        [BsonDefaultValue(true)]
         public bool IsOpen { get; set; }
 
         [BsonElement("IsExported")]
+        [BsonDefaultValue(false)]
         public bool IsExported { get; set; }
 
         [BsonElement("isPending")]
+        [BsonDefaultValue(false)]
         public bool IsPending { get; set; }
 
         // Copying user data instead of referencing so it can never change with the session
