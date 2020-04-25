@@ -254,7 +254,7 @@ namespace Carter.App.Route.Users
                     .Set("isExisting", false)
                     #pragma warning disable SA1515
                     // Removes the access token from the database
-                    // Important to increase secuirty
+                    // Important to increase security
                     #pragma warning restore SA1515
                     .Unset("accessToken");
 

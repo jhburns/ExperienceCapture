@@ -21,6 +21,8 @@ namespace Carter.App.Route.Sessions
     using MongoDB.Bson.Serialization;
     using MongoDB.Driver;
 
+    using Carter.App.Lib.DebugExtra;
+
     public class Sessions : CarterModule
     {
         public Sessions(IMongoDatabase db)
@@ -214,6 +216,16 @@ namespace Carter.App.Route.Sessions
                 {
                     string json = await req.Body.AsStringAsync();
                     document = BsonDocument.Parse(json);
+                }
+
+                if (!document.Contains("frameInfo")
+                    || document["frameInfo"].BsonType != BsonType.Document
+                    || !document["frameInfo"].AsBsonDocument.Contains("realtimeSinceStartup")
+                    || document["frameInfo"]["realtimeSinceStartup"].BsonType != BsonType.Double)
+                {
+                    DebugExtra.PrintPls((!document.Contains("frameInfo.realtimeSinceStartup")).ToString());
+                    res.StatusCode = 400;
+                    return;
                 }
 
                 var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
