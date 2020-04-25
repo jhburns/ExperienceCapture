@@ -19,6 +19,7 @@ namespace Carter.App.Route.Users
     using Carter.Request;
 
     using MongoDB.Bson;
+    using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
 
     public class Users : CarterModule
@@ -57,28 +58,34 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var users = db.GetCollection<BsonDocument>("users");
+                var users = db.GetCollection<PersonSchema>("users");
 
-                var existingPerson = await users.FindEqAsync("id", person.Subject);
+                var existingPerson = await (await users.FindAsync(
+                    Builders<PersonSchema>
+                        .Filter
+                        .Where(p => p.Id == person.Subject)))
+                        .FirstOrDefaultAsync();
+
                 if (existingPerson != null)
                 {
                     res.StatusCode = 409;
                     return;
                 }
 
-                var personObject = new
+                var personObject = new PersonSchema
                 {
-                    fullname = person.Name,
-                    firstname = person.GivenName,
-                    lastname = person.FamilyName,
-                    email = person.Email,
-                    createdAt = new BsonDateTime(DateTime.Now),
+                    InternalId = ObjectId.GenerateNewId(),
+                    Id = person.Subject,
+                    Fullname = person.Name,
+                    Firstname = person.GivenName,
+                    Lastname = person.FamilyName,
+                    Email = person.Email,
+                    CreatedAt = new BsonDateTime(DateTime.Now),
                 };
 
                 var personDoc = personObject.ToBsonDocument();
-                personDoc.Add("id", person.Subject);
 
-                await users.InsertOneAsync(personDoc.ToBsonDocument());
+                await users.InsertOneAsync(personObject);
                 BasicResponce.Send(res);
             });
 
@@ -323,34 +330,75 @@ namespace Carter.App.Route.Users
 
     public class PersonSchema
     {
-        #pragma warning disable SA1516, SA1300
-        public string fullname { get; set; }
-        public string firstname { get; set; }
-        public string lastname { get; set; }
-        public string email { get; set; }
-        public BsonDateTime createdAt { get; set; }
+        #pragma warning disable SA1516
+        [BsonId]
+        public BsonObjectId InternalId { get; set; }
+
+        [BsonElement("id")]
+        public string Id { get; set; }
+
+        [BsonElement("fullname")]
+        public string Fullname { get; set; }
+
+        [BsonElement("firstname")]
+        public string Firstname { get; set; }
+
+        [BsonElement("lastname")]
+        public string Lastname { get; set; }
+
+        [BsonElement("email")]
+        public string Email { get; set; }
+
+        [BsonElement("createdAt")]
+        public BsonDateTime CreatedAt { get; set; }
         #pragma warning restore SA151, SA1300
     }
 
     public class AccessTokenSchema
     {
-        #pragma warning disable SA1516, SA1300
-        public string newHash { get; set; }
-        public BsonObjectId user { get; set; }
-        public int expirationSeconds { get; set; }
-        public BsonDateTime createdAt { get; set; }
+        #pragma warning disable SA1516
+        [BsonId]
+        public BsonObjectId InternalId { get; set; }
+
+        [BsonElement("hash")]
+        public string Hash { get; set; }
+
+        [BsonElement("user")]
+        public BsonObjectId User { get; set; }
+
+        [BsonElement("expirationSeconds")]
+        [BsonDefaultValue(259200)] // Three days
+        public int ExpirationSeconds { get; set; }
+
+        [BsonElement("createdAt")]
+        public BsonDateTime CreatedAt { get; set; }
         #pragma warning restore SA151, SA1300
     }
 
     public class ClaimTokenSchema
     {
-        #pragma warning disable SA1516, SA1300
-        public string hash { get; set; }
-        public string accessToken { get; set; }
-        public int expirationSeconds { get; set; }
-        public bool isPending { get; set; }
-        public bool isExisting { get; set; }
-        public BsonDateTime createdAt { get; set; }
+        #pragma warning disable SA1516
+        [BsonId]
+        public BsonObjectId InternalId { get; set; }
+
+        [BsonElement("hash")]
+        public string Hash { get; set; }
+
+        [BsonElement("accessToken")]
+        public string AccessToken { get; set; }
+
+        [BsonElement("expirationSeconds")]
+        [BsonDefaultValue(3600)] // One hour
+        public int ExpirationSeconds { get; set; }
+
+        [BsonElement("isPending")]
+        public bool IsPending { get; set; }
+
+        [BsonElement("isExisting")]
+        public bool IsExisting { get; set; }
+
+        [BsonElement("createdAt")]
+        public BsonDateTime CreatedAt { get; set; }
         #pragma warning restore SA151, SA1300
     }
 }

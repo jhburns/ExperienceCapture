@@ -11,6 +11,7 @@ namespace Carter.App.Route.NewSignUp
     using Carter.App.Route.PreSecurity;
 
     using MongoDB.Bson;
+    using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
 
     public class NewSignUp : CarterModule
@@ -55,10 +56,18 @@ namespace Carter.App.Route.NewSignUp
 
     public class SignUpTokenSchema
     {
-        #pragma warning disable SA1516, SA1300
-        public string hash { get; set; }
-        public int expirationSeconds { get; set; }
-        public BsonDateTime createdAt { get; set; }
-        #pragma warning restore SA151, SA1300
+        #pragma warning disable SA1516
+        [BsonId]
+        public BsonObjectId InternalId { get; set; }
+
+        [BsonElement("hash")]
+        public string Hash { get; set; }
+
+        [BsonElement("expirationSeconds")]
+        public int ExpirationSeconds { get; set; }
+
+        [BsonElement("createdAt")]
+        public BsonDateTime CreatedAt { get; set; }
+        #pragma warning restore SA151
     }
 }
