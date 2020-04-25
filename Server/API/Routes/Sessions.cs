@@ -215,8 +215,9 @@ namespace Carter.App.Route.Sessions
                         {
                             document = BsonSerializer.Deserialize<BsonDocument>(ms);
                         }
-                        catch // TODO: print exception to debug
+                        catch
                         {
+                            // TODO: print exception to debug
                             res.StatusCode = 400;
                             return;
                         }
