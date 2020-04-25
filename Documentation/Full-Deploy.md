@@ -290,6 +290,3 @@ In `Deploy/.env`:
 ## Sharing and Deploying
 
 Everything should be setup now. This setup is designed so that these files can be shared with other developers. Test that everything is working by [following a normal deploy](Partial-Deploy.md).
-
-[comment]: <> (TODO: add info about renaming S3 bucket since those are globally namespaced)
-[comment]: <> (Or fix the backupper so a prefix is used)
