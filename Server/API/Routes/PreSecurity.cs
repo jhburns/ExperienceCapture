@@ -4,20 +4,18 @@ namespace Carter.App.Route.PreSecurity
     using System.Threading.Tasks;
 
     using Carter.App.Lib.Authentication;
-    using Carter.App.Lib.Mongo;
     using Carter.App.Lib.Timer;
 
     using Carter.App.Route.Users;
 
     using Microsoft.AspNetCore.Http;
 
-    using MongoDB.Bson;
     using MongoDB.Driver;
 
     public static class PreSecurity
     {
         public static Func<HttpContext, Task<bool>> GetSecurityCheck(IMongoDatabase db)
-        {   
+        {
             Func<HttpRequest, HttpResponse, Task<bool>> check = async (req, res) =>
             {
                 var accessTokens = db.GetCollection<AccessTokenSchema>(AccessTokenSchema.CollectionName);
@@ -35,7 +33,7 @@ namespace Carter.App.Route.PreSecurity
                         .Where(a => a.Hash == PasswordHasher.Hash(token))))
                         .FirstOrDefaultAsync();
 
-                if (accessTokenDoc == null 
+                if (accessTokenDoc == null
                     || accessTokenDoc.CreatedAt.IsAfter(accessTokenDoc.ExpirationSeconds))
                 {
                     res.StatusCode = 401;
@@ -45,7 +43,8 @@ namespace Carter.App.Route.PreSecurity
                 return true;
             };
 
-            return async (ctx) => {
+            return async (ctx) =>
+            {
                 return await check(ctx.Request, ctx.Response);
             };
         }
