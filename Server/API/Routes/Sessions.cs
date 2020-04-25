@@ -30,7 +30,7 @@ namespace Carter.App.Route.Sessions
 
             this.Post("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>("sessions");
+                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
                 string uniqueID = Generate.GetRandomId(4);
                 var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
@@ -43,7 +43,7 @@ namespace Carter.App.Route.Sessions
                     filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
                 }
 
-                var accessTokens = db.GetCollection<AccessTokenSchema>("users.tokens.access");
+                var accessTokens = db.GetCollection<AccessTokenSchema>(AccessTokenSchema.CollectionName);
                 string token = req.Cookies["ExperienceCapture-Access-Token"]; // Has to exist due to PreSecurity Check
 
                 var accessTokenDoc = await (await accessTokens.FindAsync(
@@ -52,8 +52,8 @@ namespace Carter.App.Route.Sessions
                         .Where(a => a.Hash == PasswordHasher.Hash(token))))
                         .FirstOrDefaultAsync();
 
-                var users = db.GetCollection<PersonSchema>("users");
-                var filterUser = Builders<PersonSchema>.Filter.Where(u => u.InternalId == accessTokenDoc.User);
+                var users = db.GetCollection<PersonSchema>(PersonSchema.CollectionName);
+                var filterUser = Builders<PersonSchema>.Filter.Where(p => p.InternalId == accessTokenDoc.User);
 
                 var user = await (await users
                     .FindAsync(filterUser))
@@ -66,6 +66,7 @@ namespace Carter.App.Route.Sessions
                     User = user, // Copying user data instead of referencing so it can never change with the session
                     CreatedAt = new BsonDateTime(DateTime.Now),
                     Tags = new List<string>(),
+                    LastCaptureAt = new BsonDateTime(DateTime.Now),
                 };
 
                 await sessions.InsertOneAsync(sessionDoc);
@@ -97,7 +98,7 @@ namespace Carter.App.Route.Sessions
 
             this.Get("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>("sessions");
+                var sessions = db.GetCollection<BsonDocument>(SessionSchema.CollectionName);
                 var projection = Builders<BsonDocument>.Projection.Exclude("_id");
 
                 var builder = Builders<BsonDocument>.Filter;
@@ -180,11 +181,15 @@ namespace Carter.App.Route.Sessions
 
             this.Post("/{id}", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>("sessions");
+                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
-                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+                var filter = Builders<SessionSchema>.Filter.
+                    Where(s => s.Id == uniqueID);
+
+                var sessionDoc = await (await sessions
+                    .FindAsync(filter))
+                    .FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
@@ -192,7 +197,7 @@ namespace Carter.App.Route.Sessions
                     return;
                 }
 
-                if (!sessionDoc["isOpen"].AsBoolean)
+                if (!sessionDoc.IsOpen)
                 {
                     res.StatusCode = 400;
                     return;
@@ -205,13 +210,33 @@ namespace Carter.App.Route.Sessions
                     {
                         await req.Body.CopyToAsync(ms);
                         ms.Position = 0;
-                        document = BsonSerializer.Deserialize<BsonDocument>(ms);
+
+                        try
+                        {
+                            document = BsonSerializer.Deserialize<BsonDocument>(ms);
+                        }
+                        catch
+                        {
+                            // TODO: print exception to debug
+                            res.StatusCode = 400;
+                            return;
+                        }
                     }
                 }
                 else
                 {
                     string json = await req.Body.AsStringAsync();
-                    document = BsonDocument.Parse(json);
+
+                    try
+                    {
+                        document = BsonDocument.Parse(json);
+                    }
+                    catch
+                    {
+                        // TODO: print exception to debug
+                        res.StatusCode = 400;
+                        return;
+                    }
                 }
 
                 // Manual validation, because Fluent Validation would remove extra properties
@@ -231,10 +256,10 @@ namespace Carter.App.Route.Sessions
 
                 // This lastCaptureAt is undefined on the session document until the first call of this endpoint
                 // Export flags are reset so the session can be re-exported
-                var update = Builders<BsonDocument>.Update
-                    .Set("lastCaptureAt", new BsonDateTime(DateTime.Now))
-                    .Set("isExported", false)
-                    .Set("isPending", false);
+                var update = Builders<SessionSchema>.Update
+                    .Set(s => s.LastCaptureAt, new BsonDateTime(DateTime.Now))
+                    .Set(s => s.IsExported, false)
+                    .Set(s => s.IsPending, false);
 
                 _ = sessions.UpdateOneAsync(filter, update);
 
@@ -243,15 +268,13 @@ namespace Carter.App.Route.Sessions
 
             this.Get("/{id}", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>("sessions");
+                var sessions = db.GetCollection<BsonDocument>(SessionSchema.CollectionName);
 
                 string uniqueID = req.RouteValues.As<string>("id");
-                var projection = Builders<BsonDocument>.Projection.Exclude("_id");
                 var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
 
                 var sessionDoc = await sessions
                     .Find(filter)
-                    .Project(projection)
                     .FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
@@ -297,18 +320,23 @@ namespace Carter.App.Route.Sessions
 
             this.Delete("/{id}", async (req, res) =>
             {
-                var sessions = db.GetCollection<BsonDocument>("sessions");
-
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<BsonDocument>.Filter.Eq("id", uniqueID);
-                var update = Builders<BsonDocument>.Update.Set("isOpen", false);
-                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+
+                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
+
+                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
+                var sessionDoc = await (await sessions
+                    .FindAsync(filter))
+                    .FirstOrDefaultAsync();
 
                 if (sessionDoc == null)
                 {
                     res.StatusCode = 404;
                     return;
                 }
+
+                var update = Builders<SessionSchema>.Update
+                    .Set(s => s.IsOpen, false);
 
                 await sessions.UpdateOneAsync(filter, update);
                 BasicResponce.Send(res);
@@ -319,6 +347,9 @@ namespace Carter.App.Route.Sessions
     public class SessionSchema
     {
         #pragma warning disable SA1516
+        [BsonIgnore]
+        public const string CollectionName = "sessions";
+
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
@@ -348,6 +379,9 @@ namespace Carter.App.Route.Sessions
         [BsonIgnoreIfNull]
         [BsonElement("isOngoing")]
         public bool? IsOngoing { get; set; } = null;
+
+        [BsonElement("lastCaptureAt")]
+        public BsonDateTime LastCaptureAt { get; set; }
         #pragma warning restore SA151, SA1300
     }
 }

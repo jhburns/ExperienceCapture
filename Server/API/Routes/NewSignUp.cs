@@ -11,6 +11,7 @@ namespace Carter.App.Route.NewSignUp
     using Carter.App.Route.PreSecurity;
 
     using MongoDB.Bson;
+    using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
 
@@ -25,16 +26,17 @@ namespace Carter.App.Route.NewSignUp
             this.Post("/signUp/", async (req, res) =>
             {
                 string newToken = Generate.GetRandomToken();
-                var signUpTokens = db.GetCollection<BsonDocument>("users.tokens.signUp");
+                var signUpTokens = db.GetCollection<SignUpTokenSchema>(SignUpTokenSchema.CollectionName);
 
-                var tokenDoc = new
+                var tokenDoc = new SignUpTokenSchema
                 {
-                    hash = PasswordHasher.Hash(newToken),
-                    expirationSeconds = 86400, // One day
-                    createdAt = new BsonDateTime(DateTime.Now),
+                    InternalId = ObjectId.GenerateNewId(),
+                    Hash = PasswordHasher.Hash(newToken),
+                    ExpirationSeconds = 86400, // One day
+                    CreatedAt = new BsonDateTime(DateTime.Now),
                 };
 
-                await signUpTokens.InsertOneAsync(tokenDoc.ToBsonDocument());
+                await signUpTokens.InsertOneAsync(tokenDoc);
 
                 var responce = new
                 {
@@ -57,6 +59,9 @@ namespace Carter.App.Route.NewSignUp
     public class SignUpTokenSchema
     {
         #pragma warning disable SA1516
+        [BsonIgnore]
+        public const string CollectionName = "users.tokens.signUps";
+
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
@@ -68,6 +73,7 @@ namespace Carter.App.Route.NewSignUp
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
+
         #pragma warning restore SA151
     }
 }
