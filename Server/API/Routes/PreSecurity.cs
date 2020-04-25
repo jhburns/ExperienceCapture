@@ -27,10 +27,10 @@ namespace Carter.App.Route.PreSecurity
                     return false;
                 }
 
-                var accessTokenDoc = await (await accessTokens.FindAsync(
+                var accessTokenDoc = await accessTokens.Find(
                     Builders<AccessTokenSchema>
                         .Filter
-                        .Where(a => a.Hash == PasswordHasher.Hash(token))))
+                        .Where(a => a.Hash == PasswordHasher.Hash(token)))
                         .FirstOrDefaultAsync();
 
                 if (accessTokenDoc == null

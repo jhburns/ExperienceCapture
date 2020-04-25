@@ -62,10 +62,10 @@ namespace Carter.App.Route.Users
 
                 var users = db.GetCollection<PersonSchema>("users");
 
-                var existingPerson = await (await users.FindAsync(
+                var existingPerson = await users.Find(
                     Builders<PersonSchema>
                         .Filter
-                        .Where(p => p.Id == person.Subject)))
+                        .Where(p => p.Id == person.Subject))
                         .FirstOrDefaultAsync();
 
                 if (existingPerson != null)
