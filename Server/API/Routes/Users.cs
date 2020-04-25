@@ -144,7 +144,6 @@ namespace Carter.App.Route.Users
                 };
 
                 await accessTokens.InsertOneAsync(tokenObject);
-                DebugExtra.PrintPls(newHash);
 
                 if (newAccessRequest.Data.claimToken != null)
                 {
