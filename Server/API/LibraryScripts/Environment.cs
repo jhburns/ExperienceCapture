@@ -20,7 +20,7 @@ namespace Carter.App.Lib.Environment
                     ?? throw new EnviromentVarNotSet("The following is unset", "admin_password_hash");
 
             string skipValidation = Environment.GetEnvironmentVariable("unsafe_do_no_validate_user")
-                    ?? throw new EnviromentVarNotSet("The following is unset", "unsafe_do_no_validate_user");
+                    ?? "false";
 
             string audience = Environment.GetEnvironmentVariable("gcp_client_id")
                     ?? throw new EnviromentVarNotSet("The following is unset", "gcp_client_id");

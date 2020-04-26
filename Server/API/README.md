@@ -11,6 +11,7 @@ Written in .Net Core (C#) and has the following dependencies:
 - [Google APIs client](https://developers.google.com/api-client-library/dotnet)
 - [CsvHelper](https://joshclose.github.io/CsvHelper/)
 - [Handlebars.Net](https://github.com/rexm/Handlebars.Net)
+- [Json.Net](https://www.newtonsoft.com/json)
 
 This is the bulk of the logic in the application. Also, this will start the exporter from an api call.
 

@@ -14,7 +14,7 @@ namespace Carter.App.Lib.Authentication
 
     public class GoogleApi
     {
-        public static async Task<GoogleJsonWebSignature.Payload> ValidateUser(string idToken, IAppEnvironment env)
+        public static async Task<GoogleJsonWebSignature.Payload> ValidateUser(string token, IAppEnvironment env)
         {
             if (env.SkipValidation == "true")
             {
@@ -35,9 +35,7 @@ namespace Carter.App.Lib.Authentication
                     Audience = new string[] { env.Audience },
                 };
 
-                var validPayload = await GoogleJsonWebSignature.ValidateAsync(idToken);
-                Console.WriteLine("Subject: " + validPayload.Subject);
-                Console.WriteLine("Audience: " + validPayload.Audience);
+                var validPayload = await GoogleJsonWebSignature.ValidateAsync(token);
                 return validPayload;
             }
             catch (Exception e)
