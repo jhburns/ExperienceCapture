@@ -1,8 +1,10 @@
 ﻿namespace Carter.App.Hosting
 {
+    using System;
     using System.Linq;
 
     using Carter.App.Lib.Authentication;
+    using Carter.App.Lib.Environment;
 
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
@@ -13,7 +15,9 @@
         {
             if (args.Contains("--passwordGenerate") || args.Contains("-p"))
             {
-                PasswordHasher.OutputNew();
+                string domain = Environment.GetEnvironmentVariable("aws_domain_name")
+                    ?? throw new EnviromentVarNotSet("The following is unset", "aws_domain_name");
+                PasswordHasher.OutputNew(domain);
                 return;
             }
 

@@ -1,10 +1,8 @@
 namespace Carter.App.Hosting
 {
-    using System;
-
     using Carter;
 
-    using Docker.DotNet;
+    using Carter.App.Lib.Environment;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
@@ -42,6 +40,9 @@ namespace Carter.App.Hosting
             // TODO: change this to use config string like Mongo
             MinioClient os = new MinioClient("os:9000", minioUsername, minioPassword);
             services.AddSingleton<MinioClient>(os);
+
+            AppEnvironment env = ConfigureAppEnvironment.FromEnv();
+            services.AddSingleton<IAppEnvironment>(env);
         }
 
         public void Configure(IApplicationBuilder app)
