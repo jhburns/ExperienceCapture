@@ -26,4 +26,4 @@ Outline of the deployment process, some notes:
 Outline of what happens inside of the server, besides dataflow, some notes:
 - The garbage collector's main duty is to cleanup the Backupper, but it deletes everything including itself that is stopped.
 - Continuous means a server shouldn't stop under normal circumstances, not that it never will.
-- AWS S# refers to [this service](https://aws.amazon.com/s3/).
+- AWS S3 refers to [this service](https://aws.amazon.com/s3/).
