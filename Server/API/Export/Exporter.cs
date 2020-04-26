@@ -11,6 +11,7 @@ namespace Carter.App.Export.Main
     using System.Threading.Tasks;
 
     using Carter.App.Export.JsonHelper;
+    using Carter.App.Route.Sessions;
 
     using CsvHelper;
     using CsvHelper.Configuration;
@@ -77,6 +78,7 @@ namespace Carter.App.Export.Main
 
             // Uncomment to make it so the program stays open, for debugging
             // System.Threading.Thread.Sleep(100000000);
+            Directory.Delete(prefix, true);
         }
 
         private static async Task ExportSession()
@@ -213,12 +215,12 @@ namespace Carter.App.Export.Main
                 .ToListAsync();
         }
 
-        private static async Task<BsonDocument> GetSessionInfo()
+        private static async Task<SessionSchema> GetSessionInfo()
         {
-            var sessions = DB.GetCollection<BsonDocument>("sessions");
+            var sessions = DB.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
-            var filter = Builders<BsonDocument>.Filter
-                .Eq("id", sessionId);
+            var filter = Builders<SessionSchema>.Filter
+                .Where(s => s.Id == sessionId);
 
             return await sessions
                 .Find(filter)
@@ -255,6 +257,12 @@ namespace Carter.App.Export.Main
         }
 
         private static void ToJson(BsonDocument sessionDoc, string about)
+        {
+            string filename = $"{sessionId}.{about}.json";
+            AppendToFile(sessionDoc.ToJson(JsonWriterSettings.Defaults), filename);
+        }
+
+        private static void ToJson(SessionSchema sessionDoc, string about)
         {
             string filename = $"{sessionId}.{about}.json";
             AppendToFile(sessionDoc.ToJson(JsonWriterSettings.Defaults), filename);
@@ -520,14 +528,14 @@ namespace Carter.App.Export.Main
 
         private static async Task UpdateDoc()
         {
-            var sessions = DB.GetCollection<BsonDocument>("sessions");
+            var sessions = DB.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
-            var filter = Builders<BsonDocument>.Filter
-                .Eq("id", sessionId);
+            var filter = Builders<SessionSchema>.Filter
+                .Where(s => s.Id == sessionId);
 
-            var update = Builders<BsonDocument>.Update
-                .Set("isExported", true)
-                .Set("isPending", false);
+            var update = Builders<SessionSchema>.Update
+                .Set(s => s.IsExported, true)
+                .Set(s => s.IsPending, false);
 
             await sessions.UpdateOneAsync(filter, update);
         }
