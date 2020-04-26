@@ -17,5 +17,5 @@ This is the bulk of the logic in the application. Also, this will start the expo
 
 - `LibraryScripts/` a collection of common logic.
 - `Routes/` the endpoints of the API, which is comprised of logic to be preformed based on the on the calling path.
-- `UsageHelpers/` an [Insomnia](https://insomnia.rest/) export file that makes it easier to develop the API. It also comes with a binary bson file, that can be loaded as a request body through Insomnia.
+- `UsageHelpers/` an [Insomnia](https://insomnia.rest/) export file that makes it easier to develop the API. It also comes with a binary BSON file, that can be loaded as a request body through Insomnia.
 - `Validators/` bindings for data received for each applicable route.
