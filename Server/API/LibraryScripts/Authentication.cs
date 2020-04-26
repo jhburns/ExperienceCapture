@@ -36,8 +36,6 @@ namespace Carter.App.Lib.Authentication
                 };
 
                 var validPayload = await GoogleJsonWebSignature.ValidateAsync(token);
-                Console.WriteLine("Subject: " + validPayload.Subject);
-                Console.WriteLine("Audience: " + validPayload.Audience);
                 return validPayload;
             }
             catch (Exception e)

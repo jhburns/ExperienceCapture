@@ -11,6 +11,7 @@ Written in .Net Core (C#) and has the following dependencies:
 - [Google APIs client](https://developers.google.com/api-client-library/dotnet)
 - [CsvHelper](https://joshclose.github.io/CsvHelper/)
 - [Handlebars.Net](https://github.com/rexm/Handlebars.Net)
+- [Newtonsoft](https://www.newtonsoft.com/json)
 
 This is the bulk of the logic in the application. Also, this will start the exporter from an api call.
 
@@ -21,3 +22,5 @@ This is the bulk of the logic in the application. Also, this will start the expo
 - `UsageHelpers/` an [Insomnia](https://insomnia.rest/) export file that makes it easier to develop the API. It also comes with a binary BSON file, that can be loaded as a request body through Insomnia.
 - `Validators/` bindings for data received for each applicable route.
 - `Export/` the session exporter, formerly a separate component.
+
+[comment]: <> (TODO: fix this so that debug isn't printed in production)
