@@ -5,7 +5,7 @@ namespace Carter.App.Route.Users
     using Carter;
 
     using Carter.App.Lib.Authentication;
-    using Carter.App.Lib.CustomExceptions;
+    using Carter.App.Lib.Environment;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Network;
     using Carter.App.Lib.Timer;
@@ -25,10 +25,7 @@ namespace Carter.App.Route.Users
 
     public class Users : CarterModule
     {
-        private static readonly string PasswordHash = Environment.GetEnvironmentVariable("admin_password_hash")
-            ?? throw new EnviromentVarNotSet("The following is unset", "admin_password_hash");
-
-        public Users(IMongoDatabase db)
+        public Users(IMongoDatabase db, IAppEnvironment env)
             : base("/users")
         {
             this.Post("/", async (req, res) =>
@@ -41,7 +38,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var person = await GoogleApi.ValidateUser(newPerson.Data.idToken);
+                var person = await GoogleApi.ValidateUser(newPerson.Data.idToken, env);
                 if (person == null)
                 {
                     res.StatusCode = 401;
@@ -118,7 +115,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var person = await GoogleApi.ValidateUser(newAccessRequest.Data.idToken);
+                var person = await GoogleApi.ValidateUser(newAccessRequest.Data.idToken, env);
                 if (person == null)
                 {
                     res.StatusCode = 401;
@@ -295,7 +292,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                if (!PasswordHasher.Check(newAdmin.Data.password, PasswordHash))
+                if (!PasswordHasher.Check(newAdmin.Data.password, env.PasswordHash))
                 {
                     res.StatusCode = 401;
                     return;

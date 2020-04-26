@@ -10,7 +10,6 @@ namespace Carter.App.Route.Export
 
     using Carter.App.Export.Main;
 
-    using Carter.App.Lib.CustomExceptions;
     using Carter.App.Lib.Network;
 
     using Carter.App.Route.PreSecurity;

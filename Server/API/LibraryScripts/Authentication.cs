@@ -7,21 +7,16 @@ namespace Carter.App.Lib.Authentication
 
     using System.Threading.Tasks;
 
+    using Carter.App.Lib.Environment;
     using Carter.App.Lib.Generate;
 
     using Google.Apis.Auth;
 
     public class GoogleApi
     {
-        // TODO: make following default to empty string
-        private static readonly string SkipValidation = Environment.GetEnvironmentVariable("unsafe_do_no_validate_user");
-
-        // TODO: make app throw exception when following not defined
-        private static readonly string Audience = Environment.GetEnvironmentVariable("gcp_client_id");
-
-        public static async Task<GoogleJsonWebSignature.Payload> ValidateUser(string idToken)
+        public static async Task<GoogleJsonWebSignature.Payload> ValidateUser(string idToken, IAppEnvironment env)
         {
-            if (SkipValidation == "true")
+            if (env.SkipValidation == "true")
             {
                 return new GoogleJsonWebSignature.Payload()
                 {
@@ -37,7 +32,7 @@ namespace Carter.App.Lib.Authentication
             {
                 var settings = new GoogleJsonWebSignature.ValidationSettings()
                 {
-                    Audience = new string[] { Audience },
+                    Audience = new string[] { env.Audience },
                 };
 
                 var validPayload = await GoogleJsonWebSignature.ValidateAsync(idToken);
@@ -55,9 +50,6 @@ namespace Carter.App.Lib.Authentication
 
     public class PasswordHasher
     {
-        // TODO: make app throw exception when following not defined
-        private static readonly string Domain = Environment.GetEnvironmentVariable("aws_domain_name");
-
         public static string Hash(string password)
         {
             try
@@ -98,14 +90,14 @@ namespace Carter.App.Lib.Authentication
             }
         }
 
-        public static void OutputNew()
+        public static void OutputNew(string domain)
         {
             string password = Generate.GetRandomToken();
             string urlPassword = WebUtility.UrlEncode(password);
             string hash = Hash(password);
             Console.WriteLine($"Password: {password}");
             Console.WriteLine($"Example login URL for localhost: http://localhost:8090/admin?password={urlPassword}");
-            Console.WriteLine($"Example login URL for domain: https://{Domain}/admin?password={urlPassword}");
+            Console.WriteLine($"Example login URL for domain: https://{domain}/admin?password={urlPassword}");
             Console.WriteLine($"Hash (for .env file): {hash}");
         }
     }
