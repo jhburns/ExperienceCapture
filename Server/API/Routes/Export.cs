@@ -112,8 +112,7 @@ namespace Carter.App.Route.Export
 
             try
             {
-                await os.GetObjectAsync(bucketName, objectName,
-                (stream) =>
+                await os.GetObjectAsync(bucketName, objectName, (stream) =>
                 {
                     using (var outStream = new MemoryStream())
                     {

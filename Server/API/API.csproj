@@ -13,14 +13,15 @@
                  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-<ItemGroup>
-   <None Include="appsettings.json" CopyToPublishDirectory="Always" />
-</ItemGroup>
+  <ItemGroup>
+    <None Include="appsettings.json" CopyToPublishDirectory="Always" />
+    <None Include="appsettings.production.json" CopyToPublishDirectory="Always" />
+    <None Include="Templates/README.txt.handlebars" CopyToPublishDirectory="Always" />
+  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="Carter" Version="5.0.0" />
     <PackageReference Include="CsvHelper" Version="12.2.3" />
-    <PackageReference Include="Docker.DotNet" Version="3.125.2" />
     <PackageReference Include="FluentValidation" Version="8.6.0" />
     <PackageReference Include="Google.Apis.Auth" Version="1.42.0" />
     <PackageReference Include="Handlebars.Net" Version="1.10.1" />

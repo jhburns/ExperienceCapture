@@ -1,5 +1,7 @@
 namespace Carter.App.Route.Health
 {
+    using System;
+
     using Carter;
     using Microsoft.AspNetCore.Http;
 

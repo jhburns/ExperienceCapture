@@ -84,7 +84,7 @@
     <Rule Id="SA1128" Action="Warning" /> <!-- Put constructor initializers on their own line -->
     <Rule Id="SA1122" Action="Warning" /> <!-- Use string.Empty for empty strings -->
     <Rule Id="SA1413" Action="Warning" /> <!-- Use trailing comma in multi-line initializers -->
-    <Rule Id="SA1117" Action="None" /> <!-- Parameters should be on same line or separate lines -->
+    <Rule Id="SA1117" Action="Warning" /> <!-- Parameters should be on same line or separate lines -->
     <Rule Id="SA1602" Action="Warning" /> <!-- Enumeration items should be documented -->
     <Rule Id="SA1108" Action="Warning" /> <!-- Block statements should not contain embedded comments -->
     <Rule Id="SA1601" Action="Warning" /> <!-- Partial elements should be documented -->
@@ -102,5 +102,7 @@
     <Rule Id="SA1133" Action="Warning" /> <!-- Do not combine attributes -->
     <Rule Id="SA1202" Action="Warning" /> <!-- Elements should be ordered by access -->
     <Rule Id="SA1201" Action="Warning" /> <!-- Elements should appear in the correct order -->
+    <Rule Id="SA1305" Action="Warning" /> <!-- The name of a field or variable in C# uses Hungarian notation -->
+    <Rule Id="SA1106" Action="Warning" /> <!-- No extra semicolon -->
   </Rules>
 </RuleSet>
