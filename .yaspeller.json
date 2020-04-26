@@ -111,7 +111,8 @@
     "Stateful",
     "EBS",
     "namespaced",
-    "preformatted"
+    "preformatted",
+    "BSON"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
