@@ -1,9 +1,8 @@
-namespace Export.App.Main
+namespace Carter.App.Export.Main
 {
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.Diagnostics;
     using System.IO;
     using System.IO.Compression;
     using System.Linq;
@@ -11,11 +10,11 @@ namespace Export.App.Main
     using System.Text;
     using System.Threading.Tasks;
 
+    using Carter.App.Export.JsonHelper;
+    using Carter.App.Route.Sessions;
+
     using CsvHelper;
     using CsvHelper.Configuration;
-
-    using Exporter.App.CustomExceptions;
-    using Exporter.App.JsonHelper;
 
     using HandlebarsDotNet;
 
@@ -31,35 +30,31 @@ namespace Export.App.Main
         private static readonly IMongoDatabase DB = new MongoClient(@"mongodb://db:27017").GetDatabase("ec");
         private static readonly MinioClient OS = new MinioClient("os:9000", "minio", "minio123");
 
-        private static readonly string SessionId = Environment.GetEnvironmentVariable("exporter_session_id")
-            ?? throw new EnviromentVarNotSet("The following is unset", "exporter_session_id");
-
         private static readonly string Seperator = Path.DirectorySeparatorChar.ToString();
 
-        private static Stopwatch timer;
+        private static string sessionId;
+        private static string prefix;
 
         private static int currentSceneIndex;
         private static string currentSceneName;
         private static List<string> currentHeader;
 
-        // TODO: use file-path strings more structured
-        public static void Main(string[] args)
+        public static void Entry(object id)
         {
-            // Stopwatch is used to track total time
-            // So started first
-            timer = new Stopwatch();
-            timer.Start();
-
-            MainAsync(args).GetAwaiter().GetResult();
+            _ = MainAsync((string)id);
         }
 
-        private static async Task MainAsync(string[] args)
+        private static async Task MainAsync(string id)
         {
+            sessionId = id;
+
             try
             {
-                string outFolder = $".{Seperator}exported{Seperator}";
-                string zipFolder = $".{Seperator}zipped{Seperator}";
-                string tempFolder = $".{Seperator}temporary{Seperator}CSVs{Seperator}";
+                var jobId = Guid.NewGuid();
+                prefix = $"./{Seperator}exporter_temporary_files{Seperator}{jobId}{Seperator}";
+                string outFolder = $"{prefix}exported{Seperator}";
+                string zipFolder = $"{prefix}zipped{Seperator}";
+                string tempFolder = $"{prefix}temporary{Seperator}CSVs{Seperator}";
 
                 Directory.CreateDirectory(outFolder);
                 Directory.CreateDirectory($"{outFolder}CSVs{Seperator}");
@@ -70,13 +65,11 @@ namespace Export.App.Main
                 ConfigureJsonWriter();
                 await ExportSession();
 
-                string outLocation = zipFolder + $"{SessionId}_session_exported.zip";
+                string outLocation = zipFolder + $"{sessionId}_session_exported.zip";
                 ZipFolder(outFolder, outLocation);
 
                 await Upload(outLocation);
                 await UpdateDoc();
-
-                PrintFinishTime();
             }
             catch (Exception e)
             {
@@ -85,23 +78,7 @@ namespace Export.App.Main
 
             // Uncomment to make it so the program stays open, for debugging
             // System.Threading.Thread.Sleep(100000000);
-        }
-
-        private static void PrintFinishTime()
-        {
-            timer.Stop();
-            var span = timer.Elapsed;
-            string elapsed = string.Format(
-                "{0:00}:{1:00}:{2:00}.{3:00}",
-                span.Hours,
-                span.Minutes,
-                span.Seconds,
-                span.Milliseconds / 10);
-
-            timer.Reset();
-            timer.Start();
-
-            Console.WriteLine("Completed in: " + elapsed);
+            Directory.Delete(prefix, true);
         }
 
         private static async Task ExportSession()
@@ -196,7 +173,7 @@ namespace Export.App.Main
          */
         private static async Task<List<long>> GetWorkloads()
         {
-            var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{SessionId}");
+            var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{sessionId}");
             var filter = Builders<BsonDocument>.Filter.Empty;
             long docCount = await sessionCollection.CountDocumentsAsync(filter);
 
@@ -221,7 +198,7 @@ namespace Export.App.Main
 
         private static async Task<List<BsonDocument>> SortSession(int workload, int offset)
         {
-            var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{SessionId}");
+            var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{sessionId}");
 
             var filter = Builders<BsonDocument>.Filter.Empty;
             var sorter = Builders<BsonDocument>.Sort
@@ -238,12 +215,12 @@ namespace Export.App.Main
                 .ToListAsync();
         }
 
-        private static async Task<BsonDocument> GetSessionInfo()
+        private static async Task<SessionSchema> GetSessionInfo()
         {
-            var sessions = DB.GetCollection<BsonDocument>("sessions");
+            var sessions = DB.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
-            var filter = Builders<BsonDocument>.Filter
-                .Eq("id", SessionId);
+            var filter = Builders<SessionSchema>.Filter
+                .Where(s => s.Id == sessionId);
 
             return await sessions
                 .Find(filter)
@@ -265,23 +242,29 @@ namespace Export.App.Main
                 docsTotal.Remove(0, 1);
             }
 
-            string filename = $"{SessionId}.{about}.json";
+            string filename = $"{sessionId}.{about}.json";
             AppendToFile(docsTotal.ToString(), filename);
         }
 
         private static void ToJsonStart(string about)
         {
-            AppendToFile("[", $"{SessionId}.{about}.json");
+            AppendToFile("[", $"{sessionId}.{about}.json");
         }
 
         private static void ToJsonEnd(string about)
         {
-            AppendToFile("]", $"{SessionId}.{about}.json");
+            AppendToFile("]", $"{sessionId}.{about}.json");
         }
 
         private static void ToJson(BsonDocument sessionDoc, string about)
         {
-            string filename = $"{SessionId}.{about}.json";
+            string filename = $"{sessionId}.{about}.json";
+            AppendToFile(sessionDoc.ToJson(JsonWriterSettings.Defaults), filename);
+        }
+
+        private static void ToJson(SessionSchema sessionDoc, string about)
+        {
+            string filename = $"{sessionId}.{about}.json";
             AppendToFile(sessionDoc.ToJson(JsonWriterSettings.Defaults), filename);
         }
 
@@ -388,8 +371,8 @@ namespace Export.App.Main
             string json = ToFlatJson(block.Docs);
             string csv = JsonToCsv(json);
 
-            string path = $".{Seperator}temporary{Seperator}CSVs{Seperator}";
-            AppendToFile(csv, $"{SessionId}.{about}.{block.Name}.{block.Index}.csv", path);
+            string path = $"temporary{Seperator}CSVs{Seperator}";
+            AppendToFile(csv, $"{sessionId}.{about}.{block.Name}.{block.Index}.csv", path);
         }
 
         private static string JsonToCsv(string jsonContent)
@@ -429,12 +412,12 @@ namespace Export.App.Main
                 csv.NextRecord();
             }
 
-            string path = $".{Seperator}exported{Seperator}CSVs{Seperator}";
-            string filename = $"{SessionId}.{about}.{block.Name}.{block.Index}.csv";
+            string path = $"exported{Seperator}CSVs{Seperator}";
+            string filename = $"{sessionId}.{about}.{block.Name}.{block.Index}.csv";
             AppendToFile(csvString.ToString(), filename, path);
 
-            string temporaryLocation = $".{Seperator}temporary{Seperator}CSVs{Seperator}{filename}";
-            File.AppendAllText($"{path}{filename}", File.ReadAllText(temporaryLocation));
+            string temporaryLocation = $"{prefix}temporary{Seperator}CSVs{Seperator}{filename}";
+            File.AppendAllText($"{prefix}{path}{filename}", File.ReadAllText(temporaryLocation));
 
             // Reset the headers, because a new scene will likely have differerent headers
             currentHeader = new List<string>();
@@ -485,7 +468,7 @@ namespace Export.App.Main
 
             var data = new
             {
-                id = SessionId,
+                id = sessionId,
             };
 
             AppendToFile(template(data), "README.txt");
@@ -496,11 +479,11 @@ namespace Export.App.Main
             string fullpath;
             if (path == string.Empty)
             {
-                fullpath = $".{Seperator}exported{Seperator}{filename}";
+                fullpath = $"{prefix}exported{Seperator}{filename}";
             }
             else
             {
-                fullpath = $"{path}{filename}";
+                fullpath = $"{prefix}{path}{filename}";
             }
 
             using (var sw = File.AppendText(fullpath))
@@ -521,7 +504,7 @@ namespace Export.App.Main
 
             // Regions shouldn't really matter because the zip is uploaded to local minio anyway
             var location = "us-west-1";
-            var objectName = $"{SessionId}_session_exported.zip";
+            var objectName = $"{sessionId}_session_exported.zip";
             var filePath = fileLocation;
             var contentType = "application/zip";
 
@@ -545,14 +528,14 @@ namespace Export.App.Main
 
         private static async Task UpdateDoc()
         {
-            var sessions = DB.GetCollection<BsonDocument>("sessions");
+            var sessions = DB.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
-            var filter = Builders<BsonDocument>.Filter
-                .Eq("id", SessionId);
+            var filter = Builders<SessionSchema>.Filter
+                .Where(s => s.Id == sessionId);
 
-            var update = Builders<BsonDocument>.Update
-                .Set("isExported", true)
-                .Set("isPending", false);
+            var update = Builders<SessionSchema>.Update
+                .Set(s => s.IsExported, true)
+                .Set(s => s.IsPending, false);
 
             await sessions.UpdateOneAsync(filter, update);
         }
@@ -561,11 +544,11 @@ namespace Export.App.Main
     // Used to group together captures based on timestamps
     internal class SceneBlock
     {
-        #pragma warning disable SA1516, SA1300
+        #pragma warning disable SA1516
         public string Name { get; set; }
         public double StartTime { get; set; }
         public int Index { get; set; }
         public List<BsonDocument> Docs { get; set; }
-        #pragma warning restore SA151, SA1300
+        #pragma warning restore SA151
     }
 }

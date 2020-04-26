@@ -26,4 +26,4 @@ How to use:
 - Press 'play' on the first code block, and select the `FHEB.onlyCaptures.json` locally to upload.
 - Press 'play' on the second code block.
 
-[comment]: <> (TODO: Update to latest exporter version)
+[comment]: <> (TODO: Update to latest exporter format)

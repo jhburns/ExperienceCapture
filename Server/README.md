@@ -15,7 +15,6 @@ Run `docker-compose build` first to develop locally.
 - API: `docker-compose up rp api` starts the api server. It should be available at http://localhost:8090/api/v1/.
 - WebUI: `docker-compose up rp web` starts the front-end in development mode. It should be available at http://localhost:8090.
 - Database: should be started alongside any service that needs it, but `docker-compose down` also stops it.
-- Exporter: `docker-compose run -e exporter_session_id=XXXX exporter` starts the exporter, with it exporting the given exporter_session_id (required). It will exit when done. Keep in mind the API also can start an exporter job.
 - Reverse-Proxy (Caddy): `docker-compose up rp` with start the reverse proxy, and almost all of the rest of the stack. This may be broken, so use the API's command if it is.
 - Backupper: `docker-compose up bu` which will dump MongoDB's data into S3.
 
@@ -54,9 +53,9 @@ goes to the front-end server. Some examples:
 The WebUI is a static Single-Page Application so routing to a specific page is done server side.
 
 If the a request is routed to the API server, it then uses internal logic to routes the request to a specific endpoint.
-The API server also has three services it depends on, the Exporter service, [MongoDB](https://www.mongodb.com/), and
+The API server also has two services it depends on, [MongoDB](https://www.mongodb.com/), and
 [Minio](https://min.io/). MongoDB is used for storing game session data and general purpose application data.
-The Exporter also requires MongoDB and Minio so it can convert database documents and store them as a zip file.
+The Exporter thread spawned from the API also requires MongoDB and Minio so it can convert database documents and store them as a zip file.
 Minio is an object store, very similar to AWS S3, that is used to store/serve exported game sessions zips.
 
 During development, routing is done without load balancing as there is only one instance of each service used.
@@ -71,10 +70,3 @@ of them only run in production/staging:
 - Docker Registry, which is required to use custom built images in Docker Swarm.
 - Swarm Cronjob, which runs jobs given their crontab. It schedules the Backupper and Garbage Collector services.
 - Garbage Collector, which deletes stopped containers, dangling images, etc. This prevents the server's host from running out of space.
-
-#### Exporter
-
-The exporter is a unique service as it isn't continuously running, or started by the cron service.
-Instead, when its api endpoint is called (`GET /api/v1/sessions/{id}/export/`) a docker container will be
-started and then exit when done exporting that `id`'s session. The container will then be deleted by the Garbage
-Collector.

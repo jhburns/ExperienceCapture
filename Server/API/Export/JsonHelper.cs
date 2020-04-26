@@ -1,4 +1,4 @@
-namespace Exporter.App.JsonHelper
+namespace Carter.App.Export.JsonHelper
 {
     using System.Collections.Generic;
     using System.Data;

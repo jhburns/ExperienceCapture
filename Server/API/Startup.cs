@@ -42,12 +42,6 @@ namespace Carter.App.Hosting
             // TODO: change this to use config string like Mongo
             MinioClient os = new MinioClient("os:9000", minioUsername, minioPassword);
             services.AddSingleton<MinioClient>(os);
-
-            DockerClient docker = new DockerClientConfiguration(
-                new Uri("unix:///var/run/docker.sock"))
-                .CreateClient();
-
-            services.AddSingleton<IDockerClient>(docker);
         }
 
         public void Configure(IApplicationBuilder app)

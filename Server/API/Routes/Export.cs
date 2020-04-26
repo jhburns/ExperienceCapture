@@ -1,12 +1,14 @@
 namespace Carter.App.Route.Export
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using System.Net.Mime;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Carter;
+
+    using Carter.App.Export.Main;
 
     using Carter.App.Lib.CustomExceptions;
     using Carter.App.Lib.Network;
@@ -18,7 +20,6 @@ namespace Carter.App.Route.Export
     using Carter.Response;
 
     using Docker.DotNet;
-    using Docker.DotNet.Models;
 
     using Minio;
 
@@ -26,13 +27,7 @@ namespace Carter.App.Route.Export
 
     public class Export : CarterModule
     {
-        private static readonly string ExporterImageName = Environment.GetEnvironmentVariable("exporter_image_name")
-            ?? throw new EnviromentVarNotSet("The following is unset", "exporter_image_name");
-
-        private static readonly string NetworkName = Environment.GetEnvironmentVariable("ec_network_name")
-            ?? throw new EnviromentVarNotSet("The following is unset", "ec_network_name");
-
-        public Export(IMongoDatabase db, MinioClient os, IDockerClient docker)
+        public Export(IMongoDatabase db, MinioClient os)
             : base("/sessions/{id}/export")
         {
             this.Before += PreSecurity.GetSecurityCheck(db);
@@ -53,35 +48,8 @@ namespace Carter.App.Route.Export
                     return;
                 }
 
-                // Warning: doing all of this is slow
-                // About 2 seconds
-                var exporter = await docker.Containers.CreateContainerAsync(new CreateContainerParameters()
-                {
-                    Image = ExporterImageName,
-                    #pragma warning disable SA1515
-                    // Don't bother using wait-for since this API also needs the same resources
-                    Cmd = new List<string>() { "dotnet", "Exporter.dll" },
-                    #pragma warning restore SA1515
-                    Tty = true,
-                    AttachStdin = true,
-                    AttachStdout = true,
-                    AttachStderr = true,
-                    Env = new List<string>()
-                    {
-                        $"exporter_session_id={id}",
-                    },
-                    HostConfig = new HostConfig()
-                    {
-                        Memory = 500000000, // ~0.5 Gigabytes
-                    },
-                });
-
-                await docker.Networks.ConnectNetworkAsync(NetworkName, new NetworkConnectParameters()
-                {
-                    Container = exporter.ID,
-                });
-
-                await docker.Containers.StartContainerAsync(exporter.ID, new ContainerStartParameters());
+                var export = new Thread(ExportHandler.Entry);
+                export.Start(id);
 
                 var update = Builders<SessionSchema>.Update
                     .Set(s => s.IsPending, true);
