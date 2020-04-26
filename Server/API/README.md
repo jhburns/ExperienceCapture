@@ -7,7 +7,6 @@ Written in .Net Core (C#) and has the following dependencies:
 - [Kestrel web server](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel?view=aspnetcore-3.0)
 - [MongoDB client](http://mongodb.github.io/mongo-csharp-driver/)
 - [Minio Driver](https://github.com/minio/minio-dotnet)
-- [Docker.DotNet](https://github.com/microsoft/Docker.DotNet)
 - [FluentValidation](https://fluentvalidation.net/)
 - [Google APIs client](https://developers.google.com/api-client-library/dotnet)
 - [CsvHelper](https://joshclose.github.io/CsvHelper/)

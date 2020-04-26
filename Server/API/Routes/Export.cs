@@ -18,8 +18,6 @@ namespace Carter.App.Route.Export
     using Carter.Request;
     using Carter.Response;
 
-    using Docker.DotNet;
-
     using Minio;
 
     using MongoDB.Driver;
