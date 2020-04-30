@@ -334,6 +334,7 @@ namespace Carter.App.Route.Users
         [BsonIgnore]
         public const string CollectionName = "persons";
 
+        [BsonIgnoreIfNull]
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
