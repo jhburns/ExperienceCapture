@@ -96,7 +96,6 @@ In `Deploy/.env` file:
 ```
 aws_packer_access_id=[Access Key ID for Packer account]
 aws_packer_secret_key=[Secret Access Key for Packer account]
-aws_user_for_packer=[Username of Packer account]
 ```
 
 ### REX-Ray

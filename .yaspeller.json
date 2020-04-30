@@ -112,7 +112,8 @@
     "EBS",
     "namespaced",
     "preformatted",
-    "BSON"
+    "BSON",
+    "ec"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
