@@ -73,6 +73,7 @@ namespace Carter.App.Route.Sessions
                 // isOngoing is a proxy variable and will always start out as true
                 sessionDoc.IsOngoing = true;
                 sessionDoc.InternalId = null;
+                sessionDoc.User.InternalId = null;
 
                 var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
 
@@ -156,6 +157,9 @@ namespace Carter.App.Route.Sessions
                     }
 
                     s.IsOngoing = isOngoing;
+                    s.InternalId = null;
+                    s.User.InternalId = null;
+
                     return s;
                 });
 
