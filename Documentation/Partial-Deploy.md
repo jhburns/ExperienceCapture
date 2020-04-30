@@ -29,7 +29,7 @@ All of this should be done in the `Deploy/` folder.
 1. `docker-compose build` to build the containers.
 1. `docker-compose run ssh_setup` to create an ssh key for debugging.
 1. `docker-compose up packer` which builds the Amazon Machine Image (AMI).
-1. Copy the image name (ex build-staging-v1.1.3-2020.02.01-00..27..53) into the environmental variable `aws_deploy_ami_name` in the `Deploy/.deploy.env` file to tell Pulumi which AMI to deploy.
+1. Copy the image name (ex ec-staging-v1.1.3-2020.02.01-00..27..53) into the environmental variable `aws_deploy_ami_name` in the `Deploy/.deploy.env` file to tell Pulumi which AMI to deploy.
 1. `docker-compose run pulumi up` and follow the prompts to select the correct stack, which will create the needed cloud resources automatically.
 
 ## Cleanup
