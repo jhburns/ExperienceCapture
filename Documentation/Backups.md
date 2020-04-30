@@ -17,7 +17,7 @@ The following steps should be followed to ensure a safe restore:
     > use ec
     > db.sessions.updateMany({}, { $set: { "isExported" : false, "isPending" false } })
     ```
-1. Dump local MongoBD into S3 using the Backupper, with the command `docker-compose run bu`.
+1. Dump local MongoDB into S3 using the Backupper, with the command `docker-compose run bu`.
 1. Test that the database can be restored from staging successfully. Use the following command to restore in staging or production:
     ```
     $ cd /srv
