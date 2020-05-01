@@ -30,5 +30,3 @@ header / {
 	# Only allow requests from origin
 	Access-Control-Allow-Origin http://localhost:8090
 }
-
-# TODO: add security headers here too
