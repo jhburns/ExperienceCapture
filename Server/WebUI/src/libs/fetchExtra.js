@@ -1,5 +1,4 @@
-// TODO: refactor this to use consistent naming scheme
-// And less repetition
+// TODO: refactor this to use less repetition
 async function postData(url = '', data = {}) {
   const response = await fetch(url, {
     method: 'POST',

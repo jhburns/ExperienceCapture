@@ -228,13 +228,11 @@ public class HandleCapturing : MonoBehaviour
 
                 averageOpenRequests = (averageOpenRequests * responceCount + openRequests) / (responceCount + 1);
 
-                // TODO: Just no
                 if (openRequests < minOpenRequests)
                 {
                     minOpenRequests = openRequests;
-                }
-
-                if (openRequests > maxOpenRequests)
+                } 
+                else if (openRequests > maxOpenRequests)
                 {
                     maxOpenRequests = openRequests;
                 }
@@ -243,8 +241,7 @@ public class HandleCapturing : MonoBehaviour
                 {
                     minResponceTime = responceTime;
                 }
-
-                if (responceTime > maxResponceTime)
+                else if (responceTime > maxResponceTime)
                 {
                     maxResponceTime = responceTime;
                 }

@@ -423,8 +423,6 @@ namespace Carter.App.Export.Main
             currentHeader = new List<string>();
         }
 
-        // TODO: make less magic
-        // TODO: check this works for any data
         private static DataTable AlignHeaders(DataTable dt)
         {
             var header = dt.Columns.Cast<DataColumn>()

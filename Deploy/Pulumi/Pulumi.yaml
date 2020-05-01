@@ -1,5 +1,4 @@
 ---
-# TODO: update this to be EC specific
 name: experience-capture
 runtime: dotnet
-description: A project using C# to host a cloud service
+description: A video game data analytics platform oriented towards research.

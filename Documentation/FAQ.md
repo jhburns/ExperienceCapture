@@ -1,12 +1,5 @@
 # Frequently Asked Questions
 
-### How can I change the client?
-
-[comment]: <> (TODO: Document CaptureSetup)
-
-See the properties on the CaptureSetup prefab in the Unity Editor. There isn't documentation
-on it yet, but hovering over properties has tool-tips that should help explain. 
-
 ### What happens if the game crashes/etc?
 
 The reality is there are a number of ways as session could break, including but not limited to:

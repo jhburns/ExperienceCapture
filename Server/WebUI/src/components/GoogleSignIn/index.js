@@ -12,8 +12,7 @@ import { Wrapper, Info, Google, } from 'components/GoogleSignIn/style';
 
 import { P, Row, Col, } from '@bootstrap-styled/v4';
 
-// TODO: Consider using a state machine to model sign-in
-// Maybe this: https://xstate.js.org/
+// TODO: Consider using a state string to model sign-in
 class SignIn extends Component {
   constructor(props) {
     super(props);
