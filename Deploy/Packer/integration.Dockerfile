@@ -8,7 +8,8 @@ RUN apk update \
     openssh-client~=7 \
     && rm -rf /tmp/* \
     && rm -rf /var/cache/apk/* \
-    && pip3 install ansible-lint==4.1.0
+    && pip3 install \
+    ansible-lint==4.1.0
 
 COPY .ansible-lint build.json playbook.yaml ./
 
