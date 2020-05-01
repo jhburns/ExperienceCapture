@@ -1,10 +1,9 @@
-# TODO: change to Ubuntu version 18.04
-FROM ubuntu:xenial-20191024
+FROM ubuntu:bionic-20200403
 
 RUN apt-get update \
  && apt-get install --no-install-recommends -y \
-	python3-pip=8.1.* \
-	python3-setuptools=20.7.* \
+	python3-pip=9.0.* \
+	python3-setuptools=39.0.* \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
