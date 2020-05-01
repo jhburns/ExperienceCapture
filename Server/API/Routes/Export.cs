@@ -56,8 +56,6 @@ namespace Carter.App.Route.Export
                 BasicResponce.Send(res);
             });
 
-            // TODO: Evaluate whether this endpoint is useful or not
-            // The normal GET /session/{id}/ endpoint contains the same data
             this.Get("/", async (req, res) =>
             {
                 var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);

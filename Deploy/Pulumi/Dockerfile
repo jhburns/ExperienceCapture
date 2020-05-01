@@ -10,7 +10,6 @@ RUN tar -zxf pulumi.tar.gz
 FROM mcr.microsoft.com/dotnet/core/sdk:3.0.101-bionic
 WORKDIR /app
 
-# TODO: make this step more efficient, by only copying over needed files
 COPY --from=pulumi-download /download/pulumi /usr/local/bin
 RUN pulumi plugin install resource aws v1.10.0 --exact
 

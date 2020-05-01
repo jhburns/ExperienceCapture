@@ -9,7 +9,6 @@ import { Wrapper } from 'components/SessionTable/style';
 
 import { postData, deleteData, } from 'libs/fetchExtra';
 
-// TODO: fix this so selecting archive/unarchive results in state/page refresh
 class SessionTable extends Component {
   constructor(props) {
     super(props)

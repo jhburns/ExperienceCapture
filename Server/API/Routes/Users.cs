@@ -90,7 +90,6 @@ namespace Carter.App.Route.Users
                 BasicResponce.Send(res);
             });
 
-            // TODO: refactor this section
             this.Post("/{id}/tokens/", async (req, res) =>
             {
                 var users = db.GetCollection<PersonSchema>(PersonSchema.CollectionName);
