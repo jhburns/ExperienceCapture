@@ -10,16 +10,14 @@
     packer_debug: "{{ lookup('env','packer_debug_option') }}"
     aws_target: "{{ lookup('env','aws_deploy_target') }}"
 
-  # TODO: use less direct shell scripting
-  # See: https://docs.ansible.com/ansible/latest/modules/docker_stack_module.html
   tasks:
 
     # Needed because the Ubuntu AMI does not come with python2
     - name: symlink /usr/bin/python -> /usr/bin/python3
       raw: |
-            if [ -f /usr/bin/python3 ] && [ ! -f /usr/bin/python ]; then
-              ln --symbolic /usr/bin/python3 /usr/bin/python;
-            fi
+           if [ -f /usr/bin/python3 ] && [ ! -f /usr/bin/python ]; then
+             ln --symbolic /usr/bin/python3 /usr/bin/python;
+           fi
 
     - name: Update cache before installing packages
       apt:
@@ -162,8 +160,6 @@
       args:
         chdir: /srv
 
-    # TODO: find some way to bootstrap on restart, don't rely on timing
-    # Waits so that that services don't start before the instance is stopped
     - name: Create production Docker Swarm services
       at:
         command: |
@@ -173,7 +169,7 @@
                  -c docker-compose.swarm.yaml \
                  -c docker-compose.swarm.production.yaml \
                  ec
-        count: 2
+        count: 1
         units: minutes
       register: result
       when: aws_target == 'production'
@@ -187,6 +183,6 @@
                  -c docker-compose.swarm.yaml \
                  -c docker-compose.swarm.staging.yaml \
                  ec
-        count: 2
+        count: 1
         units: minutes
       when: result is skipped
