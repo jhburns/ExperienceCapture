@@ -381,6 +381,7 @@ namespace Carter.App.Route.Sessions
         [BsonElement("isOngoing")]
         public bool? IsOngoing { get; set; } = null;
 
+        [BsonIgnoreIfNull]
         [BsonElement("lastCaptureAt")]
         public BsonDateTime LastCaptureAt { get; set; } = null;
         #pragma warning restore SA151, SA1300
