@@ -9,8 +9,7 @@ namespace Carter.App.Validation.AdminPassword
         #pragma warning restore SA151, SA1300
     }
 
-    public class AdminPasswordValidator : AbstractValidator<AdminPassword>
-    {
+    public class AdminPasswordValidator : AbstractValidator<AdminPassword> {
         public AdminPasswordValidator()
         {
             this.RuleFor(x => x.password).NotEmpty();
