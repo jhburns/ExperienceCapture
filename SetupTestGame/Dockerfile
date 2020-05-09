@@ -10,9 +10,9 @@ ARG password
 ARG username
 ARG serial
 
-ENV password ${password} 
-ENV username ${username}
-ENV serial ${serial}
+ENV password=${password} 
+ENV username=${username}
+ENV serial=${serial}
 
 COPY SetupTestGame/ .
 COPY ./ClientDevelopmentGame/Assets/ExperienceCapture/ ./Assets/ExperienceCapture
