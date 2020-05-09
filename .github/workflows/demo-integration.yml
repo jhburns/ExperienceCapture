@@ -18,17 +18,17 @@ jobs:
       - name: Run Docker
         uses: whoan/docker-build-with-cache-action@v3.1.1
         with:
-          context: ./DemoGame/
+          context: ./DemoGameW
           dockerfile: Dockerfile
           # Not caching because the licence/account info may be leaked
           pull_image_and_stages: false
           push_image_and_stages: false
           build_extra_args: |
-            --build-arg \
-            username="$username" \
-            --build-arg \
-            password="$password" \
-            --build-arg \
+            --build-arg
+            username="$username"
+            --build-arg
+            password="$password"
+            --build-arg
             serial="$serial"
           username: "${{ secrets.DOCKER_USERNAME }}"
           password: "${{ secrets.DOCKER_PASSWORD }}"
