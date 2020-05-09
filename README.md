@@ -28,7 +28,7 @@ The major subparts of this project are:
 - `ClientDevelopmentGame/` is the game used to develop the client.
 - `Server/` is a collection of back-end services for collection and processing data.
 - `Deploy/` is an automated system to build and deploy the server to AWS.
-- `SetupTestGame/` is a game used for testing the Unity client integration.
+- `SetupTestGame/` is a game used for testing the Unity client integration, to maintain backwards compatibility.
 - `Documentation/` is documentation.
 - `.github/` Contains the workflow files, for CI.
 
@@ -39,9 +39,12 @@ All of the games need Unity version [2018.2.11f](https://unity3d.com/unity/whats
 ## Other Setup
 
 The other parts (`Server/`, `Deploy/`) require the following installed:
+
 [comment]: <> (/* yaspeller ignore:start */)
+
 - [Docker](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
+
 [comment]: <> (/* yaspeller ignore:end */)
 
 In order to deploy having various cloud services is needed, [see here](Documentation/Cloud-Deploy.md).

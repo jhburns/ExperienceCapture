@@ -15,7 +15,7 @@ Any language can be used to do analysis, but the examples in Python and R.
 
 ## Analytics Online
 
-[comment]: <> (Source: https://research.google.com/colaboratory/faq.html)
+[comment1]: <> (Source: https://research.google.com/colaboratory/faq.html)
 
 Colaboratory is a free platform for doing analytics that works like Google Docs, but for data. Only the Python, JSON format is available as an example, but any Python code can be adapted for Colaboratory. Rlang/Other languages are not supported yet.
 
@@ -26,4 +26,4 @@ How to use:
 - Press 'play' on the first code block, and select the `FHEB.onlyCaptures.json` locally to upload.
 - Press 'play' on the second code block.
 
-[comment]: <> (TODO: Update to latest exporter format)
+[comment2]: <> (TODO: Update to latest exporter format)

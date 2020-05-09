@@ -2,7 +2,7 @@
 
 Hi, and thanks for considering to help out. Don't be intimidated by the size of this project as there are multiple strategies in place to control complexity. If there is are any questions/don't know where to start/need help setting up, ask me `@Jonathan Burns` in slack. I'd be happy to help.
 
-# Core Principles
+## Core Principles
 
 I try to maintain a few principles to make developing/using Experience Capture easier.
 

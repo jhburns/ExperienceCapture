@@ -7,6 +7,7 @@ This is just two scripts, one for backup and one for restore. Uses MongoDB and A
 ## Policy
 
 The current backup policy is as follows:
+
 - Backup at 2 AM Pacific Standard Time everyday.
 - Backups expire and are deleted after about two months (60 days).
 - The latest backup shouldn't expire.
@@ -14,10 +15,13 @@ The current backup policy is as follows:
 ## Restore
 
 Run the restore script with, in order to Restore locally:
+
 ```bash
 docker-compose run bu ./restore-mongodb-from-s3.sh s3://[path to dump here]
 ```
+
 For example:
+
 ```bash
 docker-compose run bu ./restore-mongodb-from-s3.sh s3://experiencecapture-ec-db-backups/development/2020-02-10T20:21:41Z.gz
 ```

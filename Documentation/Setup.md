@@ -13,7 +13,7 @@ In the Unity Editor, go to Assets -> Import Package -> Custom Package... and sel
 ![Opening asset menu](images/import_package.png)
 
 That will open a file-browser so you can navigate to where 'ExperienceCaptureClient.unitypackage'
-is downloaded and open it. 
+is downloaded and open it.
 
 ![Importing package](images/import_menu.png)
 

@@ -3,7 +3,7 @@
 Information about configure option of the `SetupCapture` game object in the `SetupEC` scene.
 Options are in order.
 
-## Capture Rate 
+## Capture Rate
 
 The rate is how often the `GetCapture()` function is called, with respect to frame rate.
 A value of 1 means `GetCapture()` is called every frame. A value of 2 means `GetCapture()`
@@ -45,7 +45,7 @@ When checked, nothing will be printed to console.
 
 ## Do Not Throw Not Found
 
-When checked, objects/keys not found by the Limit list will be ignored. 
+When checked, objects/keys not found by the Limit list will be ignored.
 Useful when a game creates/destroys objects dynamically.
 
 ## Limit Output To Specified
@@ -54,7 +54,7 @@ This allows you to ignore every property exported under `GetCapture()` except th
 
 Separate object names from key using a colon, `:`, for example:
 
-```
+```text
 Player:positionX
 ```
 

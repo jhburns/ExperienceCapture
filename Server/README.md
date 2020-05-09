@@ -20,7 +20,7 @@ Run `docker-compose build` first to develop locally.
 
 `Ctrl-C` stops any service, that was named in the `docker-compose up`. To stop all services, run `docker-compose down`. See the `Server/docker-compose.yaml` file for the port mappings on any service besides the API or WebUI.
 
-## About Docker Compose 
+## About Docker Compose
 
 This project uses Docker-compose to manage the application stack. Here is what each compose file is for:
 
@@ -44,7 +44,7 @@ The server uses a reverse proxy (Caddy) to route traffic between the static fron
 A request with `/api/v1/` in its path will be routed to the API server, while everything else
 goes to the front-end server. Some examples:
 
-```
+```text
 /api/v1/sessions/ -> API
 /api/ -> WebUI
 /home/sessions/ -> WebUI

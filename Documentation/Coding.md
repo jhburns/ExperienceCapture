@@ -17,25 +17,24 @@ using Capture;
 
 public class Example : MonoBehaviour, ICapturable
 {
-	// Class stuff
+    // Class stuff
 }
 ```
 
-2. Add the GetCapture() function to satisfy the ICapturable [interface](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/interface).
+1. Add the GetCapture() function to satisfy the ICapturable [interface](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/interface).
 
 ```csharp
 using Capture;
 
 public class Example : MonoBehaviour, ICapturable
 {
-
     // Class stuff
-	
-    public object GetCapture() 
+
+    public object GetCapture()
     {
         return new 
         {
-            
+
         };
     }
 
@@ -44,7 +43,7 @@ public class Example : MonoBehaviour, ICapturable
 
 **Check:** There shouldn't be any compile or runtime errors.
 
-## Add properties 
+## Add properties
 
 With everything setup, data to be captured can now be added. The basic format is:
 
@@ -53,11 +52,12 @@ With everything setup, data to be captured can now be added. The basic format is
     {
         return new
         {
-            positionX = transform.position.x, // separate properties with a comma 
+            positionX = transform.position.x, // separate properties with a comma
             propertyName = gameObject.value, // trailing comma recommend
         };
     }
 ```
+
 This is using an [Anonymous type](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/anonymous-types).
 It lets you define implicitly (meaning without having to declare `int`, `string`, etc) typed objects simply.
 
@@ -67,20 +67,21 @@ object this script is attached too.
 
 ![Example console](images/console.png)
 
-##### Example of console output, although with different names and values. 
+ Example of console output, although with different names and values.
 
-## How Does It Capture Data?
+## How It Captures Data
 
 Experience Capture works by running the 'GetCapture()' function on each `ICapturable`
-game object over specific intervals. The capture rate can be set as often or little 
+game object over specific intervals. The capture rate can be set as often or little
 as wanted through the prefab, and is based on frame-rate. Additional information 
-about the frame is also included automatically, like timestamps. This can be called 
+about the frame is also included automatically, like timestamps. This can be called
 an 'eventless' data capture system, which is designed to be easier to use than
 an event based one like Unity Analytics. For more information see [here](About-Capture.md).
 
-## Valid Data Types 
+## Valid Data Types
 
 Data is serialized to [JSON]((https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures) which has a limited number of data types, mainly:
+
 - Boolean (`bool`)
 - Number (`int`, `float`, etc.)
 - String (`string`)
@@ -90,7 +91,7 @@ It is not recommend to use strings when exporting numbers. Nested objects are fi
 - Vector3 (See next section for how to capture)
 - MonoBehavior (Get specific values from each game object)
 
-#### Vector3
+### Vector3
 
 [Vector3s](https://docs.unity3d.com/ScriptReference/Vector3.html), like position in this example can't be directly serialized to JSON.
 Instead, you can use the [extension method](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/extension-methods) `.ToAnonymousType()` like so.
@@ -106,7 +107,6 @@ Instead, you can use the [extension method](https://docs.microsoft.com/en-us/dot
 ```
 
 Which is the same as the following code.
-
 
 ```csharp
     public object GetCapture()
@@ -127,15 +127,16 @@ Which is the same as the following code.
 
 [Vector2s](https://docs.unity3d.com/ScriptReference/Vector2.html) work the same way as Vector3s, with `ToAnonymousType()`.
 
-
 ## Helpers
 
-### Calculate the angle between two game objects.
+### Calculate The Angle Between Two Game Objects
 
 ```csharp
 firstObject.AngleWith(secondObject);
 ```
+
 Also draw lines for debugging:
+
 ```csharp
 firstObject.AngleWith(secondObject, true);
 ```
