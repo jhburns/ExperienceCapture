@@ -22,4 +22,4 @@ It is impossible to delete a session, or any data for that matter. However, sess
 
 ## How Too Sign Up/Sign In On A Mobile Device
 
-When signing up be careful because mobile Chrome will automatically sign you into whatever account is currently synced. If you want to use a specific account either disable syncing temporarily (Settings > Account > Sign out and turn off sync) or add an account. The same goes for signing in, as you can only sign in using the account that was used to sign up. 
+When signing up be careful because mobile Chrome will automatically sign you into whatever account is currently synced. If you want to use a specific account either disable syncing temporarily (Settings > Account > Sign out and turn off sync) or add an account. The same goes for signing in, as you can only sign in using the account that was used to sign up.

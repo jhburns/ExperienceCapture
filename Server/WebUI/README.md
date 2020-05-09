@@ -1,4 +1,4 @@
-### This README is generated, so see [here](Custom-README.md) for project specific information
+# This README is generated, so see [here](Custom-README.md) for project specific information
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

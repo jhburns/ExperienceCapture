@@ -60,11 +60,11 @@ Player:positionX
 
 This entry would ignore every key except `positionX` on the `Player` game object.
 
-# Configuration API
+## Configuration API
 
 The capturer exposes an API for additional configuration, but be warned it is experimental.
 
-## Cleanup Key
+### Cleanup Key
 
 This will override the default cleanup key of `Q` to the key `W`:
 

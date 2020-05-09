@@ -38,7 +38,7 @@ For specific information about how all of this works together, see `Deploy/Packe
 
 To learn more about each service visit its respective folder this is only a description of how it all fits together.
 
-#### Routing
+### Routing
 
 The server uses a reverse proxy (Caddy) to route traffic between the static front-end and the API back-end.
 A request with `/api/v1/` in its path will be routed to the API server, while everything else
@@ -61,7 +61,7 @@ Minio is an object store, very similar to AWS S3, that is used to store/serve ex
 During development, routing is done without load balancing as there is only one instance of each service used.
 However, during production/staging the API, Caddy, and WebUI are replicated so [Docker Swarm](https://docs.docker.com/engine/swarm/) has to balance load to each replica.
 
-#### Infrastructure Services
+### Infrastructure Services
 
 There are a couple of services not involved with serving application traffic, all
 of them only run in production/staging:

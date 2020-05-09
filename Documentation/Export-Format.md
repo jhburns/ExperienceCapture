@@ -14,7 +14,7 @@ This contains all of the data that was produced by the client calling `GetCaptur
 
 Annotated example:
 
-```
+```text
 [{
   "gameObjects" : {
     "player": { // Example data exported by the developer
@@ -34,7 +34,7 @@ Annotated example:
 
 Only the non-gameObjects frames, annotated example:
 
-```
+```text
 [{
   "dateTime" : "2020-01-30T21:56:41.6282480Z", // UTC time generated on the client
   "description" : "Session Started",
@@ -68,13 +68,13 @@ Only the non-gameObjects frames, annotated example:
 
 Multiple `.csv` files can be created, and each one only contains data from one of the scene loads. Like the `Session_ID.onlyCaptures.json` file, only data from `GetCapture()` is contained in them. Their general file format is:
 
-```
+```text
 [Session ID].sceneName.[Scene Name].[Index].csv
 ```
 
 with a more concrete example of:
 
-```
+```text
 RUE6.sceneName.SampleScene.0.csv
 ```
 
@@ -103,7 +103,7 @@ This data is a [MongoDB document](https://docs.mongodb.com/manual/core/document/
 
 Here is an example of this file type, with annotations:
 
-```
+```text
 [{
   "_id" : { "$oid" : "5e3350fb774b120001aefa93" }, // Data base key, not important
   "isOpen" : true, // Whether the session was properly closed by the client

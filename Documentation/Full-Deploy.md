@@ -3,8 +3,8 @@
 ## Perquisites
 
 Doing a full deploy requires:
-- Two domain names, this tutorial will cover setting up through one purchased [Namecheap](https://www.namecheap.com/), although any register can be used.
 
+- Two domain names, this tutorial will cover setting up through one purchased [Namecheap](https://www.namecheap.com/), although any register can be used.
 - An [AWS account](https://aws.amazon.com/#).
 - A [GCP account](https://console.cloud.google.com/).
 - A [Pulumi account](https://www.pulumi.com/).
@@ -94,7 +94,7 @@ The point of doing all this to follow best security practices. By making a separ
 
 In `Deploy/.env` file:
 
-```
+```text
 aws_packer_access_id=[Access Key ID for Packer account]
 aws_packer_secret_key=[Secret Access Key for Packer account]
 ```
@@ -135,7 +135,7 @@ aws_packer_secret_key=[Secret Access Key for Packer account]
 
 In `Deploy/.env` file:
 
-```
+```text
 aws_rexray_access_id=[Access Key ID for REX-Ray account]
 aws_rexray_secret_key=[Secret Access Key for REX-Ray account]
 ```
@@ -188,7 +188,7 @@ aws_rexray_secret_key=[Secret Access Key for REX-Ray account]
 
 In `Deploy/.env` file:
 
-```
+```text
 AWS_ACCESS_KEY_ID=[Access Key ID for Pulumi account]
 AWS_SECRET_ACCESS_KEY=[Secret Access Key for Pulumi account]
 ```
@@ -216,7 +216,7 @@ AWS_SECRET_ACCESS_KEY=[Secret Access Key for Pulumi account]
 
 In `Server/.env` file:
 
-```
+```text
 aws_backupper_access_id=[Access Key ID for Backupper account]
 aws_backupper_secret_key=[Secret Access Key for Backupper account]
 ```
@@ -229,7 +229,7 @@ Get your [AWS Account ID](https://docs.aws.amazon.com/IAM/latest/UserGuide/conso
 
 Allocate two [Elastic IPs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html), and fill in the following environment variables in the `Deploy/.deploy.env` file:
 
-```
+```text
 aws_production_deploy_ip_allocation_id=eipalloc-[Ip that will be mapped to production domain, ex expcap.xyz]
 aws_staging_deploy_ip_allocation_id=eipalloc-[Ip that will be mapped to staging domain, ex expcap2.xyz]
 ```
@@ -277,6 +277,7 @@ Run `docker-compose run api dotnet API.dll --passwordGenerate` and copy the 'Has
 The following variables aren't required to be changed in order to deploy.
 
 In `Server/.deploy.env`:
+
 - `aws_region_name` where to deploy the service too, default us-west-1.
 - `aws_ami_version_number` version to give built AMI, ex 1.1.4 .
 - `packer_debug_option` whether to allow ssh access the server, either true or false.
@@ -284,6 +285,7 @@ In `Server/.deploy.env`:
 - `aws_host_ssh_address` where for the ssh client to connect to, ex expcap.xyz .
 
 In `Deploy/.env`:
+
 - `aws_region_name=us-west-1` same as above, default us-west-1.
 - `aws_backup_bucket_name` may need to be changed to a different bucket name, because they are globally namespaced.
 

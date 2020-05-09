@@ -18,7 +18,7 @@ This means that not only is the application stuff (Server, Clients) in code, but
 
 The reason for this a given, and it is achieved two ways. First, games in Unity are naturally cross-platform just by building for a different target. Second, all of the non-game parts of Experience Capture are dockerized make it so only one requirement, docker is needed run anything on a different computer.
 
-### Transparency 
+### Transparency
 
  It is important to make sure that the data captured is valid, which means transparency of how this functions is a priority. This is implemented through everything as code as mentioned before and a discrete build system for the server. What that means is given a copy of the Server code, it should identically recreatable without anything irregular coming in to play.
 

@@ -16,10 +16,11 @@
 This is a video game analytics platform oriented towards capturing as much data from a play-session as possible. Unlike traditional data analytics solutions, Experience Capture lacks the concept of events and instead gathers data from every frame. The benefits of avoiding events are making this easier to integrate a game, higher data output, and analytics can be done after a play-session using whatever language is preferred. For more info see the [documentation](Documentation/README.md).
 
 The major subparts of this project are:
-  - [Unity asset package](https://docs.unity3d.com/Manual/AssetPackages.html) client that integrates into any Unity game.
-  - Back-end server that receives, stores, and processes captured data from play-sessions.
-  - Front-end client for the server that authenticates and allows users to manage play session data.
-  - Infrastructure setup that builds the server and deploys it to [Amazon Web Services (AWS)](https://aws.amazon.com/).
+
+- [Unity asset package](https://docs.unity3d.com/Manual/AssetPackages.html) client that integrates into any Unity game.
+- Back-end server that receives, stores, and processes captured data from play-sessions.
+- Front-end client for the server that authenticates and allows users to manage play session data.
+- Infrastructure setup that builds the server and deploys it to [Amazon Web Services (AWS)](https://aws.amazon.com/).
 
 ## Folder Breakdown
 
@@ -40,12 +41,12 @@ All of the games need Unity version [2018.2.11f](https://unity3d.com/unity/whats
 
 The other parts (`Server/`, `Deploy/`) require the following installed:
 
-[comment]: <> (/* yaspeller ignore:start */)
+[comment1]: <> (/* yaspeller ignore:start */)
 
 - [Docker](https://docs.docker.com/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
-[comment]: <> (/* yaspeller ignore:end */)
+[comment2]: <> (/* yaspeller ignore:end */)
 
 In order to deploy having various cloud services is needed, [see here](Documentation/Cloud-Deploy.md).
 

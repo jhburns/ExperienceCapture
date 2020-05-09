@@ -37,7 +37,7 @@ public class Ball : MonoBehaviour, ICapturable
 {
 
     // Ball functionality
-	
+
     public object GetCapture() {
         return new
         {
@@ -49,7 +49,7 @@ public class Ball : MonoBehaviour, ICapturable
 
 ```
 
-This would produce a capture of an example frame like so [comments added]:
+This would produce a capture of an example frame like so (comments added):
 
 ```json
 {
@@ -73,10 +73,8 @@ This would produce a capture of an example frame like so [comments added]:
 Here are a couple important points to notice:
 
 - All GameObjects are grouped under a `gameObjects` key.
-- Data points are grouped together based on the [GameObject name](https://docs.unity3d.com/ScriptReference/Object-name.html).
-This allows multiple scripts to use the same key name, which is recommenced for simplicity.
-- The keys (`positionX`, `isActive`) for each value are determined by the left side of the returned
-object.
+- Data points are grouped together based on the [GameObject name](https://docs.unity3d.com/ScriptReference/Object-name.html). This allows multiple scripts to use the same key name, which is recommenced for simplicity.
+- The keys (`positionX`, `isActive`) for each value are determined by the left side of the returned object.
 - All of the timestamps are normal [Unity Time](https://docs.unity3d.com/2018.2/Documentation/ScriptReference/Time.html) variables
 
 ## Dynamic GameObject Capturing
@@ -150,7 +148,7 @@ Which produces
 
 So in summary, if an object doesn't exist it will be ignored by the exporter.
 As a result, it is best practice to attach a capture script to an object directly
-instead of trying to check for existence of it from another object. 
+instead of trying to check for existence of it from another object.
 
 ## More
 

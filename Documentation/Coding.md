@@ -32,7 +32,7 @@ public class Example : MonoBehaviour, ICapturable
 
     public object GetCapture()
     {
-        return new 
+        return new
         {
 
         };
@@ -73,7 +73,7 @@ object this script is attached too.
 
 Experience Capture works by running the 'GetCapture()' function on each `ICapturable`
 game object over specific intervals. The capture rate can be set as often or little
-as wanted through the prefab, and is based on frame-rate. Additional information 
+as wanted through the prefab, and is based on frame-rate. Additional information
 about the frame is also included automatically, like timestamps. This can be called
 an 'eventless' data capture system, which is designed to be easier to use than
 an event based one like Unity Analytics. For more information see [here](About-Capture.md).
@@ -88,6 +88,7 @@ Data is serialized to [JSON]((https://developer.mozilla.org/en-US/docs/Web/JavaS
 - Objects (like `new { ... }`)
 
 It is not recommend to use strings when exporting numbers. Nested objects are fine. This is what can NOT be exported directly:
+
 - Vector3 (See next section for how to capture)
 - MonoBehavior (Get specific values from each game object)
 
