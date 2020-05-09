@@ -20,20 +20,10 @@ jobs:
         with:
           context: ./DemoGame
           dockerfile: Dockerfile
-          # Not caching because the licence/account info may be leaked
-          pull_image_and_stages: false
-          push_image_and_stages: false
+          image_name: jhburns/ec-games-cache
           build_extra_args: |
-            --build-arg
-            username="$username"
-            --build-arg
-            password="$password"
-            --build-arg
-            serial="$serial"
+            --build-arg username=${{ secrets.UNITY_USERNAME }}
+            --build-arg password=${{ secrets.UNITY_PASSWORD }}
+            --build-arg serial=${{ secrets.UNITY_SERIAL }}
           username: "${{ secrets.DOCKER_USERNAME }}"
           password: "${{ secrets.DOCKER_PASSWORD }}"
-          image_name: notpushed
-        env:
-          username: ${{ secrets.UNITY_USERNAME }}
-          password: ${{ secrets.UNITY_PASSWORD }}
-          serial: ${{ secrets.UNITY_SERIAL }}
