@@ -15,5 +15,4 @@ public class Spinner : MonoBehaviour, ICapturable
             rotation = transform.eulerAngles.z,
         };
     }
-
 }
