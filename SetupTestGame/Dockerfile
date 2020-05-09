@@ -1,6 +1,7 @@
 # This check is special because it needs to check files from another subproject
 # It copies the client folder from the ClientDevelopmentGame
-# Run with `env DOCKER_BUILDKIT=1 docker build ../ -f Dockerfile`
+
+# Run with `env DOCKER_BUILDKIT=1 docker build ../ -f Dockerfile` from this folder
 
 FROM gableroux/unity3d:2018.2.11f1
 WORKDIR /app
