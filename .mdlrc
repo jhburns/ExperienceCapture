@@ -1,6 +1,0 @@
-show_kramdown_warnings true
-
-all
-
-exclude_rule
-    "MD013"

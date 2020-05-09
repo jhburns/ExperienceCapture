@@ -2,4 +2,4 @@ FROM pipelinecomponents/markdownlint:0.6.1
 
 COPY . .
 
-RUN mdl --style all --warnings .
+RUN mdl --style custom_style.rb --warnings .
