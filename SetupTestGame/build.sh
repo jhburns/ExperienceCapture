@@ -10,7 +10,7 @@ xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
     -username "$username" \
     -password "$password" \
     -serial "$serial" \
-    /app/SetupTestGame
+    /app
 
 # Run a build with outut
 xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
@@ -20,7 +20,7 @@ xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
     -projectPath \
     -logFile - \
     -buildTarget Win64 \
-    /app/SetupTestGame
+    /app
 
 status=$?
 

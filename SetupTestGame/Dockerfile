@@ -6,6 +6,6 @@ FROM gableroux/unity3d:2018.2.11f1
 WORKDIR /app
 
 COPY SetupTestGame/ .
-COPY ./ClientDevelopmentGame/Assets/ExperienceCapture/ SetupTestGame/Assets/ExperienceCapture
+COPY ./ClientDevelopmentGame/Assets/ExperienceCapture/ ./Assets/ExperienceCapture
 
-RUN chmod +x ./build.sh && ./build.sh
+#RUN chmod +x ./build.sh && ./build.sh
