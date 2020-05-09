@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "$test"
+
 # Get the license and build first because we have too
 xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
     /opt/Unity/Editor/Unity \
