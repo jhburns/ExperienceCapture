@@ -7,7 +7,7 @@ on:  # yamllint disable-line rule:truthy
       - master
     paths:
       - 'ClientDevelopmentGame/**'
-      - '.github/workflows/devgame-integration.yml'
+      - '.github/workflows/dev-game-integration.yml'
 
 jobs:
   build:
