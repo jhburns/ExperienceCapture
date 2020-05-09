@@ -90,11 +90,11 @@ namespace Carter.App.Route.Sessions
                 string json = JsonQuery.FulfilEncoding(req.Query, sessionDoc);
                 if (json != null)
                 {
-                    JsonResponce.FromString(res, json);
+                    await res.FromJson(json);
                     return;
                 }
 
-                BsonResponse.ToBson(res, sessionDoc);
+                await res.FromBson(sessionDoc);
             });
 
             this.Get("/", async (req, res) =>
@@ -172,11 +172,11 @@ namespace Carter.App.Route.Sessions
                 string json = JsonQuery.FulfilEncoding(req.Query, clientValues);
                 if (json != null)
                 {
-                    JsonResponce.FromString(res, json);
+                    await res.FromJson(json);
                     return;
                 }
 
-                BsonResponse.ToBson(res, clientValues);
+                await res.FromBson(clientValues);
             });
 
             this.Post("/{id}", async (req, res) =>
@@ -263,7 +263,7 @@ namespace Carter.App.Route.Sessions
 
                 _ = sessions.UpdateOneAsync(filter, update);
 
-                BasicResponce.Send(res);
+                await res.FromString();
             });
 
             this.Get("/{id}", async (req, res) =>
@@ -311,11 +311,11 @@ namespace Carter.App.Route.Sessions
                 string json = JsonQuery.FulfilEncoding(req.Query, sessionDoc);
                 if (json != null)
                 {
-                    JsonResponce.FromString(res, json);
+                    await res.FromJson(json);
                     return;
                 }
 
-                BsonResponse.ToBson(res, sessionDoc);
+                await res.FromBson(sessionDoc);
             });
 
             this.Delete("/{id}", async (req, res) =>
@@ -339,7 +339,7 @@ namespace Carter.App.Route.Sessions
                     .Set(s => s.IsOpen, false);
 
                 await sessions.UpdateOneAsync(filter, update);
-                BasicResponce.Send(res);
+                await res.FromString();
             });
         }
     }

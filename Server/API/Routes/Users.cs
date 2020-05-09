@@ -87,7 +87,8 @@ namespace Carter.App.Route.Users
                 var personDoc = personObject.ToBsonDocument();
 
                 await users.InsertOneAsync(personObject);
-                BasicResponce.Send(res);
+
+                await res.FromString();
             });
 
             this.Post("/{id}/tokens/", async (req, res) =>
@@ -171,7 +172,7 @@ namespace Carter.App.Route.Users
                         await claimTokens.UpdateOneAsync(filterClaims, update);
                     }
 
-                    BasicResponce.Send(res);
+                    await res.FromString();
                 }
                 else
                 {
@@ -184,11 +185,11 @@ namespace Carter.App.Route.Users
                     string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
                     if (json != null)
                     {
-                        JsonResponce.FromString(res, json);
+                        await res.FromJson(json);
                         return;
                     }
 
-                    BsonResponse.FromDoc(res, responceDoc);
+                    await res.FromBson(responceDoc);
                 }
             });
 
@@ -216,11 +217,11 @@ namespace Carter.App.Route.Users
                 string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
                 if (json != null)
                 {
-                    JsonResponce.FromString(res, json);
+                    await res.FromJson(json);
                     return;
                 }
 
-                BsonResponse.FromDoc(res, responceDoc);
+                await res.FromBson(responceDoc);
             });
 
             this.Get("/claims/", async (req, res) =>
@@ -252,7 +253,7 @@ namespace Carter.App.Route.Users
                 if (claimDoc.Access == null)
                 {
                     res.StatusCode = 202;
-                    BasicResponce.Send(res, "PENDING");
+                    await res.FromString("PENDING");
                     return;
                 }
 
@@ -275,11 +276,11 @@ namespace Carter.App.Route.Users
                 string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
                 if (json != null)
                 {
-                    JsonResponce.FromString(res, json);
+                    await res.FromString(json);
                     return;
                 }
 
-                BsonResponse.FromDoc(res, responceDoc);
+                await res.FromBson(responceDoc);
             });
 
             this.Post("/signUp/admin/", async (req, res) =>
@@ -318,11 +319,11 @@ namespace Carter.App.Route.Users
                 string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
                 if (json != null)
                 {
-                    JsonResponce.FromString(res, json);
+                    await res.FromJson(json);
                     return;
                 }
 
-                BsonResponse.FromDoc(res, responceDoc);
+                await res.FromBson(responceDoc);
             });
         }
     }

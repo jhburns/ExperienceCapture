@@ -53,7 +53,7 @@ namespace Carter.App.Route.Export
 
                 await sessions.UpdateOneAsync(filter, update);
 
-                BasicResponce.Send(res);
+                await res.FromString();
             });
 
             this.Get("/", async (req, res) =>
@@ -76,7 +76,7 @@ namespace Carter.App.Route.Export
                 if (sessionDoc.IsPending)
                 {
                     res.StatusCode = 202;
-                    BasicResponce.Send(res, "PENDING");
+                    await res.FromString("PENDING");
                     return;
                 }
 
