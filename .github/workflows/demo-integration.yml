@@ -18,7 +18,7 @@ jobs:
       - name: Run Docker
         uses: whoan/docker-build-with-cache-action@v3.1.1
         with:
-          context: ./DemoGameW
+          context: ./DemoGame
           dockerfile: Dockerfile
           # Not caching because the licence/account info may be leaked
           pull_image_and_stages: false
