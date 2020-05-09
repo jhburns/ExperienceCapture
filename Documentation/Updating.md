@@ -15,7 +15,7 @@ In the Unity Editor, go to Assets -> Import Package -> Custom Package... and sel
 ![Opening asset menu](images/import_package.png)
 
 That will open a file-browser so you can navigate to where 'ExperienceCaptureClient.unitypackage'
-is downloaded and open it. 
+is downloaded and open it.
 
 ![Importing package](images/import_menu.png)
 
@@ -38,6 +38,6 @@ There should also be a game object with the name `HandleCapturing` under the 'Do
 
 ## Add Scenes To Build
 
-Open the two scenes in `ExperienceCapture/`, 'SetupEC' and 'CleanupEC'. 
-Remove previous Experience Capture scenes with Right-Click > Remove Selection in Build Settings. 
+Open the two scenes in `ExperienceCapture/`, 'SetupEC' and 'CleanupEC'.
+Remove previous Experience Capture scenes with Right-Click > Remove Selection in Build Settings.
 Then click on File > Build Settings > Add Open Scenes for each.

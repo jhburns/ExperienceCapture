@@ -1,0 +1,27 @@
+---
+name: Markdown
+
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    branches:
+      - master
+    paths:
+      - '**/*.md'
+      - '*.md'
+      - '.github/workflows/markdown-integration.yml'
+      - 'markdown.integration.Dockerfile'
+
+jobs:
+  build:
+    name: Integration Checks
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Docker
+        uses: whoan/docker-build-with-cache-action@v3.1.1
+        with:
+          username: "${{ secrets.DOCKER_USERNAME }}"
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+          image_name: jhburns/ec-markdown-cache
+          context: ./
+          dockerfile: markdown.integration.Dockerfile
