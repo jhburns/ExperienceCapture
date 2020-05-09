@@ -1,0 +1,11 @@
+# This check is special because it needs to check files from another subproject
+# It copies the client folder from the ClientDevelopmentGame
+# Run with `env DOCKER_BUILDKIT=1 docker build ../ -f Dockerfile`
+
+FROM gableroux/unity3d:2018.2.11f1
+WORKDIR /app
+
+COPY SetupTestGame/ .
+COPY ./ClientDevelopmentGame/Assets/ExperienceCapture/ SetupTestGame/Assets/ExperienceCapture
+
+RUN chmod +x ./build.sh && ./build.sh

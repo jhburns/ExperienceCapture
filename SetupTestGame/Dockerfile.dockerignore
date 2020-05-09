@@ -1,0 +1,7 @@
+.git/
+.vs/
+Deploy/.secrets/
+
+Server/
+Deploy/
+DemoGame/
