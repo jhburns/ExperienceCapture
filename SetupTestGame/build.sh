@@ -6,7 +6,7 @@ xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
     -quit  \
     -batchmode \
     -buildTarget Win64 \
-    -silent-crashes
+    -silent-crashes \
     -username "$username" \
     -password "$password" \
     -serial "$serial" \
