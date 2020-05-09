@@ -1,6 +1,6 @@
 ﻿namespace Capture
 {
-    public interface ICapturableNo
+    public interface ICapturable
     {
         object GetCapture();
     }
