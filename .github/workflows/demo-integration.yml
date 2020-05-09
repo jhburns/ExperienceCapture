@@ -1,5 +1,5 @@
 ---
-name: API
+name: Demo
 
 on:  # yamllint disable-line rule:truthy
   pull_request:
@@ -23,10 +23,14 @@ jobs:
           # Not caching because the licence/account info may be leaked
           pull_image_and_stages: false
           push_image_and_stages: false
+          env:
+            username: ${{ secrets.UNITY_USERNAME }}
+            password: ${{ secrets.UNITY_PASSWORD }}
+            serial: ${{ secrets.UNITY_SERIAL }}
           build_extra_args: |
             --build-arg \
-            username={{ secrets.UNITY_USERNAME }} \
+            username="$username" \
             --build-arg \
-            password={{ secrets.UNITY_PASSWORD }} \
+            password="$password" \
             --build-arg \
-            serial={{ secrets.UNITY_SERIAL }}
+            serial="$serial"
