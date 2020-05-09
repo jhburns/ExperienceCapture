@@ -1,5 +1,5 @@
 ---
-name: DevGame
+name: DevelopmentGame
 
 on:  # yamllint disable-line rule:truthy
   pull_request:
@@ -7,7 +7,7 @@ on:  # yamllint disable-line rule:truthy
       - master
     paths:
       - 'ClientDevelopmentGame/**'
-      - '.github/workflows/dev-game-integration.yml'
+      - '.github/workflows/development-game-integration.yml'
 
 jobs:
   build:
