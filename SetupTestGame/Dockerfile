@@ -9,4 +9,4 @@ WORKDIR /app
 COPY SetupTestGame/ .
 COPY ./ClientDevelopmentGame/Assets/ExperienceCapture/ ./Assets/ExperienceCapture
 
-#RUN chmod +x ./build.sh && ./build.sh
+RUN chmod +x ./build.sh && ./build.sh
