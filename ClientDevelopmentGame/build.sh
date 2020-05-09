@@ -7,9 +7,9 @@ xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
     -quit  \
     -batchmode \
     -silent-crashes \
-    -username "$USERNAME" \
-    -password "$PASSWORD" \
-    -serial "$SERIAL"
+    -username "$username" \
+    -password "$password" \
+    -serial "$serial"
 
 # Run a build with outut
 xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
