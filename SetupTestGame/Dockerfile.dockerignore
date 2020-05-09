@@ -1,0 +1,10 @@
+.git/
+.vs/
+Deploy/.secrets/
+
+Dockerfile
+Dockerfile.dockerignore
+
+Server/
+Deploy/
+DemoGame/
