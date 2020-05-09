@@ -3,4 +3,4 @@ WORKDIR /app
 
 COPY . .
 
-RUN chmod +x ./build.sh && ./build.sh || exit 1
+RUN chmod +x ./build.sh && ./build.sh

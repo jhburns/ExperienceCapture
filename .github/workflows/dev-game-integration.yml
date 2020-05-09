@@ -19,7 +19,7 @@ jobs:
         uses: whoan/docker-build-with-cache-action@v3.1.1
         with:
           context: ./ClientDevelopmentGame
-          dockerfile: Dockerfile
+          image_name: jhburns/ec-games-cache
           # Not caching because the licence/account info may be leaked
           pull_image_and_stages: false
           push_image_and_stages: false
