@@ -46,7 +46,7 @@ namespace Carter.App.Route.Tags
                     await sessions.UpdateOneAsync(filter, update);
                 }
 
-                BasicResponce.Send(res);
+                await res.FromString();
             });
 
             this.Delete("/{tagName}", async (req, res) =>
@@ -76,7 +76,7 @@ namespace Carter.App.Route.Tags
                     await sessions.UpdateOneAsync(filter, update);
                 }
 
-                BasicResponce.Send(res);
+                await res.FromString();
             });
         }
     }

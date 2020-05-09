@@ -45,11 +45,11 @@ namespace Carter.App.Route.NewSignUp
                 string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
                 if (json != null)
                 {
-                    JsonResponce.FromString(res, json);
+                    await res.FromJson(json);
                     return;
                 }
 
-                BsonResponse.FromDoc(res, responceDoc);
+                await res.FromBson(responceDoc);
             });
         }
     }
