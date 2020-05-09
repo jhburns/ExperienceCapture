@@ -1,0 +1,32 @@
+---
+name: API
+
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'DemoGame/**'
+      - '.github/workflows/demo-integration.yml'
+
+jobs:
+  build:
+    name: Integration Checks
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Docker
+        uses: whoan/docker-build-with-cache-action@v3.1.1
+        with:
+          context: ./DemoGame/
+          dockerfile: Dockerfile
+          # Not caching because the licence/account info may be leaked
+          pull_image_and_stages: false
+          push_image_and_stages: false
+          build_extra_args: |
+            --build-arg \
+            username={{ secrets.UNITY_USERNAME }} \
+            --build-arg \
+            password={{ secrets.UNITY_PASSWORD }} \
+            --build-arg \
+            serial={{ secrets.UNITY_SERIAL }}
