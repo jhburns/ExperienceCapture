@@ -114,7 +114,8 @@
     "namespaced",
     "preformatted",
     "BSON",
-    "ec"
+    "ec",
+    "xUnit"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
