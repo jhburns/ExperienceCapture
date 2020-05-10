@@ -2,8 +2,9 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1.201-bionic AS build-env
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore
+COPY source/API.csproj ./source/
+COPY test/test.csproj ./test/
+RUN dotnet restore ./source/API.csproj && dotnet restore ./test/test.csproj
 
 # Copy everything else and build
 COPY . .
