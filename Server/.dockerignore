@@ -9,8 +9,8 @@
 
 # API
 
-bin\
-obj\
+**/bin/
+**/obj/
 
 # All
 

@@ -13,13 +13,15 @@ Written in .Net Core (C#) and has the following dependencies:
 - [CsvHelper](https://joshclose.github.io/CsvHelper/)
 - [Handlebars.Net](https://github.com/rexm/Handlebars.Net)
 - [Json.Net](https://www.newtonsoft.com/json)
+- [xUnit](https://xunit.net/)
 
 This is the bulk of the logic in the application. Also, this will start the exporter from an api call.
 
 ## Folder Breakdown
 
-- `LibraryScripts/` a collection of common logic.
-- `Routes/` the endpoints of the API, which is comprised of logic to be preformed based on the on the calling path.
-- `UsageHelpers/` an [Insomnia](https://insomnia.rest/) export file that makes it easier to develop the API. It also comes with a binary BSON file, that can be loaded as a request body through Insomnia.
-- `Validators/` bindings for data received for each applicable route.
-- `Export/` the session exporter, formerly a separate component.
+- `source/LibraryScripts/` a collection of common logic.
+- `source/Routes/` the endpoints of the API, which is comprised of logic to be preformed based on the on the calling path.
+- `source/UsageHelpers/` an [Insomnia](https://insomnia.rest/) export file that makes it easier to develop the API. It also comes with a binary BSON file, that can be loaded as a request body through Insomnia.
+- `source/Validators/` bindings for data received for each applicable route.
+- `source/Export/` the session exporter, formerly a separate component.
+- `test` another project for tests.
