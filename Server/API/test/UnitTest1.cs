@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace test
+namespace Carter.Tests
 {
     public class UnitTest1
     {
