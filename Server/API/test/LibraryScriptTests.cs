@@ -110,6 +110,20 @@ namespace Carter.Tests.LibraryScripts
         }
 
         [Fact]
+        public void IdsAreUnique()
+        {
+            var ids = new List<string>();
+
+            foreach (var t in Enumerable.Range(0, 1000))
+            {
+                ids.Add(Generate.GetRandomId(100));
+            }
+
+            bool isUnique = ids.Distinct().Count() == ids.Count();
+            Assert.True(isUnique, "IDs are not unique.");
+        }
+
+        [Fact]
         public void TokenHasSufficientLength()
         {
             var token = Generate.GetRandomToken();
