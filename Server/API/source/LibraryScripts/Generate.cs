@@ -20,13 +20,13 @@ namespace Carter.App.Lib.Generate
         // Should be considered secure
         public static string GetRandomToken()
         {
-        var key = new byte[32];
-        using (var generator = RandomNumberGenerator.Create())
-        {
-            generator.GetBytes(key);
-            string apiKey = Convert.ToBase64String(key);
-            return apiKey;
-        }
+            var key = new byte[32];
+            using (var generator = RandomNumberGenerator.Create())
+            {
+                generator.GetBytes(key);
+                string apiKey = Convert.ToBase64String(key);
+                return apiKey;
+            }
         }
     }
 }
