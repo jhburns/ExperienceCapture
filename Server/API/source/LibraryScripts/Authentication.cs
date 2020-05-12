@@ -61,9 +61,9 @@ namespace Carter.App.Lib.Authentication
 
                 return hash;
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e);
+                // TODO: evaluate whether this should throw instead
                 return null;
             }
         }
@@ -81,9 +81,9 @@ namespace Carter.App.Lib.Authentication
 
                 return Convert.FromBase64String(hash).SequenceEqual(newHash);
             }
-            catch (FormatException e)
+            catch
             {
-                Console.WriteLine(e);
+                // TODO: evaluate whether this should throw instead
                 return false;
             }
         }
