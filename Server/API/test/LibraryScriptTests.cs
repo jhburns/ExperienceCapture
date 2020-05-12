@@ -134,7 +134,7 @@ namespace Carter.Tests.LibraryScripts
             }
 
             bool isUnique = tokens.Distinct().Count() == tokens.Count();
-            Assert.True(isUnique, "GetRandomToken() is not generating unique tokens.");
+            Assert.True(isUnique, "Tokens are not unique.");
         }
     }
 }
