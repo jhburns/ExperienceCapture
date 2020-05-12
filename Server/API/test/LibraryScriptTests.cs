@@ -1,8 +1,8 @@
 namespace Carter.Tests.LibraryScripts
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Timer;
@@ -59,7 +59,7 @@ namespace Carter.Tests.LibraryScripts
         {
             var illegals = new List<string>() { "D", "I", "O", "S", "T", "Z", "0", "1", "2", "5" };
             bool isContaining = false;
-         
+
             foreach (var t in Enumerable.Range(0, 1000))
             {
                 string id = Generate.GetRandomId(100);
