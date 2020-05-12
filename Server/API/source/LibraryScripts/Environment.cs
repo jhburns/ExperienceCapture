@@ -17,16 +17,16 @@ namespace Carter.App.Lib.Environment
         public static AppEnvironment FromEnv()
         {
             string passwordHash = Environment.GetEnvironmentVariable("admin_password_hash")
-                    ?? throw new EnviromentVarNotSet("The following is unset", "admin_password_hash");
+                    ?? throw new EnvironmentVarNotSet("The following is unset", "admin_password_hash");
 
             string skipValidation = Environment.GetEnvironmentVariable("unsafe_do_no_validate_user")
                     ?? "false";
 
             string audience = Environment.GetEnvironmentVariable("gcp_client_id")
-                    ?? throw new EnviromentVarNotSet("The following is unset", "gcp_client_id");
+                    ?? throw new EnvironmentVarNotSet("The following is unset", "gcp_client_id");
 
             string domain = Environment.GetEnvironmentVariable("aws_domain_name")
-                    ?? throw new EnviromentVarNotSet("The following is unset", "aws_domain_name");
+                    ?? throw new EnvironmentVarNotSet("The following is unset", "aws_domain_name");
 
             return new AppEnvironment(passwordHash, skipValidation, audience, domain);
         }
@@ -68,23 +68,23 @@ namespace Carter.App.Lib.Environment
         }
     }
 
-    public class EnviromentVarNotSet : Exception
+    public class EnvironmentVarNotSet : Exception
     {
-        public EnviromentVarNotSet()
+        public EnvironmentVarNotSet()
         {
         }
 
-        public EnviromentVarNotSet(string message)
+        public EnvironmentVarNotSet(string message)
             : base(message)
         {
         }
 
-        public EnviromentVarNotSet(string message, string varName)
+        public EnvironmentVarNotSet(string message, string varName)
             : base(string.Format("{0}: environment variable {1}", message, varName))
         {
         }
 
-        public EnviromentVarNotSet(string message, Exception inner)
+        public EnvironmentVarNotSet(string message, Exception inner)
             : base(message, inner)
         {
         }

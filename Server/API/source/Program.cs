@@ -16,7 +16,7 @@
             if (args.Contains("--passwordGenerate") || args.Contains("-p"))
             {
                 string domain = Environment.GetEnvironmentVariable("aws_domain_name")
-                    ?? throw new EnviromentVarNotSet("The following is unset", "aws_domain_name");
+                    ?? throw new EnvironmentVarNotSet("The following is unset", "aws_domain_name");
                 PasswordHasher.OutputNew(domain);
                 return;
             }
