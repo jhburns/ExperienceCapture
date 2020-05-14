@@ -7,6 +7,7 @@ namespace Carter.App.Hosting
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
 
     using Minio;
 
@@ -43,6 +44,11 @@ namespace Carter.App.Hosting
 
             AppEnvironment env = ConfigureAppEnvironment.FromEnv();
             services.AddSingleton<IAppEnvironment>(env);
+
+            // TODO: Fix this so that LogDebug() isn't ignored
+            var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+            ILogger logger = loggerFactory.CreateLogger<Program>();
+            services.AddSingleton<ILogger>(logger);
         }
 
         public void Configure(IApplicationBuilder app)
