@@ -77,19 +77,19 @@ namespace Pulumi.App.WebServerStack
                 AssociatePublicIpAddress = false,
             });
 
-            string ipId;
+            string elasticId;
             if (IsProduction == "production")
             {
-                ipId = IpIdProduction;
+                elasticId = IpIdProduction;
             }
             else
             {
-                ipId = IpIdStaging;
+                elasticId = IpIdStaging;
             }
 
             var elasticIp = new EipAssociation("experience-capture-ip", new EipAssociationArgs
             {
-                AllocationId = ipId,
+                AllocationId = elasticId,
                 InstanceId = server.Id,
             });
 
