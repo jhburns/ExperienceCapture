@@ -31,4 +31,4 @@ on:  # yamllint disable-line rule:truthy
       # This check is special, its cross-project
       # Changes in the client also should trigger a check
       - 'ClientDevelopmentGame/**'
-      - '.github/workflows/dev-game-integration.yml'
+      - '.github/workflows/setup-game-integration.yml'
