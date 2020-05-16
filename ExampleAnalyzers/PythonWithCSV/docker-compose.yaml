@@ -1,8 +1,8 @@
 ---
-version: '3.5'
-
 services:
   processor:
     build: .
     volumes:
       - ../data:/app/data
+
+version: '3.5'

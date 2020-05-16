@@ -1,5 +1,5 @@
-# yamllint disable-file rule:key-ordering
 ---
+# yamllint disable rule:key-ordering
 - hosts: all
   become: true
   gather_facts: false
@@ -187,3 +187,5 @@
         count: 1
         units: minutes
       when: result is skipped
+
+# yamllint enable rule:key-ordering

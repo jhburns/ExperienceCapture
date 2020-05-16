@@ -1,4 +1,19 @@
 ---
+jobs:
+  build:
+    name: Integration Checks
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Docker
+        uses: whoan/docker-build-with-cache-action@v3.1.1
+        with:
+          context: ./
+          dockerfile: shellcheck.integration.Dockerfile
+          image_name: jhburns/ec-shellcheck-cache
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+          username: "${{ secrets.DOCKER_USERNAME }}"
+
 name: Shell
 
 on:  # yamllint disable-line rule:truthy
@@ -10,18 +25,3 @@ on:  # yamllint disable-line rule:truthy
       - '*.sh'
       - '.github/workflows/shell-integration.yml'
       - 'shellcheck.integration.Dockerfile'
-
-jobs:
-  build:
-    name: Integration Checks
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run Docker
-        uses: whoan/docker-build-with-cache-action@v3.1.1
-        with:
-          username: "${{ secrets.DOCKER_USERNAME }}"
-          password: "${{ secrets.DOCKER_PASSWORD }}"
-          image_name: jhburns/ec-shellcheck-cache
-          context: ./
-          dockerfile: shellcheck.integration.Dockerfile

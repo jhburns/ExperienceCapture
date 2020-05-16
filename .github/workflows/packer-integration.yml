@@ -1,4 +1,21 @@
 ---
+jobs:
+  build:
+    name: Integration Checks
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - env:
+          DOCKER_BUILDKIT: 1
+        name: Run Docker
+        uses: whoan/docker-build-with-cache-action@v3.1.1
+        with:
+          context: ./Deploy/Packer
+          dockerfile: integration.Dockerfile
+          image_name: jhburns/ec-packer-cache
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+          username: "${{ secrets.DOCKER_USERNAME }}"
+
 name: Packer
 
 on:  # yamllint disable-line rule:truthy
@@ -8,21 +25,3 @@ on:  # yamllint disable-line rule:truthy
     paths:
       - 'Deploy/Packer/**'
       - '.github/workflows/packer-integration.yml'
-
-jobs:
-  build:
-    name: Integration Checks
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run Docker
-        uses: whoan/docker-build-with-cache-action@v3.1.1
-        with:
-          username: "${{ secrets.DOCKER_USERNAME }}"
-          password: "${{ secrets.DOCKER_PASSWORD }}"
-          image_name: jhburns/ec-packer-cache
-          context: ./Deploy/Packer
-          dockerfile: integration.Dockerfile
-
-    env:
-      DOCKER_BUILDKIT: 1

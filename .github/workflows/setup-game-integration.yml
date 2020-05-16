@@ -1,4 +1,25 @@
 ---
+jobs:
+  build:
+    name: Integration Checks
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - env:
+          DOCKER_BUILDKIT: 1  # Needed so that docker build will read in correct .dockerignore
+        name: Run Docker
+        uses: whoan/docker-build-with-cache-action@v3.1.1
+        with:
+          build_extra_args: |
+            --build-arg username=${{ secrets.UNITY_USERNAME }}
+            --build-arg password=${{ secrets.UNITY_PASSWORD }}
+            --build-arg serial=${{ secrets.UNITY_SERIAL }}
+          context: .
+          dockerfile: SetupTestGame/Dockerfile
+          image_name: jhburns/ec-games-cache
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+          username: "${{ secrets.DOCKER_USERNAME }}"
+
 name: SetupGame
 
 on:  # yamllint disable-line rule:truthy
@@ -11,24 +32,3 @@ on:  # yamllint disable-line rule:truthy
       # Changes in the client also should trigger a check
       - 'ClientDevelopmentGame/**'
       - '.github/workflows/dev-game-integration.yml'
-
-jobs:
-  build:
-    name: Integration Checks
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run Docker
-        uses: whoan/docker-build-with-cache-action@v3.1.1
-        with:
-          context: .
-          dockerfile: SetupTestGame/Dockerfile
-          image_name: jhburns/ec-games-cache
-          build_extra_args: |
-            --build-arg username=${{ secrets.UNITY_USERNAME }}
-            --build-arg password=${{ secrets.UNITY_PASSWORD }}
-            --build-arg serial=${{ secrets.UNITY_SERIAL }}
-          username: "${{ secrets.DOCKER_USERNAME }}"
-          password: "${{ secrets.DOCKER_PASSWORD }}"
-        env:
-          DOCKER_BUILDKIT: 1  # Needed so that docker build will read in correct .dockerignore

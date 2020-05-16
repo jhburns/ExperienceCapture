@@ -1,6 +1,4 @@
 ---
-version: '3.5'
-
 services:
   api:
     environment:
@@ -8,15 +6,17 @@ services:
       # It shims Google Authentication instead of doing a real check
       - unsafe_do_no_validate_user=true
 
-  web:
-    volumes:
-      - ./WebUI/:/app/
-      - /app/node_modules
-    ports:
-      - "3003:3000"
+  redoc:
+    depends_on:
+      - rp
     environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
+      - SPEC_URL=http://localhost:8090/api/v1/openapi
+    hostname: redoc
+    image: redocly/redoc:v2.0.0-rc.20
+    networks:
+      - ec-network
+    ports:
+      - "4322:80"
 
   rp:
     ports:
@@ -24,17 +24,17 @@ services:
     volumes:
       - ./Caddy/Caddyfile:/etc/Caddyfile
 
-  redoc:
-    image: redocly/redoc:v2.0.0-rc.20
-    hostname: redoc
-    ports:
-      - "4322:80"
-    depends_on:
-      - rp
+  web:
     environment:
-      - SPEC_URL=http://localhost:8090/api/v1/openapi
-    networks:
-      - ec-network
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./WebUI/:/app/
+      - /app/node_modules
+
+version: '3.5'
 
 volumes:
   ec-db-volume: {}

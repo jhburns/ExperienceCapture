@@ -1,24 +1,24 @@
 ---
-version: '3.5'
-
 services:
   bu:
     environment:
       aws_deploy_target: staging
 
+version: '3.5'
+
 volumes:
+  ec-db-volume:
+    driver: rexray/ebs:0.11.4
+    driver_opts:
+      size: 5
+    name: ec-staging-db-volume
+  ec-os-volume:
+    driver: rexray/ebs:0.11.4
+    driver_opts:
+      size: 5
+    name: ec-staging-os-volume
   ec-rp-volume:
-    name: ec-staging-rp-volume
     driver: rexray/ebs:0.11.4
     driver_opts:
       size: 1
-  ec-db-volume:
-    name: ec-staging-db-volume
-    driver: rexray/ebs:0.11.4
-    driver_opts:
-      size: 5
-  ec-os-volume:
-    name: ec-staging-os-volume
-    driver: rexray/ebs:0.11.4
-    driver_opts:
-      size: 5
+    name: ec-staging-rp-volume

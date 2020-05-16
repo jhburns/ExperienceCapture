@@ -1,11 +1,4 @@
 ---
-name: Report
-
-on:  # yamllint disable-line rule:truthy
-  pull_request:
-    branches:
-      - master
-
 jobs:
   build:
     name: Integration Checks
@@ -15,10 +8,15 @@ jobs:
       - name: Run Docker
         uses: whoan/docker-build-with-cache-action@v3.1.1
         with:
-          username: "${{ secrets.DOCKER_USERNAME }}"
-          password: "${{ secrets.DOCKER_PASSWORD }}"
-          image_name: jhburns/ec-report-cache
           context: ./
           dockerfile: report.integration.Dockerfile
-    env:
-      DOCKER_BUILDKIT: 1  # Needed so that docker build will read in correct .dockerignore
+          image_name: jhburns/ec-report-cache
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+          username: "${{ secrets.DOCKER_USERNAME }}"
+
+name: Report
+
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    branches:
+      - master
