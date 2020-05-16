@@ -35,8 +35,6 @@ namespace Carter.App.Hosting
 
             string minioUsername = "minio";
             string minioPassword = "minio123";
-            services.AddSingleton<string>(minioUsername);
-            services.AddSingleton<string>(minioPassword);
 
             // TODO: change this to use config string like Mongo
             MinioClient os = new MinioClient("os:9000", minioUsername, minioPassword);
