@@ -13,8 +13,6 @@ namespace Carter.App.Hosting
 
     using MongoDB.Driver;
 
-    using System;
-
     public class Startup
     {
         private readonly AppConfiguration appconfig;
