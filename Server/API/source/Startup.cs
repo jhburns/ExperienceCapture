@@ -29,15 +29,16 @@ namespace Carter.App.Hosting
             services.AddCarter();
 
             // TODO: change port number to be included in config
-            MongoClient client = new MongoClient($"mongodb://{AppConfiguration.ConnectionString}:27017");
+            string mongoUrl = $"mongodb://{AppConfiguration.Mongo.ConnectionString}:{AppConfiguration.Mongo.Port}";
+            MongoClient client = new MongoClient(mongoUrl);
             IMongoDatabase db = client.GetDatabase("ec");
             services.AddSingleton<IMongoDatabase>(db);
 
             string minioUsername = "minio";
             string minioPassword = "minio123";
 
-            // TODO: change this to use config string like Mongo
-            MinioClient os = new MinioClient("os:9000", minioUsername, minioPassword);
+            string minioHost = $"{AppConfiguration.Minio.ConnectionString}:{AppConfiguration.Minio.Port}";
+            MinioClient os = new MinioClient(minioHost, minioUsername, minioPassword);
             services.AddSingleton<MinioClient>(os);
 
             AppEnvironment env = ConfigureAppEnvironment.FromEnv();
