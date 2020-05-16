@@ -69,6 +69,35 @@
     <Rule Id="CA2242" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1000" Action="Warning" /> <!-- The spacing around a C# keyword is incorrect -->
+    <Rule Id="SA1001" Action="Warning" /> <!-- The spacing around a comma is incorrect -->
+    <Rule Id="SA1002" Action="Warning" /> <!-- The spacing around a semicolon is incorrect -->
+    <Rule Id="SA1003" Action="Warning" /> <!-- The spacing around an operator symbol is incorrect -->
+    <Rule Id="SA1004" Action="Warning" /> <!-- A line within a documentation header above a C# element does not begin with a single space -->
+    <Rule Id="SA1005" Action="Warning" /> <!-- A single-line comment within a C# code file does not begin with a single space -->
+    <Rule Id="SA1006" Action="Warning" /> <!-- A C# preprocessor-type keyword is preceded by space -->
+    <Rule Id="SA1007" Action="Warning" /> <!-- The operator keyword within a C# operator overload method is not followed by any whitespace -->
+    <Rule Id="SA1008" Action="Warning" /> <!-- An opening parenthesis within a C# statement is not spaced correctly -->
+    <Rule Id="SA1009" Action="Warning" /> <!-- A closing parenthesis within a C# statement is not spaced correctly -->
+    <Rule Id="SA1010" Action="Warning" /> <!-- An opening square bracket within a C# statement is not spaced correctly -->
+    <Rule Id="SA1011" Action="Warning" /> <!-- A closing square bracket within a C# statement is not spaced correctly -->
+    <Rule Id="SA1012" Action="Warning" /> <!-- A closing square bracket within a C# statement is not spaced correctly -->
+    <Rule Id="SA1013" Action="Warning" /> <!-- A closing brace within a C# element is not spaced correctly -->
+    <Rule Id="SA1014" Action="Warning" /> <!-- An opening generic bracket within a C# element is not spaced correctly -->
+    <Rule Id="SA1015" Action="Warning" /> <!-- A closing generic bracket within a C# element is not spaced correctly -->
+    <Rule Id="SA1016" Action="Warning" /> <!-- An opening attribute bracket within a C# element is not spaced correctly -->
+    <Rule Id="SA1017" Action="Warning" /> <!-- A closing attribute bracket within a C# element is not spaced correctly -->
+    <Rule Id="SA1018" Action="Warning" /> <!-- A nullable type symbol within a C# element is not spaced correctly -->
+    <Rule Id="SA1019" Action="Warning" /> <!-- The spacing around a member access symbol is incorrect, within a C# code file -->
+    <Rule Id="SA1020" Action="Warning" /> <!-- An increment or decrement symbol within a C# element is not spaced correctly -->
+    <Rule Id="SA1021" Action="Warning" /> <!-- A negative sign within a C# element is not spaced correctly -->
+    <Rule Id="SA1022" Action="Warning" /> <!-- A positive sign within a C# element is not spaced correctly -->
+    <Rule Id="SA1023" Action="Warning" /> <!-- A dereference symbol or an access-of symbol within a C# element is not spaced correctly -->
+    <Rule Id="SA1024" Action="Warning" /> <!-- A colon within a C# element is not spaced correctly -->
+    <Rule Id="SA1025" Action="Warning" /> <!-- The code contains multiple whitespace characters in a row -->
+    <Rule Id="SA1026" Action="Warning" /> <!-- An implicitly typed new array allocation within a C# code file is not spaced correctly -->
+    <Rule Id="SA1027" Action="Warning" /> <!-- The code contains a tab or space character which is not consistent with the current project settings -->
+    <Rule Id="SA1028" Action="Warning" /> <!-- A line of code ends with a space, tab, or other whitespace characters before the end of line character(s) -->
     <Rule Id="SA1600" Action="Warning" /> <!-- Elements should be documented -->
     <Rule Id="SA1633" Action="None" /> <!-- File should have header -->
     <Rule Id="SA0001" Action="None" /> <!-- XML comments -->
@@ -84,7 +113,7 @@
     <Rule Id="SA1128" Action="Warning" /> <!-- Put constructor initializers on their own line -->
     <Rule Id="SA1122" Action="Warning" /> <!-- Use string.Empty for empty strings -->
     <Rule Id="SA1413" Action="Warning" /> <!-- Use trailing comma in multi-line initializers -->
-    <Rule Id="SA1117" Action="None" /> <!-- Parameters should be on same line or separate lines -->
+    <Rule Id="SA1117" Action="Warning" /> <!-- Parameters should be on same line or separate lines -->
     <Rule Id="SA1602" Action="Warning" /> <!-- Enumeration items should be documented -->
     <Rule Id="SA1108" Action="Warning" /> <!-- Block statements should not contain embedded comments -->
     <Rule Id="SA1601" Action="Warning" /> <!-- Partial elements should be documented -->
@@ -102,5 +131,42 @@
     <Rule Id="SA1133" Action="Warning" /> <!-- Do not combine attributes -->
     <Rule Id="SA1202" Action="Warning" /> <!-- Elements should be ordered by access -->
     <Rule Id="SA1201" Action="Warning" /> <!-- Elements should appear in the correct order -->
+    <Rule Id="SA1305" Action="Warning" /> <!-- The name of a field or variable in C# uses Hungarian notation -->
+    <Rule Id="SA1106" Action="Warning" /> <!-- No extra semicolon -->
+    <Rule Id="SA1100" Action="Warning" /> <!-- A call to a member from an inherited class begins with base., and the local class does not contain an override or implementation of the member -->
+    <Rule Id="SA1107" Action="Warning" /> <!-- The C# code contains more than one statement on a single line -->
+    <Rule Id="SA1110" Action="Warning" /> <!-- The opening parenthesis or bracket in a call to a C# method or indexer, or the declaration of a method or indexer, is not placed on the same line as the method or indexer name -->
+    <Rule Id="SA1111" Action="Warning" /> <!-- The closing parenthesis or bracket in a call to a C# method or indexer, or the declaration of a method or indexer, is not placed on the same line as the last parameter -->
+    <Rule Id="SA1113" Action="Warning" /> <!-- A comma between two parameters in a call to a C# method or indexer, or in the declaration of a method or indexer, is not placed on the same line as the previous parameter -->
+    <Rule Id="SA1114" Action="Warning" /> <!-- The start of the parameter list for a method or indexer call or declaration does not begin on the same line as the opening bracket, or on the line after the opening bracket -->
+    <Rule Id="SA1115" Action="Warning" /> <!-- A parameter within a C# method or indexer call or declaration does not begin on the same line as the previous parameter, or on the next line -->
+    <Rule Id="SA1116" Action="Warning" /> <!-- The parameters to a C# method or indexer call or declaration span across multiple lines, but the first parameter does not start on the line after the opening bracket -->
+    <Rule Id="SA1117" Action="Warning" /> <!-- The parameters to a C# method or indexer call or declaration are not all on the same line or each on a separate line -->
+    <Rule Id="SA1118" Action="Warning" /> <!-- A parameter to a C# method or indexer, other than the first parameter, spans across multiple lines -->
+    <Rule Id="SA1120" Action="Warning" /> <!-- The C# comment does not contain any comment text -->
+    <Rule Id="SA1121" Action="Warning" /> <!-- The code uses one of the basic C# types, but does not use the built-in alias for the type -->
+    <Rule Id="SA1125" Action="Warning" /> <!-- The Nullable type has been defined not using the C# shorthand -->
+    <Rule Id="SA1126" Action="Warning" /> <!-- A call to a member is not prefixed with the 'this.', 'base.', 'object.' or 'typename.' prefix to indicate the intended method call -->
+    <Rule Id="SA1127" Action="Warning" /> <!-- A generic constraint on a type or method declaration is on the same line as the declaration, within a C# code file -->
+    <Rule Id="SA1128" Action="Warning" /> <!-- A constructor initializer is on the same line as the constructor declaration, within a C# code file -->
+    <Rule Id="SA1129" Action="Warning" /> <!-- A value type was constructed using the syntax new T() -->
+    <Rule Id="SA1130" Action="Warning" /> <!-- An anonymous method was declared using the form delegate (parameters) { }, when a lambda expression would provide equivalent behavior with the syntax (parameters) => { } -->
+    <Rule Id="SA1131" Action="Warning" /> <!-- A comparison was made between a variable and a literal or constant value, and the variable appeared on the right-hand side of the expression -->
+    <Rule Id="SA1132" Action="Warning" /> <!-- Two or more fields were declared in the same field declaration syntax -->
+    <Rule Id="SA1133" Action="Warning" /> <!-- Two or more attributes appeared within the same set of square brackets -->
+    <Rule Id="SA1134" Action="Warning" /> <!-- An attribute is placed on the same line of code as another attribute or element -->
+    <Rule Id="SA1135" Action="Warning" /> <!-- A using directive is not qualified -->
+    <Rule Id="SA1136" Action="Warning" /> <!-- Multiple enum values are placed on the same line of code -->
+    <Rule Id="SA1137" Action="Warning" /> <!-- Two sibling elements which each start on their own line have different levels of indentation -->
+    <Rule Id="SA1138" Action="Warning" /> <!-- Use literal suffix notation instead of casting -->
+    <Rule Id="SA1141" Action="Warning" /> <!-- Use tuple syntax instead of the underlying ValueTuple implementation type -->
+    <Rule Id="SA1142" Action="Warning" /> <!-- An element of a tuple was referenced by its metadata name when an element name is available -->
+    <Rule Id="SA1119" Action="Warning" /> <!-- A C# statement contains parenthesis which are unnecessary and should be removed -->
+    <Rule Id="SA1400" Action="Warning" /> <!-- The access modifier for a C# element has not been explicitly defined -->
+    <Rule Id="SA1403" Action="Warning" /> <!-- A C# code file contains more than one namespace -->
+    <Rule Id="SA1406" Action="Warning" /> <!-- A call to Debug.Fail in C# code does not include a descriptive message -->
+    <Rule Id="SA1407" Action="Warning" /> <!-- A C# statement contains a complex arithmetic expression which omits parenthesis around operators -->
+    <Rule Id="SA1408" Action="Warning" /> <!-- A C# statement contains a complex conditional expression which omits parenthesis around operators -->
+    <Rule Id="SA1411" Action="Warning" /> <!-- An attribute declaration does not contain any parameters, yet it still includes parenthesis -->
   </Rules>
 </RuleSet>
