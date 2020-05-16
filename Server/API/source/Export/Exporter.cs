@@ -27,6 +27,7 @@ namespace Carter.App.Export.Main
 
     public class ExportHandler
     {
+        // TODO: Update this to use values from appsettings.json and AppEnvironment
         private static readonly IMongoDatabase DB = new MongoClient(@"mongodb://db:27017").GetDatabase("ec");
         private static readonly MinioClient OS = new MinioClient("os:9000", "minio", "minio123");
 
