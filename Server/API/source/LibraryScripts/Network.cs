@@ -16,7 +16,7 @@ namespace Carter.App.Lib.Network
     {
         public static async Task FromString(this HttpResponse response, string body = "OK")
         {
-            response.ContentType = "application/text; charset=utf-8";
+            response.ContentType = "text/plain; charset=utf-8";
             await response.WriteAsync(body);
             return;
         }
