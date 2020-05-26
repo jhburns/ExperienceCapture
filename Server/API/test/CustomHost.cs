@@ -1,6 +1,7 @@
 namespace Carter.Tests.CustomHost
 {
     using System.Net.Http;
+    using System.Text;
 
     using Carter.App.Hosting;
     using Carter.App.Lib.Environment;
@@ -12,6 +13,8 @@ namespace Carter.Tests.CustomHost
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
+    using MongoDB;
+    using MongoDB.Bson;
     using MongoDB.Driver;
 
     using Moq;
@@ -26,15 +29,27 @@ namespace Carter.Tests.CustomHost
                     {
                         services.AddCarter();
 
+                        // Mock database
+                        var collection = new Mock<IMongoCollection<It.IsAnyType>>();
+                        collection.SetupAllProperties();
+
                         var databaseMock = new Mock<IMongoDatabase>();
+                        databaseMock.Setup(db => db.GetCollection<It.IsAnyType>(It.IsAny<string>(), It.IsAny<MongoCollectionSettings>()))
+                            .Returns(collection.Object);
+
                         services.AddSingleton<IMongoDatabase>(databaseMock.Object);
 
+                        // Mock object store
                         var objectStoreMock = new Mock<IMinioClient>();
+                        objectStoreMock.SetupAllProperties();
                         services.AddSingleton<IMinioClient>(objectStoreMock.Object);
 
+                        // Mock environment
                         var envMock = new Mock<IAppEnvironment>();
+                        envMock.SetupAllProperties();
                         services.AddSingleton<IAppEnvironment>(envMock.Object);
 
+                        // Mock logger
                         var logger = Mock.Of<ILogger<Program>>();
                         services.AddSingleton<ILogger>(logger);
                     })
