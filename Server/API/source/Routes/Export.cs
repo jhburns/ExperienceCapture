@@ -10,6 +10,7 @@ namespace Carter.App.Route.Export
 
     using Carter.App.Export.Main;
 
+    using Carter.App.Lib.MinioExtra;
     using Carter.App.Lib.Network;
 
     using Carter.App.Route.PreSecurity;
@@ -18,13 +19,11 @@ namespace Carter.App.Route.Export
     using Carter.Request;
     using Carter.Response;
 
-    using Minio;
-
     using MongoDB.Driver;
 
     public class Export : CarterModule
     {
-        public Export(IMongoDatabase db, MinioClient os)
+        public Export(IMongoDatabase db, IMinioClient os)
             : base("/sessions/{id}/export")
         {
             this.Before += PreSecurity.GetSecurityCheck(db);
@@ -97,35 +96,6 @@ namespace Carter.App.Route.Export
                     await res.FromStream(stream, "application/zip", about);
                 }
             });
-        }
-    }
-
-    // Minio client expects the CopyTo to be both sync and async,
-    // So it is wrapped in a function call
-    internal static class MinioExtra
-    {
-        public static async Task<byte[]> GetBytesAsync(this MinioClient os, string bucketName, string objectName)
-        {
-            byte[] objectBytes = null;
-
-            try
-            {
-                await os.GetObjectAsync(bucketName, objectName, (stream) =>
-                {
-                    using (var outStream = new MemoryStream())
-                    {
-                        stream.CopyTo(outStream);
-                        objectBytes = outStream.ToArray();
-                    }
-                });
-
-                return objectBytes;
-            }
-            catch (Exception e)
-            {
-                // Should never be thrown as object state is checked from Mongo
-                throw new Exception($"GetBytesAsync Error. ObjectId: {objectName}, Bucket: {bucketName}", e);
-            }
         }
     }
 }

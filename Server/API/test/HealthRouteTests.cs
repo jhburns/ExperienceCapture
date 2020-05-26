@@ -5,7 +5,6 @@ namespace Carter.Tests.Route.Health
     using System.Text;
     using System.Threading.Tasks;
 
-    using Carter.App.Route.Health;
     using Carter.Tests.CustomHost;
 
     using Xunit;
@@ -20,7 +19,7 @@ namespace Carter.Tests.Route.Health
         public async Task GetHealth(string url)
         {
             // Arrange
-            var client = CustomHost.Create<Health>();
+            var client = CustomHost.Create();
 
             // Act
             var response = await client.GetAsync(url);
@@ -41,7 +40,7 @@ namespace Carter.Tests.Route.Health
         [InlineData("a")]
         public async Task OtherMethodHealth(string json)
         {
-            var client = CustomHost.Create<Health>();
+            var client = CustomHost.Create();
 
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
             var responsePost = await client.PostAsync("/health", stringContent);
@@ -68,7 +67,7 @@ namespace Carter.Tests.Route.Health
         [InlineData("/?test=sdkfjsdlfksdf&blak=sdfsfds")]
         public async Task GetRoot(string url)
         {
-            var client = CustomHost.Create<Health>();
+            var client = CustomHost.Create();
 
             var response = await client.GetAsync(url);
 
@@ -87,7 +86,7 @@ namespace Carter.Tests.Route.Health
         [InlineData("a")]
         public async Task OtherMethodRoot(string json)
         {
-            var client = CustomHost.Create<Health>();
+            var client = CustomHost.Create();
 
             var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
             var responsePost = await client.PostAsync("/", stringContent);
