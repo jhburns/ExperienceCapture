@@ -27,7 +27,6 @@ services:
   web:
     environment:
       - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
     ports:
       - "3003:3000"
     stdin_open: true
