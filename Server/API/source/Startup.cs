@@ -1,5 +1,7 @@
 namespace Carter.App.Hosting
 {
+    using System;
+
     using Carter;
 
     using Carter.App.Lib.Environment;
@@ -38,11 +40,8 @@ namespace Carter.App.Hosting
             string minioPassword = "minio123";
 
             string minioHost = $"{AppConfiguration.Minio.ConnectionString}:{AppConfiguration.Minio.Port}";
-            var os = new MinioClient(minioHost, minioUsername, minioPassword);
-            if (os is IMinioClient customOs)
-            {
-                services.AddSingleton<MinioClient>(os);
-            }
+            var os = new MinioClientExtra(minioHost, minioUsername, minioPassword);
+            services.AddSingleton<IMinioClient>(os);
 
             var env = ConfigureAppEnvironment.FromEnv();
             services.AddSingleton<IAppEnvironment>(env);
