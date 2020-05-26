@@ -30,6 +30,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
     ports:
       - "3003:3000"
+    stdin_open: true
     volumes:
       - ./WebUI/:/app/
       - /app/node_modules
