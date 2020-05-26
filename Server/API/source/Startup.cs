@@ -1,8 +1,11 @@
 namespace Carter.App.Hosting
 {
+    using System;
+
     using Carter;
 
     using Carter.App.Lib.Environment;
+    using Carter.App.Lib.MinioExtra;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
@@ -28,25 +31,24 @@ namespace Carter.App.Hosting
         {
             services.AddCarter();
 
-            // TODO: change port number to be included in config
             string mongoUrl = $"mongodb://{AppConfiguration.Mongo.ConnectionString}:{AppConfiguration.Mongo.Port}";
-            MongoClient client = new MongoClient(mongoUrl);
-            IMongoDatabase db = client.GetDatabase("ec");
+            var client = new MongoClient(mongoUrl);
+            var db = client.GetDatabase("ec");
             services.AddSingleton<IMongoDatabase>(db);
 
             string minioUsername = "minio";
             string minioPassword = "minio123";
 
             string minioHost = $"{AppConfiguration.Minio.ConnectionString}:{AppConfiguration.Minio.Port}";
-            MinioClient os = new MinioClient(minioHost, minioUsername, minioPassword);
-            services.AddSingleton<MinioClient>(os);
+            var os = new MinioClientExtra(minioHost, minioUsername, minioPassword);
+            services.AddSingleton<IMinioClient>(os);
 
-            AppEnvironment env = ConfigureAppEnvironment.FromEnv();
+            var env = ConfigureAppEnvironment.FromEnv();
             services.AddSingleton<IAppEnvironment>(env);
 
             // TODO: Fix this so that LogDebug() isn't ignored
             var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
-            ILogger logger = loggerFactory.CreateLogger<Program>();
+            var logger = loggerFactory.CreateLogger<Program>();
             services.AddSingleton<ILogger>(logger);
         }
 

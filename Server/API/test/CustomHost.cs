@@ -3,6 +3,8 @@ namespace Carter.Tests.CustomHost
     using System.Net.Http;
 
     using Carter.App.Hosting;
+    using Carter.App.Lib.Environment;
+    using Carter.App.Lib.MinioExtra;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -10,23 +12,30 @@ namespace Carter.Tests.CustomHost
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
+    using MongoDB.Driver;
+
     using Moq;
 
     public static class CustomHost
     {
-        // Generation method only accepts one module
-        // In order to promote module seperation
-        public static HttpClient Create<TModule>()
-            where TModule : CarterModule
+        public static HttpClient Create()
         {
             var server = new TestServer(
                 new WebHostBuilder()
                     .ConfigureServices(services =>
                     {
-                        services.AddCarter(configurator: c =>
-                            c.WithModule<TModule>());
+                        services.AddCarter();
 
-                        ILogger logger = Mock.Of<ILogger<Program>>();
+                        var databaseMock = new Mock<IMongoDatabase>();
+                        services.AddSingleton<IMongoDatabase>(databaseMock.Object);
+
+                        var objectStoreMock = new Mock<IMinioClient>();
+                        services.AddSingleton<IMinioClient>(objectStoreMock.Object);
+
+                        var envMock = new Mock<IAppEnvironment>();
+                        services.AddSingleton<IAppEnvironment>(envMock.Object);
+
+                        var logger = Mock.Of<ILogger<Program>>();
                         services.AddSingleton<ILogger>(logger);
                     })
                     .Configure(x =>
