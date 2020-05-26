@@ -62,6 +62,7 @@ namespace Carter.Tests.Route.Health
     public class RootTests
     {
         [Theory]
+        [InlineData("")]
         [InlineData("/")]
         [InlineData("/?")]
         [InlineData("/?test=sdkfjsdlfksdf&blak=sdfsfds")]

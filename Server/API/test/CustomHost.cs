@@ -10,6 +10,8 @@ namespace Carter.Tests.CustomHost
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
+    using Moq;
+
     public static class CustomHost
     {
         // Generation method only accepts one module
@@ -24,8 +26,7 @@ namespace Carter.Tests.CustomHost
                         services.AddCarter(configurator: c =>
                             c.WithModule<TModule>());
 
-                        var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
-                        ILogger logger = loggerFactory.CreateLogger<Program>();
+                        ILogger logger = Mock.Of<ILogger<Program>>();
                         services.AddSingleton<ILogger>(logger);
                     })
                     .Configure(x =>
