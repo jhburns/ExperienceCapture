@@ -18,7 +18,7 @@ namespace Carter.Tests.CustomHost
 
     public static class CustomHost
     {
-        public static HttpClient Create()
+        public static HttpClient Create(Mock<IMongoDatabase> databaseMock = null)
         {
             var server = new TestServer(
                 new WebHostBuilder()
@@ -26,15 +26,30 @@ namespace Carter.Tests.CustomHost
                     {
                         services.AddCarter();
 
-                        var databaseMock = new Mock<IMongoDatabase>();
+                        // Mock database
+                        if (databaseMock == null)
+                        {
+                            var collection = new Mock<IMongoCollection<It.IsAnyType>>();
+                            collection.SetupAllProperties();
+
+                            databaseMock = new Mock<IMongoDatabase>();
+                            databaseMock.Setup(db => db.GetCollection<It.IsAnyType>(It.IsAny<string>(), It.IsAny<MongoCollectionSettings>()))
+                                .Returns(collection.Object);
+                        }
+
                         services.AddSingleton<IMongoDatabase>(databaseMock.Object);
 
+                        // Mock object store
                         var objectStoreMock = new Mock<IMinioClient>();
+                        objectStoreMock.SetupAllProperties();
                         services.AddSingleton<IMinioClient>(objectStoreMock.Object);
 
+                        // Mock environment
                         var envMock = new Mock<IAppEnvironment>();
+                        envMock.SetupAllProperties();
                         services.AddSingleton<IAppEnvironment>(envMock.Object);
 
+                        // Mock logger
                         var logger = Mock.Of<ILogger<Program>>();
                         services.AddSingleton<ILogger>(logger);
                     })
@@ -45,6 +60,21 @@ namespace Carter.Tests.CustomHost
                     }));
 
             return server.CreateClient();
+        }
+
+        public static Mock<IMongoDatabase> MakeDatabase<T>(Mock<IMongoCollection<T>> collectionMock = null)
+        {
+            if (collectionMock == null)
+            {
+                collectionMock = new Mock<IMongoCollection<T>>();
+                collectionMock.SetupAllProperties();
+            }
+
+            var databaseMock = new Mock<IMongoDatabase>();
+            databaseMock.Setup(db => db.GetCollection<T>(It.IsAny<string>(), It.IsAny<MongoCollectionSettings>()))
+                .Returns(collectionMock.Object);
+
+            return databaseMock;
         }
     }
 }
