@@ -4,12 +4,12 @@
 
 The back-end used [Caddy 1.0](https://caddyserver.com/v1/) as a reserve proxy for each service.
 
-See: https://caddyserver.com/v1/docs for documentation. 
+[Check the documentation for more.](https://caddyserver.com/v1/docs)
 
 ## About
 
 There are two different configurations used, one for local development, `Caddyfile`,
 and one for production, `Caddyfile.production`. Routing should behave the same between
-both, with the main difference being SSL setup as it isn't feasible for local development.
+both, with the main difference being SSL is disabled for local development.
 
 [comment]: <> (TODO: add rate-limiting, only in production)

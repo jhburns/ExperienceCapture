@@ -1,47 +1,47 @@
 ---
-version: '3.5'
+networks:
+  ec-deploy-network: {}
 
 services:
   packer:
     build:
       context: ./Packer
-    volumes:
-      - ./.secrets/id_rsa.pub:/deploy/id_rsa.pub
-      - ../Server:/deploy/Server
-    networks:
-      - ec-deploy-network
     env_file:
       - .env
       - .deploy.env
+    networks:
+      - ec-deploy-network
+    volumes:
+      - ./.secrets/id_rsa.pub:/deploy/id_rsa.pub
+      - ../Server:/deploy/Server
 
   pulumi:
     build:
       context: ./Pulumi
-    networks:
-      - ec-deploy-network
     env_file:
       - .env
       - .deploy.env
+    networks:
+      - ec-deploy-network
 
   ssh_connect:
     build:
       context: ./SshClient
     command: ["sh", "-c", "ssh -o StrictHostKeyChecking=no -i id_rsa -l ec-debug $$aws_host_ssh_address"]
-    volumes:
-      - ./.secrets/id_rsa:/keys/id_rsa
-    networks:
-      - ec-deploy-network
     env_file:
       - .deploy.env
+    networks:
+      - ec-deploy-network
+    volumes:
+      - ./.secrets/id_rsa:/keys/id_rsa
 
   ssh_setup:
     build:
       context: ./SshClient
     command: ["ssh-keygen", "-b", "2048", "-q", "-t", "rsa", "-N", "", "-f", "./id_rsa"]
-    volumes:
-      - ./.secrets/:/keys/
     networks:
       - ec-deploy-network
+    volumes:
+      - ./.secrets/:/keys/
 
-networks:
-  ec-deploy-network: {}
+version: '3.5'

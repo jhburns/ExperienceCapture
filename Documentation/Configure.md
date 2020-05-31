@@ -3,11 +3,12 @@
 Information about configure option of the `SetupCapture` game object in the `SetupEC` scene.
 Options are in order.
 
-## Capture Rate 
+## Capture Rate
 
-Basically how often the `GetCapture()` function is called, respecting frame rate.
+The rate is how often the `GetCapture()` function is called, with respect to frame rate.
 A value of 1 means `GetCapture()` is called every frame. A value of 2 means `GetCapture()`
-is called every other frame.
+is called every other frame. Two games with different frame rates and the same value for this
+will result in one capturing more often than the other.
 
 ## Scene To Load
 
@@ -44,7 +45,7 @@ When checked, nothing will be printed to console.
 
 ## Do Not Throw Not Found
 
-When checked, objects/keys not found by the Limit list will be ignored. 
+When checked, objects/keys not found by the Limit list will be ignored.
 Useful when a game creates/destroys objects dynamically.
 
 ## Limit Output To Specified
@@ -53,17 +54,17 @@ This allows you to ignore every property exported under `GetCapture()` except th
 
 Separate object names from key using a colon, `:`, for example:
 
-```
+```text
 Player:positionX
 ```
 
 This entry would ignore every key except `positionX` on the `Player` game object.
 
-# API
+## Configuration API
 
-The exporter exposes an API for additional configuring, but be warned it is experimental.
+The capturer exposes an API for additional configuration, but be warned it is experimental.
 
-## Cleanup Key
+### Cleanup Key
 
 This will override the default cleanup key of `Q` to the key `W`:
 

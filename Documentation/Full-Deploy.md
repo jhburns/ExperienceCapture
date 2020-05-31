@@ -3,6 +3,7 @@
 ## Perquisites
 
 Doing a full deploy requires:
+
 - Two domain names, this tutorial will cover setting up through one purchased [Namecheap](https://www.namecheap.com/), although any register can be used.
 - An [AWS account](https://aws.amazon.com/#).
 - A [GCP account](https://console.cloud.google.com/).
@@ -35,14 +36,14 @@ be replaced with your values.
 ## Create AMI Users
 
 For each of the following policies in JSON:
-    - Create an [AWS AMI Policy](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create.html) from the following json.
-    - Attach the policy to a user.
-    - Copy the [Access Key ID and Secret Access Key](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html) into their respective environment variable.
 
-The point of doing all this to follow best security practices. By making a separate policy for each service each service has only the cloud resources it needs to 
-be able to operate. 
+- Create an [AWS AMI Policy](https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_create.html) from the following json.
+- Attach the policy to a user.
+- Copy the [Access Key ID and Secret Access Key](https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html) into their respective environment variable.
 
-### Packer
+The point of doing all this to follow best security practices. By making a separate policy for each service each service has only the cloud resources it needs to be able to operate.
+
+### Packer Role
 
 ```json
 {
@@ -91,15 +92,14 @@ be able to operate.
 }
 ```
 
-
 In `Deploy/.env` file:
-```
+
+```text
 aws_packer_access_id=[Access Key ID for Packer account]
 aws_packer_secret_key=[Secret Access Key for Packer account]
-aws_user_for_packer=[Username of Packer account]
 ```
 
-### REX-Ray
+### REX-Ray Role
 
 ```json
 {
@@ -133,14 +133,14 @@ aws_user_for_packer=[Username of Packer account]
 }
 ```
 
-
 In `Deploy/.env` file:
-```
+
+```text
 aws_rexray_access_id=[Access Key ID for REX-Ray account]
 aws_rexray_secret_key=[Secret Access Key for REX-Ray account]
 ```
 
-### Pulumi
+### Pulumi Role
 
 ```json
 {
@@ -186,14 +186,14 @@ aws_rexray_secret_key=[Secret Access Key for REX-Ray account]
 }
 ```
 
-
 In `Deploy/.env` file:
-```
+
+```text
 AWS_ACCESS_KEY_ID=[Access Key ID for Pulumi account]
 AWS_SECRET_ACCESS_KEY=[Secret Access Key for Pulumi account]
 ```
 
-### Backupper
+### Backupper Role
 
 ```json
 {
@@ -214,9 +214,9 @@ AWS_SECRET_ACCESS_KEY=[Secret Access Key for Pulumi account]
 }
 ```
 
-
 In `Server/.env` file:
-```
+
+```text
 aws_backupper_access_id=[Access Key ID for Backupper account]
 aws_backupper_secret_key=[Secret Access Key for Backupper account]
 ```
@@ -229,8 +229,8 @@ Get your [AWS Account ID](https://docs.aws.amazon.com/IAM/latest/UserGuide/conso
 
 Allocate two [Elastic IPs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html), and fill in the following environment variables in the `Deploy/.deploy.env` file:
 
-```
-aws_production_deploy_ip_allocation_id=eipalloc-[Ip that will be mapped to production domain, ex expcap.xyz]	
+```text
+aws_production_deploy_ip_allocation_id=eipalloc-[Ip that will be mapped to production domain, ex expcap.xyz]
 aws_staging_deploy_ip_allocation_id=eipalloc-[Ip that will be mapped to staging domain, ex expcap2.xyz]
 ```
 
@@ -242,7 +242,7 @@ Go to Dashboard > Manage > Advanced DNS and create a new record. It should have 
 
 | Type     | Host | Value                       | TTL       |
 |----------|------|-----------------------------|-----------|
-| A Record | @    | [Your IP, ex 13.52.144.154] | Automatic |
+| A Record | @    | (Your IP, ex 13.52.144.154) | Automatic |
 
 This should be the only record for the domain, and needs to be done for both domains. What this does is connect each domain to its respective domain. All traffic will be forward to these domains.
 
@@ -270,13 +270,14 @@ Set `aws_domain_name` variable in the `Server/.env` file to whichever domain is 
 
 ## Generate Password
 
-Run `docker-compose up new_password` and copy the Hash value into the `admin_password_hash` variable in the `Server/.env`file. This is used to bootstrap the website by visiting, `http://[your domain]/admin?password=[Password for URL value]` in the browser. 
+Run `docker-compose run api dotnet API.dll --passwordGenerate` and copy the 'Hash' value into the `admin_password_hash` variable in the `Server/.env`file. This is used to bootstrap the website by visiting, `http://[your domain]/admin?password=[Password for URL value]` in the browser, two preformatted versions are print for convenience.
 
 ## Optional Environmental Variables
 
 The following variables aren't required to be changed in order to deploy.
 
 In `Server/.deploy.env`:
+
 - `aws_region_name` where to deploy the service too, default us-west-1.
 - `aws_ami_version_number` version to give built AMI, ex 1.1.4 .
 - `packer_debug_option` whether to allow ssh access the server, either true or false.
@@ -284,11 +285,10 @@ In `Server/.deploy.env`:
 - `aws_host_ssh_address` where for the ssh client to connect to, ex expcap.xyz .
 
 In `Deploy/.env`:
+
 - `aws_region_name=us-west-1` same as above, default us-west-1.
+- `aws_backup_bucket_name` may need to be changed to a different bucket name, because they are globally namespaced.
 
 ## Sharing and Deploying
 
 Everything should be setup now. This setup is designed so that these files can be shared with other developers. Test that everything is working by [following a normal deploy](Partial-Deploy.md).
-
-[comment]: <> (TODO: add info about renaming S3 bucket since those are globally namespaced)
-[comment]: <> (Or fix the backupper so a prefix is used)

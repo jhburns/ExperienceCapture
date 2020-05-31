@@ -2,4 +2,5 @@
 extends: default
 
 rules:
+  key-ordering: {}
   line-length: disable

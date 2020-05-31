@@ -7,5 +7,5 @@ COPY . .
 
 ENV SHELLCHECK_OPTS="--exclude=SC1017"
 RUN find . -name "*.sh" -print0 \
-  | sort -z \
-  | xargs -0 -n 1 shellcheck
+    | sort -z \
+    | xargs -0 -n 1 shellcheck

@@ -1,4 +1,4 @@
-### ⭐ Latest Client Version: 1.2.0 ⭐ [Install](Setup.md) or [Update](Updating.md)
+**⭐ Latest Client Version: 1.2.0 ⭐** [Install](Setup.md) or [Update](Updating.md)
 
 # Documentation
 
@@ -31,6 +31,8 @@ Cloud Deploys can happen at two levels, a full setup or a partial redeploy. You'
 a partial redeploy, so [follow this guide](Partial-Deploy.md).
 
 For someone who is setting up the cloud service for the first time, [follow this one instead.](Full-Deploy.md)
+
+Additionally see [the architecture overview](Architecture.md) for more information about how all of the services  interact with each other. There is also a guide on how to restore [backups](Backups.md).
 
 ## Contributing
 

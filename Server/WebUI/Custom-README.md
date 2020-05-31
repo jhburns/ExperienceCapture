@@ -11,4 +11,4 @@ Written in [Node.js](https://nodejs.org/en/) with the following dependencies:
 - [Moment](https://momentjs.com/)
 - [Query String](https://www.npmjs.com/package/query-string)
 
-Additionally, only in production Caddy is used as a content server.
+Additionally, in production the site is built as a static files and served by Caddy.

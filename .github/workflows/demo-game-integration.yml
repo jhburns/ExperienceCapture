@@ -1,0 +1,29 @@
+---
+jobs:
+  build:
+    name: Integration Checks
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Docker
+        uses: whoan/docker-build-with-cache-action@v3.1.1
+        with:
+          build_extra_args: |
+            --build-arg username=${{ secrets.UNITY_USERNAME }}
+            --build-arg password=${{ secrets.UNITY_PASSWORD }}
+            --build-arg serial=${{ secrets.UNITY_SERIAL }}
+          context: ./DemoGame
+          dockerfile: Dockerfile
+          image_name: jhburns/ec-games-cache
+          password: "${{ secrets.DOCKER_PASSWORD }}"
+          username: "${{ secrets.DOCKER_USERNAME }}"
+
+name: DemoGame
+
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'DemoGame/**'
+      - '.github/workflows/demo-game-integration.yml'

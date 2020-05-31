@@ -1,9 +1,8 @@
-# TODO: change to Ubuntu version 18.04
-FROM ubuntu:xenial-20191024
+FROM ubuntu:bionic-20200403
 
 WORKDIR /keys
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
-	openssh-client=1:7.2p2-4ubuntu2.8 \
+	openssh-client=1:7.* \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*

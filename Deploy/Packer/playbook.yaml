@@ -1,4 +1,5 @@
 ---
+# yamllint disable rule:key-ordering
 - hosts: all
   become: true
   gather_facts: false
@@ -10,16 +11,14 @@
     packer_debug: "{{ lookup('env','packer_debug_option') }}"
     aws_target: "{{ lookup('env','aws_deploy_target') }}"
 
-  # TODO: make faster/working in parallel
-  # Currently takes ~13 minutes for a build
   tasks:
 
     # Needed because the Ubuntu AMI does not come with python2
     - name: symlink /usr/bin/python -> /usr/bin/python3
       raw: |
-            if [ -f /usr/bin/python3 ] && [ ! -f /usr/bin/python ]; then
-              ln --symbolic /usr/bin/python3 /usr/bin/python;
-            fi
+           if [ -f /usr/bin/python3 ] && [ ! -f /usr/bin/python ]; then
+             ln --symbolic /usr/bin/python3 /usr/bin/python;
+           fi
 
     - name: Update cache before installing packages
       apt:
@@ -95,6 +94,8 @@
                EBS_ACCESSKEY={{ rexray_access_id }} \
                EBS_SECRETKEY={{ rexray_secret_key }} \
                EBS_REGION={{ aws_region_name }}
+      async: 600  # Ten minutes
+      poll: 0
 
     - name: Allow all access from RFC1918 networks to this host
       ufw:
@@ -108,6 +109,8 @@
         - {port: "7946", protocol: "tcp"}
         - {port: "7946", protocol: "udp"}
         - {port: "4789", protocol: "udp"}
+      async: 600  # Ten minutes
+      poll: 0
 
     - name: Set authorized key
       authorized_key:
@@ -115,6 +118,8 @@
         state: present
         key: "{{ lookup('file', './id_rsa.pub') }}"
       when: packer_debug == 'true'
+      async: 600  # Ten minutes
+      poll: 0
 
     - name: Rebuild Docker images for production
       command: |
@@ -147,15 +152,6 @@
     - name: Prune non-production Docker images so the AMI uses less space
       command: docker system prune --all --force
 
-    # More details: when the api service tries to create the exporter container
-    # It may fail. That is due to the exporter image not being on the computer locally.
-    # So it has to be pulled ahead of time, or pulled the first time the api service
-    # Tries to create an exporter container. The second way would likely take to long,
-    # to do each time so instead pulling is done preemptively.
-    # TODO: fix this somehow
-    - name: Pulling exporter image because it won't be downloaded by the api on export
-      command: docker pull 127.0.0.1:5000/ec-exporter
-
     - name: Create other infrastructure services
       command: |
                docker stack deploy \
@@ -165,9 +161,6 @@
       args:
         chdir: /srv
 
-
-    # TODO: find some way to bootstrap on restart, don't rely on timing
-    # Waits so that that services don't start before the instance is stopped
     - name: Create production Docker Swarm services
       at:
         command: |
@@ -177,7 +170,7 @@
                  -c docker-compose.swarm.yaml \
                  -c docker-compose.swarm.production.yaml \
                  ec
-        count: 2
+        count: 1
         units: minutes
       register: result
       when: aws_target == 'production'
@@ -191,6 +184,8 @@
                  -c docker-compose.swarm.yaml \
                  -c docker-compose.swarm.staging.yaml \
                  ec
-        count: 2
+        count: 1
         units: minutes
       when: result is skipped
+
+# yamllint enable rule:key-ordering

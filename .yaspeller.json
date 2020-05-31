@@ -63,6 +63,7 @@
     "repeatable",
     "playbook",
     "Minio",
+    "Minio's",
     "FluentValidation",
     "DotNet",
     "Backupper",
@@ -103,8 +104,18 @@
     "md",
     "Vector2",
     "FHEB",
-	"SetupEC",
-	"CleanupEC"
+	  "SetupEC",
+    "CleanupEC",
+    "capturer",
+    "subparts",
+    "endpoints",
+    "Stateful",
+    "EBS",
+    "namespaced",
+    "preformatted",
+    "BSON",
+    "ec",
+    "xUnit"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true

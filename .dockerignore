@@ -1,8 +1,5 @@
 .git/
 .vs/
-.vscode/
-
-ClientDevelopmentGame/
-DemoGame/
-SetupTestGame/
 Deploy/.secrets/
+
+DemoGame/Assets/ExperienceCapture/

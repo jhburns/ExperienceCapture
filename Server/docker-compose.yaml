@@ -1,80 +1,26 @@
 ---
-version: '3.5'
+networks:
+  ec-network: {}
 
 services:
   api:
     build:
       context: ./API
     command: ["sh", "-c", "/wait && dotnet API.dll"]
+    depends_on:
+      - db
+      - os
+    env_file:
+      - .env
+    environment:
+      WAIT_HOSTS: db:27017, os:9000
     hostname: api
+    networks:
+      - ec-network
     ports:
       - "4321:80"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock  # May need to be changed cross platform
-    depends_on:
-      - db
-      - os
-    environment:
-      WAIT_HOSTS: db:27017, os:9000
-    env_file:
-      - .env
-    networks:
-      - ec-network
-
-  web:
-    build:
-      context: ./WebUI
-      args:  # Make sure to change the following arg for different websites
-        REACT_APP_GOOGLE_CLIENT_ID: 555477545658-co1pgbl0uh99rp8tbo2q62t2ch8vlb1h.apps.googleusercontent.com
-    hostname: web
-    networks:
-      - ec-network
-
-  exporter:
-    build:
-      context: ./Exporter
-    command: ["sh", "-c", "/wait && dotnet Exporter.dll"]
-    depends_on:
-      - db
-      - os
-    environment:
-      - WAIT_HOSTS= db:27017, os:9000
-    networks:
-      - ec-network
-
-  rp:
-    image: abiosoft/caddy:1.0.3
-    command: ["--conf", "/etc/Caddyfile"]
-    hostname: web
-    depends_on:
-      - api
-      - web
-    networks:
-      - ec-network
-
-  db:
-    image: mongo:4.2.2-bionic
-    hostname: db
-    ports:
-      - "27017:27017"
-    volumes:
-      - ec-db-volume:/data/db
-    networks:
-      - ec-network
-
-  os:
-    image: minio/minio:RELEASE.2020-01-25T02-50-51Z
-    command: server /data
-    hostname: os
-    ports:
-      - "9009:9000"
-    volumes:
-      - ec-os-volume:/data
-    environment:  # Using defaults, do not run in an insecure environment
-      MINIO_ACCESS_KEY: minio
-      MINIO_SECRET_KEY: minio123
-    networks:
-      - ec-network
 
   # Note: this service doesn't wait for the db to become active
   bu:
@@ -82,13 +28,54 @@ services:
       context: ./Backupper
     depends_on:
       - db
-    environment:
-      aws_deploy_target: development
-      aws_backup_bucket_name: experiencecapture-ec-db-backups
     env_file:
       - .env
+    environment:
+      aws_deploy_target: development
     networks:
       - ec-network
 
-networks:
-  ec-network: {}
+  db:
+    hostname: db
+    image: mongo:4.2.2-bionic
+    networks:
+      - ec-network
+    ports:
+      - "27017:27017"
+    volumes:
+      - ec-db-volume:/data/db
+
+  os:
+    command: server /data
+    environment:  # Using defaults, do not run in an insecure environment
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    hostname: os
+    image: minio/minio:RELEASE.2020-01-25T02-50-51Z
+    networks:
+      - ec-network
+    ports:
+      - "9009:9000"
+    volumes:
+      - ec-os-volume:/data
+
+  rp:
+    command: ["--conf", "/etc/Caddyfile"]
+    depends_on:
+      - api
+      - web
+    hostname: web
+    image: abiosoft/caddy:1.0.3
+    networks:
+      - ec-network
+
+  web:
+    build:
+      args:  # Make sure to change the following arg for different websites
+        REACT_APP_GOOGLE_CLIENT_ID: 555477545658-co1pgbl0uh99rp8tbo2q62t2ch8vlb1h.apps.googleusercontent.com
+      context: ./WebUI
+    hostname: web
+    networks:
+      - ec-network
+
+version: '3.5'

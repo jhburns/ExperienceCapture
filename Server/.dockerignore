@@ -7,10 +7,10 @@
 **/integration.Dockerfile
 
 
-# Exporter
+# API
 
-bin\
-obj\
+**/bin/
+**/obj/
 
 # All
 
