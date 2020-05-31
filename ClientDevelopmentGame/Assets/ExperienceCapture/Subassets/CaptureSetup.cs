@@ -45,6 +45,7 @@ public class CaptureSetup : MonoBehaviour
 
     public Text nameTitle;
     public InputField nameInput;
+    public Text dataInfo;
 
     public Text urlTitle;
     public InputField urlInput;
@@ -92,6 +93,7 @@ public class CaptureSetup : MonoBehaviour
             nameTitle.gameObject.SetActive(false);
             nameInput.gameObject.SetActive(false);
             start.gameObject.SetActive(false);
+            dataInfo.gameObject.SetActive(false);
         }
 
         urlInput.text = defaultUrl;
