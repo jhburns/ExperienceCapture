@@ -21,7 +21,7 @@ public class OutputCatcher : MonoBehaviour {
 
     void HandleLog(string logString, string stackTrace, LogType type)
     {
-        string newOutput = logString + output.text;
+        string newOutput = logString + "\n" + output.text;
         string[] byNewline = newOutput.Split('\n');
         var firstLines = byNewline.Take(12).ToList();
 

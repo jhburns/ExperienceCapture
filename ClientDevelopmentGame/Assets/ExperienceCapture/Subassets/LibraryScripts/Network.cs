@@ -25,7 +25,7 @@ namespace Network
 
                 if (request.isNetworkError || request.isHttpError)
                 {
-                    Debug.Log(request.responseCode);
+                    Debug.Log("Error Code: " + request.responseCode);
                     onError(request.error);
                 }
                 else
