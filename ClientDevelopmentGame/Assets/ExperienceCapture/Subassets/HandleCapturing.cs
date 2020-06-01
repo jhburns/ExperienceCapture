@@ -217,6 +217,7 @@ public class HandleCapturing : MonoBehaviour
 
         string requestPath = url + sessionPath + id + "?bson=true";
 
+        // TODO: check or recover from access token expiration
         StartCoroutine(HTTPHelpers.post(requestPath, bson, store.accessToken,
             (responceData) => 
             {

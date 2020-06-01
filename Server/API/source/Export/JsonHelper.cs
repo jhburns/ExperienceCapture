@@ -22,7 +22,7 @@ namespace Carter.App.Export.JsonHelper
             return dict;
         }
 
-        private static void FillDictionaryFromJToken(Dictionary<string, object> dict, JToken token, string prefix)
+        protected static void FillDictionaryFromJToken(Dictionary<string, object> dict, JToken token, string prefix)
         {
             switch (token.Type)
             {
@@ -48,7 +48,7 @@ namespace Carter.App.Export.JsonHelper
             }
         }
 
-        private static string Join(string prefix, string name)
+        protected static string Join(string prefix, string name)
         {
             return string.IsNullOrEmpty(prefix) ? name : prefix + "." + name;
         }
