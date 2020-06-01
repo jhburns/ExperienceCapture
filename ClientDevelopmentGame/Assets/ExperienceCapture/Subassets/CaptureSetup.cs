@@ -20,7 +20,7 @@ public class CaptureSetup : MonoBehaviour
 
     [Tooltip("Label the game version before releasing.")]
     public string gameVersion;
-    public const string clientVersionLocked = "1.2.0";
+    public const string clientVersionLocked = "1.2.1";
     [Tooltip("Don't edit, is readonly and only informational.")]
     public string clientVersion;
 
@@ -45,11 +45,13 @@ public class CaptureSetup : MonoBehaviour
 
     public Text nameTitle;
     public InputField nameInput;
+    public Text dataInfo;
 
     public Text urlTitle;
     public InputField urlInput;
     public Text openingInfo;
     public Text connectionInfo;
+    public Text warningInfo;
 
     public Text sessionInfo;
     private string sessionInfoSave;
@@ -84,12 +86,14 @@ public class CaptureSetup : MonoBehaviour
             newSession.gameObject.SetActive(false);
             urlTitle.gameObject.SetActive(false);
             urlInput.gameObject.SetActive(false);
+            warningInfo.gameObject.SetActive(false);
         }
         else
         {
             nameTitle.gameObject.SetActive(false);
             nameInput.gameObject.SetActive(false);
             start.gameObject.SetActive(false);
+            dataInfo.gameObject.SetActive(false);
         }
 
         urlInput.text = defaultUrl;
@@ -115,6 +119,8 @@ public class CaptureSetup : MonoBehaviour
     {
         urlTitle.gameObject.SetActive(false);
         urlInput.gameObject.SetActive(false);
+        warningInfo.gameObject.SetActive(false);
+
         newSession.gameObject.SetActive(false);
 
         connectionInfo.gameObject.SetActive(true);
@@ -153,6 +159,7 @@ public class CaptureSetup : MonoBehaviour
 
                 urlTitle.gameObject.SetActive(true);
                 urlInput.gameObject.SetActive(true);
+                warningInfo.gameObject.SetActive(true);
 
                 newSession.gameObject.SetActive(true);
             })
