@@ -11,6 +11,7 @@ namespace Carter.App.Export.Main
     using System.Threading.Tasks;
 
     using Carter.App.Export.JsonHelper;
+    using Carter.App.Hosting;
     using Carter.App.Route.Sessions;
 
     using CsvHelper;
@@ -27,11 +28,11 @@ namespace Carter.App.Export.Main
 
     public class ExportHandler
     {
-        // TODO: Update this to use values from appsettings.json and AppEnvironment
-        private static readonly IMongoDatabase DB = new MongoClient(@"mongodb://db:27017").GetDatabase("ec");
-        private static readonly MinioClient OS = new MinioClient("os:9000", "minio", "minio123");
-
         private static readonly string Seperator = Path.DirectorySeparatorChar.ToString();
+
+        private static IMongoDatabase db;
+        // TODO: Replace MinioClient with IMinioClient
+        private static MinioClient os;
 
         private static string sessionId;
         private static string prefix;
@@ -42,12 +43,12 @@ namespace Carter.App.Export.Main
 
         public static void Entry(object id)
         {
-            _ = MainAsync((string)id);
+            _ = MainAsync((ExporterConfiguration)id);
         }
 
-        protected static async Task MainAsync(string id)
+        protected static async Task MainAsync(ExporterConfiguration config)
         {
-            sessionId = id;
+            Setup(config);
 
             try
             {
@@ -80,6 +81,17 @@ namespace Carter.App.Export.Main
             // Uncomment to make it so the program stays open, for debugging
             // System.Threading.Thread.Sleep(100000000);
             Directory.Delete(prefix, true);
+        }
+
+        protected static void Setup(ExporterConfiguration config)
+        {
+            sessionId = config.Id;
+
+            string mongoUrl = $"mongodb://{config.Mongo.ConnectionString}:{config.Mongo.Port}";
+            db = new MongoClient(mongoUrl).GetDatabase("ec");
+
+            string minioHost = $"{AppConfiguration.Minio.ConnectionString}:{AppConfiguration.Minio.Port}";
+            os = new MinioClient(minioHost, "minio", "minio123");
         }
 
         protected static async Task ExportSession()
@@ -174,7 +186,7 @@ namespace Carter.App.Export.Main
          */
         protected static async Task<List<long>> GetWorkloads()
         {
-            var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{sessionId}");
+            var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{sessionId}");
             var filter = Builders<BsonDocument>.Filter.Empty;
             long docCount = await sessionCollection.CountDocumentsAsync(filter);
 
@@ -199,7 +211,7 @@ namespace Carter.App.Export.Main
 
         protected static async Task<List<BsonDocument>> SortSession(int workload, int offset)
         {
-            var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{sessionId}");
+            var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{sessionId}");
 
             var filter = Builders<BsonDocument>.Filter.Empty;
             var sorter = Builders<BsonDocument>.Sort
@@ -218,7 +230,7 @@ namespace Carter.App.Export.Main
 
         protected static async Task<SessionSchema> GetSessionInfo()
         {
-            var sessions = DB.GetCollection<SessionSchema>(SessionSchema.CollectionName);
+            var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
             var filter = Builders<SessionSchema>.Filter
                 .Where(s => s.Id == sessionId);
@@ -510,14 +522,14 @@ namespace Carter.App.Export.Main
             try
             {
                 // Make a bucket on the server, if not already present.
-                bool found = await OS.BucketExistsAsync(bucketName);
+                bool found = await os.BucketExistsAsync(bucketName);
                 if (!found)
                 {
-                    await OS.MakeBucketAsync(bucketName, location);
+                    await os.MakeBucketAsync(bucketName, location);
                 }
 
                 // Upload a file to bucket.
-                await OS.PutObjectAsync(bucketName, objectName, filePath, contentType);
+                await os.PutObjectAsync(bucketName, objectName, filePath, contentType);
             }
             catch (MinioException e)
             {
@@ -527,7 +539,7 @@ namespace Carter.App.Export.Main
 
         protected static async Task UpdateDoc()
         {
-            var sessions = DB.GetCollection<SessionSchema>(SessionSchema.CollectionName);
+            var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
             var filter = Builders<SessionSchema>.Filter
                 .Where(s => s.Id == sessionId);

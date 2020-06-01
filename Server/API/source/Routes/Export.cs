@@ -7,7 +7,7 @@ namespace Carter.App.Route.Export
     using Carter;
 
     using Carter.App.Export.Main;
-
+    using Carter.App.Hosting;
     using Carter.App.Lib.MinioExtra;
     using Carter.App.Lib.Network;
 
@@ -43,7 +43,21 @@ namespace Carter.App.Route.Export
                 }
 
                 var export = new Thread(ExportHandler.Entry);
-                export.Start(id);
+
+                var exporterConfig = new ExporterConfiguration
+                {
+                    Mongo = new ServiceConfiguration {
+                        ConnectionString = AppConfiguration.Mongo.ConnectionString,
+                        Port = AppConfiguration.Mongo.Port,
+                    },
+                    Minio = new ServiceConfiguration {
+                        ConnectionString = AppConfiguration.Minio.ConnectionString,
+                        Port = AppConfiguration.Minio.Port,
+                    },
+                    Id = id,
+                };
+
+                export.Start(exporterConfig);
 
                 var update = Builders<SessionSchema>.Update
                     .Set(s => s.IsPending, true);
