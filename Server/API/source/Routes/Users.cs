@@ -179,7 +179,9 @@ namespace Carter.App.Route.Users
                     var responce = new
                     {
                         accessToken = newToken,
+                        experation = TimerExtra.ProjectSeconds(tokenObject.ExpirationSeconds),
                     };
+
                     var responceDoc = responce.ToBsonDocument();
 
                     string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
@@ -211,6 +213,7 @@ namespace Carter.App.Route.Users
                 var responce = new
                 {
                     claimToken = newToken,
+                    experation = TimerExtra.ProjectSeconds(tokenDoc.ExpirationSeconds),
                 };
                 var responceDoc = responce.ToBsonDocument();
 
@@ -270,6 +273,7 @@ namespace Carter.App.Route.Users
                 var responce = new
                 {
                     accessToken = claimDoc.AccessToken,
+                    experation = TimerExtra.ProjectSeconds(claimDoc.ExpirationSeconds),
                 };
                 var responceDoc = responce.ToBsonDocument();
 
@@ -313,6 +317,7 @@ namespace Carter.App.Route.Users
                 var responce = new
                 {
                     claimToken = newToken,
+                    expiration = TimerExtra.ProjectSeconds(tokenDoc.ExpirationSeconds),
                 };
                 var responceDoc = responce.ToBsonDocument();
 
