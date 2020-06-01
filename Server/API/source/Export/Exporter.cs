@@ -45,7 +45,7 @@ namespace Carter.App.Export.Main
             _ = MainAsync((string)id);
         }
 
-        private static async Task MainAsync(string id)
+        protected static async Task MainAsync(string id)
         {
             sessionId = id;
 
@@ -82,7 +82,7 @@ namespace Carter.App.Export.Main
             Directory.Delete(prefix, true);
         }
 
-        private static async Task ExportSession()
+        protected static async Task ExportSession()
         {
             currentHeader = new List<string>();
             currentSceneIndex = -1; // To play nice with the proccessing code
@@ -172,7 +172,7 @@ namespace Carter.App.Export.Main
          * Breaks the session collection into blocks, of a constant size or less
          * Returns: Task<List<long>> of a broken down count of all the documents in a session
          */
-        private static async Task<List<long>> GetWorkloads()
+        protected static async Task<List<long>> GetWorkloads()
         {
             var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{sessionId}");
             var filter = Builders<BsonDocument>.Filter.Empty;
@@ -197,7 +197,7 @@ namespace Carter.App.Export.Main
             return workloads;
         }
 
-        private static async Task<List<BsonDocument>> SortSession(int workload, int offset)
+        protected static async Task<List<BsonDocument>> SortSession(int workload, int offset)
         {
             var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{sessionId}");
 
@@ -216,7 +216,7 @@ namespace Carter.App.Export.Main
                 .ToListAsync();
         }
 
-        private static async Task<SessionSchema> GetSessionInfo()
+        protected static async Task<SessionSchema> GetSessionInfo()
         {
             var sessions = DB.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
@@ -228,7 +228,7 @@ namespace Carter.App.Export.Main
                 .FirstOrDefaultAsync();
         }
 
-        private static void ToJson(List<BsonDocument> sessionDocs, string about, bool isFirst, JsonWriterSettings ws = null)
+        protected static void ToJson(List<BsonDocument> sessionDocs, string about, bool isFirst, JsonWriterSettings ws = null)
         {
             StringBuilder docsTotal = new StringBuilder();
 
@@ -247,29 +247,29 @@ namespace Carter.App.Export.Main
             AppendToFile(docsTotal.ToString(), filename);
         }
 
-        private static void ToJsonStart(string about)
+        protected static void ToJsonStart(string about)
         {
             AppendToFile("[", $"{sessionId}.{about}.json");
         }
 
-        private static void ToJsonEnd(string about)
+        protected static void ToJsonEnd(string about)
         {
             AppendToFile("]", $"{sessionId}.{about}.json");
         }
 
-        private static void ToJson(BsonDocument sessionDoc, string about)
+        protected static void ToJson(BsonDocument sessionDoc, string about)
         {
             string filename = $"{sessionId}.{about}.json";
             AppendToFile(sessionDoc.ToJson(JsonWriterSettings.Defaults), filename);
         }
 
-        private static void ToJson(SessionSchema sessionDoc, string about)
+        protected static void ToJson(SessionSchema sessionDoc, string about)
         {
             string filename = $"{sessionId}.{about}.json";
             AppendToFile(sessionDoc.ToJson(JsonWriterSettings.Defaults), filename);
         }
 
-        private static string ToFlatJson(List<BsonDocument> sessionDocs)
+        protected static string ToFlatJson(List<BsonDocument> sessionDocs)
         {
             StringBuilder docsTotal = new StringBuilder();
             docsTotal.Append("[");
@@ -289,7 +289,7 @@ namespace Carter.App.Export.Main
             return docsTotal.ToString();
         }
 
-        private static void ConfigureJsonWriter()
+        protected static void ConfigureJsonWriter()
         {
             JsonWriterSettings.Defaults = new JsonWriterSettings()
             {
@@ -298,7 +298,7 @@ namespace Carter.App.Export.Main
             };
         }
 
-        private static Configuration GetConfiguration()
+        protected static Configuration GetConfiguration()
         {
             return new Configuration
             {
@@ -308,7 +308,7 @@ namespace Carter.App.Export.Main
             };
         }
 
-        private static (List<BsonDocument> otherCaptures, List<SceneBlock> scenes) ProcessScenes(List<BsonDocument> sessionDocs)
+        protected static (List<BsonDocument> otherCaptures, List<SceneBlock> scenes) ProcessScenes(List<BsonDocument> sessionDocs)
         {
             var sceneDocs = sessionDocs.FindAll(d => d.Contains("sceneName"));
             int sceneIndex = currentSceneIndex;
@@ -367,7 +367,7 @@ namespace Carter.App.Export.Main
             return (otherCaptures, sceneMap);
         }
 
-        private static void ToCsv(SceneBlock block, string about)
+        protected static void ToCsv(SceneBlock block, string about)
         {
             string json = ToFlatJson(block.Docs);
             string csv = JsonToCsv(json);
@@ -376,7 +376,7 @@ namespace Carter.App.Export.Main
             AppendToFile(csv, $"{sessionId}.{about}.{block.Name}.{block.Index}.csv", path);
         }
 
-        private static string JsonToCsv(string jsonContent)
+        protected static string JsonToCsv(string jsonContent)
         {
             StringWriter csvString = new StringWriter();
 
@@ -399,7 +399,7 @@ namespace Carter.App.Export.Main
             return csvString.ToString();
         }
 
-        private static void CopyCsv(SceneBlock block, string about)
+        protected static void CopyCsv(SceneBlock block, string about)
         {
             StringWriter csvString = new StringWriter();
 
@@ -424,7 +424,7 @@ namespace Carter.App.Export.Main
             currentHeader = new List<string>();
         }
 
-        private static DataTable AlignHeaders(DataTable dt)
+        protected static DataTable AlignHeaders(DataTable dt)
         {
             var header = dt.Columns.Cast<DataColumn>()
                         .Select(col => col.ColumnName)
@@ -460,7 +460,7 @@ namespace Carter.App.Export.Main
             return dt;
         }
 
-        private static void CreateReadme()
+        protected static void CreateReadme()
         {
             string source = System.IO.File.ReadAllText($".{Seperator}Templates{Seperator}README.txt.handlebars");
             var template = Handlebars.Compile(source);
@@ -473,7 +473,7 @@ namespace Carter.App.Export.Main
             AppendToFile(template(data), "README.txt");
         }
 
-        private static void AppendToFile(string content, string filename, string path = "")
+        protected static void AppendToFile(string content, string filename, string path = "")
         {
             string fullpath;
             if (path == string.Empty)
@@ -491,13 +491,13 @@ namespace Carter.App.Export.Main
             }
         }
 
-        private static void ZipFolder(string location, string outName)
+        protected static void ZipFolder(string location, string outName)
         {
             ZipFile.CreateFromDirectory(location, outName);
         }
 
         // From: https://docs.min.io/docs/dotnet-client-quickstart-guide.html
-        private static async Task Upload(string fileLocation)
+        protected static async Task Upload(string fileLocation)
         {
             var bucketName = "sessions.exported";
 
@@ -525,7 +525,7 @@ namespace Carter.App.Export.Main
             }
         }
 
-        private static async Task UpdateDoc()
+        protected static async Task UpdateDoc()
         {
             var sessions = DB.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
@@ -541,7 +541,7 @@ namespace Carter.App.Export.Main
     }
 
     // Used to group together captures based on timestamps
-    internal class SceneBlock
+    public class SceneBlock
     {
         #pragma warning disable SA1516
         public string Name { get; set; }
