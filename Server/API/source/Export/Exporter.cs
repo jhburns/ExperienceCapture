@@ -20,7 +20,6 @@ namespace Carter.App.Export.Main
 
     using HandlebarsDotNet;
 
-    using Minio;
     using Minio.Exceptions;
 
     using MongoDB.Bson;
@@ -82,7 +81,7 @@ namespace Carter.App.Export.Main
                 await UpdateDoc(ExportOptions.Error);
             }
 
-            Directory.Delete(prefix, true);
+            //Directory.Delete(prefix, true);
         }
 
         protected static void Setup(ExporterConfiguration config)
@@ -109,9 +108,9 @@ namespace Carter.App.Export.Main
                 OutputMode = JsonOutputMode.Strict,
             };
 
-            ToJsonStart("raw");
-            ToJsonStart("sessionInfo");
-            ToJsonStart("onlyCaptures");
+            AppendToFile("[", $"{sessionId}.raw.json");
+            AppendToFile("[", $"{sessionId}.sessionInfo.json");
+            AppendToFile("[", $"{sessionId}.onlyCaptures.json");
 
             for (int i = 0; i < workloads.Count; i++)
             {
@@ -121,17 +120,17 @@ namespace Carter.App.Export.Main
                 List<BsonDocument> sessionSorted = await SortSession((int)workloads[i], offset);
 
                 bool isFirst = i == 0;
-                ToJson(sessionSorted, "raw", isFirst, ws);
+                AppendToFile(ToJson(sessionSorted, isFirst, ws), $"{sessionId}.raw.json");
 
                 var (otherCaptures, sceneBlocks) = ProcessScenes(sessionSorted);
                 if (otherCaptures.Count > 0)
                 {
-                    ToJson(otherCaptures, "sessionInfo", isFirst);
+                    AppendToFile(ToJson(otherCaptures, isFirst), $"{sessionId}.sessionInfo.json");
                 }
 
                 foreach (var block in sceneBlocks)
                 {
-                    ToJson(block.Docs, "onlyCaptures", isFirst);
+                    AppendToFile(ToJson(block.Docs, isFirst), $"{sessionId}.onlyCaptures.json");
                     isFirst = false;
 
                     // First scene shouldn't reqult in a previous scene being copied
@@ -139,8 +138,6 @@ namespace Carter.App.Export.Main
                     {
                         currentSceneIndex = block.Index;
                         currentSceneName = block.Name;
-
-                        ToCsv(block, "sceneName");
                     }
 
                     // If at a new scene > 0, then copy the previous
@@ -155,13 +152,12 @@ namespace Carter.App.Export.Main
 
                         currentSceneIndex = block.Index;
                         currentSceneName = block.Name;
+                    }
 
-                        ToCsv(block, "sceneName");
-                    }
-                    else
-                    {
-                        ToCsv(block, "sceneName");
-                    }
+                    AppendToFile(
+                        ToCsv(block),
+                        $"{sessionId}.sceneName.{currentSceneName}.{currentSceneIndex}.csv",
+                        $"temporary{Seperator}CSVs{Seperator}");
                 }
 
                 // Copy the last block
@@ -171,15 +167,15 @@ namespace Carter.App.Export.Main
                 }
             }
 
-            ToJsonEnd("raw");
-            ToJsonEnd("sessionInfo");
-            ToJsonEnd("onlyCaptures");
+            AppendToFile("]", $"{sessionId}.raw.json");
+            AppendToFile("]", $"{sessionId}.sessionInfo.json");
+            AppendToFile("]", $"{sessionId}.onlyCaptures.json");
 
-            ToJsonStart("database");
-            ToJson(await GetSessionInfo(), "database");
-            ToJsonEnd("database");
+            AppendToFile("[", $"{sessionId}.database.json");
+            AppendToFile(ToJson(await GetSessionInfo()), $"{sessionId}.database.json");
+            AppendToFile("]", $"{sessionId}.database.json");
 
-            CreateReadme();
+            AppendToFile(CreateReadme(), "README.txt");
         }
 
         /*
@@ -242,7 +238,7 @@ namespace Carter.App.Export.Main
                 .FirstOrDefaultAsync();
         }
 
-        protected static void ToJson(List<BsonDocument> sessionDocs, string about, bool isFirst, JsonWriterSettings ws = null)
+        protected static string ToJson(List<BsonDocument> sessionDocs, bool isFirst, JsonWriterSettings ws = null)
         {
             StringBuilder docsTotal = new StringBuilder();
 
@@ -257,30 +253,17 @@ namespace Carter.App.Export.Main
                 docsTotal.Remove(0, 1);
             }
 
-            string filename = $"{sessionId}.{about}.json";
-            AppendToFile(docsTotal.ToString(), filename);
+            return docsTotal.ToString();
         }
 
-        protected static void ToJsonStart(string about)
+        protected static string ToJson(BsonDocument sessionDoc)
         {
-            AppendToFile("[", $"{sessionId}.{about}.json");
+            return sessionDoc.ToJson(JsonWriterSettings.Defaults);
         }
 
-        protected static void ToJsonEnd(string about)
+        protected static string ToJson(SessionSchema sessionDoc)
         {
-            AppendToFile("]", $"{sessionId}.{about}.json");
-        }
-
-        protected static void ToJson(BsonDocument sessionDoc, string about)
-        {
-            string filename = $"{sessionId}.{about}.json";
-            AppendToFile(sessionDoc.ToJson(JsonWriterSettings.Defaults), filename);
-        }
-
-        protected static void ToJson(SessionSchema sessionDoc, string about)
-        {
-            string filename = $"{sessionId}.{about}.json";
-            AppendToFile(sessionDoc.ToJson(JsonWriterSettings.Defaults), filename);
+            return sessionDoc.ToJson(JsonWriterSettings.Defaults);
         }
 
         protected static string ToFlatJson(List<BsonDocument> sessionDocs)
@@ -385,13 +368,11 @@ namespace Carter.App.Export.Main
             return (otherCaptures, sceneMap);
         }
 
-        protected static void ToCsv(SceneBlock block, string about)
+        protected static string ToCsv(SceneBlock block)
         {
             string json = ToFlatJson(block.Docs);
             string csv = JsonToCsv(json);
-
-            string path = $"temporary{Seperator}CSVs{Seperator}";
-            AppendToFile(csv, $"{sessionId}.{about}.{block.Name}.{block.Index}.csv", path);
+            return csv;
         }
 
         protected static string JsonToCsv(string jsonContent)
@@ -431,14 +412,16 @@ namespace Carter.App.Export.Main
                 csv.NextRecord();
             }
 
+            // Write collected headers
             string path = $"exported{Seperator}CSVs{Seperator}";
             string filename = $"{sessionId}.{about}.{block.Name}.{block.Index}.csv";
             AppendToFile(csvString.ToString(), filename, path);
 
+            // Copy data contents to finalized location
             string temporaryLocation = $"{prefix}temporary{Seperator}CSVs{Seperator}{filename}";
             File.AppendAllText($"{prefix}{path}{filename}", File.ReadAllText(temporaryLocation));
 
-            // Reset the headers, because a new scene will likely have differerent headers
+            // Reset the headers, because a new scene should have differerent headers
             currentHeader = new List<string>();
         }
 
@@ -478,7 +461,7 @@ namespace Carter.App.Export.Main
             return dt;
         }
 
-        protected static void CreateReadme()
+        protected static string CreateReadme()
         {
             string source = System.IO.File.ReadAllText($".{Seperator}Templates{Seperator}README.txt.handlebars");
             var template = Handlebars.Compile(source);
@@ -488,7 +471,7 @@ namespace Carter.App.Export.Main
                 id = sessionId,
             };
 
-            AppendToFile(template(data), "README.txt");
+            return template(data);
         }
 
         protected static void AppendToFile(string content, string filename, string path = "")
