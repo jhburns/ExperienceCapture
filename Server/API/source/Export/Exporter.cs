@@ -550,8 +550,7 @@ namespace Carter.App.Export.Main
                 .Where(s => s.Id == sessionId);
 
             var update = Builders<SessionSchema>.Update
-                .Set(s => s.IsExported, true)
-                .Set(s => s.IsPending, false);
+                .Set(s => s.ExportState, ExportOptions.Done);
 
             await sessions.UpdateOneAsync(filter, update);
         }

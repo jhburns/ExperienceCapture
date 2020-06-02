@@ -258,8 +258,7 @@ namespace Carter.App.Route.Sessions
                 // Export flags are reset so the session can be re-exported
                 var update = Builders<SessionSchema>.Update
                     .Set(s => s.LastCaptureAt, new BsonDateTime(DateTime.Now))
-                    .Set(s => s.IsExported, false)
-                    .Set(s => s.IsPending, false);
+                    .Set(s => s.ExportState, ExportOptions.NotStarted);
 
                 _ = sessions.UpdateOneAsync(filter, update);
 
@@ -368,12 +367,6 @@ namespace Carter.App.Route.Sessions
 
         [BsonElement("isOpen")]
         public bool IsOpen { get; set; } = true;
-
-        [BsonElement("isExported")]
-        public bool IsExported { get; set; } = false;
-
-        [BsonElement("isPending")]
-        public bool IsPending { get; set; } = false;
 
         [BsonElement("exportState")]
         public ExportOptions ExportState { get; set; } = ExportOptions.NotStarted;

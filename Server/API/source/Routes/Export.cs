@@ -62,7 +62,7 @@ namespace Carter.App.Route.Export
                 export.Start(exporterConfig);
 
                 var update = Builders<SessionSchema>.Update
-                    .Set(s => s.IsPending, true);
+                    .Set(s => s.ExportState, ExportOptions.Pending);
 
                 await sessions.UpdateOneAsync(filter, update);
 
@@ -86,7 +86,7 @@ namespace Carter.App.Route.Export
                     return;
                 }
 
-                if (sessionDoc.IsPending)
+                if (sessionDoc.ExportState == ExportOptions.Pending)
                 {
                     res.StatusCode = 202;
                     await res.FromString("PENDING");
@@ -94,7 +94,7 @@ namespace Carter.App.Route.Export
                 }
 
                 // Export job hasn't been created, so return not found
-                if (!sessionDoc.IsExported)
+                if (sessionDoc.ExportState == ExportOptions.NotStarted)
                 {
                     res.StatusCode = 404;
                     return;
