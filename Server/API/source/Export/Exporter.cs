@@ -31,6 +31,7 @@ namespace Carter.App.Export.Main
         private static readonly string Seperator = Path.DirectorySeparatorChar.ToString();
 
         private static IMongoDatabase db;
+
         // TODO: Replace MinioClient with IMinioClient
         private static MinioClient os;
 

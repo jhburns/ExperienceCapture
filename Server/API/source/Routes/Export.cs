@@ -46,11 +46,13 @@ namespace Carter.App.Route.Export
 
                 var exporterConfig = new ExporterConfiguration
                 {
-                    Mongo = new ServiceConfiguration {
+                    Mongo = new ServiceConfiguration
+                    {
                         ConnectionString = AppConfiguration.Mongo.ConnectionString,
                         Port = AppConfiguration.Mongo.Port,
                     },
-                    Minio = new ServiceConfiguration {
+                    Minio = new ServiceConfiguration
+                    {
                         ConnectionString = AppConfiguration.Minio.ConnectionString,
                         Port = AppConfiguration.Minio.Port,
                     },
