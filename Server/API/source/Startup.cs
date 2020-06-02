@@ -1,7 +1,5 @@
 namespace Carter.App.Hosting
 {
-    using System;
-
     using Carter;
 
     using Carter.App.Lib.Environment;
@@ -12,19 +10,17 @@ namespace Carter.App.Hosting
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
-    using Minio;
-
     using MongoDB.Driver;
 
     public class Startup
     {
-        private readonly AppConfiguration appconfig;
+        private readonly AppConfiguration appConfig;
 
         // TODO: Check/fix config so OpenAPI is customizable
         public Startup(IConfiguration config)
         {
-            this.appconfig = new AppConfiguration();
-            config.Bind(this.appconfig);
+            this.appConfig = new AppConfiguration();
+            config.Bind(this.appConfig);
         }
 
         public void ConfigureServices(IServiceCollection services)
