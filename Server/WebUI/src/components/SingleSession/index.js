@@ -13,7 +13,7 @@ import About from "components/About";
 class SingleSession extends Component {
   render() {
     const isExportDisabled = this.props.sessionData.exportState === "Pending" 
-      || this.props.sessionData.isOngoing || this.props.sessionData.isOpen;
+      || this.props.sessionData.isOngoing;
 
     const isNotExported = !(this.props.sessionData.exportState === "Done");
 
