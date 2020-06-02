@@ -12,10 +12,10 @@ import About from "components/About";
 
 class SingleSession extends Component {
   render() {
-    const isExportDisabled = this.props.sessionData.isPending 
-      || this.props.sessionData.isOngoing;
+    const isExportDisabled = this.props.sessionData.exportState === "Pending" 
+      || this.props.sessionData.isOngoing || this.props.sessionData.isOpen;
 
-    const isNotExported = !this.props.sessionData.isExported;
+    const isNotExported = !(this.props.sessionData.exportState === "Done");
 
     const about = "Sessions have to be exported, so that they can be converted to flat files. "
       + (isExportDisabled ? "Ongoing sessions can't be exported." : "");
