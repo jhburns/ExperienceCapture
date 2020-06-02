@@ -360,7 +360,7 @@ namespace Carter.App.Route.Users
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
-        #pragma warning restore SA151, SA1300
+        #pragma warning restore SA1516
     }
 
     public class AccessTokenSchema
@@ -383,7 +383,7 @@ namespace Carter.App.Route.Users
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
-        #pragma warning restore SA151, SA1300
+        #pragma warning restore SA1516
     }
 
     public class ClaimTokenSchema
@@ -412,6 +412,6 @@ namespace Carter.App.Route.Users
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
-        #pragma warning restore SA151, SA1300
+        #pragma warning restore SA1516
     }
 }

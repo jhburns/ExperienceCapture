@@ -343,15 +343,6 @@ namespace Carter.App.Route.Sessions
         }
     }
 
-    // See Startup.cs for the code on how this is serlizalized
-    public enum ExportOptions
-    {
-        NotStarted,
-        Pending,
-        Done,
-        Error,
-    }
-
     public class SessionSchema
     {
         #pragma warning disable SA1516
@@ -389,6 +380,17 @@ namespace Carter.App.Route.Sessions
         [BsonIgnoreIfNull]
         [BsonElement("lastCaptureAt")]
         public BsonDateTime LastCaptureAt { get; set; } = null;
-        #pragma warning restore SA151, SA1300
+        #pragma warning restore SA1516
     }
+
+    // See Startup.cs for the code on how this is serlizalized
+    #pragma warning disable SA1201
+    public enum ExportOptions
+    {
+        NotStarted,
+        Pending,
+        Done,
+        Error,
+    }
+    #pragma warning restore SA1201
 }
