@@ -72,15 +72,15 @@ namespace Carter.App.Export.Main
                 ZipFolder(outFolder, outLocation);
 
                 await Upload(outLocation);
-                await UpdateDoc();
+                await UpdateDoc(ExportOptions.Done);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+
+                await UpdateDoc(ExportOptions.Error);
             }
 
-            // Uncomment to make it so the program stays open, for debugging
-            // System.Threading.Thread.Sleep(100000000);
             Directory.Delete(prefix, true);
         }
 
@@ -542,7 +542,7 @@ namespace Carter.App.Export.Main
             }
         }
 
-        protected static async Task UpdateDoc()
+        protected static async Task UpdateDoc(ExportOptions status)
         {
             var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
 
@@ -550,7 +550,7 @@ namespace Carter.App.Export.Main
                 .Where(s => s.Id == sessionId);
 
             var update = Builders<SessionSchema>.Update
-                .Set(s => s.ExportState, ExportOptions.Done);
+                .Set(s => s.ExportState, status);
 
             await sessions.UpdateOneAsync(filter, update);
         }
