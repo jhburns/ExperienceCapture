@@ -176,10 +176,10 @@ namespace Carter.App.Route.Users
                 }
                 else
                 {
-                    var responce = new
+                    var responce = new AccessTokenResponce
                     {
-                        accessToken = newToken,
-                        experation = TimerExtra.ProjectSeconds(tokenObject.ExpirationSeconds),
+                        AccessToken = newToken,
+                        Expiration = TimerExtra.ProjectSeconds(tokenObject.ExpirationSeconds),
                     };
 
                     var responceDoc = responce.ToBsonDocument();
@@ -210,10 +210,10 @@ namespace Carter.App.Route.Users
 
                 await claimTokens.InsertOneAsync(tokenDoc);
 
-                var responce = new
+                var responce = new ClaimTokenResponce
                 {
-                    claimToken = newToken,
-                    experation = TimerExtra.ProjectSeconds(tokenDoc.ExpirationSeconds),
+                    ClaimToken = newToken,
+                    Expiration = TimerExtra.ProjectSeconds(tokenDoc.ExpirationSeconds),
                 };
                 var responceDoc = responce.ToBsonDocument();
 
@@ -270,10 +270,10 @@ namespace Carter.App.Route.Users
 
                 await claimTokens.UpdateOneAsync(filter, update);
 
-                var responce = new
+                var responce = new AccessTokenResponce
                 {
-                    accessToken = claimDoc.AccessToken,
-                    experation = TimerExtra.ProjectSeconds(claimDoc.ExpirationSeconds),
+                    AccessToken = claimDoc.AccessToken,
+                    Expiration = TimerExtra.ProjectSeconds(claimDoc.ExpirationSeconds),
                 };
                 var responceDoc = responce.ToBsonDocument();
 
@@ -314,10 +314,10 @@ namespace Carter.App.Route.Users
 
                 await signUpTokens.InsertOneAsync(tokenDoc);
 
-                var responce = new
+                var responce = new ClaimTokenResponce
                 {
-                    claimToken = newToken,
-                    expiration = TimerExtra.ProjectSeconds(tokenDoc.ExpirationSeconds),
+                    ClaimToken = newToken,
+                    Expiration = TimerExtra.ProjectSeconds(tokenDoc.ExpirationSeconds),
                 };
                 var responceDoc = responce.ToBsonDocument();
 
@@ -386,6 +386,15 @@ namespace Carter.App.Route.Users
         #pragma warning restore SA1516
     }
 
+    public class AccessTokenResponce
+    {
+        [BsonElement("accessToken")]
+        public string AccessToken { get; set; }
+
+        [BsonElement("expiration")]
+        public BsonDateTime Expiration { get; set; }
+    }
+
     public class ClaimTokenSchema
     {
         #pragma warning disable SA1516
@@ -413,5 +422,14 @@ namespace Carter.App.Route.Users
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
         #pragma warning restore SA1516
+    }
+
+    public class ClaimTokenResponce
+    {
+        [BsonElement("claimToken")]
+        public string ClaimToken { get; set; }
+
+        [BsonElement("expiration")]
+        public BsonDateTime Expiration { get; set; }
     }
 }
