@@ -12,6 +12,7 @@ namespace Carter.App.Export.Main
 
     using Carter.App.Export.JsonHelper;
     using Carter.App.Hosting;
+    using Carter.App.Lib.MinioExtra;
     using Carter.App.Route.Sessions;
 
     using CsvHelper;
@@ -33,7 +34,7 @@ namespace Carter.App.Export.Main
         private static IMongoDatabase db;
 
         // TODO: Replace MinioClient with IMinioClient
-        private static MinioClient os;
+        private static IMinioClient os;
 
         private static string sessionId;
         private static string prefix;
@@ -92,7 +93,7 @@ namespace Carter.App.Export.Main
             db = new MongoClient(mongoUrl).GetDatabase("ec");
 
             string minioHost = $"{AppConfiguration.Minio.ConnectionString}:{AppConfiguration.Minio.Port}";
-            os = new MinioClient(minioHost, "minio", "minio123");
+            os = new MinioClientExtra(minioHost, "minio", "minio123");
         }
 
         protected static async Task ExportSession()
