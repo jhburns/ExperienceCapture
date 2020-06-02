@@ -10,7 +10,7 @@ namespace Carter.App.Export.Main
     using System.Text;
     using System.Threading.Tasks;
 
-    using Carter.App.Export.JsonHelper;
+    using Carter.App.Export.JsonExtra;
     using Carter.App.Hosting;
     using Carter.App.Lib.MinioExtra;
     using Carter.App.Route.Sessions;
@@ -32,7 +32,6 @@ namespace Carter.App.Export.Main
 
         private static IMongoDatabase db;
 
-        // TODO: Replace MinioClient with IMinioClient
         private static IMinioClient os;
 
         private static string sessionId;
@@ -276,7 +275,7 @@ namespace Carter.App.Export.Main
                 foreach (BsonDocument d in sessionDocs)
                 {
                     string json = d.ToJson(JsonWriterSettings.Defaults);
-                    var dict = JsonHelper.DeserializeAndFlatten(json);
+                    var dict = JsonExtra.DeserializeAndFlatten(json);
                     string flat = Newtonsoft.Json.JsonConvert.SerializeObject(dict);
 
                     docsTotal.AppendFormat("{0}{1}", flat, ",");
@@ -381,7 +380,7 @@ namespace Carter.App.Export.Main
 
             using (var csv = new CsvWriter(csvString, GetConfiguration()))
             {
-                var dt = JsonHelper.JsonToTable(jsonContent);
+                var dt = JsonExtra.JsonToTable(jsonContent);
                 dt = AlignHeaders(dt);
 
                 foreach (DataRow row in dt.Rows)

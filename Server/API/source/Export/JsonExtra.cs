@@ -1,11 +1,11 @@
-namespace Carter.App.Export.JsonHelper
+namespace Carter.App.Export.JsonExtra
 {
     using System.Collections.Generic;
     using System.Data;
 
     using Newtonsoft.Json.Linq;
 
-    public class JsonHelper
+    public class JsonExtra
     {
         // https://stackoverflow.com/a/36348017
         public static DataTable JsonToTable(string jsonContent)
