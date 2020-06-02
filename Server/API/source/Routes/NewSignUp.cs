@@ -7,6 +7,7 @@ namespace Carter.App.Route.NewSignUp
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Network;
+    using Carter.App.Lib.Timer;
 
     using Carter.App.Route.PreSecurity;
 
@@ -36,9 +37,10 @@ namespace Carter.App.Route.NewSignUp
 
                 await signUpTokens.InsertOneAsync(tokenDoc);
 
-                var responce = new
+                var responce = new SignUpTokenResponce
                 {
-                    signUpToken = newToken,
+                    SignUpToken = newToken,
+                    Expiration = TimerExtra.ProjectSeconds(tokenDoc.ExpirationSeconds),
                 };
                 var responceDoc = responce.ToBsonDocument();
 
@@ -54,9 +56,9 @@ namespace Carter.App.Route.NewSignUp
         }
     }
 
-    #pragma warning disable SA1516
     public class SignUpTokenSchema
     {
+        #pragma warning disable SA1516
         [BsonIgnore]
         public const string CollectionName = "persons.tokens.signUps";
 
@@ -71,6 +73,17 @@ namespace Carter.App.Route.NewSignUp
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
+        #pragma warning restore SA1516
     }
-    #pragma warning restore SA1516
+
+    public class SignUpTokenResponce
+    {
+        #pragma warning disable SA1516
+        [BsonElement("signUpToken")]
+        public string SignUpToken { get; set; }
+
+        [BsonElement("expiration")]
+        public BsonDateTime Expiration { get; set; }
+        #pragma warning restore SA1516
+    }
 }
