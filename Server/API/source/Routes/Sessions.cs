@@ -344,6 +344,15 @@ namespace Carter.App.Route.Sessions
         }
     }
 
+    // See Startup.cs for the code on how this is serlizalized
+    public enum ExportOptions
+    {
+        NotStarted,
+        Pending,
+        Done,
+        Error,
+    }
+
     public class SessionSchema
     {
         #pragma warning disable SA1516
@@ -365,6 +374,9 @@ namespace Carter.App.Route.Sessions
 
         [BsonElement("isPending")]
         public bool IsPending { get; set; } = false;
+
+        [BsonElement("exportState")]
+        public ExportOptions ExportState { get; set; } = ExportOptions.NotStarted;
 
         // Copying user data instead of referencing so it can never change with the session
         // Also so that it is easy to include when exporting

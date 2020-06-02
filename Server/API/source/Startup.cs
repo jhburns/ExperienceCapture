@@ -4,12 +4,16 @@ namespace Carter.App.Hosting
 
     using Carter.App.Lib.Environment;
     using Carter.App.Lib.MinioExtra;
+    using Carter.App.Route.Sessions;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
+    using MongoDB.Bson;
+    using MongoDB.Bson.Serialization;
+    using MongoDB.Bson.Serialization.Serializers;
     using MongoDB.Driver;
 
     public class Startup
@@ -26,6 +30,8 @@ namespace Carter.App.Hosting
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCarter();
+
+            BsonSerializer.RegisterSerializer(new EnumSerializer<ExportOptions>(BsonType.String));
 
             string mongoUrl = $"mongodb://{AppConfiguration.Mongo.ConnectionString}:{AppConfiguration.Mongo.Port}";
             var client = new MongoClient(mongoUrl);
