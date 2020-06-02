@@ -388,11 +388,13 @@ namespace Carter.App.Route.Users
 
     public class AccessTokenResponce
     {
+        #pragma warning disable SA1516
         [BsonElement("accessToken")]
         public string AccessToken { get; set; }
 
         [BsonElement("expiration")]
         public BsonDateTime Expiration { get; set; }
+        #pragma warning restore SA1516
     }
 
     public class ClaimTokenSchema
@@ -426,10 +428,12 @@ namespace Carter.App.Route.Users
 
     public class ClaimTokenResponce
     {
+        #pragma warning disable SA1516
         [BsonElement("claimToken")]
         public string ClaimToken { get; set; }
 
         [BsonElement("expiration")]
         public BsonDateTime Expiration { get; set; }
+        #pragma warning restore SA1516
     }
 }
