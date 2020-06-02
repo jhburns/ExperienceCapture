@@ -258,8 +258,7 @@ namespace Carter.App.Route.Sessions
                 // Export flags are reset so the session can be re-exported
                 var update = Builders<SessionSchema>.Update
                     .Set(s => s.LastCaptureAt, new BsonDateTime(DateTime.Now))
-                    .Set(s => s.IsExported, false)
-                    .Set(s => s.IsPending, false);
+                    .Set(s => s.ExportState, ExportOptions.NotStarted);
 
                 _ = sessions.UpdateOneAsync(filter, update);
 
@@ -360,11 +359,8 @@ namespace Carter.App.Route.Sessions
         [BsonElement("isOpen")]
         public bool IsOpen { get; set; } = true;
 
-        [BsonElement("isExported")]
-        public bool IsExported { get; set; } = false;
-
-        [BsonElement("isPending")]
-        public bool IsPending { get; set; } = false;
+        [BsonElement("exportState")]
+        public ExportOptions ExportState { get; set; } = ExportOptions.NotStarted;
 
         // Copying user data instead of referencing so it can never change with the session
         // Also so that it is easy to include when exporting
@@ -384,6 +380,17 @@ namespace Carter.App.Route.Sessions
         [BsonIgnoreIfNull]
         [BsonElement("lastCaptureAt")]
         public BsonDateTime LastCaptureAt { get; set; } = null;
-        #pragma warning restore SA151, SA1300
+        #pragma warning restore SA1516
     }
+
+    // See Startup.cs for the code on how this is serlizalized
+    #pragma warning disable SA1201
+    public enum ExportOptions
+    {
+        NotStarted,
+        Pending,
+        Done,
+        Error,
+    }
+    #pragma warning restore SA1201
 }

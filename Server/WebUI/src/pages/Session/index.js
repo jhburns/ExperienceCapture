@@ -37,8 +37,7 @@ class SessionPage extends Component {
       id: sessionsData.id,
       fullname: sessionsData.user.fullname,
       createdAt: sessionsData.createdAt.$date,
-      isExported: sessionsData.isExported,
-      isPending: sessionsData.isPending,
+      exportState: sessionsData.exportState,
       isOpen: sessionsData.isOpen,
       isOngoing: sessionsData.isOngoing
     }
@@ -111,7 +110,7 @@ class SessionPage extends Component {
             </Row>
             <Row>
               <Col className="text-center">
-                {this.state.session.isPending &&
+                {this.state.session.exportState === "Pending" &&
                   <h5>Exporting...</h5>
                 }
               </Col>

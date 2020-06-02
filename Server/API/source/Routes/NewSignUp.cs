@@ -54,9 +54,9 @@ namespace Carter.App.Route.NewSignUp
         }
     }
 
+    #pragma warning disable SA1516
     public class SignUpTokenSchema
     {
-        #pragma warning disable SA1516
         [BsonIgnore]
         public const string CollectionName = "persons.tokens.signUps";
 
@@ -71,7 +71,6 @@ namespace Carter.App.Route.NewSignUp
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
-
-        #pragma warning restore SA151
     }
+    #pragma warning restore SA1516
 }
