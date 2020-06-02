@@ -307,22 +307,6 @@ namespace Carter.Tests.LibraryScripts
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void EnvironmentPasswordSetOrThrow(string value)
-        {
-            Environment.SetEnvironmentVariable("admin_password_hash", value);
-            Environment.SetEnvironmentVariable("unsafe_do_no_validate_user", "2");
-            Environment.SetEnvironmentVariable("gcp_client_id", "3");
-            Environment.SetEnvironmentVariable("aws_domain_name", "4");
-
-            Assert.Throws<EnvironmentVarNotSet>(() =>
-            {
-                ConfigureAppEnvironment.FromEnv();
-            });
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
         public void EnvironmentValidDefaultToFalse(string value)
         {
             Environment.SetEnvironmentVariable("admin_password_hash", "1");
