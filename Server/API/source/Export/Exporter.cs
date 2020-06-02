@@ -287,16 +287,20 @@ namespace Carter.App.Export.Main
             StringBuilder docsTotal = new StringBuilder();
             docsTotal.Append("[");
 
-            foreach (BsonDocument d in sessionDocs)
+            if (sessionDocs.Count > 0)
             {
-                string json = d.ToJson(JsonWriterSettings.Defaults);
-                var dict = JsonHelper.DeserializeAndFlatten(json);
-                string flat = Newtonsoft.Json.JsonConvert.SerializeObject(dict);
+                foreach (BsonDocument d in sessionDocs)
+                {
+                    string json = d.ToJson(JsonWriterSettings.Defaults);
+                    var dict = JsonHelper.DeserializeAndFlatten(json);
+                    string flat = Newtonsoft.Json.JsonConvert.SerializeObject(dict);
 
-                docsTotal.AppendFormat("{0}{1}", flat, ",");
+                    docsTotal.AppendFormat("{0}{1}", flat, ",");
+                }
+
+                docsTotal.Length--; // Remove trailing comma
             }
 
-            docsTotal.Length--; // Remove trailing comma
             docsTotal.Append("]");
 
             return docsTotal.ToString();
