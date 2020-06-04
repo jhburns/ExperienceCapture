@@ -61,20 +61,5 @@ namespace Carter.Tests.CustomHost
 
             return server.CreateClient();
         }
-
-        public static Mock<IMongoDatabase> MakeDatabase<T>(Mock<IMongoCollection<T>> collectionMock = null)
-        {
-            if (collectionMock == null)
-            {
-                collectionMock = new Mock<IMongoCollection<T>>();
-                collectionMock.SetupAllProperties();
-            }
-
-            var databaseMock = new Mock<IMongoDatabase>();
-            databaseMock.Setup(db => db.GetCollection<T>(It.IsAny<string>(), It.IsAny<MongoCollectionSettings>()))
-                .Returns(collectionMock.Object);
-
-            return databaseMock;
-        }
     }
 }
