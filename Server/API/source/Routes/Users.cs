@@ -373,9 +373,6 @@ namespace Carter.App.Route.Users
     public class AccessTokenSchema
     {
         #pragma warning disable SA1516
-        [BsonIgnore]
-        public const string CollectionName = "persons.tokens.accesses";
-
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
@@ -415,9 +412,6 @@ namespace Carter.App.Route.Users
     public class ClaimTokenSchema
     {
         #pragma warning disable SA1516
-        [BsonIgnore]
-        public const string CollectionName = "persons.tokens.claims";
-
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
