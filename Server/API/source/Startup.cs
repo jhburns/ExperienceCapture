@@ -4,7 +4,11 @@ namespace Carter.App.Hosting
 
     using Carter.App.Lib.Environment;
     using Carter.App.Lib.MinioExtra;
+    using Carter.App.Lib.Repository;
+
+    using Carter.App.Route.NewSignUp;
     using Carter.App.Route.Sessions;
+    using Carter.App.Route.Users;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
@@ -37,6 +41,12 @@ namespace Carter.App.Hosting
             var client = new MongoClient(mongoUrl);
             var db = client.GetDatabase("ec");
             services.AddSingleton<IMongoDatabase>(db);
+
+            var signUpRepo = new SignUpTokenRepository(db);
+            services.AddSingleton<IRepository<SignUpTokenSchema>>(signUpRepo);
+
+            var accessRepo = new AccessTokenRepository(db);
+            services.AddSingleton<IRepository<AccessTokenSchema>>(accessRepo);
 
             string minioUsername = "minio";
             string minioPassword = "minio123";

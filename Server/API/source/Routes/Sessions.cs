@@ -10,6 +10,7 @@ namespace Carter.App.Route.Sessions
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Network;
+    using Carter.App.Lib.Repository;
 
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.Users;
@@ -23,10 +24,12 @@ namespace Carter.App.Route.Sessions
 
     public class Sessions : CarterModule
     {
-        public Sessions(IMongoDatabase db)
+        public Sessions(
+            IRepository<AccessTokenSchema> accessRepo,
+            IMongoDatabase db)
             : base("/sessions")
         {
-            this.Before += PreSecurity.GetSecurityCheck(db);
+            this.Before += PreSecurity.GetSecurityCheck(accessRepo);
 
             this.Post("/", async (req, res) =>
             {

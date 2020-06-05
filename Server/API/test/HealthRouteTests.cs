@@ -5,7 +5,7 @@ namespace Carter.Tests.Route.Health
     using System.Text;
     using System.Threading.Tasks;
 
-    using Carter.Tests.CustomHost;
+    using Carter.Tests.HostingExtra;
 
     using Xunit;
 
@@ -18,13 +18,10 @@ namespace Carter.Tests.Route.Health
         [InlineData("/health/?test=sdkfjsdlfksdf&blak=sdfsfds")]
         public async Task GetHealth(string url)
         {
-            // Arrange
             var client = CustomHost.Create();
 
-            // Act
             var response = await client.GetAsync(url);
 
-            // Assert
             response.EnsureSuccessStatusCode(); // Status Code 200-299
             Assert.Equal(
                 "text/plain; charset=utf-8",

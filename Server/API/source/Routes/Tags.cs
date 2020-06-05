@@ -3,9 +3,11 @@ namespace Carter.App.Route.Tags
     using Carter;
 
     using Carter.App.Lib.Network;
-    using Carter.App.Route.PreSecurity;
+    using Carter.App.Lib.Repository;
 
+    using Carter.App.Route.PreSecurity;
     using Carter.App.Route.Sessions;
+    using Carter.App.Route.Users;
 
     using Carter.Request;
 
@@ -14,10 +16,12 @@ namespace Carter.App.Route.Tags
 
     public class Tags : CarterModule
     {
-        public Tags(IMongoDatabase db)
+        public Tags(
+            IRepository<AccessTokenSchema> accesRepo,
+            IMongoDatabase db)
             : base("/sessions/{id}/tags")
         {
-            this.Before += PreSecurity.GetSecurityCheck(db);
+            this.Before += PreSecurity.GetSecurityCheck(accesRepo);
 
             this.Post("/{tagName}", async (req, res) =>
             {
