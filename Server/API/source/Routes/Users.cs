@@ -1,6 +1,7 @@
 namespace Carter.App.Route.Users
 {
     using System;
+    using System.Threading.Tasks;
 
     using Carter;
 
@@ -8,6 +9,7 @@ namespace Carter.App.Route.Users
     using Carter.App.Lib.Environment;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Network;
+    using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
 
     using Carter.App.Route.NewSignUp;
@@ -25,7 +27,10 @@ namespace Carter.App.Route.Users
 
     public class Users : CarterModule
     {
-        public Users(IMongoDatabase db, IAppEnvironment env)
+        public Users(
+            IRepository<AccessTokenSchema> accessRepo,
+            IMongoDatabase db,
+            IAppEnvironment env)
             : base("/users")
         {
             this.Post("/", async (req, res) =>
@@ -384,6 +389,21 @@ namespace Carter.App.Route.Users
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
         #pragma warning restore SA1516
+    }
+
+    public sealed class AccessTokenRepository : RepositoryBase<AccessTokenSchema>
+    {
+        public AccessTokenRepository(IMongoDatabase database)
+            : base(database, "persons.tokens.accesses")
+        {
+        }
+
+        public override async Task<AccessTokenSchema> FindOne(FilterDefinition<AccessTokenSchema> query)
+        {
+            return await this.Collection
+                .Find(query)
+                .FirstOrDefaultAsync();
+        }
     }
 
     public class AccessTokenResponce

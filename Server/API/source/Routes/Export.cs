@@ -10,9 +10,11 @@ namespace Carter.App.Route.Export
     using Carter.App.Hosting;
     using Carter.App.Lib.MinioExtra;
     using Carter.App.Lib.Network;
+    using Carter.App.Lib.Repository;
 
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.Sessions;
+    using Carter.App.Route.Users;
 
     using Carter.Request;
     using Carter.Response;
@@ -21,10 +23,13 @@ namespace Carter.App.Route.Export
 
     public class Export : CarterModule
     {
-        public Export(IMongoDatabase db, IMinioClient os)
+        public Export(
+            IRepository<AccessTokenSchema> accessRepo,
+            IMongoDatabase db,
+            IMinioClient os)
             : base("/sessions/{id}/export")
         {
-            this.Before += PreSecurity.GetSecurityCheck(db);
+            this.Before += PreSecurity.GetSecurityCheck(accessRepo);
 
             this.Post("/", async (req, res) =>
             {

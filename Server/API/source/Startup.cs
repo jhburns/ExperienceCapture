@@ -8,6 +8,7 @@ namespace Carter.App.Hosting
 
     using Carter.App.Route.NewSignUp;
     using Carter.App.Route.Sessions;
+    using Carter.App.Route.Users;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.Extensions.Configuration;
@@ -44,6 +45,9 @@ namespace Carter.App.Hosting
             //Temp
             var signUpRepo = new SignUpTokenRepository(db);
             services.AddSingleton<IRepository<SignUpTokenSchema>>(signUpRepo);
+
+            var accessRepo = new AccessTokenRepository(db);
+            services.AddSingleton<IRepository<AccessTokenSchema>>(accessRepo);
             //Temp end
 
             string minioUsername = "minio";

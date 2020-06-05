@@ -1,10 +1,13 @@
-namespace Carter.Tests.CustomHost
+namespace Carter.Tests.HostingExtra
 {
     using System.Net.Http;
 
     using Carter.App.Hosting;
     using Carter.App.Lib.Environment;
     using Carter.App.Lib.MinioExtra;
+    using Carter.App.Lib.Repository;
+    using Carter.App.Route.NewSignUp;
+    using Carter.App.Route.Users;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -18,13 +21,31 @@ namespace Carter.Tests.CustomHost
 
     public static class CustomHost
     {
-        public static HttpClient Create(Mock<IMongoDatabase> databaseMock = null)
+        public static HttpClient Create(
+            Mock<IRepository<AccessTokenSchema>> accessMock = null,
+            Mock<IRepository<SignUpTokenSchema>> signUpMock = null,
+            Mock<IMongoDatabase> databaseMock = null)
         {
             var server = new TestServer(
                 new WebHostBuilder()
                     .ConfigureServices(services =>
                     {
                         services.AddCarter();
+
+                        // Mock repos
+                        if (accessMock == null)
+                        {
+                            accessMock = new Mock<IRepository<AccessTokenSchema>>();
+                        }
+
+                        services.AddSingleton<IRepository<AccessTokenSchema>>(accessMock.Object);
+
+                        if (signUpMock == null)
+                        {
+                            signUpMock = new Mock<IRepository<SignUpTokenSchema>>();
+                        }
+
+                        services.AddSingleton<IRepository<SignUpTokenSchema>>(signUpMock.Object);
 
                         // Mock database
                         if (databaseMock == null)

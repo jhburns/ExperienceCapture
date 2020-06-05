@@ -12,6 +12,7 @@ namespace Carter.App.Route.NewSignUp
     using Carter.App.Lib.Timer;
 
     using Carter.App.Route.PreSecurity;
+    using Carter.App.Route.Users;
 
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization.Attributes;
@@ -19,11 +20,13 @@ namespace Carter.App.Route.NewSignUp
 
     public class NewSignUp : CarterModule
     {
-        public NewSignUp(IMongoDatabase db, IRepository<SignUpTokenSchema> repo)
+        public NewSignUp(
+            IRepository<AccessTokenSchema> accessRepo,
+            IRepository<SignUpTokenSchema> signUpRepo)
             : base("/users")
         {
             // TODO: only allow admins to create sign-up tokens, or another restriction
-            this.Before += PreSecurity.GetSecurityCheck(db);
+            this.Before += PreSecurity.GetSecurityCheck(accessRepo);
 
             this.Post("/signUp/", async (req, res) =>
             {
@@ -36,7 +39,7 @@ namespace Carter.App.Route.NewSignUp
                     CreatedAt = new BsonDateTime(DateTime.Now),
                 };
 
-                await repo.Add(tokenDoc);
+                await signUpRepo.Add(tokenDoc);
 
                 var responce = new SignUpTokenResponce
                 {
@@ -60,6 +63,9 @@ namespace Carter.App.Route.NewSignUp
     public class SignUpTokenSchema
     {
         #pragma warning disable SA1516
+        [BsonIgnore]
+        public const string CollectionName = "persons.tokens.signUps";
+
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
