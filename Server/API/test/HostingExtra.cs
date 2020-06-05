@@ -1,7 +1,9 @@
 namespace Carter.Tests.HostingExtra
 {
+    using System;
     using System.Net.Http;
     using System.Text;
+    using System.Threading.Tasks;
 
     using Carter.App.Hosting;
     using Carter.App.Lib.Environment;
@@ -16,6 +18,7 @@ namespace Carter.Tests.HostingExtra
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
 
+    using MongoDB.Bson;
     using MongoDB.Driver;
 
     using Moq;
@@ -36,7 +39,24 @@ namespace Carter.Tests.HostingExtra
                         // Mock repos
                         if (accessMock == null)
                         {
+                            // Allows every route to authenticate through Pre-security
                             accessMock = new Mock<IRepository<AccessTokenSchema>>();
+                            var result = new Task<AccessTokenSchema>(() =>
+                            {
+                                return new AccessTokenSchema
+                                {
+                                    InternalId = ObjectId.GenerateNewId(),
+                                    Hash = string.Empty,
+                                    User = ObjectId.GenerateNewId(),
+
+                                    // A day so the token can't expire while running
+                                    CreatedAt = new BsonDateTime(DateTime.Now.AddSeconds(86400)),
+                                };
+                            });
+                            result.Start();
+
+                            accessMock.Setup(a => a.FindOne(It.IsAny<FilterDefinition<AccessTokenSchema>>()))
+                                .Returns(result);
                         }
 
                         services.AddSingleton<IRepository<AccessTokenSchema>>(accessMock.Object);
@@ -87,10 +107,15 @@ namespace Carter.Tests.HostingExtra
 
     public static class CustomRequest
     {
-        public static HttpRequestMessage Create(HttpMethod method, string url)
+        public static HttpRequestMessage Create(HttpMethod method, string url, bool isAuthorized = true)
         {
             var request = new HttpRequestMessage(method, "/users/signUp/");
             request.Content = new StringContent(string.Empty, Encoding.UTF8, "application/json");
+
+            if (isAuthorized)
+            {
+                request.Headers.TryAddWithoutValidation("Cookie", "ExperienceCapture-Access-Token=" + "ok");
+            }
 
             return request;
         }

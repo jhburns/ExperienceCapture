@@ -11,6 +11,7 @@ namespace Carter.Tests.Route.PreSecurity
 
     using Carter.Tests.HostingExtra;
 
+    using MongoDB.Bson;
     using MongoDB.Driver;
 
     using Moq;
@@ -52,7 +53,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/");
+            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/", false);
             request.Headers.TryAddWithoutValidation("Cookie", "ExperienceCapture-Access-Token=" + value);
 
             var response = await client.SendAsync(request);
@@ -60,6 +61,51 @@ namespace Carter.Tests.Route.PreSecurity
             Assert.True(
                 response.StatusCode == HttpStatusCode.Unauthorized,
                 "Triggering pre-security with a bad token is not unauthorized.");
+        }
+
+        [Theory]
+        [InlineData(259201)] // One over expired time
+        [InlineData(1000000)]
+        public async Task ExpiredTokenIsUnauthorizedPresecurity(int value)
+        {
+            var accessMock = new Mock<IRepository<AccessTokenSchema>>();
+            var result = new Task<AccessTokenSchema>(() =>
+            {
+                return new AccessTokenSchema
+                {
+                    InternalId = ObjectId.GenerateNewId(),
+                    Hash = string.Empty,
+                    User = ObjectId.GenerateNewId(),
+                    CreatedAt = new BsonDateTime(DateTime.Now.AddSeconds(-value)),
+                };
+            });
+            result.Start();
+
+            accessMock.Setup(a => a.FindOne(It.IsAny<FilterDefinition<AccessTokenSchema>>()))
+                .Returns(result);
+
+            var client = CustomHost.Create(accessMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/", false);
+            request.Headers.TryAddWithoutValidation("Cookie", "ExperienceCapture-Access-Token=" + "ok");
+
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.Unauthorized,
+                "Triggering pre-security with an expired token is not unauthorized.");
+        }
+
+        [Fact]
+        public async Task AllowedTokenIsOkPresecurity()
+        {
+            var client = CustomHost.Create();
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/");
+
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
         }
     }
 }
