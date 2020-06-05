@@ -25,7 +25,7 @@ namespace Carter.App.Route.Export
     {
         public Export(
             IRepository<AccessTokenSchema> accessRepo,
-            IMongoDatabase db,
+            IRepository<SessionSchema> sessionRepo,
             IMinioClient os)
             : base("/sessions/{id}/export")
         {
@@ -33,13 +33,12 @@ namespace Carter.App.Route.Export
 
             this.Post("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
-
                 string id = req.RouteValues.As<string>("id");
                 var filter = Builders<SessionSchema>.Filter
                     .Where(s => s.Id == id);
 
-                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+                var sessionDoc = await sessionRepo
+                    .FindOne(filter);
 
                 if (sessionDoc == null)
                 {
@@ -69,21 +68,18 @@ namespace Carter.App.Route.Export
                 var update = Builders<SessionSchema>.Update
                     .Set(s => s.ExportState, ExportOptions.Pending);
 
-                await sessions.UpdateOneAsync(filter, update);
+                await sessionRepo.Update(filter, update);
 
                 await res.FromString();
             });
 
             this.Get("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
-
                 string id = req.RouteValues.As<string>("id");
-                var sessionDoc = await sessions.Find(
+                var sessionDoc = await sessionRepo.FindOne(
                     Builders<SessionSchema>
                         .Filter
-                        .Where(s => s.Id == id))
-                        .FirstOrDefaultAsync();
+                        .Where(s => s.Id == id));
 
                 if (sessionDoc == null)
                 {
