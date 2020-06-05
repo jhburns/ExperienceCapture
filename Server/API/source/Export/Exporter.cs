@@ -227,7 +227,7 @@ namespace Carter.App.Export.Main
 
         protected static async Task<SessionSchema> GetSessionInfo()
         {
-            var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
+            var sessions = db.GetCollection<SessionSchema>("sessions");
 
             var filter = Builders<SessionSchema>.Filter
                 .Where(s => s.Id == sessionId);
@@ -527,7 +527,7 @@ namespace Carter.App.Export.Main
 
         protected static async Task UpdateDoc(ExportOptions status)
         {
-            var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
+            var sessions = db.GetCollection<SessionSchema>("sessions");
 
             var filter = Builders<SessionSchema>.Filter
                 .Where(s => s.Id == sessionId);

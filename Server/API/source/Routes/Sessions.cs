@@ -329,9 +329,6 @@ namespace Carter.App.Route.Sessions
     public class SessionSchema
     {
         #pragma warning disable SA1516
-        [BsonIgnore]
-        public const string CollectionName = "sessions";
-
         [BsonIgnoreIfNull]
         [BsonId]
         public BsonObjectId InternalId { get; set; }

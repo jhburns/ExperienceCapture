@@ -57,6 +57,9 @@ namespace Carter.App.Hosting
             var captureRepo = new CapturesRepository(db);
             services.AddSingleton<IRepository<BsonDocument>>(captureRepo);
 
+            var personRepo = new PersonRepository(db);
+            services.AddSingleton<IRepository<PersonSchema>>(personRepo);
+
             // Add Minio
             string minioUsername = "minio";
             string minioPassword = "minio123";

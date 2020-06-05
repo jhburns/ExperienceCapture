@@ -101,19 +101,6 @@ namespace Carter.Tests.HostingExtra
 
                         services.AddSingleton<IRepository<BsonDocument>>(captureMock.Object);
 
-                        // Mock database
-                        if (databaseMock == null)
-                        {
-                            var collection = new Mock<IMongoCollection<It.IsAnyType>>();
-                            collection.SetupAllProperties();
-
-                            databaseMock = new Mock<IMongoDatabase>();
-                            databaseMock.Setup(db => db.GetCollection<It.IsAnyType>(It.IsAny<string>(), It.IsAny<MongoCollectionSettings>()))
-                                .Returns(collection.Object);
-                        }
-
-                        services.AddSingleton<IMongoDatabase>(databaseMock.Object);
-
                         // Mock object store
                         var objectStoreMock = new Mock<IMinioClient>();
                         objectStoreMock.SetupAllProperties();
