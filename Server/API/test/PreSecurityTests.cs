@@ -49,7 +49,8 @@ namespace Carter.Tests.Route.PreSecurity
             result.Start();
 
             accessMock.Setup(a => a.FindOne(It.IsAny<FilterDefinition<AccessTokenSchema>>()))
-                .Returns(result);
+                .Returns(result)
+                .Verifiable();
 
             var client = CustomHost.Create(accessMock);
 
@@ -82,7 +83,8 @@ namespace Carter.Tests.Route.PreSecurity
             result.Start();
 
             accessMock.Setup(a => a.FindOne(It.IsAny<FilterDefinition<AccessTokenSchema>>()))
-                .Returns(result);
+                .Returns(result)
+                .Verifiable();
 
             var client = CustomHost.Create(accessMock);
 
