@@ -1,6 +1,7 @@
 namespace Carter.Tests.HostingExtra
 {
     using System.Net.Http;
+    using System.Text;
 
     using Carter.App.Hosting;
     using Carter.App.Lib.Environment;
@@ -81,6 +82,17 @@ namespace Carter.Tests.HostingExtra
                     }));
 
             return server.CreateClient();
+        }
+    }
+
+    public static class CustomRequest
+    {
+        public static HttpRequestMessage Create(HttpMethod method, string url)
+        {
+            var request = new HttpRequestMessage(method, "/users/signUp/");
+            request.Content = new StringContent(string.Empty, Encoding.UTF8, "application/json");
+
+            return request;
         }
     }
 }

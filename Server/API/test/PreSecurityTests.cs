@@ -1,5 +1,6 @@
 namespace Carter.Tests.Route.PreSecurity
 {
+    using System;
     using System.Net;
     using System.Net.Http;
     using System.Text;
@@ -9,6 +10,8 @@ namespace Carter.Tests.Route.PreSecurity
     using Carter.App.Route.Users;
 
     using Carter.Tests.HostingExtra;
+
+    using MongoDB.Driver;
 
     using Moq;
 
@@ -20,15 +23,43 @@ namespace Carter.Tests.Route.PreSecurity
         [Fact]
         public async Task NoCookieIsBadPreSecurity()
         {
-            var accessMock = new Mock<IRepository<AccessTokenSchema>>();
-            var client = CustomHost.Create(accessMock);
+            var client = CustomHost.Create();
 
             var stringContent = new StringContent(string.Empty, Encoding.UTF8, "application/json");
             var response = await client.PostAsync("/users/signUp/", stringContent);
 
             Assert.True(
                 response.StatusCode == HttpStatusCode.BadRequest,
-                "Triggering pre-security with a cookie is not bad.");
+                "Triggering pre-security without a token is not bad.");
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("allow")]
+        [InlineData("dsf5ter4fdsfd58eidjfhgtuiejdfssdfdsf")]
+        [InlineData("^&*(*&^%$%^&**><KOPL<KJHY")]
+        public async Task BadAccessTokenIsUnauthorizedPresecurity(string value)
+        {
+            var accessMock = new Mock<IRepository<AccessTokenSchema>>();
+            var result = new Task<AccessTokenSchema>(() =>
+            {
+                return null;
+            });
+            result.Start();
+
+            accessMock.Setup(a => a.FindOne(It.IsAny<FilterDefinition<AccessTokenSchema>>()))
+                .Returns(result);
+
+            var client = CustomHost.Create(accessMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/");
+            request.Headers.TryAddWithoutValidation("Cookie", "ExperienceCapture-Access-Token=" + value);
+
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.Unauthorized,
+                "Triggering pre-security with a bad token is not unauthorized.");
         }
     }
 }

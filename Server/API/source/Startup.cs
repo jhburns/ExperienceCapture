@@ -42,13 +42,11 @@ namespace Carter.App.Hosting
             var db = client.GetDatabase("ec");
             services.AddSingleton<IMongoDatabase>(db);
 
-            //Temp
             var signUpRepo = new SignUpTokenRepository(db);
             services.AddSingleton<IRepository<SignUpTokenSchema>>(signUpRepo);
 
             var accessRepo = new AccessTokenRepository(db);
             services.AddSingleton<IRepository<AccessTokenSchema>>(accessRepo);
-            //Temp end
 
             string minioUsername = "minio";
             string minioPassword = "minio123";
