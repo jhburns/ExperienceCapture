@@ -129,7 +129,7 @@ namespace Carter.Tests.HostingExtra
     {
         public static HttpRequestMessage Create(HttpMethod method, string url, bool isAuthorized = true)
         {
-            var request = new HttpRequestMessage(method, "/users/signUp/");
+            var request = new HttpRequestMessage(method, url);
             request.Content = new StringContent(string.Empty, Encoding.UTF8, "application/json");
 
             if (isAuthorized)

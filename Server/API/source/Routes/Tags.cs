@@ -11,7 +11,6 @@ namespace Carter.App.Route.Tags
 
     using Carter.Request;
 
-    using MongoDB.Bson;
     using MongoDB.Driver;
 
     public class Tags : CarterModule
