@@ -17,11 +17,11 @@ namespace Carter.App.Route.Tags
     public class Tags : CarterModule
     {
         public Tags(
-            IRepository<AccessTokenSchema> accesRepo,
+            IRepository<AccessTokenSchema> accessRepo,
             IMongoDatabase db)
             : base("/sessions/{id}/tags")
         {
-            this.Before += PreSecurity.GetSecurityCheck(accesRepo);
+            this.Before += PreSecurity.GetSecurityCheck(accessRepo);
 
             this.Post("/{tagName}", async (req, res) =>
             {
