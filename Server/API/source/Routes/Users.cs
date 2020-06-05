@@ -456,7 +456,7 @@ namespace Carter.App.Route.Users
         #pragma warning restore SA1516
     }
 
-    public sealed class ClaimTokenc : RepositoryBase<ClaimTokenSchema>
+    public sealed class ClaimTokenRepository : RepositoryBase<ClaimTokenSchema>
     {
         public ClaimTokenRepository(IMongoDatabase database)
             : base(database, "persons.tokens.claims")
