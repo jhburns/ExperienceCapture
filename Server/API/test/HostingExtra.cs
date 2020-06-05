@@ -10,6 +10,7 @@ namespace Carter.Tests.HostingExtra
     using Carter.App.Lib.MinioExtra;
     using Carter.App.Lib.Repository;
     using Carter.App.Route.NewSignUp;
+    using Carter.App.Route.Sessions;
     using Carter.App.Route.Users;
 
     using Microsoft.AspNetCore.Builder;
@@ -28,6 +29,10 @@ namespace Carter.Tests.HostingExtra
         public static HttpClient Create(
             Mock<IRepository<AccessTokenSchema>> accessMock = null,
             Mock<IRepository<SignUpTokenSchema>> signUpMock = null,
+            Mock<IRepository<ClaimTokenSchema>> claimMock = null,
+            Mock<IRepository<PersonSchema>> personMock = null,
+            Mock<IRepository<SessionSchema>> sessionMock = null,
+            Mock<IRepository<BsonDocument>> captureMock = null,
             Mock<IMongoDatabase> databaseMock = null)
         {
             var server = new TestServer(
@@ -67,6 +72,34 @@ namespace Carter.Tests.HostingExtra
                         }
 
                         services.AddSingleton<IRepository<SignUpTokenSchema>>(signUpMock.Object);
+
+                        if (claimMock == null)
+                        {
+                            claimMock = new Mock<IRepository<ClaimTokenSchema>>();
+                        }
+
+                        services.AddSingleton<IRepository<ClaimTokenSchema>>(claimMock.Object);
+
+                        if (personMock == null)
+                        {
+                            personMock = new Mock<IRepository<PersonSchema>>();
+                        }
+
+                        services.AddSingleton<IRepository<PersonSchema>>(personMock.Object);
+
+                        if (sessionMock == null)
+                        {
+                            sessionMock = new Mock<IRepository<SessionSchema>>();
+                        }
+
+                        services.AddSingleton<IRepository<SessionSchema>>(sessionMock.Object);
+
+                        if (captureMock == null)
+                        {
+                            captureMock = new Mock<IRepository<BsonDocument>>();
+                        }
+
+                        services.AddSingleton<IRepository<BsonDocument>>(captureMock.Object);
 
                         // Mock database
                         if (databaseMock == null)
