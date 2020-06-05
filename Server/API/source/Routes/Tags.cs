@@ -67,9 +67,6 @@ namespace Carter.App.Route.Tags
                     return;
                 }
 
-                string collectionName = $"sessions.{uniqueID}";
-                var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
-
                 string tag = req.RouteValues.As<string>("tagName");
 
                 if (sessionDoc.Tags.Contains(tag))

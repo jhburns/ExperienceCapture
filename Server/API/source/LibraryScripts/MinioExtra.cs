@@ -50,6 +50,8 @@ namespace Carter.App.Lib.MinioExtra
         /// <param name="sse">Optional Server-side encryption option. Defaults to null.</param>
         /// <param name="cancellationToken">Optional cancellation token to cancel the operation</param>
         Task PutObjectAsync(string bucketName, string objectName, string filePath, string contentType = null, Dictionary<string, string> metaData = null, ServerSideEncryption sse = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        Task<byte[]> GetBytesAsync(string bucketName, string objectName);
     }
 
     public class MinioClientExtra : MinioClient, IMinioClient
@@ -67,19 +69,16 @@ namespace Carter.App.Lib.MinioExtra
             : base(endpoint, accessKey, secretKey, region, sessionToken)
         {
         }
-    }
 
-    // Minio client expects the CopyTo to be both sync and async,
-    // So it is wrapped in a function call
-    internal static class MinioExtensions
-    {
-        public static async Task<byte[]> GetBytesAsync(this IMinioClient os, string bucketName, string objectName)
+        // Minio client expects the CopyTo to be both sync and async,
+        // So it is wrapped in a function call
+        public async Task<byte[]> GetBytesAsync(string bucketName, string objectName)
         {
             byte[] objectBytes = null;
 
             try
             {
-                await os.GetObjectAsync(bucketName, objectName, (stream) =>
+                await this.GetObjectAsync(bucketName, objectName, (stream) =>
                 {
                     using (var outStream = new MemoryStream())
                     {
