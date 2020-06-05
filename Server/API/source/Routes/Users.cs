@@ -29,7 +29,9 @@ namespace Carter.App.Route.Users
     {
         public Users(
             IRepository<AccessTokenSchema> accessRepo,
-            IMongoDatabase db,
+            IRepository<SignUpTokenSchema> signUpRepo,
+            IRepository<ClaimTokenSchema> claimRepo,
+            IRepository<PersonSchema> personRepo,
             IAppEnvironment env)
             : base("/users")
         {
@@ -50,13 +52,10 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var signUpTokens = db.GetCollection<SignUpTokenSchema>(SignUpTokenSchema.CollectionName);
-
-                var signUpDoc = await signUpTokens.Find(
+                var signUpDoc = await signUpRepo.FindOne(
                     Builders<SignUpTokenSchema>
                         .Filter
-                        .Where(t => t.Hash == PasswordHasher.Hash(newPerson.Data.signUpToken)))
-                        .FirstOrDefaultAsync();
+                        .Where(t => t.Hash == PasswordHasher.Hash(newPerson.Data.signUpToken)));
 
                 if (signUpDoc == null || signUpDoc.CreatedAt.IsAfter(signUpDoc.ExpirationSeconds))
                 {
@@ -64,13 +63,10 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var users = db.GetCollection<PersonSchema>(PersonSchema.CollectionName);
-
-                var existingPerson = await users.Find(
+                var existingPerson = await personRepo.FindOne(
                     Builders<PersonSchema>
                         .Filter
-                        .Where(p => p.Id == person.Subject))
-                        .FirstOrDefaultAsync();
+                        .Where(p => p.Id == person.Subject));
 
                 if (existingPerson != null)
                 {
@@ -89,23 +85,18 @@ namespace Carter.App.Route.Users
                     CreatedAt = new BsonDateTime(DateTime.Now),
                 };
 
-                var personDoc = personObject.ToBsonDocument();
-
-                await users.InsertOneAsync(personObject);
+                await personRepo.Add(personObject);
 
                 await res.FromString();
             });
 
             this.Post("/{id}/tokens/", async (req, res) =>
             {
-                var users = db.GetCollection<PersonSchema>(PersonSchema.CollectionName);
-
                 string userID = req.RouteValues.As<string>("id");
-                var userDoc = await users.Find(
+                var userDoc = await personRepo.FindOne(
                     Builders<PersonSchema>
                         .Filter
-                        .Where(p => p.Id == userID))
-                        .FirstOrDefaultAsync();
+                        .Where(p => p.Id == userID));
 
                 if (userDoc == null)
                 {
@@ -135,7 +126,6 @@ namespace Carter.App.Route.Users
 
                 string newToken = Generate.GetRandomToken();
                 string newHash = PasswordHasher.Hash(newToken);
-                var accessTokens = db.GetCollection<AccessTokenSchema>(AccessTokenSchema.CollectionName);
 
                 var tokenObject = new AccessTokenSchema
                 {
@@ -145,16 +135,14 @@ namespace Carter.App.Route.Users
                     CreatedAt = new BsonDateTime(DateTime.Now),
                 };
 
-                await accessTokens.InsertOneAsync(tokenObject);
+                await accessRepo.Add(tokenObject);
 
                 if (newAccessRequest.Data.claimToken != null)
                 {
-                    var claimTokens = db.GetCollection<ClaimTokenSchema>(ClaimTokenSchema.CollectionName);
-
                     var filterClaims = Builders<ClaimTokenSchema>.Filter
                         .Where(c => c.Hash == PasswordHasher.Hash(newAccessRequest.Data.claimToken));
 
-                    var claimDoc = await claimTokens.Find(filterClaims).FirstOrDefaultAsync();
+                    var claimDoc = await claimRepo.FindOne(filterClaims);
 
                     // 401 returned twice, which may be hard for the client to interpret
                     if (claimDoc == null || claimDoc.CreatedAt.IsAfter(claimDoc.ExpirationSeconds))
@@ -174,7 +162,7 @@ namespace Carter.App.Route.Users
                             #pragma warning restore SA1515
                             .Set(c => c.AccessToken, newToken);
 
-                        await claimTokens.UpdateOneAsync(filterClaims, update);
+                        await claimRepo.Update(filterClaims, update);
                     }
 
                     await res.FromString();
@@ -204,7 +192,6 @@ namespace Carter.App.Route.Users
             {
                 string newToken = Generate.GetRandomToken();
                 string newHash = PasswordHasher.Hash(newToken);
-                var claimTokens = db.GetCollection<ClaimTokenSchema>(ClaimTokenSchema.CollectionName);
 
                 var tokenDoc = new ClaimTokenSchema
                 {
@@ -213,7 +200,7 @@ namespace Carter.App.Route.Users
                     CreatedAt = new BsonDateTime(DateTime.Now),
                 };
 
-                await claimTokens.InsertOneAsync(tokenDoc);
+                await claimRepo.Add(tokenDoc);
 
                 var responce = new ClaimTokenResponce
                 {
@@ -241,10 +228,9 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var claimTokens = db.GetCollection<ClaimTokenSchema>(ClaimTokenSchema.CollectionName);
                 var filter = Builders<ClaimTokenSchema>.Filter
                     .Where(c => c.Hash == PasswordHasher.Hash(claimToken));
-                var claimDoc = await claimTokens.Find(filter).FirstOrDefaultAsync();
+                var claimDoc = await claimRepo.FindOne(filter);
 
                 if (claimDoc == null)
                 {
@@ -273,7 +259,7 @@ namespace Carter.App.Route.Users
                     #pragma warning restore SA1515
                     .Set(c => c.AccessToken, null);
 
-                await claimTokens.UpdateOneAsync(filter, update);
+                await claimRepo.Update(filter, update);
 
                 var responce = new AccessTokenResponce
                 {
@@ -308,7 +294,6 @@ namespace Carter.App.Route.Users
                 }
 
                 string newToken = Generate.GetRandomToken();
-                var signUpTokens = db.GetCollection<SignUpTokenSchema>(SignUpTokenSchema.CollectionName);
 
                 var tokenDoc = new SignUpTokenSchema
                 {
@@ -317,7 +302,7 @@ namespace Carter.App.Route.Users
                     CreatedAt = new BsonDateTime(DateTime.Now),
                 };
 
-                await signUpTokens.InsertOneAsync(tokenDoc);
+                await signUpRepo.Add(tokenDoc);
 
                 var responce = new ClaimTokenResponce
                 {

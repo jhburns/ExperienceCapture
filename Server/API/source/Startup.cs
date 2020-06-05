@@ -35,12 +35,12 @@ namespace Carter.App.Hosting
         {
             services.AddCarter();
 
+            // Add repositories based on Mongo
             BsonSerializer.RegisterSerializer(new EnumSerializer<ExportOptions>(BsonType.String));
 
             string mongoUrl = $"mongodb://{AppConfiguration.Mongo.ConnectionString}:{AppConfiguration.Mongo.Port}";
             var client = new MongoClient(mongoUrl);
             var db = client.GetDatabase("ec");
-            services.AddSingleton<IMongoDatabase>(db);
 
             var signUpRepo = new SignUpTokenRepository(db);
             services.AddSingleton<IRepository<SignUpTokenSchema>>(signUpRepo);
@@ -48,6 +48,16 @@ namespace Carter.App.Hosting
             var accessRepo = new AccessTokenRepository(db);
             services.AddSingleton<IRepository<AccessTokenSchema>>(accessRepo);
 
+            var claimRepo = new ClaimTokenRepository(db);
+            services.AddSingleton<IRepository<ClaimTokenSchema>>(claimRepo);
+
+            var sessionRepo = new SessionRepository(db);
+            services.AddSingleton<IRepository<SessionSchema>>(sessionRepo);
+
+            var captureRepo = new CapturesRepository(db);
+            services.AddSingleton<IRepository<BsonDocument>>(captureRepo);
+
+            // Add Minio
             string minioUsername = "minio";
             string minioPassword = "minio123";
 
@@ -55,6 +65,7 @@ namespace Carter.App.Hosting
             var os = new MinioClientExtra(minioHost, minioUsername, minioPassword);
             services.AddSingleton<IMinioClient>(os);
 
+            // Add environment
             var env = ConfigureAppEnvironment.FromEnv();
             services.AddSingleton<IAppEnvironment>(env);
 

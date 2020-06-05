@@ -21,34 +21,31 @@ namespace Carter.App.Lib.Repository
         Task Update(FilterDefinition<TSchema> filter, UpdateDefinition<TSchema> update);
 
         Task Index(IndexKeysDefinition<TSchema> key, CreateIndexOptions<TSchema> options = null);
+
+        void Configure(string name);
     }
 
     public abstract class RepositoryBase<TSchema> : IRepository<TSchema>
     {
         public RepositoryBase(IMongoDatabase db, string collectionName)
         {
+            // The database needs to be saved for configuring the collection later
+            this.Database = db;
             this.Collection = db.GetCollection<TSchema>(collectionName);
         }
 
         protected virtual IMongoCollection<TSchema> Collection { get; set; }
 
+        protected virtual IMongoDatabase Database { get; set; }
+
         public virtual async Task<IList<TSchema>> FindAll(
             FilterDefinition<TSchema> filter,
-            SortDefinition<TSchema> sorter = null)
+            SortDefinition<TSchema> sorter)
         {
-            if (sorter == null)
-            {
-                return await this.Collection
-                    .Find(filter)
-                    .Sort(sorter)
-                    .ToListAsync();
-            }
-            else
-            {
-                return await this.Collection
-                    .Find(filter)
-                    .ToListAsync();
-            }
+            return await this.Collection
+                .Find(filter)
+                .Sort(sorter)
+                .ToListAsync();
         }
 
         public virtual async Task<TSchema> FindOne(FilterDefinition<TSchema> query)
@@ -83,6 +80,11 @@ namespace Carter.App.Lib.Repository
         {
             var model = new CreateIndexModel<TSchema>(key, options ?? new CreateIndexOptions());
             await this.Collection.Indexes.CreateOneAsync(model);
+        }
+
+        public virtual void Configure(string name)
+        {
+            this.Collection = this.Database.GetCollection<TSchema>(name);
         }
     }
 }
