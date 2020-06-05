@@ -368,6 +368,23 @@ namespace Carter.App.Route.Users
         #pragma warning restore SA1516
     }
 
+    public sealed class PersonRepository : RepositoryBase<PersonSchema>
+    {
+        public PersonRepository(IMongoDatabase database)
+            : base(database, "persons")
+        {
+        }
+
+        public override async Task<PersonSchema> FindById(string id)
+        {
+            return await this.Collection.Find(
+                Builders<PersonSchema>
+                    .Filter
+                    .Where(p => p.Id == id))
+                    .FirstOrDefaultAsync();
+        }
+    }
+
     public class AccessTokenSchema
     {
         #pragma warning disable SA1516
@@ -396,13 +413,6 @@ namespace Carter.App.Route.Users
         public AccessTokenRepository(IMongoDatabase database)
             : base(database, "persons.tokens.accesses")
         {
-        }
-
-        public override async Task<AccessTokenSchema> FindOne(FilterDefinition<AccessTokenSchema> query)
-        {
-            return await this.Collection
-                .Find(query)
-                .FirstOrDefaultAsync();
         }
     }
 
@@ -444,6 +454,14 @@ namespace Carter.App.Route.Users
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
         #pragma warning restore SA1516
+    }
+
+    public sealed class ClaimTokenRepository : RepositoryBase<ClaimTokenSchema>
+    {
+        public ClaimTokenRepository(IMongoDatabase database)
+            : base(database, "persons.tokens.claims")
+        {
+        }
     }
 
     public class ClaimTokenResponce

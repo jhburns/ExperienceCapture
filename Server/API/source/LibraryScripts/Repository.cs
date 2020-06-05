@@ -18,11 +18,9 @@ namespace Carter.App.Lib.Repository
         // Mutate
         Task Add(TSchema item);
 
-        Task Delete(TSchema item);
+        Task Update(FilterDefinition<TSchema> filter, UpdateDefinition<TSchema> update);
 
-        Task Update(TSchema item);
-
-        Task Index(CreateIndexModel<TSchema> index);
+        Task Index(IndexKeysDefinition<TSchema> key, CreateIndexOptions<TSchema> options = null);
     }
 
     public abstract class RepositoryBase<TSchema> : IRepository<TSchema>
@@ -34,39 +32,57 @@ namespace Carter.App.Lib.Repository
 
         protected virtual IMongoCollection<TSchema> Collection { get; set; }
 
-        public virtual Task<IList<TSchema>> FindAll(FilterDefinition<TSchema> query, SortDefinition<TSchema> sorter)
+        public virtual async Task<IList<TSchema>> FindAll(
+            FilterDefinition<TSchema> filter,
+            SortDefinition<TSchema> sorter = null)
         {
-            throw new NotImplementedException();
+            if (sorter == null)
+            {
+                return await this.Collection
+                    .Find(filter)
+                    .Sort(sorter)
+                    .ToListAsync();
+            }
+            else
+            {
+                return await this.Collection
+                    .Find(filter)
+                    .ToListAsync();
+            }
         }
 
-        public virtual Task<TSchema> FindOne(FilterDefinition<TSchema> query)
+        public virtual async Task<TSchema> FindOne(FilterDefinition<TSchema> query)
         {
-            throw new NotImplementedException();
+            return await this.Collection
+                .Find(query)
+                .FirstOrDefaultAsync();
         }
 
+        // This method is going to be Collection specific,
+        // So it will have to overrode
         public virtual Task<TSchema> FindById(string id)
         {
             throw new NotImplementedException();
         }
 
-        public virtual Task Add(TSchema item)
+        public virtual async Task Add(TSchema item)
         {
-            throw new NotImplementedException();
+            await this.Collection.InsertOneAsync(item);
         }
 
-        public virtual Task Delete(TSchema item)
+        public virtual async Task Update(
+            FilterDefinition<TSchema> filter,
+            UpdateDefinition<TSchema> update)
         {
-            throw new NotImplementedException();
+            await this.Collection.UpdateOneAsync(filter, update);
         }
 
-        public virtual Task Update(TSchema item)
+        public virtual async Task Index(
+            IndexKeysDefinition<TSchema> key,
+            CreateIndexOptions<TSchema> options = null)
         {
-            throw new NotImplementedException();
-        }
-
-        public virtual Task Index(CreateIndexModel<TSchema> index)
-        {
-            throw new NotImplementedException();
+            var model = new CreateIndexModel<TSchema>(key, options ?? new CreateIndexOptions());
+            await this.Collection.Indexes.CreateOneAsync(model);
         }
     }
 }

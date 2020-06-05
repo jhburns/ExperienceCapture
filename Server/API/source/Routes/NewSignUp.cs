@@ -86,11 +86,6 @@ namespace Carter.App.Route.NewSignUp
             : base(database, "persons.tokens.signUps")
         {
         }
-
-        public override async Task Add(SignUpTokenSchema item)
-        {
-            await this.Collection.InsertOneAsync(item);
-        }
     }
 
     public class SignUpTokenResponce

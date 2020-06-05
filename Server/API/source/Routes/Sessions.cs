@@ -4,6 +4,7 @@ namespace Carter.App.Route.Sessions
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Carter;
 
@@ -396,4 +397,23 @@ namespace Carter.App.Route.Sessions
         Error,
     }
     #pragma warning restore SA1201
+
+    public sealed class SessionRepository : RepositoryBase<SessionSchema>
+    {
+        public SessionRepository(IMongoDatabase database)
+            : base(database, "sessions")
+        {
+        }
+
+        public override async Task<SessionSchema> FindById(string id)
+        {
+            var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == id);
+
+            var sessionDoc = await this.Collection
+                .Find(filter)
+                .FirstOrDefaultAsync();
+
+            return sessionDoc;
+        }
+    }
 }
