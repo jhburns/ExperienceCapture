@@ -386,6 +386,10 @@ namespace Carter.Tests.Route.PreSecurity
 
         [Theory]
         [InlineData("test/")]
+        [InlineData("test")]
+        [InlineData("_")]
+        [InlineData("sdfsdf4erbtg4e&*sada")]
+        [InlineData("sdfsdf4erbtg4e&*sada?test=sdkfjsdlfksdf&blak=sdfsfds")]
         [InlineData("test?")]
         [InlineData("test/?")]
         [InlineData("test?test=sdkfjsdlfksdf&blak=sdfsfds")]
