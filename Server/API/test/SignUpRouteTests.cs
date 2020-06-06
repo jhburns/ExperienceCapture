@@ -171,7 +171,7 @@ namespace Carter.Tests.Route.PreSecurity
         [InlineData("?")]
         [InlineData("/?")]
         [InlineData("/?test=sdkfjsdlfksdf&blak=sdfsfds")]
-        public async Task OtherMethodsTag(string input)
+        public async Task OtherMethodsSignUp(string input)
         {
             var client = CustomHost.Create();
 
@@ -180,28 +180,28 @@ namespace Carter.Tests.Route.PreSecurity
 
             Assert.True(
                 responsePut.StatusCode == HttpStatusCode.MethodNotAllowed,
-                "Putting tags is an allowed method.");
+                "Putting SignUp is an allowed method.");
 
             var requestPatch = CustomRequest.Create(HttpMethod.Put, $"/users/signUp{input}");
             var responsePatch = await client.SendAsync(requestPatch);
 
             Assert.True(
                 responsePatch.StatusCode == HttpStatusCode.MethodNotAllowed,
-                "Patching tags is an allowed method.");
+                "Patching SignUp is an allowed method.");
 
             var requestGet = CustomRequest.Create(HttpMethod.Put, $"/users/signUp{input}");
             var responseGet = await client.SendAsync(requestGet);
 
             Assert.True(
                 responseGet.StatusCode == HttpStatusCode.MethodNotAllowed,
-                "Gettings tags is an allowed method.");
+                "Gettings SignUp is an allowed method.");
 
             var requestDelete = CustomRequest.Create(HttpMethod.Put, $"/users/signUp{input}");
             var responseDelete = await client.SendAsync(requestDelete);
 
             Assert.True(
                 responseGet.StatusCode == HttpStatusCode.MethodNotAllowed,
-                "Deleting tags is an allowed method.");
+                "Deleting SignUp is an allowed method.");
         }
     }
 }
