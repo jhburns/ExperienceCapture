@@ -64,11 +64,12 @@ namespace Carter.App.Route.Export
 
                 threader.Run(ExportHandler.Entry, exporterConfig);
 
+                var filter = Builders<SessionSchema>.Filter
+                    .Where(s => s.Id == id);
+
                 var update = Builders<SessionSchema>.Update
                     .Set(s => s.ExportState, ExportOptions.Pending);
 
-                var filter = Builders<SessionSchema>.Filter
-                    .Where(s => s.Id == id);
                 await sessionRepo.Update(filter, update);
 
                 await res.FromString();
