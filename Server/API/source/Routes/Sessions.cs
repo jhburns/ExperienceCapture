@@ -42,7 +42,7 @@ namespace Carter.App.Route.Sessions
                 // Needed because the ids that are generated are from a small number of combinations
                 while (await sessionRepo.FindById(uniqueID) != null)
                 {
-                    uniqueID = Generate.GetRandomId(4);            
+                    uniqueID = Generate.GetRandomId(4);
                 }
 
                 string token = req.Cookies["ExperienceCapture-Access-Token"]; // Has to exist due to PreSecurity Check
