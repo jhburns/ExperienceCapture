@@ -415,5 +415,52 @@ namespace Carter.Tests.Route.PreSecurity
 
             response.EnsureSuccessStatusCode();
         }
+
+        [Theory]
+        [InlineData("test/")]
+        [InlineData("test?")]
+        [InlineData("test/?")]
+        [InlineData("test?test=sdkfjsdlfksdf&blak=sdfsfds")]
+        public async Task OtherMethodsTag(string input)
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema
+                {
+                    InternalId = ObjectId.GenerateNewId(),
+                    Id = string.Empty,
+                    User = null,
+                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    Tags = new List<string>(),
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+                .Returns(result);
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+            var requestPut = CustomRequest.Create(HttpMethod.Put, $"/sessions/EXEX/tags/{input}");
+            var responsePut = await client.SendAsync(requestPut);
+
+            Assert.True(
+                responsePut.StatusCode == HttpStatusCode.MethodNotAllowed,
+                "Putting tags is an allowed method");
+
+            var requestPatch = CustomRequest.Create(HttpMethod.Put, $"/sessions/EXEX/tags/{input}");
+            var responsePatch = await client.SendAsync(requestPatch);
+
+            Assert.True(
+                responsePatch.StatusCode == HttpStatusCode.MethodNotAllowed,
+                "Patching tags is an allowed method");
+
+            var requestGet = CustomRequest.Create(HttpMethod.Put, $"/sessions/EXEX/tags/{input}");
+            var responseGet = await client.SendAsync(requestGet);
+
+            Assert.True(
+                responseGet.StatusCode == HttpStatusCode.MethodNotAllowed,
+                "Patching tags is an allowed method");
+        }
     }
 }
