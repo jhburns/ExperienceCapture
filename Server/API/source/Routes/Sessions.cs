@@ -63,7 +63,7 @@ namespace Carter.App.Route.Sessions
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Id = uniqueID,
-                    User = user, // Copying user data instead of referencing so it can never change with the session
+                    User = user, // Copying user data instead of referencing so it can never change in the session
                     CreatedAt = new BsonDateTime(DateTime.Now),
                     Tags = new List<string>(),
                 };
