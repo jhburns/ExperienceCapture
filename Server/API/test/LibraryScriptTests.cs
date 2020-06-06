@@ -268,6 +268,7 @@ namespace Carter.Tests.LibraryScripts
         }
     }
 
+    // Note: the following tests are not thread safe
     public class EnvironmentTests
     {
         [Theory]
@@ -335,12 +336,14 @@ namespace Carter.Tests.LibraryScripts
             Assert.True(env.SkipValidation == "false", "Skip validation env var is not string false when null.");
         }
 
-        [Fact]
-        public void EnvironmentAudienceSetOrThrow()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void EnvironmentAudienceSetOrThrow(string value)
         {
             Environment.SetEnvironmentVariable("admin_password_hash", "1");
             Environment.SetEnvironmentVariable("unsafe_do_no_validate_user", "2");
-            Environment.SetEnvironmentVariable("gcp_client_id", null);
+            Environment.SetEnvironmentVariable("gcp_client_id", value);
             Environment.SetEnvironmentVariable("aws_domain_name", "4");
 
             Assert.Throws<EnvironmentVarNotSet>(() =>

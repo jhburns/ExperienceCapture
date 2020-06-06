@@ -25,3 +25,7 @@ This is the bulk of the logic in the application. Also, this will start the expo
 - `source/Validators/` bindings for data received for each applicable route.
 - `source/Export/` the session exporter, formerly a separate component.
 - `test` another project for tests.
+
+## Tests
+
+Run by building the integration Dockerfile, `docker build -f integration.Dockerfile .` or with `dotnet test`. The non-docker version will run tests with in parallel to make them faster, but that makes things flaky so integration does things sequentially.

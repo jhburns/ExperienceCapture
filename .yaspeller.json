@@ -115,7 +115,8 @@
     "preformatted",
     "BSON",
     "ec",
-    "xUnit"
+    "xUnit",
+    "Dockerfile"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
