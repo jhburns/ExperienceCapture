@@ -3,9 +3,11 @@ namespace Carter.App.Hosting
     using Carter;
 
     using Carter.App.Lib.Environment;
+    using Carter.App.Lib.ExporterExtra;
     using Carter.App.Lib.MinioExtra;
     using Carter.App.Lib.Repository;
 
+    using Carter.App.Route.Export;
     using Carter.App.Route.NewSignUp;
     using Carter.App.Route.Sessions;
     using Carter.App.Route.Users;
@@ -59,6 +61,10 @@ namespace Carter.App.Hosting
 
             var personRepo = new PersonRepository(db);
             services.AddSingleton<IRepository<PersonSchema>>(personRepo);
+
+            // Add Threading
+            var threader = new ExportThreader();
+            services.AddSingleton<IThreadExtra>(threader);
 
             // Add Minio
             string minioUsername = "minio";
