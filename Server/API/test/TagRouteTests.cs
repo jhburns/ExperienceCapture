@@ -144,6 +144,9 @@ namespace Carter.Tests.Route.PreSecurity
             var response = await client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
+            Assert.Equal(
+                "text/plain; charset=utf-8",
+                response.Content.Headers.ContentType.ToString());
 
             Assert.True(
                 await response.Content.ReadAsStringAsync() == "OK",
@@ -152,6 +155,10 @@ namespace Carter.Tests.Route.PreSecurity
 
         [Theory]
         [InlineData("test/")]
+        [InlineData("test")]
+        [InlineData("_")]
+        [InlineData("sdfsdf4erbtg4e&*sada")]
+        [InlineData("sdfsdf4erbtg4e&*sada?test=sdkfjsdlfksdf&blak=sdfsfds")]
         [InlineData("test?")]
         [InlineData("test/?")]
         [InlineData("test?test=sdkfjsdlfksdf&blak=sdfsfds")]
@@ -342,6 +349,9 @@ namespace Carter.Tests.Route.PreSecurity
             var response = await client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
+            Assert.Equal(
+                "text/plain; charset=utf-8",
+                response.Content.Headers.ContentType.ToString());
 
             Assert.True(
                 await response.Content.ReadAsStringAsync() == "OK",
