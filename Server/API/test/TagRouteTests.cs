@@ -34,7 +34,7 @@ namespace Carter.Tests.Route.PreSecurity
         }
 
         [Fact]
-        public async Task PostMissingSessionIsNotFoundPostTag()
+        public async Task MissingSessionIsNotFoundPostTag()
         {
             var sessionMock = new Mock<IRepository<SessionSchema>>();
             var result = new Task<SessionSchema>(() =>
