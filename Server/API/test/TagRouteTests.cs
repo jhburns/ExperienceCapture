@@ -43,7 +43,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -76,7 +76,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -105,7 +105,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -135,7 +135,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -178,7 +178,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -206,7 +206,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -248,7 +248,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -281,7 +281,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -310,7 +310,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -340,7 +340,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -375,7 +375,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -419,7 +419,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -451,8 +451,9 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
-                .Returns(result);
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
             var requestPut = CustomRequest.Create(HttpMethod.Put, $"/sessions/EXEX/tags/{input}");
