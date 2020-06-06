@@ -1,7 +1,6 @@
 namespace Carter.App.Route.NewSignUp
 {
     using System;
-    using System.Threading.Tasks;
 
     using Carter;
 
@@ -28,7 +27,7 @@ namespace Carter.App.Route.NewSignUp
             // TODO: only allow admins to create sign-up tokens, or another restriction
             this.Before += PreSecurity.GetSecurityCheck(accessRepo);
 
-            this.Post("/signUp/", async (req, res) =>
+            this.Post("/signUp", async (req, res) =>
             {
                 string newToken = Generate.GetRandomToken();
 
@@ -88,9 +87,11 @@ namespace Carter.App.Route.NewSignUp
     public class SignUpTokenResponce
     {
         #pragma warning disable SA1516
+        [BsonRequired]
         [BsonElement("signUpToken")]
         public string SignUpToken { get; set; }
 
+        [BsonRequired]
         [BsonElement("expiration")]
         public BsonDateTime Expiration { get; set; }
         #pragma warning restore SA1516

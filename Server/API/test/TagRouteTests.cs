@@ -34,7 +34,7 @@ namespace Carter.Tests.Route.PreSecurity
         }
 
         [Fact]
-        public async Task PostMissingSessionIsNotFoundPostTag()
+        public async Task MissingSessionIsNotFoundPostTag()
         {
             var sessionMock = new Mock<IRepository<SessionSchema>>();
             var result = new Task<SessionSchema>(() =>
@@ -45,7 +45,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
-                .Verifiable("A session was never searched for");
+                .Verifiable("A session was never searched for.");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
 
@@ -78,7 +78,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
-                .Verifiable("A session was never searched for");
+                .Verifiable("A session was never searched for.");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
 
@@ -107,7 +107,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
-                .Verifiable("A session was never searched for");
+                .Verifiable("A session was never searched for.");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
             var request = CustomRequest.Create(HttpMethod.Post, $"/sessions/EXEX/tags/");
@@ -137,7 +137,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
-                .Verifiable("A session was never searched for");
+                .Verifiable("A session was never searched for.");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
             var request = CustomRequest.Create(HttpMethod.Post, $"/sessions/EXEX/tags/test");
@@ -150,7 +150,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             Assert.True(
                 await response.Content.ReadAsStringAsync() == "OK",
-                "Tagging does not have a body of 'OK'");
+                "Tagging does not have a body of 'OK'.");
         }
 
         [Theory]
@@ -180,7 +180,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
-                .Verifiable("A session was never searched for");
+                .Verifiable("A session was never searched for.");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
             var request = CustomRequest.Create(HttpMethod.Post, $"/sessions/EXEX/tags/{input}");
@@ -208,14 +208,14 @@ namespace Carter.Tests.Route.PreSecurity
 
             sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
-                .Verifiable("A session was never searched for");
+                .Verifiable("A session was never searched for.");
 
             // For some reason Verify() doesn't work
             sessionMock.Setup(
                 s => s.Update(
                     It.IsAny<FilterDefinition<SessionSchema>>(),
                     It.IsAny<UpdateDefinition<SessionSchema>>()))
-                .Verifiable("A session was never updated");
+                .Verifiable("A session was never updated.");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
 
@@ -250,7 +250,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
-                .Verifiable("A session was never searched for");
+                .Verifiable("A session was never searched for.");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
 
@@ -283,7 +283,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
-                .Verifiable("A session was never searched for");
+                .Verifiable("A session was never searched for.");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
 
@@ -312,7 +312,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
-                .Verifiable("A session was never searched for");
+                .Verifiable("A session was never searched for.");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
             var request = CustomRequest.Create(HttpMethod.Delete, $"/sessions/EXEX/tags/");
@@ -342,7 +342,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
-                .Verifiable("A session was never searched for");
+                .Verifiable("A session was never searched for.");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
             var request = CustomRequest.Create(HttpMethod.Delete, $"/sessions/EXEX/tags/test");
@@ -355,7 +355,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             Assert.True(
                 await response.Content.ReadAsStringAsync() == "OK",
-                "Tagging does not have a body of 'OK'");
+                "Tagging does not have a body of 'OK'.");
         }
 
         [Fact]
@@ -377,14 +377,14 @@ namespace Carter.Tests.Route.PreSecurity
 
             sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
-                .Verifiable("A session was never searched for");
+                .Verifiable("A session was never searched for.");
 
             // For some reason Verify() doesn't work
             sessionMock.Setup(
                 s => s.Update(
                     It.IsAny<FilterDefinition<SessionSchema>>(),
                     It.IsAny<UpdateDefinition<SessionSchema>>()))
-                .Verifiable("A session was never updated");
+                .Verifiable("A session was never updated.");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
 
@@ -421,7 +421,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
-                .Verifiable("A session was never searched for");
+                .Verifiable("A session was never searched for.");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
             var request = CustomRequest.Create(HttpMethod.Delete, $"/sessions/EXEX/tags/{input}");
@@ -434,7 +434,7 @@ namespace Carter.Tests.Route.PreSecurity
         [InlineData("test/")]
         [InlineData("test?")]
         [InlineData("test/?")]
-        [InlineData("test?test=sdkfjsdlfksdf&blak=sdfsfds")]
+        [InlineData("test?test=sdkfjsdlfksdf&blak=sdfsfds.")]
         public async Task OtherMethodsTag(string input)
         {
             var sessionMock = new Mock<IRepository<SessionSchema>>();
@@ -453,7 +453,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
-                .Verifiable("A session was never searched for");
+                .Verifiable("A session was never searched for.");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
             var requestPut = CustomRequest.Create(HttpMethod.Put, $"/sessions/EXEX/tags/{input}");
@@ -461,21 +461,21 @@ namespace Carter.Tests.Route.PreSecurity
 
             Assert.True(
                 responsePut.StatusCode == HttpStatusCode.MethodNotAllowed,
-                "Putting tags is an allowed method");
+                "Putting tags is an allowed method.");
 
             var requestPatch = CustomRequest.Create(HttpMethod.Put, $"/sessions/EXEX/tags/{input}");
             var responsePatch = await client.SendAsync(requestPatch);
 
             Assert.True(
                 responsePatch.StatusCode == HttpStatusCode.MethodNotAllowed,
-                "Patching tags is an allowed method");
+                "Patching tags is an allowed method.");
 
             var requestGet = CustomRequest.Create(HttpMethod.Put, $"/sessions/EXEX/tags/{input}");
             var responseGet = await client.SendAsync(requestGet);
 
             Assert.True(
                 responseGet.StatusCode == HttpStatusCode.MethodNotAllowed,
-                "Gettings tags is an allowed method");
+                "Gettings tags is an allowed method.");
         }
     }
 }
