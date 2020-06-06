@@ -37,14 +37,12 @@ namespace Carter.App.Route.Sessions
             this.Post("/", async (req, res) =>
             {
                 string uniqueID = Generate.GetRandomId(4);
-                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
 
                 // Will loop until a unique id is found
                 // Needed because the ids that are generated are from a small number of combinations
-                while (await sessionRepo.FindOne(filter) != null)
+                while (await sessionRepo.FindById(uniqueID) != null)
                 {
-                    uniqueID = Generate.GetRandomId(4);
-                    filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
+                    uniqueID = Generate.GetRandomId(4);                    
                 }
 
                 string token = req.Cookies["ExperienceCapture-Access-Token"]; // Has to exist due to PreSecurity Check
@@ -176,11 +174,9 @@ namespace Carter.App.Route.Sessions
             this.Post("/{id}", async (req, res) =>
             {
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<SessionSchema>.Filter.
-                    Where(s => s.Id == uniqueID);
 
                 var sessionDoc = await sessionRepo
-                    .FindOne(filter);
+                    .FindById(uniqueID);
 
                 if (sessionDoc == null)
                 {
@@ -243,6 +239,8 @@ namespace Carter.App.Route.Sessions
                 captureRepo.Configure($"sessions.{uniqueID}");
                 await captureRepo.Add(document);
 
+                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
+
                 // This lastCaptureAt is undefined on the session document until the first call of this endpoint
                 // Export flags are reset so the session can be re-exported
                 var update = Builders<SessionSchema>.Update
@@ -257,10 +255,9 @@ namespace Carter.App.Route.Sessions
             this.Get("/{id}", async (req, res) =>
             {
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
 
                 var sessionDoc = await sessionRepo
-                    .FindOne(filter);
+                    .FindById(uniqueID);
 
                 if (sessionDoc == null)
                 {
@@ -309,7 +306,7 @@ namespace Carter.App.Route.Sessions
 
                 var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
                 var sessionDoc = await sessionRepo
-                    .FindOne(filter);
+                    .FindById(uniqueID);
 
                 if (sessionDoc == null)
                 {

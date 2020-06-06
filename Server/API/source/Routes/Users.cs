@@ -63,10 +63,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var existingPerson = await personRepo.FindOne(
-                    Builders<PersonSchema>
-                        .Filter
-                        .Where(p => p.Id == person.Subject));
+                var existingPerson = await personRepo.FindById(person.Subject);
 
                 if (existingPerson != null)
                 {
@@ -93,10 +90,7 @@ namespace Carter.App.Route.Users
             this.Post("/{id}/tokens/", async (req, res) =>
             {
                 string userID = req.RouteValues.As<string>("id");
-                var userDoc = await personRepo.FindOne(
-                    Builders<PersonSchema>
-                        .Filter
-                        .Where(p => p.Id == userID));
+                var userDoc = await personRepo.FindById(userID);
 
                 if (userDoc == null)
                 {
