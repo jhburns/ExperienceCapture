@@ -57,7 +57,7 @@ namespace Carter.Tests.Route.PreSecurity
                 .Returns(result);
 
             accessMock.Setup(s => s.Add(It.IsAny<AccessTokenSchema>()))
-                .Verifiable("An access token was never added");
+                .Verifiable("An access token was never added.");
 
             var client = CustomHost.Create(accessMock: accessMock);
 
@@ -80,10 +80,32 @@ namespace Carter.Tests.Route.PreSecurity
             var body = await response.Content.ReadAsStringAsync();
             var data = BsonSerializer.Deserialize<SignUpTokenResponce>(body);
 
-            Assert.False(data == null, "SignUp data is null");
-            Assert.False(data.SignUpToken == null, "SignUp token data is null");
-            Assert.False(data.SignUpToken == string.Empty, "SignUp token data is empty");
-            Assert.False(data.Expiration == null, "SignUp expiration data is null");
+            Assert.False(data == null, "SignUp data is null.");
+            Assert.False(data.SignUpToken == null, "SignUp token data is null.");
+            Assert.False(data.SignUpToken == string.Empty, "SignUp token data is empty.");
+            Assert.False(data.Expiration == null, "SignUp expiration data is null.");
+        }
+
+        [Theory]
+        [InlineData("?")]
+        [InlineData("/?")]
+        [InlineData("/?sdfsdf=sdfdsf34543&")]
+        public async Task ResponceIsValidBsonPostSignUp(string input)
+        {
+            var client = CustomHost.Create();
+
+            var request = CustomRequest.Create(HttpMethod.Post, $"/users/signUp{input}bson=true");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsByteArrayAsync();
+            var data = BsonSerializer.Deserialize<SignUpTokenResponce>(body);
+
+            Assert.False(data == null, "SignUp data is null.");
+            Assert.False(data.SignUpToken == null, "SignUp token data is null.");
+            Assert.False(data.SignUpToken == string.Empty, "SignUp token data is empty.");
+            Assert.False(data.Expiration == null, "SignUp expiration data is null.");
         }
 
         [Theory]
@@ -158,28 +180,28 @@ namespace Carter.Tests.Route.PreSecurity
 
             Assert.True(
                 responsePut.StatusCode == HttpStatusCode.MethodNotAllowed,
-                "Putting tags is an allowed method");
+                "Putting tags is an allowed method.");
 
             var requestPatch = CustomRequest.Create(HttpMethod.Put, $"/users/signUp{input}");
             var responsePatch = await client.SendAsync(requestPatch);
 
             Assert.True(
                 responsePatch.StatusCode == HttpStatusCode.MethodNotAllowed,
-                "Patching tags is an allowed method");
+                "Patching tags is an allowed method.");
 
             var requestGet = CustomRequest.Create(HttpMethod.Put, $"/users/signUp{input}");
             var responseGet = await client.SendAsync(requestGet);
 
             Assert.True(
                 responseGet.StatusCode == HttpStatusCode.MethodNotAllowed,
-                "Gettings tags is an allowed method");
+                "Gettings tags is an allowed method.");
 
             var requestDelete = CustomRequest.Create(HttpMethod.Put, $"/users/signUp{input}");
             var responseDelete = await client.SendAsync(requestDelete);
 
             Assert.True(
                 responseGet.StatusCode == HttpStatusCode.MethodNotAllowed,
-                "Deleting tags is an allowed method");
+                "Deleting tags is an allowed method.");
         }
     }
 }
