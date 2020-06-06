@@ -326,9 +326,6 @@ namespace Carter.App.Route.Users
     public class PersonSchema
     {
         #pragma warning disable SA1516
-        [BsonIgnore]
-        public const string CollectionName = "persons";
-
         [BsonIgnoreIfNull]
         [BsonId]
         public BsonObjectId InternalId { get; set; }
