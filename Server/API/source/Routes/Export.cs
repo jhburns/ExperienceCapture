@@ -8,6 +8,8 @@ namespace Carter.App.Route.Export
 
     using Carter.App.Export.Main;
     using Carter.App.Hosting;
+
+    using Carter.App.Lib.ExporterExtra;
     using Carter.App.Lib.MinioExtra;
     using Carter.App.Lib.Network;
     using Carter.App.Lib.Repository;
@@ -26,6 +28,7 @@ namespace Carter.App.Route.Export
         public Export(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SessionSchema> sessionRepo,
+            IThreadExtra threader,
             IMinioClient os)
             : base("/sessions/{id}/export")
         {
@@ -44,8 +47,6 @@ namespace Carter.App.Route.Export
                     return;
                 }
 
-                var export = new Thread(ExportHandler.Entry);
-
                 var exporterConfig = new ExporterConfiguration
                 {
                     Mongo = new ServiceConfiguration
@@ -61,13 +62,14 @@ namespace Carter.App.Route.Export
                     Id = id,
                 };
 
-                export.Start(exporterConfig);
+                threader.Run(ExportHandler.Entry, exporterConfig);
+
+                var filter = Builders<SessionSchema>.Filter
+                    .Where(s => s.Id == id);
 
                 var update = Builders<SessionSchema>.Update
                     .Set(s => s.ExportState, ExportOptions.Pending);
 
-                var filter = Builders<SessionSchema>.Filter
-                    .Where(s => s.Id == id);
                 await sessionRepo.Update(filter, update);
 
                 await res.FromString();
@@ -108,6 +110,15 @@ namespace Carter.App.Route.Export
                     await res.FromStream(stream, "application/zip", about);
                 }
             });
+        }
+    }
+
+    public sealed class ExportThreader : IThreadExtra
+    {
+        public void Run(ParameterizedThreadStart method, object parameter = null)
+        {
+            var export = new Thread(ExportHandler.Entry);
+            export.Start(parameter);
         }
     }
 }

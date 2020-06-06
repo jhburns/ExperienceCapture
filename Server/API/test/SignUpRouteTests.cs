@@ -182,25 +182,25 @@ namespace Carter.Tests.Route.PreSecurity
                 responsePut.StatusCode == HttpStatusCode.MethodNotAllowed,
                 "Putting SignUp is an allowed method.");
 
-            var requestPatch = CustomRequest.Create(HttpMethod.Put, $"/users/signUp{input}");
+            var requestPatch = CustomRequest.Create(HttpMethod.Patch, $"/users/signUp{input}");
             var responsePatch = await client.SendAsync(requestPatch);
 
             Assert.True(
                 responsePatch.StatusCode == HttpStatusCode.MethodNotAllowed,
                 "Patching SignUp is an allowed method.");
 
-            var requestGet = CustomRequest.Create(HttpMethod.Put, $"/users/signUp{input}");
+            var requestGet = CustomRequest.Create(HttpMethod.Get, $"/users/signUp{input}");
             var responseGet = await client.SendAsync(requestGet);
 
             Assert.True(
                 responseGet.StatusCode == HttpStatusCode.MethodNotAllowed,
                 "Gettings SignUp is an allowed method.");
 
-            var requestDelete = CustomRequest.Create(HttpMethod.Put, $"/users/signUp{input}");
+            var requestDelete = CustomRequest.Create(HttpMethod.Delete, $"/users/signUp{input}");
             var responseDelete = await client.SendAsync(requestDelete);
 
             Assert.True(
-                responseGet.StatusCode == HttpStatusCode.MethodNotAllowed,
+                responseDelete.StatusCode == HttpStatusCode.MethodNotAllowed,
                 "Deleting SignUp is an allowed method.");
         }
     }
