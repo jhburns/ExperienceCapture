@@ -335,14 +335,12 @@ namespace Carter.Tests.LibraryScripts
             Assert.True(env.SkipValidation == "false", "Skip validation env var is not string false when null.");
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void EnvironmentAudienceSetOrThrow(string value)
+        [Fact]
+        public void EnvironmentAudienceSetOrThrow()
         {
             Environment.SetEnvironmentVariable("admin_password_hash", "1");
             Environment.SetEnvironmentVariable("unsafe_do_no_validate_user", "2");
-            Environment.SetEnvironmentVariable("gcp_client_id", value);
+            Environment.SetEnvironmentVariable("gcp_client_id", null);
             Environment.SetEnvironmentVariable("aws_domain_name", "4");
 
             Assert.Throws<EnvironmentVarNotSet>(() =>
