@@ -25,9 +25,8 @@ namespace Carter.App.Route.Tags
             this.Post("/{tagName}", async (req, res) =>
             {
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
                 var sessionDoc = await sessionRepo
-                    .FindOne(filter);
+                    .FindById(uniqueID);
 
                 if (sessionDoc == null)
                 {
@@ -40,8 +39,13 @@ namespace Carter.App.Route.Tags
                 if (!sessionDoc.Tags.Contains(tag))
                 {
                     sessionDoc.Tags.Add(tag);
+
+                    var filter = Builders<SessionSchema>.Filter
+                        .Where(s => s.Id == uniqueID);
+
                     var update = Builders<SessionSchema>.Update
                         .Set(s => s.Tags, sessionDoc.Tags);
+
                     await sessionRepo.Update(filter, update);
                 }
 
@@ -51,9 +55,8 @@ namespace Carter.App.Route.Tags
             this.Delete("/{tagName}", async (req, res) =>
             {
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
                 var sessionDoc = await sessionRepo
-                    .FindOne(filter);
+                    .FindById(uniqueID);
 
                 if (sessionDoc == null)
                 {
@@ -66,8 +69,13 @@ namespace Carter.App.Route.Tags
                 if (sessionDoc.Tags.Contains(tag))
                 {
                     sessionDoc.Tags.Remove(tag);
+
+                    var filter = Builders<SessionSchema>.Filter
+                        .Where(s => s.Id == uniqueID);
+
                     var update = Builders<SessionSchema>.Update
                         .Set(s => s.Tags, sessionDoc.Tags);
+
                     await sessionRepo.Update(filter, update);
                 }
 

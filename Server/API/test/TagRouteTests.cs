@@ -43,7 +43,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -76,7 +76,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -105,7 +105,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -135,7 +135,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -144,6 +144,9 @@ namespace Carter.Tests.Route.PreSecurity
             var response = await client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
+            Assert.Equal(
+                "text/plain; charset=utf-8",
+                response.Content.Headers.ContentType.ToString());
 
             Assert.True(
                 await response.Content.ReadAsStringAsync() == "OK",
@@ -152,6 +155,10 @@ namespace Carter.Tests.Route.PreSecurity
 
         [Theory]
         [InlineData("test/")]
+        [InlineData("test")]
+        [InlineData("_")]
+        [InlineData("sdfsdf4erbtg4e&*sada")]
+        [InlineData("sdfsdf4erbtg4e&*sada?test=sdkfjsdlfksdf&blak=sdfsfds")]
         [InlineData("test?")]
         [InlineData("test/?")]
         [InlineData("test?test=sdkfjsdlfksdf&blak=sdfsfds")]
@@ -171,7 +178,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -199,7 +206,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -241,7 +248,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -274,7 +281,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -303,7 +310,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -333,7 +340,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -342,6 +349,9 @@ namespace Carter.Tests.Route.PreSecurity
             var response = await client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
+            Assert.Equal(
+                "text/plain; charset=utf-8",
+                response.Content.Headers.ContentType.ToString());
 
             Assert.True(
                 await response.Content.ReadAsStringAsync() == "OK",
@@ -365,7 +375,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -409,7 +419,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for");
 
@@ -441,8 +451,9 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SessionSchema>>()))
-                .Returns(result);
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for");
 
             var client = CustomHost.Create(sessionMock: sessionMock);
             var requestPut = CustomRequest.Create(HttpMethod.Put, $"/sessions/EXEX/tags/{input}");

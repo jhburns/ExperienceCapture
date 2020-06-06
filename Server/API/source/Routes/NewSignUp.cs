@@ -63,9 +63,6 @@ namespace Carter.App.Route.NewSignUp
     public class SignUpTokenSchema
     {
         #pragma warning disable SA1516
-        [BsonIgnore]
-        public const string CollectionName = "persons.tokens.signUps";
-
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 

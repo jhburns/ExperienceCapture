@@ -34,11 +34,9 @@ namespace Carter.App.Route.Export
             this.Post("/", async (req, res) =>
             {
                 string id = req.RouteValues.As<string>("id");
-                var filter = Builders<SessionSchema>.Filter
-                    .Where(s => s.Id == id);
 
                 var sessionDoc = await sessionRepo
-                    .FindOne(filter);
+                    .FindById(id);
 
                 if (sessionDoc == null)
                 {
@@ -68,6 +66,8 @@ namespace Carter.App.Route.Export
                 var update = Builders<SessionSchema>.Update
                     .Set(s => s.ExportState, ExportOptions.Pending);
 
+                var filter = Builders<SessionSchema>.Filter
+                    .Where(s => s.Id == id);
                 await sessionRepo.Update(filter, update);
 
                 await res.FromString();
@@ -76,10 +76,7 @@ namespace Carter.App.Route.Export
             this.Get("/", async (req, res) =>
             {
                 string id = req.RouteValues.As<string>("id");
-                var sessionDoc = await sessionRepo.FindOne(
-                    Builders<SessionSchema>
-                        .Filter
-                        .Where(s => s.Id == id));
+                var sessionDoc = await sessionRepo.FindById(id);
 
                 if (sessionDoc == null)
                 {
