@@ -475,7 +475,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             Assert.True(
                 responseGet.StatusCode == HttpStatusCode.MethodNotAllowed,
-                "Patching tags is an allowed method");
+                "Gettings tags is an allowed method");
         }
     }
 }
