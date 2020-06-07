@@ -21,7 +21,7 @@ namespace Carter.Tests.Route.PreSecurity
 
     using Xunit;
 
-    public class ExportTests
+    public class ExportTests : IDisposable
     {
         // Setting to some defaults
         public ExportTests()
@@ -37,6 +37,12 @@ namespace Carter.Tests.Route.PreSecurity
                 ConnectionString = null,
                 Port = 0,
             };
+        }
+
+        public void Dispose()
+        {
+            AppConfiguration.Mongo = null;
+            AppConfiguration.Minio = null;
         }
 
         [Fact]

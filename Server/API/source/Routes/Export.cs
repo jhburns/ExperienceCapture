@@ -13,6 +13,7 @@ namespace Carter.App.Route.Export
     using Carter.App.Lib.MinioExtra;
     using Carter.App.Lib.Network;
     using Carter.App.Lib.Repository;
+    using Carter.App.Lib.Timer;
 
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.Sessions;
@@ -29,10 +30,11 @@ namespace Carter.App.Route.Export
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SessionSchema> sessionRepo,
             IThreadExtra threader,
-            IMinioClient os)
+            IMinioClient os,
+            IDateExtra date)
             : base("/sessions/{id}/export")
         {
-            this.Before += PreSecurity.GetSecurityCheck(accessRepo);
+            this.Before += PreSecurity.GetSecurityCheck(accessRepo, date);
 
             this.Post("/", async (req, res) =>
             {

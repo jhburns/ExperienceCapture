@@ -6,6 +6,7 @@ namespace Carter.App.Hosting
     using Carter.App.Lib.ExporterExtra;
     using Carter.App.Lib.MinioExtra;
     using Carter.App.Lib.Repository;
+    using Carter.App.Lib.Timer;
 
     using Carter.App.Route.Export;
     using Carter.App.Route.NewSignUp;
@@ -65,6 +66,10 @@ namespace Carter.App.Hosting
             // Add Threading
             var threader = new ExportThreader();
             services.AddSingleton<IThreadExtra>(threader);
+
+            // Add time
+            var date = new DateProvider();
+            services.AddSingleton<IDateExtra>(date);
 
             // Add Minio
             string minioUsername = "minio";

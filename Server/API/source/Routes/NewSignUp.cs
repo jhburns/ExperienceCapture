@@ -1,7 +1,5 @@
 namespace Carter.App.Route.NewSignUp
 {
-    using System;
-
     using Carter;
 
     using Carter.App.Lib.Authentication;
@@ -21,11 +19,12 @@ namespace Carter.App.Route.NewSignUp
     {
         public NewSignUp(
             IRepository<AccessTokenSchema> accessRepo,
-            IRepository<SignUpTokenSchema> signUpRepo)
+            IRepository<SignUpTokenSchema> signUpRepo,
+            IDateExtra date)
             : base("/users")
         {
             // TODO: only allow admins to create sign-up tokens, or another restriction
-            this.Before += PreSecurity.GetSecurityCheck(accessRepo);
+            this.Before += PreSecurity.GetSecurityCheck(accessRepo, date);
 
             this.Post("/signUp", async (req, res) =>
             {
@@ -35,7 +34,7 @@ namespace Carter.App.Route.NewSignUp
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = PasswordHasher.Hash(newToken),
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(date.Now),
                 };
 
                 await signUpRepo.Add(tokenDoc);
@@ -43,7 +42,7 @@ namespace Carter.App.Route.NewSignUp
                 var responce = new SignUpTokenResponce
                 {
                     SignUpToken = newToken,
-                    Expiration = TimerExtra.ProjectSeconds(tokenDoc.ExpirationSeconds),
+                    Expiration = TimerExtra.ProjectSeconds(date, tokenDoc.ExpirationSeconds),
                 };
                 var responceDoc = responce.ToBsonDocument();
 
