@@ -39,7 +39,8 @@ namespace Carter.Tests.HostingExtra
             Mock<IMongoDatabase> databaseMock = null,
             Mock<IThreadExtra> threadMock = null,
             Mock<IMinioClient> objectStoreMock = null,
-            Mock<IDateExtra> dateMock = null)
+            Mock<IDateExtra> dateMock = null,
+            Mock<IAppEnvironment> envMock = null)
         {
             var server = new TestServer(
                 new WebHostBuilder()
@@ -133,7 +134,10 @@ namespace Carter.Tests.HostingExtra
                         }
 
                         // Mock environment
-                        var envMock = new Mock<IAppEnvironment>();
+                        if (envMock == null)
+                        {
+                            envMock = new Mock<IAppEnvironment>();
+                        }
                         services.AddSingleton<IAppEnvironment>(envMock.Object);
 
                         // Mock logger
