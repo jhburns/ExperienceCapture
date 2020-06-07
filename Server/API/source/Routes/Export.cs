@@ -100,6 +100,13 @@ namespace Carter.App.Route.Export
                     return;
                 }
 
+                // Not sure what to do about an error
+                if (sessionDoc.ExportState == ExportOptions.Error)
+                {
+                    res.StatusCode = 500;
+                    return;
+                }
+
                 string bucketName = "sessions.exported";
                 string objectName = $"{id}_session_exported.zip";
                 byte[] body = await os.GetBytesAsync(bucketName, objectName);
