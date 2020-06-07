@@ -1,6 +1,5 @@
 namespace Carter.App.Route.Users
 {
-    using System;
     using System.Threading.Tasks;
 
     using Carter;
@@ -32,7 +31,8 @@ namespace Carter.App.Route.Users
             IRepository<SignUpTokenSchema> signUpRepo,
             IRepository<ClaimTokenSchema> claimRepo,
             IRepository<PersonSchema> personRepo,
-            IAppEnvironment env)
+            IAppEnvironment env,
+            IDateExtra date)
             : base("/users")
         {
             this.Post("/", async (req, res) =>
@@ -57,7 +57,7 @@ namespace Carter.App.Route.Users
                         .Filter
                         .Where(t => t.Hash == PasswordHasher.Hash(newPerson.Data.signUpToken)));
 
-                if (signUpDoc == null || signUpDoc.CreatedAt.IsAfter(signUpDoc.ExpirationSeconds))
+                if (signUpDoc == null || signUpDoc.CreatedAt.IsAfter(date, signUpDoc.ExpirationSeconds))
                 {
                     res.StatusCode = 401;
                     return;
@@ -79,7 +79,7 @@ namespace Carter.App.Route.Users
                     Firstname = person.GivenName,
                     Lastname = person.FamilyName,
                     Email = person.Email,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(date.Now),
                 };
 
                 await personRepo.Add(personObject);
@@ -126,7 +126,7 @@ namespace Carter.App.Route.Users
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = newHash,
                     User = userDoc.InternalId,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(date.Now),
                 };
 
                 await accessRepo.Add(tokenObject);
@@ -139,7 +139,7 @@ namespace Carter.App.Route.Users
                     var claimDoc = await claimRepo.FindOne(filterClaims);
 
                     // 401 returned twice, which may be hard for the client to interpret
-                    if (claimDoc == null || claimDoc.CreatedAt.IsAfter(claimDoc.ExpirationSeconds))
+                    if (claimDoc == null || claimDoc.CreatedAt.IsAfter(date, claimDoc.ExpirationSeconds))
                     {
                         res.StatusCode = 401;
                         return;
@@ -166,7 +166,7 @@ namespace Carter.App.Route.Users
                     var responce = new AccessTokenResponce
                     {
                         AccessToken = newToken,
-                        Expiration = TimerExtra.ProjectSeconds(tokenObject.ExpirationSeconds),
+                        Expiration = TimerExtra.ProjectSeconds(date, tokenObject.ExpirationSeconds),
                     };
 
                     var responceDoc = responce.ToBsonDocument();
@@ -191,7 +191,7 @@ namespace Carter.App.Route.Users
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = newHash,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(date.Now),
                 };
 
                 await claimRepo.Add(tokenDoc);
@@ -199,7 +199,7 @@ namespace Carter.App.Route.Users
                 var responce = new ClaimTokenResponce
                 {
                     ClaimToken = newToken,
-                    Expiration = TimerExtra.ProjectSeconds(tokenDoc.ExpirationSeconds),
+                    Expiration = TimerExtra.ProjectSeconds(date, tokenDoc.ExpirationSeconds),
                 };
                 var responceDoc = responce.ToBsonDocument();
 
@@ -232,7 +232,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                if (!claimDoc.IsExisting || claimDoc.CreatedAt.IsAfter(claimDoc.ExpirationSeconds))
+                if (!claimDoc.IsExisting || claimDoc.CreatedAt.IsAfter(date, claimDoc.ExpirationSeconds))
                 {
                     res.StatusCode = 404;
                     return;
@@ -258,7 +258,7 @@ namespace Carter.App.Route.Users
                 var responce = new AccessTokenResponce
                 {
                     AccessToken = claimDoc.AccessToken,
-                    Expiration = TimerExtra.ProjectSeconds(claimDoc.ExpirationSeconds),
+                    Expiration = TimerExtra.ProjectSeconds(date, claimDoc.ExpirationSeconds),
                 };
                 var responceDoc = responce.ToBsonDocument();
 
@@ -293,7 +293,7 @@ namespace Carter.App.Route.Users
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = PasswordHasher.Hash(newToken),
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(date.Now),
                 };
 
                 await signUpRepo.Add(tokenDoc);
@@ -301,7 +301,7 @@ namespace Carter.App.Route.Users
                 var responce = new ClaimTokenResponce
                 {
                     ClaimToken = newToken,
-                    Expiration = TimerExtra.ProjectSeconds(tokenDoc.ExpirationSeconds),
+                    Expiration = TimerExtra.ProjectSeconds(date, tokenDoc.ExpirationSeconds),
                 };
                 var responceDoc = responce.ToBsonDocument();
 

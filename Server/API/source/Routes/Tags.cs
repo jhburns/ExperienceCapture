@@ -4,6 +4,7 @@ namespace Carter.App.Route.Tags
 
     using Carter.App.Lib.Network;
     using Carter.App.Lib.Repository;
+    using Carter.App.Lib.Timer;
 
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.Sessions;
@@ -17,10 +18,11 @@ namespace Carter.App.Route.Tags
     {
         public Tags(
             IRepository<AccessTokenSchema> accessRepo,
-            IRepository<SessionSchema> sessionRepo)
+            IRepository<SessionSchema> sessionRepo,
+            IDateExtra date)
             : base("/sessions/{id}/tags")
         {
-            this.Before += PreSecurity.GetSecurityCheck(accessRepo);
+            this.Before += PreSecurity.GetSecurityCheck(accessRepo, date);
 
             this.Post("/{tagName}", async (req, res) =>
             {

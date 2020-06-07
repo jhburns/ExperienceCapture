@@ -10,6 +10,8 @@ namespace Carter.Tests.HostingExtra
     using Carter.App.Lib.ExporterExtra;
     using Carter.App.Lib.MinioExtra;
     using Carter.App.Lib.Repository;
+    using Carter.App.Lib.Timer;
+
     using Carter.App.Route.NewSignUp;
     using Carter.App.Route.Sessions;
     using Carter.App.Route.Users;
@@ -36,7 +38,8 @@ namespace Carter.Tests.HostingExtra
             Mock<IRepository<BsonDocument>> captureMock = null,
             Mock<IMongoDatabase> databaseMock = null,
             Mock<IThreadExtra> threadMock = null,
-            Mock<IMinioClient> objectStoreMock = null)
+            Mock<IMinioClient> objectStoreMock = null,
+            Mock<IDateExtra> dateMock = null)
         {
             var server = new TestServer(
                 new WebHostBuilder()
@@ -118,6 +121,16 @@ namespace Carter.Tests.HostingExtra
                         }
 
                         services.AddSingleton<IMinioClient>(objectStoreMock.Object);
+
+                        // Mock timer
+                        if (dateMock == null)
+                        {
+                            services.AddSingleton<IDateExtra>(new DateProvider());
+                        }
+                        else
+                        {
+                            services.AddSingleton<IDateExtra>(dateMock.Object);
+                        }
 
                         // Mock environment
                         var envMock = new Mock<IAppEnvironment>();

@@ -13,6 +13,7 @@ namespace Carter.Tests.LibraryScripts
 
     using Xunit;
 
+    // TODO: Test timer with mocks
     public class TimerTests
     {
         [Fact]
@@ -20,7 +21,7 @@ namespace Carter.Tests.LibraryScripts
         {
             var date = new BsonDateTime(DateTime.Now);
 
-            Assert.False(date.IsAfter(100000), "IsAfter is true when parameter expirationTime is large and positive.");
+            Assert.False(date.IsAfter(new DateProvider(), 100000), "IsAfter is true when parameter expirationTime is large and positive.");
         }
 
         [Fact]
@@ -28,7 +29,7 @@ namespace Carter.Tests.LibraryScripts
         {
             var date = new BsonDateTime(DateTime.Now);
 
-            Assert.True(date.IsAfter(-100000), "IsAfter is false when parameter expirationTime is negative.");
+            Assert.True(date.IsAfter(new DateProvider(), -100000), "IsAfter is false when parameter expirationTime is negative.");
         }
     }
 
