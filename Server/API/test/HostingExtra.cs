@@ -138,6 +138,7 @@ namespace Carter.Tests.HostingExtra
                         {
                             envMock = new Mock<IAppEnvironment>();
                         }
+
                         services.AddSingleton<IAppEnvironment>(envMock.Object);
 
                         // Mock logger
