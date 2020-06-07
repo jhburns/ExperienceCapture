@@ -35,7 +35,8 @@ namespace Carter.Tests.HostingExtra
             Mock<IRepository<SessionSchema>> sessionMock = null,
             Mock<IRepository<BsonDocument>> captureMock = null,
             Mock<IMongoDatabase> databaseMock = null,
-            Mock<IThreadExtra> threadMock = null)
+            Mock<IThreadExtra> threadMock = null,
+            Mock<IMinioClient> objectStoreMock = null)
         {
             var server = new TestServer(
                 new WebHostBuilder()
@@ -111,13 +112,15 @@ namespace Carter.Tests.HostingExtra
                         services.AddSingleton<IThreadExtra>(threadMock.Object);
 
                         // Mock object store
-                        var objectStoreMock = new Mock<IMinioClient>();
-                        objectStoreMock.SetupAllProperties();
+                        if (objectStoreMock == null)
+                        {
+                            objectStoreMock = new Mock<IMinioClient>();
+                        }
+
                         services.AddSingleton<IMinioClient>(objectStoreMock.Object);
 
                         // Mock environment
                         var envMock = new Mock<IAppEnvironment>();
-                        envMock.SetupAllProperties();
                         services.AddSingleton<IAppEnvironment>(envMock.Object);
 
                         // Mock logger
