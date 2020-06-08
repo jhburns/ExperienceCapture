@@ -45,12 +45,13 @@ namespace Carter.App.Route.Sessions
 
                 // Will loop until a unique id is found
                 // Needed because the ids that are generated are from a small number of combinations
-                while (await sessionRepo.FindById(uniqueID) != null)
+                while ((await sessionRepo.FindById(uniqueID)) != null)
                 {
                     uniqueID = Generate.GetRandomId(4);
                 }
 
-                string token = req.Cookies["ExperienceCapture-Access-Token"]; // Has to exist due to PreSecurity Check
+                // Has to exist due to PreSecurity Check
+                string token = req.Cookies["ExperienceCapture-Access-Token"];
 
                 var accessTokenDoc = await accessRepo.FindOne(
                     Builders<AccessTokenSchema>
