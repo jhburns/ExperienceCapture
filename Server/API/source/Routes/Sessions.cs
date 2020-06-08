@@ -1,5 +1,6 @@
 namespace Carter.App.Route.Sessions
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -18,6 +19,8 @@ namespace Carter.App.Route.Sessions
 
     using Carter.Request;
 
+    using Microsoft.Extensions.Logging;
+
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization;
     using MongoDB.Bson.Serialization.Attributes;
@@ -30,6 +33,7 @@ namespace Carter.App.Route.Sessions
             IRepository<SessionSchema> sessionRepo,
             IRepository<PersonSchema> personRepo,
             IRepository<BsonDocument> captureRepo,
+            ILogger logger,
             IDateExtra date)
             : base("/sessions")
         {
@@ -203,9 +207,9 @@ namespace Carter.App.Route.Sessions
                         {
                             document = BsonSerializer.Deserialize<BsonDocument>(ms);
                         }
-                        catch
+                        catch (Exception err)
                         {
-                            // TODO: print exception to debug
+                            logger.LogError(err.Message);
                             res.StatusCode = 400;
                             return;
                         }
@@ -219,9 +223,9 @@ namespace Carter.App.Route.Sessions
                     {
                         document = BsonDocument.Parse(json);
                     }
-                    catch
+                    catch (Exception err)
                     {
-                        // TODO: print exception to debug
+                        logger.LogError(err.Message);
                         res.StatusCode = 400;
                         return;
                     }
