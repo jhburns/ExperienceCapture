@@ -1,6 +1,6 @@
 namespace Carter.Tests.Route.PreSecurity
 {
-    using System;
+    using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -412,6 +412,7 @@ namespace Carter.Tests.Route.PreSecurity
             Assert.True(data.IsOpen, "New session isOngoing data is not true.");
             Assert.True(data.InternalId == null, "New session internal id data is not null.");
             Assert.True(data.User.InternalId == null, "New session user internal id data is not null.");
+            Assert.True(data.ExportState == ExportOptions.NotStarted, "New session export state data is not 'not started'.");
         }
 
         [Fact]
@@ -484,6 +485,64 @@ namespace Carter.Tests.Route.PreSecurity
             Assert.True(
                 response.StatusCode == HttpStatusCode.BadRequest,
                 "Getting sessions is a bad request without access token.");
+        }
+
+        [Fact]
+        public async Task EmptyListIsAllowedGetSessions()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<IList<SessionSchema>>(() =>
+            {
+                return new List<SessionSchema>();
+            });
+            result.Start();
+
+            sessionMock.Setup(a => a.FindAll(
+                    It.IsAny<FilterDefinition<SessionSchema>>(),
+                    It.IsAny<SortDefinition<SessionSchema>>()))
+                .Returns(result)
+                .Verifiable("Sessions are never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, "/sessions");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("/")]
+        [InlineData("?")]
+        [InlineData("/?")]
+        [InlineData("/?test=sdkfjsdlfksdf&blak=sdfsfds")]
+        public async Task ResponceIsValidGetSessions(string input)
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<IList<SessionSchema>>(() =>
+            {
+                return new List<SessionSchema>();
+            });
+            result.Start();
+
+            sessionMock.Setup(a => a.FindAll(
+                    It.IsAny<FilterDefinition<SessionSchema>>(),
+                    It.IsAny<SortDefinition<SessionSchema>>()))
+                .Returns(result)
+                .Verifiable("Sessions are never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions{input}");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+            var data = BsonSerializer.Deserialize<SessionsResponce>(body);
         }
 
         [Theory]
