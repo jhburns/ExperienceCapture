@@ -223,7 +223,7 @@ namespace Carter.App.Route.Sessions
                     {
                         document = BsonDocument.Parse(json);
                     }
-                    catch
+                    catch (Exception err)
                     {
                         logger.LogError(err.Message);
                         res.StatusCode = 400;
