@@ -943,6 +943,147 @@ namespace Carter.Tests.Route.PreSecurity
         }
 
         [Theory]
+        [InlineData("")]
+        [InlineData("{ \"frameInfo\": {} }")]
+        [InlineData("{ \"frameInfo\": \"hello\" }")]
+        [InlineData("{ \"frameInfo\": { \"test\": 0.1 } }")]
+        [InlineData("{ \"frameInfo\": { \"realtimeSinceStartup\": true } }")]
+        [InlineData("{ \"frameInfo\": { \"realtimeSinceStartup\": 1 } }")]
+        [InlineData("{ \"frameInfo\": { }, \"realtimeSinceStartup\": 0.1 }")]
+        public async Task DoesNotAcceptInvalidSchemaPostSession(string input)
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    IsOpen = true,
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/sessions/EXEX");
+            request.Content = new StringContent(input, Encoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.BadRequest,
+                "Posting a capture with invalid schema is allowed.");
+        }
+
+        [Fact]
+        public async Task CallsThingsPostSession()
+        {
+            var captureMock = new Mock<IRepository<BsonDocument>>();
+            captureMock.Setup(a => a.Configure(It.IsAny<string>()))
+                .Verifiable("A capture collection was never configured.");
+
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    IsOpen = true,
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            sessionMock.Setup(s => s.Update(
+                    It.IsAny<FilterDefinition<SessionSchema>>(),
+                    It.IsAny<UpdateDefinition<SessionSchema>>()))
+                .Verifiable("An update was never called");
+
+            var client = CustomHost.Create(sessionMock: sessionMock, captureMock: captureMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/sessions/EXEX");
+            request.Content = new StringContent("{ \"frameInfo\": { \"realtimeSinceStartup\": 0.1 } }", Encoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Theory]
+        [InlineData("/EXEX", "{ \"frameInfo\": { \"realtimeSinceStartup\": 0.1 } }")]
+        [InlineData("/e", "{ \"frameInfo\": { \"realtimeSinceStartup\": 0.1 } }")]
+        [InlineData("/esdfer34wfv34f44wfsd", "{ \"frameInfo\": { \"realtimeSinceStartup\": 0.1 } }")]
+        [InlineData("/EXEX/", "{ \"frameInfo\": { \"realtimeSinceStartup\": 0.1 } }")]
+        [InlineData("/EXEX?", "{ \"frameInfo\": { \"realtimeSinceStartup\": 0.1 } }")]
+        [InlineData("/EXEX/?", "{ \"frameInfo\": { \"realtimeSinceStartup\": 0.1 } }")]
+        [InlineData("/EXEX/?s43f4r=34fr&dfwe=s1123", "{ \"frameInfo\": { \"realtimeSinceStartup\": 0.1 } }")]
+        [InlineData("/EXEX", "{ \"frameInfo\": { \"realtimeSinceStartup\": 0.1, \"test\": 1234 } }")]
+        [InlineData("/EXEX", "{ \"frameInfo\": { \"realtimeSinceStartup\": 0.1}, \"test\": 1234, \"test2\": [1, 2, 3] }")]
+        [InlineData("/EXEX", "{ \"gameObjects\": { \"Player\": { \"x\": 1.01 } }, \"frameInfo\": { \"realtimeSinceStartup\": 0.1} }")]
+        public async Task AllowsManyDocumentsAndPathsPostSession(string path, string body)
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    IsOpen = true,
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, $"/sessions{path}");
+            request.Content = new StringContent(body, Encoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task ResponceIsOkSession()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    IsOpen = true,
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/sessions/EXEX");
+            request.Content = new StringContent("{ \"frameInfo\": { \"realtimeSinceStartup\": 0.1 } }", Encoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+            Assert.True(
+                body == "OK",
+                "The responce body of posting a capture is not 'OK'.");
+        }
+
+        [Theory]
         [InlineData("t")]
         [InlineData("534r3wefv3c")]
         [InlineData("EXEX")]
