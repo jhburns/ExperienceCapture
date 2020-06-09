@@ -1344,6 +1344,114 @@ namespace Carter.Tests.Route.PreSecurity
             Assert.True(data.IsOngoing == isOngoing, "isOngoing is not aligned with given value.");
         }
 
+        [Fact]
+        public async Task RequiresAccessDeleteSession()
+        {
+            var client = CustomHost.Create();
+
+            var request = CustomRequest.Create(HttpMethod.Delete, "/sessions/EXEX", false);
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.BadRequest,
+                "Getting a session is a bad request without access token.");
+        }
+
+        [Fact]
+        public async Task SessionIsNotFoundDeleteSession()
+        {
+            var client = CustomHost.Create();
+
+            var request = CustomRequest.Create(HttpMethod.Delete, "/sessions/EXEX");
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.NotFound,
+                "Getting missing session is not found.");
+        }
+
+        [Fact]
+        public async Task FindAndUpdateAreCalledDeleteSession()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema();
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            sessionMock.Setup(s => s.Update(
+                    It.IsAny<FilterDefinition<SessionSchema>>(),
+                    It.IsAny<UpdateDefinition<SessionSchema>>()))
+                .Verifiable("A session was never updated.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Delete, "/sessions/EXEX");
+            var response = await client.SendAsync(request);
+        }
+
+        [Theory]
+        [InlineData("f")]
+        [InlineData("EXEX")]
+        [InlineData("EXEX/")]
+        [InlineData("EXEX?")]
+        [InlineData("t34g534ff43ff44")]
+        [InlineData("t34g534ff43ff44?wrd23=23d")]
+        public async Task MultipleRoutesAllowedDeleteSession(string input)
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema();
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Delete, $"/sessions/{input}");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task ResponceIsOkDeleteSession()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema();
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Delete, $"/sessions/EXEX");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+
+            Assert.True(body == "OK", "Delete session responce body is no 'OK'.");
+        }
+
         [Theory]
         [InlineData("t")]
         [InlineData("534r3wefv3c")]
