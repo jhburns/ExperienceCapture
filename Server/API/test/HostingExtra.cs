@@ -137,6 +137,8 @@ namespace Carter.Tests.HostingExtra
                         if (envMock == null)
                         {
                             envMock = new Mock<IAppEnvironment>();
+                            envMock.SetupGet(e => e.SkipValidation)
+                                .Returns("true");
                         }
 
                         services.AddSingleton<IAppEnvironment>(envMock.Object);
