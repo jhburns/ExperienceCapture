@@ -295,6 +295,8 @@ namespace Carter.App.Route.Sessions
                 }
 
                 sessionDoc.IsOngoing = isOngoing;
+                sessionDoc.InternalId = null;
+                sessionDoc.User.InternalId = null;
 
                 string json = JsonQuery.FulfilEncoding(req.Query, sessionDoc);
                 if (json != null)
