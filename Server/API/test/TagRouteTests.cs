@@ -1,4 +1,4 @@
-namespace Carter.Tests.Route.PreSecurity
+namespace Carter.Tests.Route.Tags
 {
     using System;
     using System.Collections.Generic;

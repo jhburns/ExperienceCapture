@@ -1,4 +1,4 @@
-namespace Carter.Tests.Route.Health
+namespace Carter.Tests.Route.Illegal
 {
     using System.Net;
     using System.Net.Http;

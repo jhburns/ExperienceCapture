@@ -1,4 +1,4 @@
-namespace Carter.Tests.Route.PreSecurity
+namespace Carter.Tests.Route.NewSignUp
 {
     using System;
     using System.Net;

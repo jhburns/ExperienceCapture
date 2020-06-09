@@ -1,4 +1,4 @@
-namespace Carter.Tests.Route.PreSecurity
+namespace Carter.Tests.Route.Sessions
 {
     using System.Collections.Generic;
     using System.Linq;
