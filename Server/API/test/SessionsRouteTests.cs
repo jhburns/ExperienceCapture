@@ -1052,7 +1052,7 @@ namespace Carter.Tests.Route.PreSecurity
         }
 
         [Fact]
-        public async Task ResponceIsOkSession()
+        public async Task ResponceIsOkPostSession()
         {
             var sessionMock = new Mock<IRepository<SessionSchema>>();
 
