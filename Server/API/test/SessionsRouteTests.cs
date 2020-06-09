@@ -1,11 +1,13 @@
 namespace Carter.Tests.Route.PreSecurity
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
 
     using Carter.App.Lib.Repository;
+    using Carter.App.Lib.Timer;
     using Carter.App.Route.Sessions;
     using Carter.App.Route.Users;
 
@@ -111,7 +113,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(a => a.FindById(It.IsAny<string>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for.");
 
@@ -153,7 +155,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(a => a.FindById(It.IsAny<string>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for.");
 
@@ -207,7 +209,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(a => a.FindById(It.IsAny<string>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for.");
 
@@ -252,7 +254,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(a => a.FindById(It.IsAny<string>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for.");
 
@@ -307,7 +309,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(a => a.FindById(It.IsAny<string>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for.");
 
@@ -367,7 +369,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(a => a.FindById(It.IsAny<string>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for.");
 
@@ -426,7 +428,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(a => a.FindById(It.IsAny<string>()))
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
                 .Returns(result)
                 .Verifiable("A session was never searched for.");
 
@@ -498,7 +500,7 @@ namespace Carter.Tests.Route.PreSecurity
             });
             result.Start();
 
-            sessionMock.Setup(a => a.FindAll(
+            sessionMock.Setup(s => s.FindAll(
                     It.IsAny<FilterDefinition<SessionSchema>>(),
                     It.IsAny<SortDefinition<SessionSchema>>()))
                 .Returns(result)
@@ -516,8 +518,6 @@ namespace Carter.Tests.Route.PreSecurity
         [InlineData("")]
         [InlineData("/")]
         [InlineData("?")]
-        [InlineData("/?")]
-        [InlineData("/?test=sdkfjsdlfksdf&blak=sdfsfds")]
         public async Task ResponceIsValidGetSessions(string input)
         {
             var sessionMock = new Mock<IRepository<SessionSchema>>();
@@ -543,6 +543,244 @@ namespace Carter.Tests.Route.PreSecurity
 
             var body = await response.Content.ReadAsStringAsync();
             var data = BsonSerializer.Deserialize<SessionsResponce>(body);
+
+            Assert.True(data.ContentList.Count == 0, "Get sessions does not return given array.");
+        }
+
+        [Theory]
+        [InlineData("?bson=true")]
+        [InlineData("?sdfdsff=534rwfere&bson=true")]
+        public async Task ResponceIsValidBsonGetSessions(string input)
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<IList<SessionSchema>>(() =>
+            {
+                return new List<SessionSchema>();
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindAll(
+                    It.IsAny<FilterDefinition<SessionSchema>>(),
+                    It.IsAny<SortDefinition<SessionSchema>>()))
+                .Returns(result)
+                .Verifiable("Sessions are never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions{input}");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsByteArrayAsync();
+            var data = BsonSerializer.Deserialize<SessionsResponce>(body);
+
+            Assert.True(data.ContentList.Count == 0, "Get sessions does not return given list.");
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(5)]
+        [InlineData(1000)]
+        public async Task ResponceIsCorrectForAllGetSessions(int input)
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<IList<SessionSchema>>(() =>
+            {
+                return Enumerable.Repeat(
+                    new SessionSchema
+                    {
+                        InternalId = ObjectId.GenerateNewId(),
+                        Id = null,
+                        User = new PersonSchema()
+                        {
+                            InternalId = ObjectId.GenerateNewId(),
+                        },
+                        CreatedAt = null,
+                        Tags = null,
+                        ExportState = ExportOptions.Done,
+                    },
+                    input)
+                    .ToList();
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindAll(
+                    It.IsAny<FilterDefinition<SessionSchema>>(),
+                    It.IsAny<SortDefinition<SessionSchema>>()))
+                .Returns(result)
+                .Verifiable("Sessions are never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+            var data = BsonSerializer.Deserialize<SessionsResponce>(body);
+
+            Assert.True(data.ContentList.Count == input, "Get sessions does not return given list length.");
+
+            foreach (var session in data.ContentList)
+            {
+                Assert.True(session.InternalId == null, "A session does not have a null id.");
+                Assert.True(session.User.InternalId == null, "A session's user does not have a null id.");
+            }
+        }
+
+        [Fact]
+        public async Task IsNotOngoingWhenClosedGetSessions()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<IList<SessionSchema>>(() =>
+            {
+                return new List<SessionSchema>()
+                {
+                    new SessionSchema
+                    {
+                        User = new PersonSchema(),
+                        IsOpen = false,
+                    },
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindAll(
+                    It.IsAny<FilterDefinition<SessionSchema>>(),
+                    It.IsAny<SortDefinition<SessionSchema>>()))
+                .Returns(result)
+                .Verifiable("Sessions are never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+            var data = BsonSerializer.Deserialize<SessionsResponce>(body);
+
+            Assert.True(data.ContentList[0].IsOngoing == false, "isOngoing is not false when isOpen is false.");
+        }
+
+        [Theory]
+        [InlineData(0, true)]
+        [InlineData(-1, true)]
+        [InlineData(-1000, true)]
+        [InlineData(1, true)]
+        [InlineData(100, true)]
+        [InlineData(300, false)]
+        [InlineData(10000, false)]
+        public async Task ChecksWhenNotStartedGetSessions(int seconds, bool isOngoing)
+        {
+            var setTime = new DateProvider().Now;
+            var dateMock = new Mock<IDateExtra>();
+            dateMock.SetupGet(d => d.Now)
+                .Returns(setTime.AddSeconds(seconds))
+                .Verifiable("Now was never called.");
+
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<IList<SessionSchema>>(() =>
+            {
+                return new List<SessionSchema>()
+                {
+                    new SessionSchema
+                    {
+                        User = new PersonSchema(),
+                        IsOpen = true,
+                        CreatedAt = new BsonDateTime(setTime),
+
+                        // Being explicit, so its clear the session doesn't have any captures yet
+                        LastCaptureAt = null,
+                    },
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindAll(
+                    It.IsAny<FilterDefinition<SessionSchema>>(),
+                    It.IsAny<SortDefinition<SessionSchema>>()))
+                .Returns(result)
+                .Verifiable("Sessions are never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock, dateMock: dateMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+            var data = BsonSerializer.Deserialize<SessionsResponce>(body);
+
+            Assert.True(data.ContentList[0].IsOngoing == isOngoing, "isOngoing is not aligned with given value.");
+        }
+
+        [Theory]
+        [InlineData(0, 0, true)]
+        [InlineData(-1, 0, true)]
+        [InlineData(0, -1, true)]
+        [InlineData(-1, -1, true)]
+        [InlineData(-1000, 0, true)]
+        [InlineData(0, -1000, false)]
+        [InlineData(-1000, -1000, true)]
+        [InlineData(0, 1, true)]
+        [InlineData(0, 6, true)]
+        [InlineData(0, 1000, true)]
+        [InlineData(1, 1000, true)]
+        [InlineData(6, 1000, true)]
+        [InlineData(1000, 1000, true)]
+        [InlineData(1, 0, true)]
+        [InlineData(6, 0, false)]
+        [InlineData(1000, 0, false)]
+        public async Task ChecksWhenStartedGetSessions(int currentSeconds, int captureSecond, bool isOngoing)
+        {
+            var setTime = new DateProvider().Now;
+            var dateMock = new Mock<IDateExtra>();
+            dateMock.SetupGet(d => d.Now)
+                .Returns(setTime.AddSeconds(currentSeconds))
+                .Verifiable("Now was never called.");
+
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<IList<SessionSchema>>(() =>
+            {
+                return new List<SessionSchema>()
+                {
+                    new SessionSchema
+                    {
+                        User = new PersonSchema(),
+                        IsOpen = true,
+                        LastCaptureAt = new BsonDateTime(setTime.AddSeconds(captureSecond)),
+                    },
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindAll(
+                    It.IsAny<FilterDefinition<SessionSchema>>(),
+                    It.IsAny<SortDefinition<SessionSchema>>()))
+                .Returns(result)
+                .Verifiable("Sessions are never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock, dateMock: dateMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+            var data = BsonSerializer.Deserialize<SessionsResponce>(body);
+
+            Assert.True(data.ContentList[0].IsOngoing == isOngoing, "isOngoing is not aligned with given value.");
         }
 
         [Theory]
