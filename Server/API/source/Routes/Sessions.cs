@@ -45,12 +45,13 @@ namespace Carter.App.Route.Sessions
 
                 // Will loop until a unique id is found
                 // Needed because the ids that are generated are from a small number of combinations
-                while (await sessionRepo.FindById(uniqueID) != null)
+                while ((await sessionRepo.FindById(uniqueID)) != null)
                 {
                     uniqueID = Generate.GetRandomId(4);
                 }
 
-                string token = req.Cookies["ExperienceCapture-Access-Token"]; // Has to exist due to PreSecurity Check
+                // Has to exist due to PreSecurity Check
+                string token = req.Cookies["ExperienceCapture-Access-Token"];
 
                 var accessTokenDoc = await accessRepo.FindOne(
                     Builders<AccessTokenSchema>
@@ -160,10 +161,10 @@ namespace Carter.App.Route.Sessions
                     return s;
                 });
 
-                var clientValues = new
+                var clientValues = new SessionsResponce
                 {
                     // Bson documents can't start with an array like Json, so a wrapping object is used instead
-                    contentArray = sessionsDocsWithOngoing,
+                    ContentList = sessionsDocsWithOngoing.ToList(),
                 };
 
                 string json = JsonQuery.FulfilEncoding(req.Query, clientValues);
@@ -362,6 +363,16 @@ namespace Carter.App.Route.Sessions
         [BsonIgnoreIfNull]
         [BsonElement("lastCaptureAt")]
         public BsonDateTime LastCaptureAt { get; set; } = null;
+        #pragma warning restore SA1516
+    }
+
+    public class SessionsResponce
+    {
+        #pragma warning disable SA1516
+        // TODO: rename this to list something, its not an array
+        [BsonElement("contentArray")]
+        public List<SessionSchema> ContentList { get; set; }
+
         #pragma warning restore SA1516
     }
 
