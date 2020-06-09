@@ -1177,6 +1177,173 @@ namespace Carter.Tests.Route.PreSecurity
             Assert.True(data.User.InternalId == null, "Session user is data is not null.");
         }
 
+        [Fact]
+        public async Task ResponceIsValidBsonGetSession()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema
+                {
+                    User = new PersonSchema
+                    {
+                    },
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions/EXEX?bson=true");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsByteArrayAsync();
+            var data = BsonSerializer.Deserialize<SessionSchema>(body);
+        }
+
+        [Fact]
+        public async Task IsNotOngoingWhenClosedGetSession()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    User = new PersonSchema(),
+                    IsOpen = false,
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session is never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions/EXEX");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+            var data = BsonSerializer.Deserialize<SessionSchema>(body);
+
+            Assert.True(data.IsOngoing == false, "IsOngoing is not false when isOpen also is.");
+        }
+
+        [Theory]
+        [InlineData(0, true)]
+        [InlineData(-1, true)]
+        [InlineData(-1000, true)]
+        [InlineData(1, true)]
+        [InlineData(100, true)]
+        [InlineData(300, false)]
+        [InlineData(10000, false)]
+        public async Task ChecksWhenNotStartedGetSession(int seconds, bool isOngoing)
+        {
+            var setTime = new DateProvider().Now;
+            var dateMock = new Mock<IDateExtra>();
+            dateMock.SetupGet(d => d.Now)
+                .Returns(setTime.AddSeconds(seconds))
+                .Verifiable("Now was never called.");
+
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    User = new PersonSchema(),
+                    IsOpen = true,
+                    CreatedAt = new BsonDateTime(setTime),
+
+                    // Being explicit, so its clear the session doesn't have any captures yet
+                    LastCaptureAt = null,
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session is never searched for");
+
+            var client = CustomHost.Create(sessionMock: sessionMock, dateMock: dateMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions/EXEX");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+            var data = BsonSerializer.Deserialize<SessionSchema>(body);
+
+            Assert.True(data.IsOngoing == isOngoing, "isOngoing is not aligned with given value.");
+        }
+
+        [Theory]
+        [InlineData(0, 0, true)]
+        [InlineData(-1, 0, true)]
+        [InlineData(0, -1, true)]
+        [InlineData(-1, -1, true)]
+        [InlineData(-1000, 0, true)]
+        [InlineData(0, -1000, false)]
+        [InlineData(-1000, -1000, true)]
+        [InlineData(0, 1, true)]
+        [InlineData(0, 6, true)]
+        [InlineData(0, 1000, true)]
+        [InlineData(1, 1000, true)]
+        [InlineData(6, 1000, true)]
+        [InlineData(1000, 1000, true)]
+        [InlineData(1, 0, true)]
+        [InlineData(6, 0, false)]
+        [InlineData(1000, 0, false)]
+        public async Task ChecksWhenStartedGetSession(int currentSeconds, int captureSecond, bool isOngoing)
+        {
+            var setTime = new DateProvider().Now;
+            var dateMock = new Mock<IDateExtra>();
+            dateMock.SetupGet(d => d.Now)
+                .Returns(setTime.AddSeconds(currentSeconds))
+                .Verifiable("Now was never called.");
+
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    User = new PersonSchema(),
+                    IsOpen = true,
+                    LastCaptureAt = new BsonDateTime(setTime.AddSeconds(captureSecond)),
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session is never called.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock, dateMock: dateMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions/EXEX");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+            var data = BsonSerializer.Deserialize<SessionSchema>(body);
+
+            Assert.True(data.IsOngoing == isOngoing, "isOngoing is not aligned with given value.");
+        }
+
         [Theory]
         [InlineData("t")]
         [InlineData("534r3wefv3c")]
