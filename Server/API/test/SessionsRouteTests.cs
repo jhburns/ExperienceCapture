@@ -1083,6 +1083,100 @@ namespace Carter.Tests.Route.PreSecurity
                 "The responce body of posting a capture is not 'OK'.");
         }
 
+        [Fact]
+        public async Task RequiresAccessGetSession()
+        {
+            var client = CustomHost.Create();
+
+            var request = CustomRequest.Create(HttpMethod.Get, "/sessions/EXEX", false);
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.BadRequest,
+                "Getting a session is a bad request without access token.");
+        }
+
+        [Fact]
+        public async Task SessionIsNotFoundGetSession()
+        {
+            var client = CustomHost.Create();
+
+            var request = CustomRequest.Create(HttpMethod.Get, "/sessions/EXEX");
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.NotFound,
+                "Getting missing session is not found.");
+        }
+
+        [Fact]
+        public async Task FindIsCalledGetSession()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    User = new PersonSchema
+                    {
+                    },
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, "/sessions/EXEX");
+            var response = await client.SendAsync(request);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("/")]
+        [InlineData("?")]
+        [InlineData("/?")]
+        [InlineData("/?test=sdkfjsdlfksdf&blak=sdfsfds")]
+        public async Task ResponceIsValidGetSession(string input)
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema
+                {
+                    InternalId = ObjectId.GenerateNewId(),
+                    User = new PersonSchema
+                    {
+                        InternalId = ObjectId.GenerateNewId(),
+                    },
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions/EXEX{input}");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+            var data = BsonSerializer.Deserialize<SessionSchema>(body);
+
+            Assert.False(data == null, "Session data is null.");
+            Assert.True(data.InternalId == null, "Session id data is not null.");
+            Assert.True(data.User.InternalId == null, "Session user is data is not null.");
+        }
+
         [Theory]
         [InlineData("t")]
         [InlineData("534r3wefv3c")]
