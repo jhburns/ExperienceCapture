@@ -4,6 +4,7 @@ namespace Carter.Tests.Route.PreSecurity
     using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Text;
     using System.Threading.Tasks;
 
     using Carter.App.Lib.Repository;
@@ -813,6 +814,159 @@ namespace Carter.Tests.Route.PreSecurity
             Assert.True(
                 responseDelete.StatusCode == HttpStatusCode.MethodNotAllowed,
                 "Deleting sessions is an allowed method.");
+        }
+
+        [Fact]
+        public async Task RequiresAccessPostSession()
+        {
+            var client = CustomHost.Create();
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/sessions/EXEX", false);
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.BadRequest,
+                "Adding a capture to a session a bad request without access token.");
+        }
+
+        [Fact]
+        public async Task SessionIsNotFoundPostSession()
+        {
+            var client = CustomHost.Create();
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/sessions/EXEX");
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.NotFound,
+                "Adding a capture to a missing session is not found.");
+        }
+
+        [Fact]
+        public async Task IsOpenErrorsPostSession()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    IsOpen = false,
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/sessions/EXEX");
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.BadRequest,
+                "Adding a capture to a closed session is a bad request.");
+        }
+
+        [Fact]
+        public async Task BsonNotAllowedNormallyPostSession()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    IsOpen = true,
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/sessions/EXEX");
+            var content = new
+            {
+                frameInfo = new
+                {
+                    realtimeSinceStartup = 0.1,
+                },
+            };
+            request.Content = new ByteArrayContent(content.ToBson());
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.BadRequest,
+                "Posting a bson capture without the query parameter is allowed.");
+        }
+
+        [Fact]
+        public async Task JsonNotAllowedWithParamPostSession()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    IsOpen = true,
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/sessions/EXEX?bson=true");
+            var content = new
+            {
+                frameInfo = new
+                {
+                    realtimeSinceStartup = 0.1,
+                },
+            };
+            request.Content = new StringContent(content.ToJson(), Encoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.BadRequest,
+                "Posting a json capture with the bson query parameter is allowed.");
+        }
+
+        [Theory]
+        [InlineData("t")]
+        [InlineData("534r3wefv3c")]
+        [InlineData("EXEX")]
+        [InlineData("EXEX/")]
+        [InlineData("EXEX?")]
+        [InlineData("EXEX/?")]
+        [InlineData("EXEX/?test=sdkfjsdlfksdf&blak=sdfsfds")]
+        public async Task OtherMethodsSession(string input)
+        {
+            var client = CustomHost.Create();
+
+            var requestPut = CustomRequest.Create(HttpMethod.Put, $"/sessions/{input}");
+            var responsePut = await client.SendAsync(requestPut);
+
+            Assert.True(
+                responsePut.StatusCode == HttpStatusCode.MethodNotAllowed,
+                "Putting a session is an allowed method.");
+
+            var requestPatch = CustomRequest.Create(HttpMethod.Patch, $"/sessions/{input}");
+            var responsePatch = await client.SendAsync(requestPatch);
+
+            Assert.True(
+                responsePatch.StatusCode == HttpStatusCode.MethodNotAllowed,
+                "Patching a session is an allowed method.");
         }
     }
 }
