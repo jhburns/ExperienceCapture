@@ -20,7 +20,7 @@ RUN dotnet restore
 COPY . .
 
 # Pre-building so it doesn't happen everytime at runtime
-RUN dotnet build -nologo . -p:GHA_BUILD=True 
+RUN dotnet build --nologo . -p:GHA_BUILD=True 
 
 # entrypoint may have windows line ending so it has to be sanitized
 RUN chmod +x entrypoint.sh \
