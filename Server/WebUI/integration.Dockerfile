@@ -1,5 +1,8 @@
 FROM node:13.1.0-alpine as build
 WORKDIR /app
+
+# Needed so that tests always run
+# See: https://create-react-app.dev/docs/running-tests/#continuous-integration
 ENV CI=true
 
 COPY package.json package-lock.json /app/
