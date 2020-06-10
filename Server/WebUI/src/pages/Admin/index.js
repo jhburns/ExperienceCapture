@@ -22,7 +22,7 @@ class Admin extends Component {
 
   onSuccess(response) {
     this.setState({
-      accessToken: response.claimToken,
+      accessToken: response.signUpToken,
       isWaiting: false
     });
   }
