@@ -8,7 +8,7 @@ RUN dotnet restore ./source/API.csproj && dotnet restore ./test/test.csproj
 
 # Copy everything else and build
 COPY . .
-RUN dotnet publish -c Release -o out -nologo
+RUN dotnet publish -c Release -o out --nologo
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.3-bionic
