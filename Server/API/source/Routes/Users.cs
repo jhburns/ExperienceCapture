@@ -294,21 +294,20 @@ namespace Carter.App.Route.Users
 
                 await signUpRepo.Add(tokenDoc);
 
-                var responce = new ClaimTokenResponce
+                var responce = new SignUpTokenResponce
                 {
-                    ClaimToken = newToken,
+                    SignUpToken = newToken,
                     Expiration = TimerExtra.ProjectSeconds(date, tokenDoc.ExpirationSeconds),
                 };
-                var responceDoc = responce.ToBsonDocument();
 
-                string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
+                string json = JsonQuery.FulfilEncoding(req.Query, responce);
                 if (json != null)
                 {
                     await res.FromJson(json);
                     return;
                 }
 
-                await res.FromBson(responceDoc);
+                await res.FromBson(responce.ToBsonDocument());
             });
         }
     }
