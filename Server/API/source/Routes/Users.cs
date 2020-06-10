@@ -14,6 +14,7 @@ namespace Carter.App.Route.Users
     using Carter.App.Route.NewSignUp;
 
     using Carter.App.Validation.AccessTokenRequest;
+    using Carter.App.Validation.AdminPassword;
     using Carter.App.Validation.Person;
 
     using Carter.ModelBinding;
@@ -261,6 +262,48 @@ namespace Carter.App.Route.Users
                 if (json != null)
                 {
                     await res.FromString(json);
+                    return;
+                }
+
+                await res.FromBson(responce.ToBsonDocument());
+            });
+
+            this.Post("/signUp/admin/", async (req, res) =>
+            {
+                var newAdmin = await req.BindAndValidate<AdminPassword>();
+                if (!newAdmin.ValidationResult.IsValid)
+                {
+                    res.StatusCode = 400;
+                    return;
+                }
+
+                if (!PasswordHasher.Check(newAdmin.Data.password, env.PasswordHash))
+                {
+                    res.StatusCode = 401;
+                    return;
+                }
+
+                string newToken = Generate.GetRandomToken();
+
+                var tokenDoc = new SignUpTokenSchema
+                {
+                    InternalId = ObjectId.GenerateNewId(),
+                    Hash = PasswordHasher.Hash(newToken),
+                    CreatedAt = new BsonDateTime(date.Now),
+                };
+
+                await signUpRepo.Add(tokenDoc);
+
+                var responce = new SignUpTokenResponce
+                {
+                    SignUpToken = newToken,
+                    Expiration = TimerExtra.ProjectSeconds(date, tokenDoc.ExpirationSeconds),
+                };
+
+                string json = JsonQuery.FulfilEncoding(req.Query, responce);
+                if (json != null)
+                {
+                    await res.FromJson(json);
                     return;
                 }
 

@@ -12,10 +12,6 @@ namespace Carter.App.Route.NewSignUp
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.Users;
 
-    using Carter.App.Validation.AdminPassword;
-
-    using Carter.ModelBinding;
-
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
@@ -48,49 +44,6 @@ namespace Carter.App.Route.NewSignUp
                 var responce = new SignUpTokenResponce
                 {
                     SignUpToken = newToken,
-                    Expiration = TimerExtra.ProjectSeconds(date, tokenDoc.ExpirationSeconds),
-                };
-                var responceDoc = responce.ToBsonDocument();
-
-                string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
-                if (json != null)
-                {
-                    await res.FromJson(json);
-                    return;
-                }
-
-                await res.FromBson(responceDoc);
-            });
-
-            this.Post("/signUp/admin/", async (req, res) =>
-            {
-                var newAdmin = await req.BindAndValidate<AdminPassword>();
-                if (!newAdmin.ValidationResult.IsValid)
-                {
-                    res.StatusCode = 400;
-                    return;
-                }
-
-                if (!PasswordHasher.Check(newAdmin.Data.password, env.PasswordHash))
-                {
-                    res.StatusCode = 401;
-                    return;
-                }
-
-                string newToken = Generate.GetRandomToken();
-
-                var tokenDoc = new SignUpTokenSchema
-                {
-                    InternalId = ObjectId.GenerateNewId(),
-                    Hash = PasswordHasher.Hash(newToken),
-                    CreatedAt = new BsonDateTime(date.Now),
-                };
-
-                await signUpRepo.Add(tokenDoc);
-
-                var responce = new ClaimTokenResponce
-                {
-                    ClaimToken = newToken,
                     Expiration = TimerExtra.ProjectSeconds(date, tokenDoc.ExpirationSeconds),
                 };
                 var responceDoc = responce.ToBsonDocument();

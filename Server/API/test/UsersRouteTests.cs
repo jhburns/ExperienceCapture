@@ -1,11 +1,11 @@
 namespace Carter.Tests.Route.Users
 {
-    using System;
     using System.Net;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
 
+    using Carter.App.Lib.Environment;
     using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
     using Carter.App.Route.NewSignUp;
@@ -1130,6 +1130,158 @@ namespace Carter.Tests.Route.Users
             Assert.True(
                 responseDelete.StatusCode == HttpStatusCode.MethodNotAllowed,
                 "Deleting claims is an allowed method.");
+        }
+
+        [Theory]
+        [InlineData("{}")]
+        [InlineData("{ \"password\": 1234567890 }")]
+        [InlineData("{ \"password\": \"\" }")]
+        [InlineData("{ \"fail\": \"1234567890\" }")]
+        public async Task BodyIsCheckedPostAdmin(string input)
+        {
+            var client = CustomHost.Create();
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/admin");
+            request.Content = new StringContent(input, Encoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.BadRequest,
+                "Creating a new sign-up token from admin is not a bad request.");
+        }
+
+        [Fact]
+        public async Task BadPasswordIsUnauthorizedPostAdmin()
+        {
+            var envMock = new Mock<IAppEnvironment>();
+            envMock.SetupGet(e => e.PasswordHash)
+                .Returns("CLi4XS7q4DNwiYSWI6JI7rqEz9KHvI27E3mm9i0Xr6Q=");
+
+            var client = CustomHost.Create(envMock: envMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/admin");
+            request.Content = new StringContent("{ \"password\": \"fail\" }", Encoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.Unauthorized,
+                "Creating a new sign-up token from admin is not unauthorized.");
+        }
+
+        [Fact]
+        public async Task UpdateIsCalledPostAdmin()
+        {
+            var envMock = new Mock<IAppEnvironment>();
+            envMock.SetupGet(e => e.PasswordHash)
+                .Returns("CLi4XS7q4DNwiYSWI6JI7rqEz9KHvI27E3mm9i0Xr6Q=");
+
+            var signUpMock = new Mock<IRepository<SignUpTokenSchema>>();
+
+            signUpMock.Setup(s => s.Add(It.IsAny<SignUpTokenSchema>()))
+                .Verifiable("A sign-up token is never added");
+
+            var client = CustomHost.Create(signUpMock: signUpMock, envMock: envMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/admin");
+            request.Content = new StringContent("{ \"password\": \"7JO8e1TmORUCSvHAdcp2eBFAdwh02o+WwLiLjdF4Kkc=\" }", Encoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
+        public async Task ResponceIsValidPostAdmin()
+        {
+            var envMock = new Mock<IAppEnvironment>();
+            envMock.SetupGet(e => e.PasswordHash)
+                .Returns("CLi4XS7q4DNwiYSWI6JI7rqEz9KHvI27E3mm9i0Xr6Q=");
+
+            var signUpMock = new Mock<IRepository<SignUpTokenSchema>>();
+
+            signUpMock.Setup(s => s.Add(It.IsAny<SignUpTokenSchema>()))
+                .Verifiable("A sign-up token is never added");
+
+            var client = CustomHost.Create(signUpMock: signUpMock, envMock: envMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/admin");
+            request.Content = new StringContent("{ \"password\": \"7JO8e1TmORUCSvHAdcp2eBFAdwh02o+WwLiLjdF4Kkc=\" }", Encoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+            var data = BsonSerializer.Deserialize<SignUpTokenResponce>(body);
+
+            Assert.False(data.SignUpToken == null, "An admin token data is null.");
+            Assert.False(data.SignUpToken == string.Empty, "An admin token data is empty.");
+            Assert.False(data.Expiration == null, "An admin expiration data is null.");
+        }
+
+        [Fact]
+        public async Task ResponceIsValidBsonPostAdmin()
+        {
+            var envMock = new Mock<IAppEnvironment>();
+            envMock.SetupGet(e => e.PasswordHash)
+                .Returns("CLi4XS7q4DNwiYSWI6JI7rqEz9KHvI27E3mm9i0Xr6Q=");
+
+            var signUpMock = new Mock<IRepository<SignUpTokenSchema>>();
+
+            signUpMock.Setup(s => s.Add(It.IsAny<SignUpTokenSchema>()))
+                .Verifiable("A sign-up token is never added");
+
+            var client = CustomHost.Create(signUpMock: signUpMock, envMock: envMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/admin?bson=true");
+            request.Content = new StringContent("{ \"password\": \"7JO8e1TmORUCSvHAdcp2eBFAdwh02o+WwLiLjdF4Kkc=\" }", Encoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsByteArrayAsync();
+            var data = BsonSerializer.Deserialize<SignUpTokenResponce>(body);
+
+            Assert.False(data.SignUpToken == null, "An admin token data is null.");
+            Assert.False(data.SignUpToken == string.Empty, "An admin token data is empty.");
+            Assert.False(data.Expiration == null, "An admin expiration data is null.");
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("/")]
+        [InlineData("?")]
+        [InlineData("/?")]
+        [InlineData("/?test=sdkfjsdlfksdf&blak=sdfsfds")]
+        public async Task OtherMethodsAdmin(string input)
+        {
+            var client = CustomHost.Create();
+
+            var requestPut = CustomRequest.Create(HttpMethod.Put, $"/users/signUp/admin{input}");
+            var responsePut = await client.SendAsync(requestPut);
+
+            Assert.True(
+                responsePut.StatusCode == HttpStatusCode.MethodNotAllowed,
+                "Putting admin is an allowed method.");
+
+            var requestPatch = CustomRequest.Create(HttpMethod.Patch, $"/users/signUp/admin{input}");
+            var responsePatch = await client.SendAsync(requestPatch);
+
+            Assert.True(
+                responsePatch.StatusCode == HttpStatusCode.MethodNotAllowed,
+                "Patching admin is an allowed method.");
+
+            var requestDelete = CustomRequest.Create(HttpMethod.Delete, $"/users/signUp/admin{input}");
+            var responseDelete = await client.SendAsync(requestDelete);
+
+            Assert.True(
+                responseDelete.StatusCode == HttpStatusCode.MethodNotAllowed,
+                "Deleting admin is an allowed method.");
+
+            var requestGet = CustomRequest.Create(HttpMethod.Get, $"/users/signUp/admin{input}");
+            var responseGet = await client.SendAsync(requestGet);
+
+            Assert.True(
+                responseGet.StatusCode == HttpStatusCode.MethodNotAllowed,
+                "Getting admin is an allowed method.");
         }
     }
 }
