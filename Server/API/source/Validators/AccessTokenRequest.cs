@@ -2,6 +2,8 @@ namespace Carter.App.Validation.AccessTokenRequest
 {
     using FluentValidation;
 
+    // TODO: Rename validators to *Request
+    // ex: AccessTokenRequest
     public class AccessToken
     {
         #pragma warning disable SA1516, SA1300
