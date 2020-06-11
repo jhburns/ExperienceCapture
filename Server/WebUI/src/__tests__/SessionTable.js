@@ -3,25 +3,25 @@ import { shallow, mount, } from 'enzyme';
 import SessionTable from 'components/SessionTable';
 
 it('has non-empty content', () => {
-  const row = shallow(<SessionTable />);
+  const table = shallow(<SessionTable />);
 
-  expect(row.text().length).toBeGreaterThan(0);
+  expect(table.text().length).toBeGreaterThan(0);
 });
 
 it('lacks button header when undefined', () => {
-  const row = mount(<SessionTable />);
+  const table = mount(<SessionTable />);
 
-  expect(row.find('th')).toHaveLength(3);
+  expect(table.find('th')).toHaveLength(3);
 });
 
 it('has button header when defined', () => {
-  const row = mount(<SessionTable buttonData={{}} />);
+  const table = mount(<SessionTable buttonData={{}} />);
 
-  expect(row.find('th')).toHaveLength(4);
+  expect(table.find('th')).toHaveLength(4);
 });
 
 it('uses empty text when items is empty', () => {
-  const row = mount(<SessionTable sessions={[]} emptyMessage="example" />);
+  const table = mount(<SessionTable sessions={[]} emptyMessage="example" />);
 
-  expect(row.text().includes("example")).toBeTruthy();
+  expect(table.text().includes("example")).toBeTruthy();
 });
