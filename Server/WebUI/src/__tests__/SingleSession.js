@@ -27,7 +27,6 @@ it('is ongoing when ongoing', () => {
     </Router>;
   const session = mount(jsx);
 
-  console.log(session.text());
   expect(session.text().includes("Ongoing")).toBeTruthy();
 });
 
@@ -38,6 +37,5 @@ it('is closed unexpectedly when not ongoing but still open', () => {
     </Router>;
   const session = mount(jsx);
 
-  console.log(session.text());
   expect(session.text().includes("Closed Unexpectedly")).toBeTruthy();
 });
