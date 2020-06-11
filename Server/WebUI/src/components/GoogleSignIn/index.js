@@ -198,7 +198,7 @@ class SignIn extends Component {
   }
 
   onInvalidRequest(err) {
-    console.log("Site is running locally, using mock data");
+    console.log("Site is running locally, using mock data.");
 
     const options = {
       signUpToken: this.props.signUpToken,

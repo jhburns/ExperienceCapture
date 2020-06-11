@@ -20,5 +20,5 @@ it('callback is called on change', () => {
 
   button.find('button').simulate('click');
 
-  expect(callback).toHaveBeenCalled();
+  expect(callback).toHaveBeenCalledTimes(1);
 });
