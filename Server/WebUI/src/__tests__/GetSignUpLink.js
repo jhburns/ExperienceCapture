@@ -2,8 +2,6 @@ import React from 'react';
 import { shallow, mount, } from 'enzyme';
 import GetSignUpLink from 'components/GetSignUpLink';
 
-import validator from 'validator';
-
 it('has non-empty content', () => {
   const button = shallow(<GetSignUpLink />);
 
