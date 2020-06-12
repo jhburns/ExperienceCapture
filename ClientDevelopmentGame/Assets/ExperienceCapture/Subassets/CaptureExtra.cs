@@ -1,7 +1,5 @@
 namespace Capture
 {
-    using System.Linq;
-
     using UnityEngine;
 
     public static class TypesExtra
