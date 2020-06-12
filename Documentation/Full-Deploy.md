@@ -287,7 +287,7 @@ In `Server/.deploy.env`:
 In `Deploy/.env`:
 
 - `aws_region_name=us-west-1` same as above, default us-west-1.
-- `aws_backup_bucket_name` may need to be changed to a different bucket name, because they are globally namespaced.
+- `aws_backup_bucket_name` may need to be changed to a different bucket name, because they are globally namespaced. Also for whatever bucket is used, it is recommend to change its access to "Bucket and objects not public".
 
 ## Sharing and Deploying
 
