@@ -1,9 +1,14 @@
-﻿{
+{
     "name": "Tests",
+    "references": [
+        "Capture"
+    ],
     "optionalUnityReferences": [
         "TestAssemblies"
     ],
     "includePlatforms": [
         "Editor"
-    ]
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
 }
