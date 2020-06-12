@@ -12,6 +12,8 @@ xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
     -serial "$serial"
 
 # Run a build with output
+echo Run build
+echo ----------------------------------------------------------
 xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
     /opt/Unity/Editor/Unity \
     -quit  \
@@ -22,12 +24,16 @@ xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
     /app
 
 # Run tests
+echo Run tests
+echo ----------------------------------------------------------
 xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
     /opt/Unity/Editor/Unity \
 	-runTests \
     -batchmode \
     -projectPath \
-	-testResults -
+	-testResults ./unit-tests.xml
+
+cat unit-tests.xml
 
 status2=$?
 
