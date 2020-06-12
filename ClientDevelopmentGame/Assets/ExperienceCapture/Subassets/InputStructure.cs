@@ -4,6 +4,8 @@ namespace Capture.Internal.InputStructure
 
     public class SpecificPair
     {
+        // TODO: change this to not be names so confusing
+        // key: value is much more clear
         public string name {  get; private set; }
         public string key { get; private set; }
 

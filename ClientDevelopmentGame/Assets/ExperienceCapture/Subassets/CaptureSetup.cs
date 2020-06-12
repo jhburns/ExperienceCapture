@@ -282,7 +282,7 @@
         }
 
         // All of this is since Unity only supports 1D arrays in the editor
-        private InputStructure.SpecificPair[] parseSpecific()
+        public InputStructure.SpecificPair[] parseSpecific()
         {
             InputStructure.SpecificPair[] tempPairs = new InputStructure.SpecificPair[limitOutputToSpecified.Length];
 
