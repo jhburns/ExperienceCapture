@@ -11,7 +11,7 @@ RUN apk update \
     && pip3 install \
     ansible-lint==4.1.0
 
-COPY .ansible-lint build.json playbook.yaml ./
+COPY .ansible-lint build.json playbook.yaml tests.py ./
 
 RUN packer validate build.json
 RUN ansible-lint playbook.yaml
