@@ -11,7 +11,7 @@ xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
     -password "$password" \
     -serial "$serial"
 
-# Run a build with outut
+# Run a build with output
 xvfb-run --auto-servernum --server-args='-screen 0 640x480x24' \
     /opt/Unity/Editor/Unity \
     -quit  \
