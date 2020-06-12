@@ -115,7 +115,7 @@
       async: 600  # Ten minutes
       poll: 0
 
-    - name: Set authorized key
+    - name: Set key for ssh authorization
       authorized_key:
         user: ec-debug
         state: present
@@ -171,6 +171,20 @@
       loop:
         - 'pytest==5.4.3'
         - 'testinfra==5.1.0'
+      when: packer_debug == 'true'
+
+    - name: Copy test file
+      copy:
+        src: /deploy/tests.py
+        dest: ~/tests.py
+        owner: ec-debug
+        mode: '0644'
+      when: packer_debug == 'true'
+
+    - name: Run test file
+      command: python3 -m pytest tests.py
+      args:
+        chdir: ~/
       when: packer_debug == 'true'
 
     - name: Create production Docker Swarm services
