@@ -1716,7 +1716,7 @@ MonoBehaviour:
   gameVersion: 
   clientVersion: 
   defaultUrl: https://expcap.xyz
-  offlineMode: 1
+  offlineMode: 0
   printAdditionalCaptureInfo: 0
   findObjectsInEachFrame: 1
   doNotPrintToConsole: 0

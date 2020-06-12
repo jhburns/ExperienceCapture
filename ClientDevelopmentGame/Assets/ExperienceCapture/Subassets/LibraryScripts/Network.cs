@@ -1,4 +1,4 @@
-namespace Network
+namespace Capture.Internal.Network
 {
     using UnityEngine.Networking;
     using System.Collections;

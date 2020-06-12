@@ -1,4 +1,4 @@
-namespace InputStructure
+namespace Capture.Internal.InputStructure
 {
     using System;
 
