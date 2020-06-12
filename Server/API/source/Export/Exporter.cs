@@ -10,7 +10,9 @@ namespace Carter.App.Export.Main
     using System.Text;
     using System.Threading.Tasks;
 
-    using Carter.App.Export.JsonHelper;
+    using Carter.App.Export.JsonExtra;
+    using Carter.App.Hosting;
+    using Carter.App.Lib.MinioExtra;
     using Carter.App.Route.Sessions;
 
     using CsvHelper;
@@ -18,7 +20,6 @@ namespace Carter.App.Export.Main
 
     using HandlebarsDotNet;
 
-    using Minio;
     using Minio.Exceptions;
 
     using MongoDB.Bson;
@@ -27,11 +28,11 @@ namespace Carter.App.Export.Main
 
     public class ExportHandler
     {
-        // TODO: Update this to use values from appsettings.json and AppEnvironment
-        private static readonly IMongoDatabase DB = new MongoClient(@"mongodb://db:27017").GetDatabase("ec");
-        private static readonly MinioClient OS = new MinioClient("os:9000", "minio", "minio123");
-
         private static readonly string Seperator = Path.DirectorySeparatorChar.ToString();
+
+        private static IMongoDatabase db;
+
+        private static IMinioClient os;
 
         private static string sessionId;
         private static string prefix;
@@ -42,12 +43,12 @@ namespace Carter.App.Export.Main
 
         public static void Entry(object id)
         {
-            _ = MainAsync((string)id);
+            _ = MainAsync((ExporterConfiguration)id);
         }
 
-        private static async Task MainAsync(string id)
+        protected static async Task MainAsync(ExporterConfiguration config)
         {
-            sessionId = id;
+            Setup(config);
 
             try
             {
@@ -70,19 +71,30 @@ namespace Carter.App.Export.Main
                 ZipFolder(outFolder, outLocation);
 
                 await Upload(outLocation);
-                await UpdateDoc();
+                await UpdateDoc(ExportOptions.Done);
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+
+                await UpdateDoc(ExportOptions.Error);
             }
 
-            // Uncomment to make it so the program stays open, for debugging
-            // System.Threading.Thread.Sleep(100000000);
             Directory.Delete(prefix, true);
         }
 
-        private static async Task ExportSession()
+        protected static void Setup(ExporterConfiguration config)
+        {
+            sessionId = config.Id;
+
+            string mongoUrl = $"mongodb://{config.Mongo.ConnectionString}:{config.Mongo.Port}";
+            db = new MongoClient(mongoUrl).GetDatabase("ec");
+
+            string minioHost = $"{AppConfiguration.Minio.ConnectionString}:{AppConfiguration.Minio.Port}";
+            os = new MinioClientExtra(minioHost, "minio", "minio123");
+        }
+
+        protected static async Task ExportSession()
         {
             currentHeader = new List<string>();
             currentSceneIndex = -1; // To play nice with the proccessing code
@@ -95,9 +107,9 @@ namespace Carter.App.Export.Main
                 OutputMode = JsonOutputMode.Strict,
             };
 
-            ToJsonStart("raw");
-            ToJsonStart("sessionInfo");
-            ToJsonStart("onlyCaptures");
+            AppendToFile("[", $"{sessionId}.raw.json");
+            AppendToFile("[", $"{sessionId}.sessionInfo.json");
+            AppendToFile("[", $"{sessionId}.onlyCaptures.json");
 
             for (int i = 0; i < workloads.Count; i++)
             {
@@ -107,17 +119,17 @@ namespace Carter.App.Export.Main
                 List<BsonDocument> sessionSorted = await SortSession((int)workloads[i], offset);
 
                 bool isFirst = i == 0;
-                ToJson(sessionSorted, "raw", isFirst, ws);
+                AppendToFile(ToJson(sessionSorted, isFirst, ws), $"{sessionId}.raw.json");
 
                 var (otherCaptures, sceneBlocks) = ProcessScenes(sessionSorted);
                 if (otherCaptures.Count > 0)
                 {
-                    ToJson(otherCaptures, "sessionInfo", isFirst);
+                    AppendToFile(ToJson(otherCaptures, isFirst), $"{sessionId}.sessionInfo.json");
                 }
 
                 foreach (var block in sceneBlocks)
                 {
-                    ToJson(block.Docs, "onlyCaptures", isFirst);
+                    AppendToFile(ToJson(block.Docs, isFirst), $"{sessionId}.onlyCaptures.json");
                     isFirst = false;
 
                     // First scene shouldn't reqult in a previous scene being copied
@@ -125,8 +137,6 @@ namespace Carter.App.Export.Main
                     {
                         currentSceneIndex = block.Index;
                         currentSceneName = block.Name;
-
-                        ToCsv(block, "sceneName");
                     }
 
                     // If at a new scene > 0, then copy the previous
@@ -141,13 +151,12 @@ namespace Carter.App.Export.Main
 
                         currentSceneIndex = block.Index;
                         currentSceneName = block.Name;
+                    }
 
-                        ToCsv(block, "sceneName");
-                    }
-                    else
-                    {
-                        ToCsv(block, "sceneName");
-                    }
+                    AppendToFile(
+                        ToCsv(block),
+                        $"{sessionId}.sceneName.{currentSceneName}.{currentSceneIndex}.csv",
+                        $"temporary{Seperator}CSVs{Seperator}");
                 }
 
                 // Copy the last block
@@ -157,24 +166,24 @@ namespace Carter.App.Export.Main
                 }
             }
 
-            ToJsonEnd("raw");
-            ToJsonEnd("sessionInfo");
-            ToJsonEnd("onlyCaptures");
+            AppendToFile("]", $"{sessionId}.raw.json");
+            AppendToFile("]", $"{sessionId}.sessionInfo.json");
+            AppendToFile("]", $"{sessionId}.onlyCaptures.json");
 
-            ToJsonStart("database");
-            ToJson(await GetSessionInfo(), "database");
-            ToJsonEnd("database");
+            AppendToFile("[", $"{sessionId}.database.json");
+            AppendToFile(ToJson(await GetSessionInfo()), $"{sessionId}.database.json");
+            AppendToFile("]", $"{sessionId}.database.json");
 
-            CreateReadme();
+            AppendToFile(CreateReadme(), "README.txt");
         }
 
         /*
          * Breaks the session collection into blocks, of a constant size or less
          * Returns: Task<List<long>> of a broken down count of all the documents in a session
          */
-        private static async Task<List<long>> GetWorkloads()
+        protected static async Task<List<long>> GetWorkloads()
         {
-            var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{sessionId}");
+            var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{sessionId}");
             var filter = Builders<BsonDocument>.Filter.Empty;
             long docCount = await sessionCollection.CountDocumentsAsync(filter);
 
@@ -197,9 +206,9 @@ namespace Carter.App.Export.Main
             return workloads;
         }
 
-        private static async Task<List<BsonDocument>> SortSession(int workload, int offset)
+        protected static async Task<List<BsonDocument>> SortSession(int workload, int offset)
         {
-            var sessionCollection = DB.GetCollection<BsonDocument>($"sessions.{sessionId}");
+            var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{sessionId}");
 
             var filter = Builders<BsonDocument>.Filter.Empty;
             var sorter = Builders<BsonDocument>.Sort
@@ -216,9 +225,9 @@ namespace Carter.App.Export.Main
                 .ToListAsync();
         }
 
-        private static async Task<SessionSchema> GetSessionInfo()
+        protected static async Task<SessionSchema> GetSessionInfo()
         {
-            var sessions = DB.GetCollection<SessionSchema>(SessionSchema.CollectionName);
+            var sessions = db.GetCollection<SessionSchema>("sessions");
 
             var filter = Builders<SessionSchema>.Filter
                 .Where(s => s.Id == sessionId);
@@ -228,7 +237,7 @@ namespace Carter.App.Export.Main
                 .FirstOrDefaultAsync();
         }
 
-        private static void ToJson(List<BsonDocument> sessionDocs, string about, bool isFirst, JsonWriterSettings ws = null)
+        protected static string ToJson(List<BsonDocument> sessionDocs, bool isFirst, JsonWriterSettings ws = null)
         {
             StringBuilder docsTotal = new StringBuilder();
 
@@ -243,53 +252,44 @@ namespace Carter.App.Export.Main
                 docsTotal.Remove(0, 1);
             }
 
-            string filename = $"{sessionId}.{about}.json";
-            AppendToFile(docsTotal.ToString(), filename);
+            return docsTotal.ToString();
         }
 
-        private static void ToJsonStart(string about)
+        protected static string ToJson(BsonDocument sessionDoc)
         {
-            AppendToFile("[", $"{sessionId}.{about}.json");
+            return sessionDoc.ToJson(JsonWriterSettings.Defaults);
         }
 
-        private static void ToJsonEnd(string about)
+        protected static string ToJson(SessionSchema sessionDoc)
         {
-            AppendToFile("]", $"{sessionId}.{about}.json");
+            return sessionDoc.ToJson(JsonWriterSettings.Defaults);
         }
 
-        private static void ToJson(BsonDocument sessionDoc, string about)
-        {
-            string filename = $"{sessionId}.{about}.json";
-            AppendToFile(sessionDoc.ToJson(JsonWriterSettings.Defaults), filename);
-        }
-
-        private static void ToJson(SessionSchema sessionDoc, string about)
-        {
-            string filename = $"{sessionId}.{about}.json";
-            AppendToFile(sessionDoc.ToJson(JsonWriterSettings.Defaults), filename);
-        }
-
-        private static string ToFlatJson(List<BsonDocument> sessionDocs)
+        protected static string ToFlatJson(List<BsonDocument> sessionDocs)
         {
             StringBuilder docsTotal = new StringBuilder();
             docsTotal.Append("[");
 
-            foreach (BsonDocument d in sessionDocs)
+            if (sessionDocs.Count > 0)
             {
-                string json = d.ToJson(JsonWriterSettings.Defaults);
-                var dict = JsonHelper.DeserializeAndFlatten(json);
-                string flat = Newtonsoft.Json.JsonConvert.SerializeObject(dict);
+                foreach (BsonDocument d in sessionDocs)
+                {
+                    string json = d.ToJson(JsonWriterSettings.Defaults);
+                    var dict = JsonExtra.DeserializeAndFlatten(json);
+                    string flat = Newtonsoft.Json.JsonConvert.SerializeObject(dict);
 
-                docsTotal.AppendFormat("{0}{1}", flat, ",");
+                    docsTotal.AppendFormat("{0}{1}", flat, ",");
+                }
+
+                docsTotal.Length--; // Remove trailing comma
             }
 
-            docsTotal.Length--; // Remove trailing comma
             docsTotal.Append("]");
 
             return docsTotal.ToString();
         }
 
-        private static void ConfigureJsonWriter()
+        protected static void ConfigureJsonWriter()
         {
             JsonWriterSettings.Defaults = new JsonWriterSettings()
             {
@@ -298,7 +298,7 @@ namespace Carter.App.Export.Main
             };
         }
 
-        private static Configuration GetConfiguration()
+        protected static Configuration GetConfiguration()
         {
             return new Configuration
             {
@@ -308,7 +308,7 @@ namespace Carter.App.Export.Main
             };
         }
 
-        private static (List<BsonDocument> otherCaptures, List<SceneBlock> scenes) ProcessScenes(List<BsonDocument> sessionDocs)
+        protected static (List<BsonDocument> otherCaptures, List<SceneBlock> scenes) ProcessScenes(List<BsonDocument> sessionDocs)
         {
             var sceneDocs = sessionDocs.FindAll(d => d.Contains("sceneName"));
             int sceneIndex = currentSceneIndex;
@@ -367,22 +367,20 @@ namespace Carter.App.Export.Main
             return (otherCaptures, sceneMap);
         }
 
-        private static void ToCsv(SceneBlock block, string about)
+        protected static string ToCsv(SceneBlock block)
         {
             string json = ToFlatJson(block.Docs);
             string csv = JsonToCsv(json);
-
-            string path = $"temporary{Seperator}CSVs{Seperator}";
-            AppendToFile(csv, $"{sessionId}.{about}.{block.Name}.{block.Index}.csv", path);
+            return csv;
         }
 
-        private static string JsonToCsv(string jsonContent)
+        protected static string JsonToCsv(string jsonContent)
         {
             StringWriter csvString = new StringWriter();
 
             using (var csv = new CsvWriter(csvString, GetConfiguration()))
             {
-                var dt = JsonHelper.JsonToTable(jsonContent);
+                var dt = JsonExtra.JsonToTable(jsonContent);
                 dt = AlignHeaders(dt);
 
                 foreach (DataRow row in dt.Rows)
@@ -399,7 +397,7 @@ namespace Carter.App.Export.Main
             return csvString.ToString();
         }
 
-        private static void CopyCsv(SceneBlock block, string about)
+        protected static void CopyCsv(SceneBlock block, string about)
         {
             StringWriter csvString = new StringWriter();
 
@@ -413,18 +411,20 @@ namespace Carter.App.Export.Main
                 csv.NextRecord();
             }
 
+            // Write collected headers
             string path = $"exported{Seperator}CSVs{Seperator}";
             string filename = $"{sessionId}.{about}.{block.Name}.{block.Index}.csv";
             AppendToFile(csvString.ToString(), filename, path);
 
+            // Copy data contents to finalized location
             string temporaryLocation = $"{prefix}temporary{Seperator}CSVs{Seperator}{filename}";
             File.AppendAllText($"{prefix}{path}{filename}", File.ReadAllText(temporaryLocation));
 
-            // Reset the headers, because a new scene will likely have differerent headers
+            // Reset the headers, because a new scene should have differerent headers
             currentHeader = new List<string>();
         }
 
-        private static DataTable AlignHeaders(DataTable dt)
+        protected static DataTable AlignHeaders(DataTable dt)
         {
             var header = dt.Columns.Cast<DataColumn>()
                         .Select(col => col.ColumnName)
@@ -460,7 +460,7 @@ namespace Carter.App.Export.Main
             return dt;
         }
 
-        private static void CreateReadme()
+        protected static string CreateReadme()
         {
             string source = System.IO.File.ReadAllText($".{Seperator}Templates{Seperator}README.txt.handlebars");
             var template = Handlebars.Compile(source);
@@ -470,10 +470,10 @@ namespace Carter.App.Export.Main
                 id = sessionId,
             };
 
-            AppendToFile(template(data), "README.txt");
+            return template(data);
         }
 
-        private static void AppendToFile(string content, string filename, string path = "")
+        protected static void AppendToFile(string content, string filename, string path = "")
         {
             string fullpath;
             if (path == string.Empty)
@@ -491,13 +491,13 @@ namespace Carter.App.Export.Main
             }
         }
 
-        private static void ZipFolder(string location, string outName)
+        protected static void ZipFolder(string location, string outName)
         {
             ZipFile.CreateFromDirectory(location, outName);
         }
 
         // From: https://docs.min.io/docs/dotnet-client-quickstart-guide.html
-        private static async Task Upload(string fileLocation)
+        protected static async Task Upload(string fileLocation)
         {
             var bucketName = "sessions.exported";
 
@@ -510,14 +510,14 @@ namespace Carter.App.Export.Main
             try
             {
                 // Make a bucket on the server, if not already present.
-                bool found = await OS.BucketExistsAsync(bucketName);
+                bool found = await os.BucketExistsAsync(bucketName);
                 if (!found)
                 {
-                    await OS.MakeBucketAsync(bucketName, location);
+                    await os.MakeBucketAsync(bucketName, location);
                 }
 
                 // Upload a file to bucket.
-                await OS.PutObjectAsync(bucketName, objectName, filePath, contentType);
+                await os.PutObjectAsync(bucketName, objectName, filePath, contentType);
             }
             catch (MinioException e)
             {
@@ -525,23 +525,22 @@ namespace Carter.App.Export.Main
             }
         }
 
-        private static async Task UpdateDoc()
+        protected static async Task UpdateDoc(ExportOptions status)
         {
-            var sessions = DB.GetCollection<SessionSchema>(SessionSchema.CollectionName);
+            var sessions = db.GetCollection<SessionSchema>("sessions");
 
             var filter = Builders<SessionSchema>.Filter
                 .Where(s => s.Id == sessionId);
 
             var update = Builders<SessionSchema>.Update
-                .Set(s => s.IsExported, true)
-                .Set(s => s.IsPending, false);
+                .Set(s => s.ExportState, status);
 
             await sessions.UpdateOneAsync(filter, update);
         }
     }
 
     // Used to group together captures based on timestamps
-    internal class SceneBlock
+    public class SceneBlock
     {
         #pragma warning disable SA1516
         public string Name { get; set; }

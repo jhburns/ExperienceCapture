@@ -1,6 +1,6 @@
 namespace Carter.App.Route.Users
 {
-    using System;
+    using System.Threading.Tasks;
 
     using Carter;
 
@@ -8,6 +8,7 @@ namespace Carter.App.Route.Users
     using Carter.App.Lib.Environment;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Network;
+    using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
 
     using Carter.App.Route.NewSignUp;
@@ -25,7 +26,13 @@ namespace Carter.App.Route.Users
 
     public class Users : CarterModule
     {
-        public Users(IMongoDatabase db, IAppEnvironment env)
+        public Users(
+            IRepository<AccessTokenSchema> accessRepo,
+            IRepository<SignUpTokenSchema> signUpRepo,
+            IRepository<ClaimTokenSchema> claimRepo,
+            IRepository<PersonSchema> personRepo,
+            IAppEnvironment env,
+            IDateExtra date)
             : base("/users")
         {
             this.Post("/", async (req, res) =>
@@ -45,27 +52,18 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var signUpTokens = db.GetCollection<SignUpTokenSchema>(SignUpTokenSchema.CollectionName);
-
-                var signUpDoc = await signUpTokens.Find(
+                var signUpDoc = await signUpRepo.FindOne(
                     Builders<SignUpTokenSchema>
                         .Filter
-                        .Where(t => t.Hash == PasswordHasher.Hash(newPerson.Data.signUpToken)))
-                        .FirstOrDefaultAsync();
+                        .Where(t => t.Hash == PasswordHasher.Hash(newPerson.Data.signUpToken)));
 
-                if (signUpDoc == null || signUpDoc.CreatedAt.IsAfter(signUpDoc.ExpirationSeconds))
+                if (signUpDoc == null || signUpDoc.CreatedAt.IsAfter(date, signUpDoc.ExpirationSeconds))
                 {
                     res.StatusCode = 401;
                     return;
                 }
 
-                var users = db.GetCollection<PersonSchema>(PersonSchema.CollectionName);
-
-                var existingPerson = await users.Find(
-                    Builders<PersonSchema>
-                        .Filter
-                        .Where(p => p.Id == person.Subject))
-                        .FirstOrDefaultAsync();
+                var existingPerson = await personRepo.FindById(person.Subject);
 
                 if (existingPerson != null)
                 {
@@ -81,26 +79,18 @@ namespace Carter.App.Route.Users
                     Firstname = person.GivenName,
                     Lastname = person.FamilyName,
                     Email = person.Email,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(date.Now),
                 };
 
-                var personDoc = personObject.ToBsonDocument();
-
-                await users.InsertOneAsync(personObject);
+                await personRepo.Add(personObject);
 
                 await res.FromString();
             });
 
             this.Post("/{id}/tokens/", async (req, res) =>
             {
-                var users = db.GetCollection<PersonSchema>(PersonSchema.CollectionName);
-
                 string userID = req.RouteValues.As<string>("id");
-                var userDoc = await users.Find(
-                    Builders<PersonSchema>
-                        .Filter
-                        .Where(p => p.Id == userID))
-                        .FirstOrDefaultAsync();
+                var userDoc = await personRepo.FindById(userID);
 
                 if (userDoc == null)
                 {
@@ -130,29 +120,26 @@ namespace Carter.App.Route.Users
 
                 string newToken = Generate.GetRandomToken();
                 string newHash = PasswordHasher.Hash(newToken);
-                var accessTokens = db.GetCollection<AccessTokenSchema>(AccessTokenSchema.CollectionName);
 
                 var tokenObject = new AccessTokenSchema
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = newHash,
                     User = userDoc.InternalId,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(date.Now),
                 };
 
-                await accessTokens.InsertOneAsync(tokenObject);
+                await accessRepo.Add(tokenObject);
 
                 if (newAccessRequest.Data.claimToken != null)
                 {
-                    var claimTokens = db.GetCollection<ClaimTokenSchema>(ClaimTokenSchema.CollectionName);
-
                     var filterClaims = Builders<ClaimTokenSchema>.Filter
                         .Where(c => c.Hash == PasswordHasher.Hash(newAccessRequest.Data.claimToken));
 
-                    var claimDoc = await claimTokens.Find(filterClaims).FirstOrDefaultAsync();
+                    var claimDoc = await claimRepo.FindOne(filterClaims);
 
                     // 401 returned twice, which may be hard for the client to interpret
-                    if (claimDoc == null || claimDoc.CreatedAt.IsAfter(claimDoc.ExpirationSeconds))
+                    if (claimDoc == null || claimDoc.CreatedAt.IsAfter(date, claimDoc.ExpirationSeconds))
                     {
                         res.StatusCode = 401;
                         return;
@@ -169,27 +156,27 @@ namespace Carter.App.Route.Users
                             #pragma warning restore SA1515
                             .Set(c => c.AccessToken, newToken);
 
-                        await claimTokens.UpdateOneAsync(filterClaims, update);
+                        await claimRepo.Update(filterClaims, update);
                     }
 
                     await res.FromString();
                 }
                 else
                 {
-                    var responce = new
+                    var responce = new AccessTokenResponce
                     {
-                        accessToken = newToken,
+                        AccessToken = newToken,
+                        Expiration = TimerExtra.ProjectSeconds(date, tokenObject.ExpirationSeconds),
                     };
-                    var responceDoc = responce.ToBsonDocument();
 
-                    string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
+                    string json = JsonQuery.FulfilEncoding(req.Query, responce);
                     if (json != null)
                     {
                         await res.FromJson(json);
                         return;
                     }
 
-                    await res.FromBson(responceDoc);
+                    await res.FromBson(responce.ToBsonDocument());
                 }
             });
 
@@ -197,31 +184,30 @@ namespace Carter.App.Route.Users
             {
                 string newToken = Generate.GetRandomToken();
                 string newHash = PasswordHasher.Hash(newToken);
-                var claimTokens = db.GetCollection<ClaimTokenSchema>(ClaimTokenSchema.CollectionName);
 
                 var tokenDoc = new ClaimTokenSchema
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = newHash,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(date.Now),
                 };
 
-                await claimTokens.InsertOneAsync(tokenDoc);
+                await claimRepo.Add(tokenDoc);
 
-                var responce = new
+                var responce = new ClaimTokenResponce
                 {
-                    claimToken = newToken,
+                    ClaimToken = newToken,
+                    Expiration = TimerExtra.ProjectSeconds(date, tokenDoc.ExpirationSeconds),
                 };
-                var responceDoc = responce.ToBsonDocument();
 
-                string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
+                string json = JsonQuery.FulfilEncoding(req.Query, responce);
                 if (json != null)
                 {
                     await res.FromJson(json);
                     return;
                 }
 
-                await res.FromBson(responceDoc);
+                await res.FromBson(responce.ToBsonDocument());
             });
 
             this.Get("/claims/", async (req, res) =>
@@ -233,10 +219,9 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var claimTokens = db.GetCollection<ClaimTokenSchema>(ClaimTokenSchema.CollectionName);
                 var filter = Builders<ClaimTokenSchema>.Filter
                     .Where(c => c.Hash == PasswordHasher.Hash(claimToken));
-                var claimDoc = await claimTokens.Find(filter).FirstOrDefaultAsync();
+                var claimDoc = await claimRepo.FindOne(filter);
 
                 if (claimDoc == null)
                 {
@@ -244,7 +229,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                if (!claimDoc.IsExisting || claimDoc.CreatedAt.IsAfter(claimDoc.ExpirationSeconds))
+                if (!claimDoc.IsExisting || claimDoc.CreatedAt.IsAfter(date, claimDoc.ExpirationSeconds))
                 {
                     res.StatusCode = 404;
                     return;
@@ -265,22 +250,22 @@ namespace Carter.App.Route.Users
                     #pragma warning restore SA1515
                     .Set(c => c.AccessToken, null);
 
-                await claimTokens.UpdateOneAsync(filter, update);
+                await claimRepo.Update(filter, update);
 
-                var responce = new
+                var responce = new AccessTokenResponce
                 {
-                    accessToken = claimDoc.AccessToken,
+                    AccessToken = claimDoc.AccessToken,
+                    Expiration = TimerExtra.ProjectSeconds(date, claimDoc.ExpirationSeconds),
                 };
-                var responceDoc = responce.ToBsonDocument();
 
-                string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
+                string json = JsonQuery.FulfilEncoding(req.Query, responce);
                 if (json != null)
                 {
                     await res.FromString(json);
                     return;
                 }
 
-                await res.FromBson(responceDoc);
+                await res.FromBson(responce.ToBsonDocument());
             });
 
             this.Post("/signUp/admin/", async (req, res) =>
@@ -299,31 +284,30 @@ namespace Carter.App.Route.Users
                 }
 
                 string newToken = Generate.GetRandomToken();
-                var signUpTokens = db.GetCollection<SignUpTokenSchema>(SignUpTokenSchema.CollectionName);
 
                 var tokenDoc = new SignUpTokenSchema
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = PasswordHasher.Hash(newToken),
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(date.Now),
                 };
 
-                await signUpTokens.InsertOneAsync(tokenDoc);
+                await signUpRepo.Add(tokenDoc);
 
-                var responce = new
+                var responce = new SignUpTokenResponce
                 {
-                    claimToken = newToken,
+                    SignUpToken = newToken,
+                    Expiration = TimerExtra.ProjectSeconds(date, tokenDoc.ExpirationSeconds),
                 };
-                var responceDoc = responce.ToBsonDocument();
 
-                string json = JsonQuery.FulfilEncoding(req.Query, responceDoc);
+                string json = JsonQuery.FulfilEncoding(req.Query, responce);
                 if (json != null)
                 {
                     await res.FromJson(json);
                     return;
                 }
 
-                await res.FromBson(responceDoc);
+                await res.FromBson(responce.ToBsonDocument());
             });
         }
     }
@@ -331,9 +315,6 @@ namespace Carter.App.Route.Users
     public class PersonSchema
     {
         #pragma warning disable SA1516
-        [BsonIgnore]
-        public const string CollectionName = "persons";
-
         [BsonIgnoreIfNull]
         [BsonId]
         public BsonObjectId InternalId { get; set; }
@@ -355,15 +336,29 @@ namespace Carter.App.Route.Users
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
-        #pragma warning restore SA151, SA1300
+        #pragma warning restore SA1516
+    }
+
+    public sealed class PersonRepository : RepositoryBase<PersonSchema>
+    {
+        public PersonRepository(IMongoDatabase database)
+            : base(database, "persons")
+        {
+        }
+
+        public override async Task<PersonSchema> FindById(string id)
+        {
+            return await this.Collection.Find(
+                Builders<PersonSchema>
+                    .Filter
+                    .Where(p => p.Id == id))
+                    .FirstOrDefaultAsync();
+        }
     }
 
     public class AccessTokenSchema
     {
         #pragma warning disable SA1516
-        [BsonIgnore]
-        public const string CollectionName = "persons.tokens.accesses";
-
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
@@ -378,15 +373,31 @@ namespace Carter.App.Route.Users
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
-        #pragma warning restore SA151, SA1300
+        #pragma warning restore SA1516
+    }
+
+    public sealed class AccessTokenRepository : RepositoryBase<AccessTokenSchema>
+    {
+        public AccessTokenRepository(IMongoDatabase database)
+            : base(database, "persons.tokens.accesses")
+        {
+        }
+    }
+
+    public class AccessTokenResponce
+    {
+        #pragma warning disable SA1516
+        [BsonElement("accessToken")]
+        public string AccessToken { get; set; }
+
+        [BsonElement("expiration")]
+        public BsonDateTime Expiration { get; set; }
+        #pragma warning restore SA1516
     }
 
     public class ClaimTokenSchema
     {
         #pragma warning disable SA1516
-        [BsonIgnore]
-        public const string CollectionName = "persons.tokens.claims";
-
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
@@ -407,6 +418,25 @@ namespace Carter.App.Route.Users
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
-        #pragma warning restore SA151, SA1300
+        #pragma warning restore SA1516
+    }
+
+    public sealed class ClaimTokenRepository : RepositoryBase<ClaimTokenSchema>
+    {
+        public ClaimTokenRepository(IMongoDatabase database)
+            : base(database, "persons.tokens.claims")
+        {
+        }
+    }
+
+    public class ClaimTokenResponce
+    {
+        #pragma warning disable SA1516
+        [BsonElement("claimToken")]
+        public string ClaimToken { get; set; }
+
+        [BsonElement("expiration")]
+        public BsonDateTime Expiration { get; set; }
+        #pragma warning restore SA1516
     }
 }

@@ -1,14 +1,16 @@
 namespace Carter.App.Route.NewSignUp
 {
-    using System;
-
     using Carter;
 
     using Carter.App.Lib.Authentication;
+    using Carter.App.Lib.Environment;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Network;
+    using Carter.App.Lib.Repository;
+    using Carter.App.Lib.Timer;
 
     using Carter.App.Route.PreSecurity;
+    using Carter.App.Route.Users;
 
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization.Attributes;
@@ -16,29 +18,33 @@ namespace Carter.App.Route.NewSignUp
 
     public class NewSignUp : CarterModule
     {
-        public NewSignUp(IMongoDatabase db)
+        public NewSignUp(
+            IRepository<AccessTokenSchema> accessRepo,
+            IRepository<SignUpTokenSchema> signUpRepo,
+            IAppEnvironment env,
+            IDateExtra date)
             : base("/users")
         {
             // TODO: only allow admins to create sign-up tokens, or another restriction
-            this.Before += PreSecurity.GetSecurityCheck(db);
+            this.Before += PreSecurity.GetSecurityCheck(accessRepo, date);
 
-            this.Post("/signUp/", async (req, res) =>
+            this.Post("/signUp", async (req, res) =>
             {
                 string newToken = Generate.GetRandomToken();
-                var signUpTokens = db.GetCollection<SignUpTokenSchema>(SignUpTokenSchema.CollectionName);
 
                 var tokenDoc = new SignUpTokenSchema
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = PasswordHasher.Hash(newToken),
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(date.Now),
                 };
 
-                await signUpTokens.InsertOneAsync(tokenDoc);
+                await signUpRepo.Add(tokenDoc);
 
-                var responce = new
+                var responce = new SignUpTokenResponce
                 {
-                    signUpToken = newToken,
+                    SignUpToken = newToken,
+                    Expiration = TimerExtra.ProjectSeconds(date, tokenDoc.ExpirationSeconds),
                 };
                 var responceDoc = responce.ToBsonDocument();
 
@@ -57,9 +63,6 @@ namespace Carter.App.Route.NewSignUp
     public class SignUpTokenSchema
     {
         #pragma warning disable SA1516
-        [BsonIgnore]
-        public const string CollectionName = "persons.tokens.signUps";
-
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
@@ -71,7 +74,27 @@ namespace Carter.App.Route.NewSignUp
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
+        #pragma warning restore SA1516
+    }
 
-        #pragma warning restore SA151
+    public sealed class SignUpTokenRepository : RepositoryBase<SignUpTokenSchema>
+    {
+        public SignUpTokenRepository(IMongoDatabase database)
+            : base(database, "persons.tokens.signUps")
+        {
+        }
+    }
+
+    public class SignUpTokenResponce
+    {
+        #pragma warning disable SA1516
+        [BsonRequired]
+        [BsonElement("signUpToken")]
+        public string SignUpToken { get; set; }
+
+        [BsonRequired]
+        [BsonElement("expiration")]
+        public BsonDateTime Expiration { get; set; }
+        #pragma warning restore SA1516
     }
 }

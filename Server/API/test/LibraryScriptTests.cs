@@ -3,16 +3,27 @@ namespace Carter.Tests.LibraryScripts
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
 
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Environment;
     using Carter.App.Lib.Generate;
+    using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
+
+    using Carter.App.Route.Sessions;
+    using Carter.App.Route.Users;
+
+    using Carter.Tests.HostingExtra;
 
     using MongoDB.Bson;
 
+    using Moq;
+
     using Xunit;
 
+    // TODO: Test timer with mocks
     public class TimerTests
     {
         [Fact]
@@ -20,7 +31,7 @@ namespace Carter.Tests.LibraryScripts
         {
             var date = new BsonDateTime(DateTime.Now);
 
-            Assert.False(date.IsAfter(100000), "IsAfter is true when parameter expirationTime is large and positive.");
+            Assert.False(date.IsAfter(new DateProvider(), 100000), "IsAfter is true when parameter expirationTime is large and positive.");
         }
 
         [Fact]
@@ -28,7 +39,7 @@ namespace Carter.Tests.LibraryScripts
         {
             var date = new BsonDateTime(DateTime.Now);
 
-            Assert.True(date.IsAfter(-100000), "IsAfter is false when parameter expirationTime is negative.");
+            Assert.True(date.IsAfter(new DateProvider(), -100000), "IsAfter is false when parameter expirationTime is negative.");
         }
     }
 
@@ -268,6 +279,7 @@ namespace Carter.Tests.LibraryScripts
         }
     }
 
+    // Note: the following tests are not thread safe
     public class EnvironmentTests
     {
         [Theory]
@@ -365,6 +377,130 @@ namespace Carter.Tests.LibraryScripts
             {
                 ConfigureAppEnvironment.FromEnv();
             });
+        }
+    }
+
+    public class NetworkTests
+    {
+        // These tests use arbitrary endpoints for simplicity
+        [Fact]
+        public async Task StringTypeIsCorrect()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema();
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result);
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Delete, $"/sessions/EXEX");
+            var response = await client.SendAsync(request);
+
+            Assert.Equal(
+                "text/plain; charset=utf-8",
+                response.Content.Headers.ContentType.ToString());
+        }
+
+        [Fact]
+        public async Task JsonTypeIsCorrect()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    User = new PersonSchema
+                    {
+                    },
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, "/sessions/EXEX");
+            var response = await client.SendAsync(request);
+
+            Assert.Equal(
+                "application/json; charset=utf-8",
+                response.Content.Headers.ContentType.ToString());
+        }
+
+        [Fact]
+        public async Task JsonIsUglyCorrect()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    User = new PersonSchema
+                    {
+                    },
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, "/sessions/EXEX?ugly=true");
+            var response = await client.SendAsync(request);
+            var body = await response.Content.ReadAsStringAsync();
+
+            Assert.Equal(
+                "application/json; charset=utf-8",
+                response.Content.Headers.ContentType.ToString());
+
+            Assert.False(body.Contains(" "), "Ugly json should not contain spaces.");
+            Assert.False(body.Contains("\t"), "Ugly json should not contain tabs.");
+            Assert.False(body.Contains("\r"), "Ugly json should not contain carriage return.");
+            Assert.False(body.Contains("\n"), "Ugly json should not contain newlines.");
+        }
+
+        [Fact]
+        public async Task BsonTypeIsCorrect()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema()
+                {
+                    User = new PersonSchema
+                    {
+                    },
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, "/sessions/EXEX?bson=true");
+            var response = await client.SendAsync(request);
+
+            Assert.Equal(
+                "application/bson",
+                response.Content.Headers.ContentType.ToString());
         }
     }
 }

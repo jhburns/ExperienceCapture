@@ -15,7 +15,7 @@ class Footer extends Component {
               href="https://github.com/jhburns/ExperienceCapture/tree/master/Documentation#documentation"
               target="_blank" rel="noopener noreferrer"
             >
-              Help
+              HELP
             </Item>
           </Col>
         </Row>

@@ -4,6 +4,7 @@ namespace Carter.App.Route.PreSecurity
     using System.Threading.Tasks;
 
     using Carter.App.Lib.Authentication;
+    using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
 
     using Carter.App.Route.Users;
@@ -14,12 +15,10 @@ namespace Carter.App.Route.PreSecurity
 
     public static class PreSecurity
     {
-        public static Func<HttpContext, Task<bool>> GetSecurityCheck(IMongoDatabase db)
+        public static Func<HttpContext, Task<bool>> GetSecurityCheck(IRepository<AccessTokenSchema> repo, IDateExtra date)
         {
             Func<HttpRequest, HttpResponse, Task<bool>> check = async (req, res) =>
             {
-                var accessTokens = db.GetCollection<AccessTokenSchema>(AccessTokenSchema.CollectionName);
-
                 string token = req.Cookies["ExperienceCapture-Access-Token"];
                 if (token == null)
                 {
@@ -27,14 +26,13 @@ namespace Carter.App.Route.PreSecurity
                     return false;
                 }
 
-                var accessTokenDoc = await accessTokens.Find(
+                var accessTokenDoc = await repo.FindOne(
                     Builders<AccessTokenSchema>
                         .Filter
-                        .Where(a => a.Hash == PasswordHasher.Hash(token)))
-                        .FirstOrDefaultAsync();
+                        .Where(a => a.Hash == PasswordHasher.Hash(token)));
 
                 if (accessTokenDoc == null
-                    || accessTokenDoc.CreatedAt.IsAfter(accessTokenDoc.ExpirationSeconds))
+                    || accessTokenDoc.CreatedAt.IsAfter(date, accessTokenDoc.ExpirationSeconds))
                 {
                     res.StatusCode = 401;
                     return false;

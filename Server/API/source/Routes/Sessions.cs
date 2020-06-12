@@ -4,17 +4,22 @@ namespace Carter.App.Route.Sessions
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Carter;
 
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Generate;
     using Carter.App.Lib.Network;
+    using Carter.App.Lib.Repository;
+    using Carter.App.Lib.Timer;
 
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.Users;
 
     using Carter.Request;
+
+    using Microsoft.Extensions.Logging;
 
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization;
@@ -23,69 +28,66 @@ namespace Carter.App.Route.Sessions
 
     public class Sessions : CarterModule
     {
-        public Sessions(IMongoDatabase db)
+        public Sessions(
+            IRepository<AccessTokenSchema> accessRepo,
+            IRepository<SessionSchema> sessionRepo,
+            IRepository<PersonSchema> personRepo,
+            IRepository<BsonDocument> captureRepo,
+            ILogger logger,
+            IDateExtra date)
             : base("/sessions")
         {
-            this.Before += PreSecurity.GetSecurityCheck(db);
+            this.Before += PreSecurity.GetSecurityCheck(accessRepo, date);
 
             this.Post("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
-
                 string uniqueID = Generate.GetRandomId(4);
-                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
 
                 // Will loop until a unique id is found
                 // Needed because the ids that are generated are from a small number of combinations
-                while ((await sessions.Find(filter).FirstOrDefaultAsync()) != null)
+                while ((await sessionRepo.FindById(uniqueID)) != null)
                 {
                     uniqueID = Generate.GetRandomId(4);
-                    filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
                 }
 
-                var accessTokens = db.GetCollection<AccessTokenSchema>(AccessTokenSchema.CollectionName);
-                string token = req.Cookies["ExperienceCapture-Access-Token"]; // Has to exist due to PreSecurity Check
+                // Has to exist due to PreSecurity Check
+                string token = req.Cookies["ExperienceCapture-Access-Token"];
 
-                var accessTokenDoc = await accessTokens.Find(
+                var accessTokenDoc = await accessRepo.FindOne(
                     Builders<AccessTokenSchema>
                         .Filter
-                        .Where(a => a.Hash == PasswordHasher.Hash(token)))
-                        .FirstOrDefaultAsync();
+                        .Where(a => a.Hash == PasswordHasher.Hash(token)));
 
-                var users = db.GetCollection<PersonSchema>(PersonSchema.CollectionName);
                 var filterUser = Builders<PersonSchema>.Filter.Where(p => p.InternalId == accessTokenDoc.User);
 
-                var user = await users
-                    .Find(filterUser)
-                    .FirstOrDefaultAsync();
+                var user = await personRepo
+                    .FindOne(filterUser);
 
                 var sessionDoc = new SessionSchema
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Id = uniqueID,
-                    User = user, // Copying user data instead of referencing so it can never change with the session
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    User = user, // Copying user data instead of referencing so it can never change in the session
+                    CreatedAt = new BsonDateTime(date.Now),
                     Tags = new List<string>(),
                 };
 
-                await sessions.InsertOneAsync(sessionDoc);
+                await sessionRepo.Add(sessionDoc);
 
                 // isOngoing is a proxy variable and will always start out as true
                 sessionDoc.IsOngoing = true;
                 sessionDoc.InternalId = null;
                 sessionDoc.User.InternalId = null;
 
-                var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
+                captureRepo.Configure($"sessions.{uniqueID}");
 
                 // Secondary index or else Mongo will fail on large queries
                 // It has a limit for max number of documents on properties
                 // Without an index, see https://docs.mongodb.com/manual/reference/limits/#Sort-Operations
                 var index = Builders<BsonDocument>.IndexKeys;
                 var key = index.Ascending("frameInfo.realtimeSinceStartup");
-                var options = new CreateIndexOptions();
 
-                var model = new CreateIndexModel<BsonDocument>(key, options);
-                await sessionCollection.Indexes.CreateOneAsync(model);
+                await captureRepo.Index(key);
 
                 string json = JsonQuery.FulfilEncoding(req.Query, sessionDoc);
                 if (json != null)
@@ -99,13 +101,11 @@ namespace Carter.App.Route.Sessions
 
             this.Get("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
-
                 var builder = Builders<SessionSchema>.Filter;
                 FilterDefinition<SessionSchema> filter = builder.Empty;
 
-                var startRange = new BsonDateTime(DateTime.Now.AddSeconds(-300)); // 5 minutes
-                var closeRange = new BsonDateTime(DateTime.Now.AddSeconds(-5)); // 5 seconds
+                var startRange = new BsonDateTime(date.Now.AddSeconds(-300)); // 5 minutes
+                var closeRange = new BsonDateTime(date.Now.AddSeconds(-5)); // 5 seconds
 
                 // TODO: add a way to query based on tag
 
@@ -130,10 +130,8 @@ namespace Carter.App.Route.Sessions
                 }
 
                 var sorter = Builders<SessionSchema>.Sort.Descending(s => s.CreatedAt);
-                var sessionDocs = await sessions
-                    .Find(filter)
-                    .Sort(sorter)
-                    .ToListAsync();
+                var sessionDocs = await sessionRepo
+                    .FindAll(filter, sorter);
 
                 var sessionsDocsWithOngoing = sessionDocs.Select((s) =>
                 {
@@ -163,10 +161,10 @@ namespace Carter.App.Route.Sessions
                     return s;
                 });
 
-                var clientValues = new
+                var clientValues = new SessionsResponce
                 {
                     // Bson documents can't start with an array like Json, so a wrapping object is used instead
-                    contentArray = sessionsDocsWithOngoing,
+                    ContentList = sessionsDocsWithOngoing.ToList(),
                 };
 
                 string json = JsonQuery.FulfilEncoding(req.Query, clientValues);
@@ -181,15 +179,10 @@ namespace Carter.App.Route.Sessions
 
             this.Post("/{id}", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
-
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<SessionSchema>.Filter.
-                    Where(s => s.Id == uniqueID);
 
-                var sessionDoc = await sessions
-                    .Find(filter)
-                    .FirstOrDefaultAsync();
+                var sessionDoc = await sessionRepo
+                    .FindById(uniqueID);
 
                 if (sessionDoc == null)
                 {
@@ -215,9 +208,9 @@ namespace Carter.App.Route.Sessions
                         {
                             document = BsonSerializer.Deserialize<BsonDocument>(ms);
                         }
-                        catch
+                        catch (Exception err)
                         {
-                            // TODO: print exception to debug
+                            logger.LogError(err.Message);
                             res.StatusCode = 400;
                             return;
                         }
@@ -231,9 +224,9 @@ namespace Carter.App.Route.Sessions
                     {
                         document = BsonDocument.Parse(json);
                     }
-                    catch
+                    catch (Exception err)
                     {
-                        // TODO: print exception to debug
+                        logger.LogError(err.Message);
                         res.StatusCode = 400;
                         return;
                     }
@@ -249,33 +242,28 @@ namespace Carter.App.Route.Sessions
                     return;
                 }
 
-                var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{uniqueID}");
+                captureRepo.Configure($"sessions.{uniqueID}");
+                await captureRepo.Add(document);
 
-                // These calls not awaited for max performance
-                _ = sessionCollection.InsertOneAsync(document);
+                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
 
                 // This lastCaptureAt is undefined on the session document until the first call of this endpoint
                 // Export flags are reset so the session can be re-exported
                 var update = Builders<SessionSchema>.Update
-                    .Set(s => s.LastCaptureAt, new BsonDateTime(DateTime.Now))
-                    .Set(s => s.IsExported, false)
-                    .Set(s => s.IsPending, false);
+                    .Set(s => s.LastCaptureAt, new BsonDateTime(date.Now))
+                    .Set(s => s.ExportState, ExportOptions.NotStarted);
 
-                _ = sessions.UpdateOneAsync(filter, update);
+                await sessionRepo.Update(filter, update);
 
                 await res.FromString();
             });
 
             this.Get("/{id}", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
-
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
 
-                var sessionDoc = await sessions
-                    .Find(filter)
-                    .FirstOrDefaultAsync();
+                var sessionDoc = await sessionRepo
+                    .FindById(uniqueID);
 
                 if (sessionDoc == null)
                 {
@@ -283,8 +271,8 @@ namespace Carter.App.Route.Sessions
                     return;
                 }
 
-                var startRange = new BsonDateTime(DateTime.Now.AddSeconds(-300)); // 5 minutes
-                var closeRange = new BsonDateTime(DateTime.Now.AddSeconds(-5)); // 5 seconds
+                var startRange = new BsonDateTime(date.Now.AddSeconds(-300)); // 5 minutes
+                var closeRange = new BsonDateTime(date.Now.AddSeconds(-5)); // 5 seconds
                 bool isStarted = false;
 
                 // Check if key exists
@@ -307,6 +295,8 @@ namespace Carter.App.Route.Sessions
                 }
 
                 sessionDoc.IsOngoing = isOngoing;
+                sessionDoc.InternalId = null;
+                sessionDoc.User.InternalId = null;
 
                 string json = JsonQuery.FulfilEncoding(req.Query, sessionDoc);
                 if (json != null)
@@ -322,12 +312,9 @@ namespace Carter.App.Route.Sessions
             {
                 string uniqueID = req.RouteValues.As<string>("id");
 
-                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
-
                 var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
-                var sessionDoc = await sessions
-                    .Find(filter)
-                    .FirstOrDefaultAsync();
+                var sessionDoc = await sessionRepo
+                    .FindById(uniqueID);
 
                 if (sessionDoc == null)
                 {
@@ -338,7 +325,7 @@ namespace Carter.App.Route.Sessions
                 var update = Builders<SessionSchema>.Update
                     .Set(s => s.IsOpen, false);
 
-                await sessions.UpdateOneAsync(filter, update);
+                await sessionRepo.Update(filter, update);
                 await res.FromString();
             });
         }
@@ -347,9 +334,6 @@ namespace Carter.App.Route.Sessions
     public class SessionSchema
     {
         #pragma warning disable SA1516
-        [BsonIgnore]
-        public const string CollectionName = "sessions";
-
         [BsonIgnoreIfNull]
         [BsonId]
         public BsonObjectId InternalId { get; set; }
@@ -360,11 +344,8 @@ namespace Carter.App.Route.Sessions
         [BsonElement("isOpen")]
         public bool IsOpen { get; set; } = true;
 
-        [BsonElement("isExported")]
-        public bool IsExported { get; set; } = false;
-
-        [BsonElement("isPending")]
-        public bool IsPending { get; set; } = false;
+        [BsonElement("exportState")]
+        public ExportOptions ExportState { get; set; } = ExportOptions.NotStarted;
 
         // Copying user data instead of referencing so it can never change with the session
         // Also so that it is easy to include when exporting
@@ -384,6 +365,56 @@ namespace Carter.App.Route.Sessions
         [BsonIgnoreIfNull]
         [BsonElement("lastCaptureAt")]
         public BsonDateTime LastCaptureAt { get; set; } = null;
-        #pragma warning restore SA151, SA1300
+        #pragma warning restore SA1516
+    }
+
+    public class SessionsResponce
+    {
+        #pragma warning disable SA1516
+        // TODO: rename this to list something, its not an array
+        [BsonElement("contentArray")]
+        public List<SessionSchema> ContentList { get; set; }
+
+        #pragma warning restore SA1516
+    }
+
+    // See Startup.cs for the code on how this is serlizalized
+    #pragma warning disable SA1201
+    public enum ExportOptions
+    {
+        NotStarted,
+        Pending,
+        Done,
+        Error,
+    }
+    #pragma warning restore SA1201
+
+    public sealed class SessionRepository : RepositoryBase<SessionSchema>
+    {
+        public SessionRepository(IMongoDatabase database)
+            : base(database, "sessions")
+        {
+        }
+
+        public override async Task<SessionSchema> FindById(string id)
+        {
+            var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == id);
+
+            var sessionDoc = await this.Collection
+                .Find(filter)
+                .FirstOrDefaultAsync();
+
+            return sessionDoc;
+        }
+    }
+
+    public sealed class CapturesRepository : RepositoryBase<BsonDocument>
+    {
+        // The session Id isn't know until runtime,
+        // So it is constructed as temp
+        public CapturesRepository(IMongoDatabase database)
+            : base(database, "sessions.this.is.temp")
+        {
+        }
     }
 }

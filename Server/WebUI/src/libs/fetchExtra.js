@@ -1,4 +1,5 @@
 // TODO: refactor this to use less repetition
+// TODO: check or recover from access token expiration
 async function postData(url = '', data = {}) {
   const response = await fetch(url, {
     method: 'POST',

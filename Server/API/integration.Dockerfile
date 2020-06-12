@@ -8,8 +8,12 @@ RUN dotnet restore ./source/API.csproj && dotnet restore ./test/test.csproj
 
 # Copy everything else and build
 COPY . .
-RUN dotnet publish -c Release -o out -nologo -p:GHA_BUILD=True
-RUN dotnet test
+
+# Overwrite normal test-runner with slower, but thread-safe
+COPY ./test/xunit.ci.json /app/test/xunit.runner.json
+
+RUN dotnet publish -c Release -o out --nologo -p:GHA_BUILD=True
+RUN dotnet test --nologo
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.3-bionic

@@ -7,12 +7,17 @@ namespace Carter.App.Route.Export
     using Carter;
 
     using Carter.App.Export.Main;
+    using Carter.App.Hosting;
 
+    using Carter.App.Lib.ExporterExtra;
     using Carter.App.Lib.MinioExtra;
     using Carter.App.Lib.Network;
+    using Carter.App.Lib.Repository;
+    using Carter.App.Lib.Timer;
 
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.Sessions;
+    using Carter.App.Route.Users;
 
     using Carter.Request;
     using Carter.Response;
@@ -21,20 +26,22 @@ namespace Carter.App.Route.Export
 
     public class Export : CarterModule
     {
-        public Export(IMongoDatabase db, IMinioClient os)
+        public Export(
+            IRepository<AccessTokenSchema> accessRepo,
+            IRepository<SessionSchema> sessionRepo,
+            IThreadExtra threader,
+            IMinioClient os,
+            IDateExtra date)
             : base("/sessions/{id}/export")
         {
-            this.Before += PreSecurity.GetSecurityCheck(db);
+            this.Before += PreSecurity.GetSecurityCheck(accessRepo, date);
 
             this.Post("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
-
                 string id = req.RouteValues.As<string>("id");
-                var filter = Builders<SessionSchema>.Filter
-                    .Where(s => s.Id == id);
 
-                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+                var sessionDoc = await sessionRepo
+                    .FindById(id);
 
                 if (sessionDoc == null)
                 {
@@ -42,27 +49,38 @@ namespace Carter.App.Route.Export
                     return;
                 }
 
-                var export = new Thread(ExportHandler.Entry);
-                export.Start(id);
+                var exporterConfig = new ExporterConfiguration
+                {
+                    Mongo = new ServiceConfiguration
+                    {
+                        ConnectionString = AppConfiguration.Mongo.ConnectionString,
+                        Port = AppConfiguration.Mongo.Port,
+                    },
+                    Minio = new ServiceConfiguration
+                    {
+                        ConnectionString = AppConfiguration.Minio.ConnectionString,
+                        Port = AppConfiguration.Minio.Port,
+                    },
+                    Id = id,
+                };
+
+                threader.Run(ExportHandler.Entry, exporterConfig);
+
+                var filter = Builders<SessionSchema>.Filter
+                    .Where(s => s.Id == id);
 
                 var update = Builders<SessionSchema>.Update
-                    .Set(s => s.IsPending, true);
+                    .Set(s => s.ExportState, ExportOptions.Pending);
 
-                await sessions.UpdateOneAsync(filter, update);
+                await sessionRepo.Update(filter, update);
 
                 await res.FromString();
             });
 
             this.Get("/", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
-
                 string id = req.RouteValues.As<string>("id");
-                var sessionDoc = await sessions.Find(
-                    Builders<SessionSchema>
-                        .Filter
-                        .Where(s => s.Id == id))
-                        .FirstOrDefaultAsync();
+                var sessionDoc = await sessionRepo.FindById(id);
 
                 if (sessionDoc == null)
                 {
@@ -70,7 +88,7 @@ namespace Carter.App.Route.Export
                     return;
                 }
 
-                if (sessionDoc.IsPending)
+                if (sessionDoc.ExportState == ExportOptions.Pending)
                 {
                     res.StatusCode = 202;
                     await res.FromString("PENDING");
@@ -78,9 +96,16 @@ namespace Carter.App.Route.Export
                 }
 
                 // Export job hasn't been created, so return not found
-                if (!sessionDoc.IsExported)
+                if (sessionDoc.ExportState == ExportOptions.NotStarted)
                 {
                     res.StatusCode = 404;
+                    return;
+                }
+
+                // Not sure what to do about an error
+                if (sessionDoc.ExportState == ExportOptions.Error)
+                {
+                    res.StatusCode = 500;
                     return;
                 }
 
@@ -94,6 +119,15 @@ namespace Carter.App.Route.Export
                     await res.FromStream(stream, "application/zip", about);
                 }
             });
+        }
+    }
+
+    public sealed class ExportThreader : IThreadExtra
+    {
+        public void Run(ParameterizedThreadStart method, object parameter = null)
+        {
+            var export = new Thread(ExportHandler.Entry);
+            export.Start(parameter);
         }
     }
 }

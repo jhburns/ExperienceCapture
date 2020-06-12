@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { Wrapper } from 'components/SessionRow/style';
 
+// TODO: rename to SessionRow
 class Session extends Component {
   render() {
     return (

@@ -3,29 +3,32 @@ namespace Carter.App.Route.Tags
     using Carter;
 
     using Carter.App.Lib.Network;
-    using Carter.App.Route.PreSecurity;
+    using Carter.App.Lib.Repository;
+    using Carter.App.Lib.Timer;
 
+    using Carter.App.Route.PreSecurity;
     using Carter.App.Route.Sessions;
+    using Carter.App.Route.Users;
 
     using Carter.Request;
 
-    using MongoDB.Bson;
     using MongoDB.Driver;
 
     public class Tags : CarterModule
     {
-        public Tags(IMongoDatabase db)
+        public Tags(
+            IRepository<AccessTokenSchema> accessRepo,
+            IRepository<SessionSchema> sessionRepo,
+            IDateExtra date)
             : base("/sessions/{id}/tags")
         {
-            this.Before += PreSecurity.GetSecurityCheck(db);
+            this.Before += PreSecurity.GetSecurityCheck(accessRepo, date);
 
             this.Post("/{tagName}", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
-
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
-                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+                var sessionDoc = await sessionRepo
+                    .FindById(uniqueID);
 
                 if (sessionDoc == null)
                 {
@@ -33,17 +36,19 @@ namespace Carter.App.Route.Tags
                     return;
                 }
 
-                string collectionName = $"sessions.{uniqueID}";
-                var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
-
                 string tag = req.RouteValues.As<string>("tagName");
 
                 if (!sessionDoc.Tags.Contains(tag))
                 {
                     sessionDoc.Tags.Add(tag);
+
+                    var filter = Builders<SessionSchema>.Filter
+                        .Where(s => s.Id == uniqueID);
+
                     var update = Builders<SessionSchema>.Update
                         .Set(s => s.Tags, sessionDoc.Tags);
-                    await sessions.UpdateOneAsync(filter, update);
+
+                    await sessionRepo.Update(filter, update);
                 }
 
                 await res.FromString();
@@ -51,11 +56,9 @@ namespace Carter.App.Route.Tags
 
             this.Delete("/{tagName}", async (req, res) =>
             {
-                var sessions = db.GetCollection<SessionSchema>(SessionSchema.CollectionName);
-
                 string uniqueID = req.RouteValues.As<string>("id");
-                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
-                var sessionDoc = await sessions.Find(filter).FirstOrDefaultAsync();
+                var sessionDoc = await sessionRepo
+                    .FindById(uniqueID);
 
                 if (sessionDoc == null)
                 {
@@ -63,17 +66,19 @@ namespace Carter.App.Route.Tags
                     return;
                 }
 
-                string collectionName = $"sessions.{uniqueID}";
-                var sessionCollection = db.GetCollection<BsonDocument>(collectionName);
-
                 string tag = req.RouteValues.As<string>("tagName");
 
                 if (sessionDoc.Tags.Contains(tag))
                 {
                     sessionDoc.Tags.Remove(tag);
+
+                    var filter = Builders<SessionSchema>.Filter
+                        .Where(s => s.Id == uniqueID);
+
                     var update = Builders<SessionSchema>.Update
                         .Set(s => s.Tags, sessionDoc.Tags);
-                    await sessions.UpdateOneAsync(filter, update);
+
+                    await sessionRepo.Update(filter, update);
                 }
 
                 await res.FromString();
