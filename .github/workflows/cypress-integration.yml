@@ -11,9 +11,9 @@ jobs:
       - name: Create .env file
         run: cp template.env .env
       - name: Pull images
-        run: docker-compose pull --quiet db os
+        run: docker-compose pull --quiet db os rp
       - name: Build images (is a separate step so --parallel flag can speed things up)
-        run: docker-compose build --parallel --quiet api rp web cy
+        run: docker-compose build --parallel --quiet api web cy
       - name: Run Docker Compose
         run: docker-compose up cy
 
