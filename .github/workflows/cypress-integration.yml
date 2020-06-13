@@ -11,8 +11,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Create .env file
         run: cp template.env .env
-      - name: Build images (is a separate step to work in parallel)
-        run: docker-compose build --parallel
+      - name: Pull images
+        run: docker-compose pull --quiet db os
+      - name: Build images (is a separate step so --parallel flag can speed things up)
+        run: docker-compose build --parallel --quiet api rp web cy
       - name: Run Docker Compose
         run: docker-compose up cy
 
