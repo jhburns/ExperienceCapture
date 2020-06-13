@@ -5,14 +5,9 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-      - name: Run Docker
-        uses: whoan/docker-build-with-cache-action@v3.1.1
-        with:
-          context: ./Server/API
-          dockerfile: integration.Dockerfile
-          image_name: jhburns/ec-receiver-cache
-          password: "${{ secrets.DOCKER_PASSWORD }}"
-          username: "${{ secrets.DOCKER_USERNAME }}"
+      - name: Run Docker Compose
+        run: docker-compose up cy
+        working-directory: ./Server
 
 name: Cypress
 
