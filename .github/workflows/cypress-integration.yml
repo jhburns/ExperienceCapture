@@ -3,11 +3,16 @@ jobs:
   build:
     name: End-To-End Checks
     runs-on: ubuntu-18.04
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./Server
     steps:
       - uses: actions/checkout@v2
+      - name: Create .env file
+        run: cp template.env .env
       - name: Run Docker Compose
         run: docker-compose up cy
-        working-directory: ./Server
 
 name: Cypress
 
