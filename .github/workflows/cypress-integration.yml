@@ -3,7 +3,6 @@ jobs:
   build:
     defaults:
       run:
-        shell: bash
         working-directory: ./Server
     name: End-To-End Checks
     runs-on: ubuntu-18.04
