@@ -64,7 +64,7 @@ services:
     depends_on:
       - api
       - web
-    hostname: web
+    hostname: rp
     image: abiosoft/caddy:1.0.3
     networks:
       - ec-network
