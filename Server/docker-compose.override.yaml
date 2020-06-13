@@ -6,6 +6,18 @@ services:
       # It shims Google Authentication instead of doing a real check
       - unsafe_do_no_validate_user=true
 
+  cy:
+    build:
+      context: ./Cypress
+    command: ["sh", "-c", "/wait && npm run start -- --browser chrome"]
+    depends_on:
+      - rp
+    environment:
+      WAIT_HOSTS: rp:2015
+    networks:
+      - ec-network
+
+  # This service is a work in progress
   redoc:
     depends_on:
       - rp

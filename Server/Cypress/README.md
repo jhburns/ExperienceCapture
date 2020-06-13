@@ -10,4 +10,4 @@ Do the command `npm run open` from this folder and selects which tests to run.
 
 ## Running in Docker
 
-From this folder: `docker build -f Dockerfile -t cypress_tests .`
+From this folder: `docker-compose up cy`
