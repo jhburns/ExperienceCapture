@@ -15,7 +15,7 @@ jobs:
       - name: Build images (is a separate step so --parallel flag can speed things up)
         run: docker-compose build --parallel --quiet api web cy
       - name: Run Docker Compose
-        run: docker-compose up cy
+        run: docker-compose run cy
 
 name: Cypress
 
