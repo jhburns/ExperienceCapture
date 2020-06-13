@@ -11,7 +11,7 @@ jobs:
       - name: Run echo
         run: echo Always runs in case another End-To-End Check does not
 
-name: Cypress
+name: Other
 
 on:  # yamllint disable-line rule:truthy
   pull_request:
