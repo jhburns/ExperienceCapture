@@ -25,4 +25,4 @@ on:  # yamllint disable-line rule:truthy
       - master
     paths:
       - 'Server/**'
-      - '.github/workflows/cypress-integration.yml'
+      - '.github/workflows/cypress-end-to-end.yml'

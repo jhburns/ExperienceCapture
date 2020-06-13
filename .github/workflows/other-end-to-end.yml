@@ -1,0 +1,19 @@
+---
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: ./Server
+    name: End-To-End Checks
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run echo
+        run: echo Always runs in case another End-To-End Check does not
+
+name: Cypress
+
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    branches:
+      - master
