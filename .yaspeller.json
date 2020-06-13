@@ -116,7 +116,8 @@
     "BSON",
     "ec",
     "xUnit",
-    "Dockerfile"
+    "Dockerfile",
+    "Cypress"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true

@@ -17,6 +17,7 @@ Run `docker-compose build` first to develop locally.
 - Database: should be started alongside any service that needs it, but `docker-compose down` also stops it.
 - Reverse-Proxy (Caddy): `docker-compose up rp` with start the reverse proxy, and almost all of the rest of the stack. This may be broken, so use the API's command if it is.
 - Backupper: `docker-compose up bu` which will dump MongoDB's data into S3.
+- Cypress: `docker-compose up cy` which runs automated end-to-end tests. Also see the `Cypress/` folder for how to run tests in your browser.
 
 `Ctrl-C` stops any service, that was named in the `docker-compose up`. To stop all services, run `docker-compose down`. See the `Server/docker-compose.yaml` file for the port mappings on any service besides the API or WebUI.
 
