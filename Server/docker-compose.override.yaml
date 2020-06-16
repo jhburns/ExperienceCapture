@@ -15,10 +15,14 @@ services:
       - api
       - web
     environment:
+      COMPOSE_INTERACTIVE_NO_CLI: "true"
       WAIT_HOSTS: rp:2015, api:80 , web:3000
       WAIT_HOSTS_TIMEOUT: 180
     networks:
       - ec-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./:/app/Server/
 
   # This service is a work in progress
   redoc:

@@ -277,7 +277,8 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                if (!PasswordHasher.Check(newAdmin.Data.password, env.PasswordHash))
+                // TODO: add a test for skipping validation
+                if (!PasswordHasher.Check(newAdmin.Data.password, env.PasswordHash) && env.SkipValidation != "true")
                 {
                     res.StatusCode = 401;
                     return;

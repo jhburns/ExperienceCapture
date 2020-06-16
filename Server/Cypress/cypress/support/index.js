@@ -14,11 +14,23 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import './commands';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
 Cypress.Screenshot.defaults({
   screenshotOnRunFailure: false
-})
+});
+
+beforeEach(() => {
+  // Seed
+  // Wipe the database first
+  cy.exec('docker-compose -f docker-compose.clone.yaml --project-name server exec -T db mongo ec --eval "db.dropDatabase();"');
+
+  // Visit the admin signup path
+  cy.visit("/admin?password=validationIsTurnOff");
+
+  // Sign In
+  cy.get('[data-cy=go-home]').click();
+});
