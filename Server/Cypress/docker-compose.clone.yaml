@@ -1,0 +1,19 @@
+---
+networks:
+  ec-network: {}
+
+services:
+  db:
+    hostname: db
+    image: mongo:4.2.2-bionic
+    networks:
+      - ec-network
+    ports:
+      - "27017:27017"
+    volumes:
+      - ec-db-volume:/data/db
+
+version: '3.5'
+
+volumes:
+  ec-db-volume: {}

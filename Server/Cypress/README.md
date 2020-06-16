@@ -10,7 +10,7 @@ Do the command `npm run open` from this folder and selects which tests to run.
 
 ## Data seeding
 
-It is recommenced to delete all of your database data locally with `docker volume rm server_ec-db-volume`. Because you may have different data locally, cleaning out the database is the easiest way to make sure the context is consistent between tests.
+In order to make sure that testing is consistent, all data is deleted between runs. Backup local MongoDB data if it important, before running cypress.
 
 ## Running in Docker
 

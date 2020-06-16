@@ -22,19 +22,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock  # May need to be changed cross platform
 
-  # Note: this service doesn't wait for the db to become active
-  bu:
-    build:
-      context: ./Backupper
-    depends_on:
-      - db
-    env_file:
-      - .env
-    environment:
-      aws_deploy_target: development
-    networks:
-      - ec-network
-
   db:
     hostname: db
     image: mongo:4.2.2-bionic
