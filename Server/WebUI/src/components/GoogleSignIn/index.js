@@ -220,8 +220,7 @@ class SignIn extends Component {
         client_id: this.props.clientId,
       });
 
-	    this.auth2.then(() => {}, this.invalidCallback);
-      gapi.load('signin2', this.renderLoginCallback);
+      this.auth2.then(() => gapi.load('signin2', this.renderLoginCallback), this.invalidCallback);
     });
   }
 

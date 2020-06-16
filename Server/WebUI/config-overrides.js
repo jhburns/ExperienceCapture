@@ -1,15 +1,15 @@
-const SriPlugin = require('webpack-subresource-integrity');
+const htmlWebpackInjectAttributesPlugin = require('html-webpack-inject-attributes-plugin');
 
+// This override is needed to allow cypress to report
+// Errors from the site's scripts
 module.exports = function override(config, env) {
-  config.output.crossOriginLoading = 'anonymous';
-
-  console.log(process.env.NODE_ENV === 'development');
-  config.plugins.push(
-    new SriPlugin({
-      hashFuncNames: ['sha256', 'sha384'],
-      enabled: process.env.NODE_ENV === 'development',
-    })
-  );
+  if (process.env.NODE_ENV === 'development') {
+    config.plugins.push(
+      new htmlWebpackInjectAttributesPlugin({
+        crossorigin: "anonymous",
+      })
+    );
+  }
   
   return config;
 }

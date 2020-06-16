@@ -57,8 +57,8 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^1.7.0",
+    "html-webpack-inject-attributes-plugin": "^1.0.3",
     "react-app-rewired": "^2.1.6",
-    "validator": "^13.1.0",
-    "webpack-subresource-integrity": "^1.4.1"
+    "validator": "^13.1.0"
   }
 }
