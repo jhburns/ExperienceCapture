@@ -13,7 +13,7 @@ class MenuLink extends Component {
     return (
       <Wrapper>
         <NavItem>
-          <NavLink active={isActive} tag={Link} to={this.props.to}>
+          <NavLink active={isActive} tag={Link} to={this.props.to} data-cy="menu-link">
             {this.props.linkText}
           </NavLink>
         </NavItem>

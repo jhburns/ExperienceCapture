@@ -150,7 +150,7 @@ class SignIn extends Component {
     }   
   }
 
-  renderLogin() {
+  renderLogin(isMock) {
     const opts = {
       width: 220,
       height: 50,
@@ -159,7 +159,9 @@ class SignIn extends Component {
       onfailure: this.failureCallback
     }
     
-	  gapi.signin2.render('loginButton', opts);
+	  if (!isMock) {
+      gapi.signin2.render('loginButton', opts);
+    }
   }
 
   onDuplicate() {
@@ -170,13 +172,15 @@ class SignIn extends Component {
   }
 
   async onSignOut() {
-    await signOutUser(this.state.isMock);
+    const isMock = this.state.isMock;
+
+    await signOutUser(isMock);
     this.setState({
 	    isSignedIn: false,
       isSignedOut: true,
       isDuplicateSignIn: false,
       isUnableToSignIn: false,
-    }, () => gapi.load('signin2', this.renderLoginCallback));
+    }, () => gapi.load('signin2', this.renderLoginCallback(isMock)));
   }
 
   async onSuccess(user) {

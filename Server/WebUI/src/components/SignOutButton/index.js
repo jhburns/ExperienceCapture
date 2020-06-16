@@ -8,6 +8,7 @@ class SignOutButton extends Component {
       <Button 
         onClick={this.props.onClickCallback}
         className="btn btn-outline-dark btn-block"
+        data-cy="sign-out"
       >
         Sign Out
       </Button>
