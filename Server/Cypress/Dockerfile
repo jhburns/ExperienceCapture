@@ -11,4 +11,6 @@ RUN npm ci --silent
 
 # Run tests
 COPY . .
+RUN cp cypress.integration.json cypress.json
+
 CMD ["npm", "run", "start", "--", "--browser", "chrome"]

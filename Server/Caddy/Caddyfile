@@ -27,6 +27,6 @@ header / {
 	X-Content-Type-Options "nosniff"
 	# Disallow the site to be rendered within a frame (clickjacking protection)
 	X-Frame-Options "DENY"
-	# Only allow requests from origin
-	Access-Control-Allow-Origin http://localhost:8090
+	# Allow access in development for testing purposes
+	Access-Control-Allow-Origin *
 }

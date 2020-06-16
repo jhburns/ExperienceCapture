@@ -12,5 +12,6 @@ RUN npm install --silent
 ARG REACT_APP_GOOGLE_CLIENT_ID
 ENV REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID
 
-# start app
+# Start app
+ENTRYPOINT []
 CMD ["npm", "start"]

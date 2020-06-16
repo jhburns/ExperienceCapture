@@ -47,6 +47,10 @@ services:
     stdin_open: true
     volumes:
       - ./WebUI/:/app/
+      # This is a work-around so that local modules aren't used.
+      # Keep in mind the volume needs to be deleted whenever
+      # Modules are reinstalled in the docker container,
+      # Or else a package may not be found
       - /app/node_modules
 
 version: '3.5'
