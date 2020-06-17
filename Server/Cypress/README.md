@@ -1,3 +1,6 @@
+[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Cypress/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3ACypress)
+[![Integration Status](https://github.com/jhburns/ExperienceCapture/workflows/Cypress%20Lint/badge.svg)](https://github.com/jhburns/ExperienceCapture/actions?query=workflow%3A%22Cypress+Lint%22)
+
 # Cypress
 
 Cypress is an end-to-end testing framework, [more information.](https://www.cypress.io/how-it-works)
