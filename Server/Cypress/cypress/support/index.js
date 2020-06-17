@@ -19,6 +19,8 @@ import './commands';
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
+// Disable screenshots for all tests
+// This can only be configured in code, not cypres.json
 Cypress.Screenshot.defaults({
   screenshotOnRunFailure: false
 });

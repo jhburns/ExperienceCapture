@@ -15,6 +15,8 @@ services:
       - api
       - web
     environment:
+      # 'COMPOSE_INTERACTIVE_NO_CLI' needed so the docker cli doesn't also need to be installed
+      # See: https://docs.docker.com/compose/reference/envvars/#compose_interactive_no_cli
       COMPOSE_INTERACTIVE_NO_CLI: "true"
       WAIT_HOSTS: rp:2015, api:80 , web:3000
       WAIT_HOSTS_TIMEOUT: 180
@@ -22,7 +24,6 @@ services:
       - ec-network
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./:/app/Server/
 
   # This service is a work in progress
   redoc:

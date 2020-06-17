@@ -5,8 +5,7 @@ describe('rootpage navigation tests.', () => {
     cy.get('[data-cy=go-home]')
       .click()
       .then(() => {
-        cy
-        .url()
+        cy.url()
         .should((u) => {
           assert.include(u, "/home/start", "The home button goes to the wrong url.");
         });
