@@ -28,7 +28,7 @@ describe('navbar tests.', () => {
           .then((links) => {
             assert.strictEqual(links.length, 3, "There aren't the correct number of menu links.");
 
-            // Yes, this is messy, but the only practical way to test each menu link
+            // Yes, this is messy, but its the only practical way to test each menu link
             cy.wrap(links[1])
               .click()
               .then(() => {
