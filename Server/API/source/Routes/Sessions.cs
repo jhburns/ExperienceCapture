@@ -102,10 +102,13 @@ namespace Carter.App.Route.Sessions
             this.Get("/", async (req, res) =>
             {
                 var builder = Builders<SessionSchema>.Filter;
+
+                // Note: only use `&=` for adding to the filter,
+                // Or else the filter cannot handle multiple query string options
                 FilterDefinition<SessionSchema> filter = builder.Empty;
 
-                var startRange = new BsonDateTime(date.UtcNow.AddSeconds(-300)); // 5 minutes
-                var closeRange = new BsonDateTime(date.UtcNow.AddSeconds(-5)); // 5 seconds
+                var startMin = new BsonDateTime(date.UtcNow.AddSeconds(-300)); // 5 minutes
+                var closeMin = new BsonDateTime(date.UtcNow.AddSeconds(-5)); // 5 seconds
 
                 var hasTags = req.Query.AsMultiple<string>("hasTags").ToList();
                 if (hasTags.Count > 0)
@@ -129,19 +132,20 @@ namespace Carter.App.Route.Sessions
                 if (req.Query.As<bool?>("isOngoing") != null)
                 {
                     bool isOngoing = req.Query.As<bool>("isOngoing");
-                    filter &= builder.Where(s => s.IsOpen == isOngoing);
 
                     if (isOngoing)
                     {
-                        filter &= (builder.Where(s => s.LastCaptureAt == null)
-                            & builder.Where(s => s.CreatedAt > startRange))
-                            | builder.Where(s => s.LastCaptureAt > closeRange);
+                        filter &= builder.Where(s => s.IsOpen == true)
+                            & (builder.Where(s => s.CreatedAt > startMin)
+                            | (builder.Where(s => s.LastCaptureAt != null)
+                            & builder.Where(s => s.LastCaptureAt > closeMin)));
                     }
                     else
                     {
-                        filter |= (builder.Where(s => s.LastCaptureAt == null)
-                            & builder.Where(s => s.CreatedAt < startRange))
-                            | builder.Where(s => s.LastCaptureAt < closeRange);
+                        filter &= builder.Where(s => s.IsOpen == false)
+                            | (builder.Where(s => s.CreatedAt < startMin)
+                            | (builder.Where(s => s.LastCaptureAt != null)
+                            & builder.Where(s => s.LastCaptureAt < closeMin)));
                     }
                 }
 
@@ -161,9 +165,9 @@ namespace Carter.App.Route.Sessions
                     if (s.IsOpen)
                     {
                         isOngoing = (!isStarted
-                            && startRange.CompareTo(s.CreatedAt) < 0)
+                            && startMin < s.CreatedAt)
                             || (isStarted
-                            && closeRange.CompareTo(s.LastCaptureAt) < 0);
+                            && closeMin < s.LastCaptureAt);
                     }
                     else
                     {
