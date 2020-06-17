@@ -20,7 +20,7 @@ class ArchivedSessionsPage extends Component {
           <Row className="justify-content-center">
             <Col lg={10} className="pr-0">
               <SessionTable
-                sessionsQuery={"isOngoing=false&hasTag=archived"}
+                queryOptions={{ isOngoing: false, hasTags: "archived" }}
                 buttonData={{
                   isAdd: false,
                   body: "Unarchive",

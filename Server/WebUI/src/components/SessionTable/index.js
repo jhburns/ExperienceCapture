@@ -9,6 +9,8 @@ import { Wrapper } from 'components/SessionTable/style';
 
 import { postData, deleteData, } from 'libs/fetchExtra';
 
+import queryString from 'query-string';
+
 class SessionTable extends Component {
   constructor(props) {
     super(props)
@@ -60,7 +62,11 @@ class SessionTable extends Component {
   }
 
   async onSession() {
-    const url = `/api/v1/sessions?${this.props.sessionsQuery}&ugly=true`;
+    let queryOptions = this.props.queryOptions;
+    queryOptions.ugly = true;
+    const query = queryString.stringify(queryOptions);
+
+    const url = `/api/v1/sessions?${query}`;
     const getSessions = await getData(url);
     const sessionsData = await getSessions.json();
     const sessions = sessionsData.contentArray;
