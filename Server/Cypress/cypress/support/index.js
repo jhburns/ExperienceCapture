@@ -31,6 +31,7 @@ beforeEach(() => {
   // Visit the admin signup path
   cy.visit("/admin?password=validationIsTurnOff");
 
-  // Sign In
-  cy.get('[data-cy=go-home]').click();
+  // Wait until it can sign In
+  cy.get('[data-cy=go-home]');
 });
+
