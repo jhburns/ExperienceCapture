@@ -680,9 +680,9 @@ namespace Carter.Tests.Route.Sessions
         [InlineData(10000, false)]
         public async Task ChecksWhenNotStartedGetSessions(int seconds, bool isOngoing)
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime.AddSeconds(seconds))
                 .Verifiable("Now was never called.");
 
@@ -743,9 +743,9 @@ namespace Carter.Tests.Route.Sessions
         [InlineData(1000, 0, false)]
         public async Task ChecksWhenStartedGetSessions(int currentSeconds, int captureSecond, bool isOngoing)
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime.AddSeconds(currentSeconds))
                 .Verifiable("Now was never called.");
 
@@ -1250,9 +1250,9 @@ namespace Carter.Tests.Route.Sessions
         [InlineData(10000, false)]
         public async Task ChecksWhenNotStartedGetSession(int seconds, bool isOngoing)
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime.AddSeconds(seconds))
                 .Verifiable("Now was never called.");
 
@@ -1308,9 +1308,9 @@ namespace Carter.Tests.Route.Sessions
         [InlineData(1000, 0, false)]
         public async Task ChecksWhenStartedGetSession(int currentSeconds, int captureSecond, bool isOngoing)
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime.AddSeconds(currentSeconds))
                 .Verifiable("Now was never called.");
 

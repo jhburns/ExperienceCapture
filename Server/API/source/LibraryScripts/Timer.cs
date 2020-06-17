@@ -5,28 +5,28 @@ namespace Carter.App.Lib.Timer
 
     public interface IDateExtra
     {
-        DateTime Now { get; }
+        DateTime UtcNow { get; }
     }
 
     public static class TimerExtra
     {
         public static bool IsAfter(this BsonDateTime start, IDateExtra date, int expirationTime)
         {
-            BsonDateTime endTime = new BsonDateTime(date.Now.AddSeconds(-expirationTime));
+            BsonDateTime endTime = new BsonDateTime(date.UtcNow.AddSeconds(-expirationTime));
             return start.CompareTo(endTime) < 0;
         }
 
         public static BsonDateTime ProjectSeconds(IDateExtra date, int expirationTime)
         {
-            return new BsonDateTime(date.Now.AddSeconds(expirationTime));
+            return new BsonDateTime(date.UtcNow.AddSeconds(expirationTime));
         }
     }
 
     public sealed class DateProvider : IDateExtra
     {
-        public DateTime Now
+        public DateTime UtcNow
         {
-            get => DateTime.Now;
+            get => DateTime.UtcNow;
         }
     }
 }

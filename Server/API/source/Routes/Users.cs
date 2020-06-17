@@ -79,7 +79,7 @@ namespace Carter.App.Route.Users
                     Firstname = person.GivenName,
                     Lastname = person.FamilyName,
                     Email = person.Email,
-                    CreatedAt = new BsonDateTime(date.Now),
+                    CreatedAt = new BsonDateTime(date.UtcNow),
                 };
 
                 await personRepo.Add(personObject);
@@ -126,7 +126,7 @@ namespace Carter.App.Route.Users
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = newHash,
                     User = userDoc.InternalId,
-                    CreatedAt = new BsonDateTime(date.Now),
+                    CreatedAt = new BsonDateTime(date.UtcNow),
                 };
 
                 await accessRepo.Add(tokenObject);
@@ -189,7 +189,7 @@ namespace Carter.App.Route.Users
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = newHash,
-                    CreatedAt = new BsonDateTime(date.Now),
+                    CreatedAt = new BsonDateTime(date.UtcNow),
                 };
 
                 await claimRepo.Add(tokenDoc);
@@ -290,7 +290,7 @@ namespace Carter.App.Route.Users
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = PasswordHasher.Hash(newToken),
-                    CreatedAt = new BsonDateTime(date.Now),
+                    CreatedAt = new BsonDateTime(date.UtcNow),
                 };
 
                 await signUpRepo.Add(tokenDoc);

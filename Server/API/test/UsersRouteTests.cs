@@ -71,9 +71,9 @@ namespace Carter.Tests.Route.Users
         [InlineData(1000000)]
         public async Task ExpiredTokenIsUnauthorizedPostUsers(int seconds)
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime.AddSeconds(seconds))
                 .Verifiable("Now was never called.");
 
@@ -106,9 +106,9 @@ namespace Carter.Tests.Route.Users
         [Fact]
         public async Task ExistingPersonIsConflictPostUsers()
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime)
                 .Verifiable("Now was never called.");
 
@@ -155,9 +155,9 @@ namespace Carter.Tests.Route.Users
         [Fact]
         public async Task AddIsCalledPostUsers()
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime)
                 .Verifiable("Now was never called.");
 
@@ -208,9 +208,9 @@ namespace Carter.Tests.Route.Users
         [InlineData("/?test=sdkfjsdlfksdf&blak=sdfsfds")]
         public async Task MultipulRoutesAreOkPostUsers(string input)
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime)
                 .Verifiable("Now was never called.");
 
@@ -535,9 +535,9 @@ namespace Carter.Tests.Route.Users
         [Fact]
         public async Task ThingsAreCalledForClaimPostAccessToken()
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime)
                 .Verifiable("Now was never called.");
 
@@ -590,9 +590,9 @@ namespace Carter.Tests.Route.Users
         [Fact]
         public async Task ResponceIsOkPostAccessToken()
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime)
                 .Verifiable("Now was never called.");
 
@@ -650,9 +650,9 @@ namespace Carter.Tests.Route.Users
         [Fact]
         public async Task ExpiredTokenIsUnauthorizedPostAccessToken()
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime.AddSeconds(3601))
                 .Verifiable("Now was never called.");
 
@@ -890,9 +890,9 @@ namespace Carter.Tests.Route.Users
         [Fact]
         public async Task ExpiredClaimIsNotFoundGetClaims()
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime.AddSeconds(3601))
                 .Verifiable("Now was never called.");
 
@@ -926,9 +926,9 @@ namespace Carter.Tests.Route.Users
         [Fact]
         public async Task NotAccessIsPendingGetClaims()
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime)
                 .Verifiable("Now was never called.");
 
@@ -967,9 +967,9 @@ namespace Carter.Tests.Route.Users
         [Fact]
         public async Task UpdateIsCalledGetClaims()
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime)
                 .Verifiable("Now was never called.");
 
@@ -1007,9 +1007,9 @@ namespace Carter.Tests.Route.Users
         [Fact]
         public async Task ResponceIsValidGetClaims()
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime)
                 .Verifiable("Now was never called.");
 
@@ -1055,9 +1055,9 @@ namespace Carter.Tests.Route.Users
         [Fact]
         public async Task ResponceIsValidBsonGetClaims()
         {
-            var setTime = new DateProvider().Now;
+            var setTime = new DateProvider().UtcNow;
             var dateMock = new Mock<IDateExtra>();
-            dateMock.SetupGet(d => d.Now)
+            dateMock.SetupGet(d => d.UtcNow)
                 .Returns(setTime)
                 .Verifiable("Now was never called.");
 

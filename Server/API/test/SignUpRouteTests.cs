@@ -48,7 +48,7 @@ namespace Carter.Tests.Route.NewSignUp
                     User = ObjectId.GenerateNewId(),
 
                     // A day so the token can't expire while running
-                    CreatedAt = new BsonDateTime(DateTime.Now.AddSeconds(86400)),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow.AddSeconds(86400)),
                 };
             });
             result.Start();
@@ -127,7 +127,7 @@ namespace Carter.Tests.Route.NewSignUp
         [Fact]
         public async Task ResponceExpirationIsInTheFuturePostSignUp()
         {
-            var now = new BsonDateTime(DateTime.Now);
+            var now = new BsonDateTime(DateTime.UtcNow);
             var client = CustomHost.Create();
 
             var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp");

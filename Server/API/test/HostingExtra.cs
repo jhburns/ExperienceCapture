@@ -62,7 +62,7 @@ namespace Carter.Tests.HostingExtra
                                     User = ObjectId.GenerateNewId(),
 
                                     // A day so the token can't expire while running
-                                    CreatedAt = new BsonDateTime(DateTime.Now.AddSeconds(86400)),
+                                    CreatedAt = new BsonDateTime(DateTime.UtcNow.AddSeconds(86400)),
                                 };
                             });
                             result.Start();
