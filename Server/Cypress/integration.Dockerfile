@@ -1,5 +1,4 @@
 FROM node:13.8.0-stretch-slim
-
 WORKDIR /app
 
 # Install packages

@@ -1,4 +1,5 @@
 ---
+# This file is needed so that the database can be reset before each test
 networks:
   ec-network: {}
 

@@ -1,5 +1,4 @@
 FROM cypress/browsers:node13.8.0-chrome81-ff75
-
 WORKDIR /app
 
 # Add wait
@@ -17,6 +16,8 @@ RUN npm ci --silent
 
 # Run tests
 COPY . .
+
+# Override the local cypress config file
 RUN cp cypress.integration.json cypress.json
 
 CMD ["npm", "run", "start", "--", "--browser", "chrome"]
