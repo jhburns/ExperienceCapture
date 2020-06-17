@@ -68,7 +68,7 @@ namespace Carter.App.Route.Sessions
                     InternalId = ObjectId.GenerateNewId(),
                     Id = uniqueID,
                     User = user, // Copying user data instead of referencing so it can never change in the session
-                    CreatedAt = new BsonDateTime(date.Now),
+                    CreatedAt = new BsonDateTime(date.UtcNow),
                     Tags = new List<string>(),
                 };
 
@@ -104,8 +104,8 @@ namespace Carter.App.Route.Sessions
                 var builder = Builders<SessionSchema>.Filter;
                 FilterDefinition<SessionSchema> filter = builder.Empty;
 
-                var startRange = new BsonDateTime(date.Now.AddSeconds(-300)); // 5 minutes
-                var closeRange = new BsonDateTime(date.Now.AddSeconds(-5)); // 5 seconds
+                var startRange = new BsonDateTime(date.UtcNow.AddSeconds(-300)); // 5 minutes
+                var closeRange = new BsonDateTime(date.UtcNow.AddSeconds(-5)); // 5 seconds
 
                 // TODO: add a way to query based on tag
 
@@ -250,7 +250,7 @@ namespace Carter.App.Route.Sessions
                 // This lastCaptureAt is undefined on the session document until the first call of this endpoint
                 // Export flags are reset so the session can be re-exported
                 var update = Builders<SessionSchema>.Update
-                    .Set(s => s.LastCaptureAt, new BsonDateTime(date.Now))
+                    .Set(s => s.LastCaptureAt, new BsonDateTime(date.UtcNow))
                     .Set(s => s.ExportState, ExportOptions.NotStarted);
 
                 await sessionRepo.Update(filter, update);
@@ -271,8 +271,8 @@ namespace Carter.App.Route.Sessions
                     return;
                 }
 
-                var startRange = new BsonDateTime(date.Now.AddSeconds(-300)); // 5 minutes
-                var closeRange = new BsonDateTime(date.Now.AddSeconds(-5)); // 5 seconds
+                var startRange = new BsonDateTime(date.UtcNow.AddSeconds(-300)); // 5 minutes
+                var closeRange = new BsonDateTime(date.UtcNow.AddSeconds(-5)); // 5 seconds
                 bool isStarted = false;
 
                 // Check if key exists

@@ -29,7 +29,7 @@ namespace Carter.Tests.LibraryScripts
         [Fact]
         public void IsNotAfterPositive()
         {
-            var date = new BsonDateTime(DateTime.Now);
+            var date = new BsonDateTime(DateTime.UtcNow);
 
             Assert.False(date.IsAfter(new DateProvider(), 100000), "IsAfter is true when parameter expirationTime is large and positive.");
         }
@@ -37,7 +37,7 @@ namespace Carter.Tests.LibraryScripts
         [Fact]
         public void IsAfterNegative()
         {
-            var date = new BsonDateTime(DateTime.Now);
+            var date = new BsonDateTime(DateTime.UtcNow);
 
             Assert.True(date.IsAfter(new DateProvider(), -100000), "IsAfter is false when parameter expirationTime is negative.");
         }

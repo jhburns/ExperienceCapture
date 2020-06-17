@@ -77,7 +77,7 @@ namespace Carter.Tests.Route.PreSecurity
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = string.Empty,
                     User = ObjectId.GenerateNewId(),
-                    CreatedAt = new BsonDateTime(DateTime.Now.AddSeconds(-value)),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow.AddSeconds(-value)),
                 };
             });
             result.Start();
