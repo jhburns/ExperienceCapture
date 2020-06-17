@@ -107,7 +107,23 @@ namespace Carter.App.Route.Sessions
                 var startRange = new BsonDateTime(date.UtcNow.AddSeconds(-300)); // 5 minutes
                 var closeRange = new BsonDateTime(date.UtcNow.AddSeconds(-5)); // 5 seconds
 
-                // TODO: add a way to query based on tag
+                var hasTags = req.Query.AsMultiple<string>("hasTags").ToList();
+                if (hasTags.Count > 0)
+                {
+                    foreach (var tag in hasTags)
+                    {
+                        filter &= builder.Where(s => s.Tags.Contains(tag));
+                    }
+                }
+
+                var lacksTags = req.Query.AsMultiple<string>("lacksTags").ToList();
+                if (lacksTags.Count > 0)
+                {
+                    foreach (var tag in lacksTags)
+                    {
+                        filter &= builder.Where(s => !s.Tags.Contains(tag));
+                    }
+                }
 
                 // Three potential options: null, true, or false
                 if (req.Query.As<bool?>("isOngoing") != null)
