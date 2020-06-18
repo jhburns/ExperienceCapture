@@ -9,6 +9,8 @@ import { Wrapper } from 'components/SessionTable/style';
 
 import { postData, deleteData, } from 'libs/fetchExtra';
 
+import queryString from 'query-string';
+
 class SessionTable extends Component {
   constructor(props) {
     super(props)
@@ -36,52 +38,28 @@ class SessionTable extends Component {
         throw Error(archiveRequest.status);
       }
 
-      const sessionsUpdated = this.state.sessions.filter((session) => {
-        return session.id !== id;
-      });
-
-      this.setState({
-        sessions: sessionsUpdated
-      });
+      await this.getSessionCallback();
     } catch (err) {
       console.error(err);
     }
   }
 
   async pollSessions() {
-      const currentSessions = await this.getSessionCallback();
-
-      // Very hacky, but easiest way to do abstract comparisons
-      if (JSON.stringify(currentSessions) !== JSON.stringify(this.state.sessions)) {
-        this.setState({
-          sessions: currentSessions
-        });
-      }
+      await this.getSessionCallback();
   }
 
   async onSession() {
-    const url = `/api/v1/sessions?${this.props.sessionsQuery}&ugly=true`;
+    let queryOptions = this.props.queryOptions;
+    queryOptions.ugly = true;
+    const query = queryString.stringify(queryOptions);
+
+    const url = `/api/v1/sessions?${query}`;
     const getSessions = await getData(url);
     const sessionsData = await getSessions.json();
     const sessions = sessionsData.contentArray;
 
-    // Removing any session if it lacks or has a tag it shouldn't
-    const sessionsFiltered = sessions.reduce((sessions, s) => {
-      if (this.props.lacksTag !== undefined || this.props.hasTag !== undefined) {
-        if (this.props.lacksTag !== undefined && !s.tags.includes(this.props.lacksTag)) {
-          sessions.push(s);
-        } else if (this.props.hasTag !== undefined && s.tags.includes(this.props.hasTag)) {
-          sessions.push(s);
-        }
-      } else {
-        sessions.push(s);
-      }
-
-      return sessions;
-    }, []);
-
     // Removing all the extra data from each session, and flattening
-    const sessionsConverted = sessionsFiltered.map((s) => {
+    const sessionsConverted = sessions.map((s) => {
       return {
         id: s.id,
         fullname: s.user.fullname,
@@ -89,14 +67,16 @@ class SessionTable extends Component {
       }
     });
 
-    return sessionsConverted;
+    // Very hacky, but easiest way to do abstract comparisons
+    if (JSON.stringify(sessionsConverted) !== JSON.stringify(this.state.sessions)) {
+      this.setState({
+        sessions: sessionsConverted
+      });
+    }
   }
 
   async componentDidMount() {
-    const firstSessions = await this.getSessionCallback();
-    this.setState({
-      sessions: firstSessions
-    });
+    await this.getSessionCallback();
 
     this.poller = setInterval(() => this.poll(), 10000); // 10 seconds
   }
