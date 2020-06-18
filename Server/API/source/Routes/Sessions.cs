@@ -151,9 +151,17 @@ namespace Carter.App.Route.Sessions
                     }
                 }
 
+                var page = req.Query.As<int?>("page") ?? 1;
+                if (page < 1)
+                {
+                    // Page query needs to be possible
+                    res.StatusCode = 400;
+                    return;
+                }
+
                 var sorter = Builders<SessionSchema>.Sort.Descending(s => s.CreatedAt);
                 var sessionDocs = await sessionRepo
-                    .FindAll(filter, sorter);
+                    .FindAll(filter, sorter, page);
 
                 var sessionsDocsWithOngoing = sessionDocs.Select((s) =>
                 {
@@ -183,10 +191,12 @@ namespace Carter.App.Route.Sessions
                     return s;
                 });
 
+                var count = await sessionRepo.FindThenCount(filter);
                 var clientValues = new SessionsResponce
                 {
                     // Bson documents can't start with an array like Json, so a wrapping object is used instead
                     ContentList = sessionsDocsWithOngoing.ToList(),
+                    PageTotal = (long)Math.Ceiling((double)count / 10d),
                 };
 
                 string json = JsonQuery.FulfilEncoding(req.Query, clientValues);
@@ -401,6 +411,9 @@ namespace Carter.App.Route.Sessions
         [BsonElement("contentArray")]
         public List<SessionSchema> ContentList { get; set; }
 
+        [BsonElement("pageTotal")]
+        public long PageTotal { get; set; }
+
         #pragma warning restore SA1516
     }
 
@@ -442,11 +455,10 @@ namespace Carter.App.Route.Sessions
 
             return await this.Collection
                 .Find(filter)
-                .Skip(page * limit)
+                .Skip((page - 1) * limit)
                 .Limit(limit)
                 .Sort(sorter)
-                .Project(projection)
-                .As<SessionSchema>()
+                .Project<SessionSchema>(projection)
                 .ToListAsync();
         }
 

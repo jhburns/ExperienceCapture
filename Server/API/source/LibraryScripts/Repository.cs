@@ -9,11 +9,13 @@ namespace Carter.App.Lib.Repository
     public interface IRepository<TSchema>
     {
         // Query
-        Task<IList<TSchema>> FindAll(FilterDefinition<TSchema> query, SortDefinition<TSchema> sorter, int page = 0);
+        Task<IList<TSchema>> FindAll(FilterDefinition<TSchema> query, SortDefinition<TSchema> sorter, int page = 1);
 
         Task<TSchema> FindOne(FilterDefinition<TSchema> query);
 
         Task<TSchema> FindById(string id);
+
+        Task<long> FindThenCount(FilterDefinition<TSchema> query = null);
 
         // Mutate
         Task Add(TSchema item);
@@ -41,7 +43,7 @@ namespace Carter.App.Lib.Repository
         public virtual async Task<IList<TSchema>> FindAll(
             FilterDefinition<TSchema> filter,
             SortDefinition<TSchema> sorter,
-            int page = 0)
+            int page = 1)
         {
             return await this.Collection
                 .Find(filter)
@@ -61,6 +63,11 @@ namespace Carter.App.Lib.Repository
         public virtual Task<TSchema> FindById(string id)
         {
             throw new NotImplementedException();
+        }
+
+        public virtual async Task<long> FindThenCount(FilterDefinition<TSchema> query = null)
+        {
+            return await this.Collection.CountDocumentsAsync(query ?? Builders<TSchema>.Filter.Empty);
         }
 
         public virtual async Task Add(TSchema item)
