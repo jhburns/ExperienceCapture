@@ -38,27 +38,14 @@ class SessionTable extends Component {
         throw Error(archiveRequest.status);
       }
 
-      const sessionsUpdated = this.state.sessions.filter((session) => {
-        return session.id !== id;
-      });
-
-      this.setState({
-        sessions: sessionsUpdated
-      });
+      await this.getSessionCallback();
     } catch (err) {
       console.error(err);
     }
   }
 
   async pollSessions() {
-      const currentSessions = await this.getSessionCallback();
-
-      // Very hacky, but easiest way to do abstract comparisons
-      if (JSON.stringify(currentSessions) !== JSON.stringify(this.state.sessions)) {
-        this.setState({
-          sessions: currentSessions
-        });
-      }
+      await this.getSessionCallback();
   }
 
   async onSession() {
@@ -80,14 +67,16 @@ class SessionTable extends Component {
       }
     });
 
-    return sessionsConverted;
+    // Very hacky, but easiest way to do abstract comparisons
+    if (JSON.stringify(sessionsConverted) !== JSON.stringify(this.state.sessions)) {
+      this.setState({
+        sessions: sessionsConverted
+      });
+    }
   }
 
   async componentDidMount() {
-    const firstSessions = await this.getSessionCallback();
-    this.setState({
-      sessions: firstSessions
-    });
+    await this.getSessionCallback();
 
     this.poller = setInterval(() => this.poll(), 10000); // 10 seconds
   }
