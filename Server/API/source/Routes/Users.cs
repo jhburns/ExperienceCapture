@@ -37,7 +37,7 @@ namespace Carter.App.Route.Users
         {
             this.Post("/", async (req, res) =>
             {
-                var newPerson = await req.BindAndValidate<Person>();
+                var newPerson = await req.BindAndValidate<PersonRequest>();
 
                 if (!newPerson.ValidationResult.IsValid)
                 {
@@ -98,7 +98,7 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                var newAccessRequest = await req.BindAndValidate<AccessToken>();
+                var newAccessRequest = await req.BindAndValidate<AccessTokenRequest>();
                 if (!newAccessRequest.ValidationResult.IsValid)
                 {
                     res.StatusCode = 400;
@@ -270,7 +270,7 @@ namespace Carter.App.Route.Users
 
             this.Post("/signUp/admin/", async (req, res) =>
             {
-                var newAdmin = await req.BindAndValidate<AdminPassword>();
+                var newAdmin = await req.BindAndValidate<AdminPasswordRequest>();
                 if (!newAdmin.ValidationResult.IsValid)
                 {
                     res.StatusCode = 400;
