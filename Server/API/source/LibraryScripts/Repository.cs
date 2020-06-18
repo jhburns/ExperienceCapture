@@ -9,7 +9,7 @@ namespace Carter.App.Lib.Repository
     public interface IRepository<TSchema>
     {
         // Query
-        Task<IList<TSchema>> FindAll(FilterDefinition<TSchema> query, SortDefinition<TSchema> sorter);
+        Task<IList<TSchema>> FindAll(FilterDefinition<TSchema> query, SortDefinition<TSchema> sorter, int page = 0);
 
         Task<TSchema> FindOne(FilterDefinition<TSchema> query);
 
@@ -40,7 +40,8 @@ namespace Carter.App.Lib.Repository
 
         public virtual async Task<IList<TSchema>> FindAll(
             FilterDefinition<TSchema> filter,
-            SortDefinition<TSchema> sorter)
+            SortDefinition<TSchema> sorter,
+            int page = 0)
         {
             return await this.Collection
                 .Find(filter)

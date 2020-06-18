@@ -503,7 +503,8 @@ namespace Carter.Tests.Route.Sessions
 
             sessionMock.Setup(s => s.FindAll(
                     It.IsAny<FilterDefinition<SessionSchema>>(),
-                    It.IsAny<SortDefinition<SessionSchema>>()))
+                    It.IsAny<SortDefinition<SessionSchema>>(),
+                    It.IsAny<int>()))
                 .Returns(result)
                 .Verifiable("Sessions are never searched for.");
 
@@ -529,9 +530,10 @@ namespace Carter.Tests.Route.Sessions
             });
             result.Start();
 
-            sessionMock.Setup(a => a.FindAll(
+            sessionMock.Setup(s => s.FindAll(
                     It.IsAny<FilterDefinition<SessionSchema>>(),
-                    It.IsAny<SortDefinition<SessionSchema>>()))
+                    It.IsAny<SortDefinition<SessionSchema>>(),
+                    It.IsAny<int>()))
                 .Returns(result)
                 .Verifiable("Sessions are never searched for.");
 
@@ -563,7 +565,8 @@ namespace Carter.Tests.Route.Sessions
 
             sessionMock.Setup(s => s.FindAll(
                     It.IsAny<FilterDefinition<SessionSchema>>(),
-                    It.IsAny<SortDefinition<SessionSchema>>()))
+                    It.IsAny<SortDefinition<SessionSchema>>(),
+                    It.IsAny<int>()))
                 .Returns(result)
                 .Verifiable("Sessions are never searched for.");
 
@@ -610,7 +613,8 @@ namespace Carter.Tests.Route.Sessions
 
             sessionMock.Setup(s => s.FindAll(
                     It.IsAny<FilterDefinition<SessionSchema>>(),
-                    It.IsAny<SortDefinition<SessionSchema>>()))
+                    It.IsAny<SortDefinition<SessionSchema>>(),
+                    It.IsAny<int>()))
                 .Returns(result)
                 .Verifiable("Sessions are never searched for.");
 
@@ -653,7 +657,8 @@ namespace Carter.Tests.Route.Sessions
 
             sessionMock.Setup(s => s.FindAll(
                     It.IsAny<FilterDefinition<SessionSchema>>(),
-                    It.IsAny<SortDefinition<SessionSchema>>()))
+                    It.IsAny<SortDefinition<SessionSchema>>(),
+                    It.IsAny<int>()))
                 .Returns(result)
                 .Verifiable("Sessions are never searched for.");
 
@@ -707,7 +712,8 @@ namespace Carter.Tests.Route.Sessions
 
             sessionMock.Setup(s => s.FindAll(
                     It.IsAny<FilterDefinition<SessionSchema>>(),
-                    It.IsAny<SortDefinition<SessionSchema>>()))
+                    It.IsAny<SortDefinition<SessionSchema>>(),
+                    It.IsAny<int>()))
                 .Returns(result)
                 .Verifiable("Sessions are never searched for.");
 
@@ -767,7 +773,8 @@ namespace Carter.Tests.Route.Sessions
 
             sessionMock.Setup(s => s.FindAll(
                     It.IsAny<FilterDefinition<SessionSchema>>(),
-                    It.IsAny<SortDefinition<SessionSchema>>()))
+                    It.IsAny<SortDefinition<SessionSchema>>(),
+                    It.IsAny<int>()))
                 .Returns(result)
                 .Verifiable("Sessions are never searched for.");
 

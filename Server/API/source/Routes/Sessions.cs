@@ -430,6 +430,26 @@ namespace Carter.App.Route.Sessions
             _ = this.Index(keyId);
         }
 
+        public override async Task<IList<SessionSchema>> FindAll(
+            FilterDefinition<SessionSchema> filter,
+            SortDefinition<SessionSchema> sorter,
+            int page)
+        {
+            var projection = Builders<SessionSchema>.Projection
+                .Exclude(s => s.InternalId);
+
+            int limit = 10;
+
+            return await this.Collection
+                .Find(filter)
+                .Skip(page * limit)
+                .Limit(limit)
+                .Sort(sorter)
+                .Project(projection)
+                .As<SessionSchema>()
+                .ToListAsync();
+        }
+
         public override async Task<SessionSchema> FindById(string id)
         {
             var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == id);
