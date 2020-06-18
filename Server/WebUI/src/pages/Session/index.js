@@ -42,6 +42,15 @@ class SessionPage extends Component {
       isOngoing: sessionsData.isOngoing
     }
 
+    // Poll based on session state
+    if (["Done", "NotStarted", "Error"].includes(cleanedSession.exportState)) {
+      clearInterval(this.poller);
+      this.poller = setInterval(() => this.poll(), 10000); // 10 seconds
+    } else {
+      clearInterval(this.poller);
+      this.poller = setInterval(() => this.poll(), 250); // 0.25 seconds
+    }
+
     return cleanedSession;
   }
 
@@ -67,7 +76,7 @@ class SessionPage extends Component {
 
 
   async pollSession() {
-    const currentSession = await this.getSession();
+    const currentSession = await this.sessionCallback();
 
     // Very hacky, but easiest way to do abstract comparisons
     if (JSON.stringify(currentSession) !== JSON.stringify(this.state.session)) {
@@ -79,13 +88,11 @@ class SessionPage extends Component {
 
   async componentDidMount()
   {
-    const firstSessions = await this.getSession();
+    const firstSessions = await this.sessionCallback();
 
     this.setState({
       session: firstSessions,
     });
-
-    this.poller = setInterval(() => this.poll(), 10000); // 10 seconds
   }
 
   componentWillUnmount() {
@@ -94,8 +101,7 @@ class SessionPage extends Component {
   }
 
   render() {
-    if (this.state.session != null)
-    {
+    if (this.state.session != null) {
       return (
         <Wrapper>
           <Container className="p-0">
