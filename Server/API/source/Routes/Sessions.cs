@@ -159,7 +159,25 @@ namespace Carter.App.Route.Sessions
                     return;
                 }
 
-                var sorter = Builders<SessionSchema>.Sort.Descending(s => s.CreatedAt);
+                var direction = req.Query.As<string>("sort");
+                SortDefinition<SessionSchema> sorter;
+                if (direction == null)
+                {
+                    sorter = Builders<SessionSchema>.Sort.Descending(s => s.CreatedAt);
+                }
+                else
+                {
+                    if (Enum.TryParse(typeof(SortOptions), direction, true, out object options))
+                    {
+                        sorter = ((SortOptions)options).ToDefinition();
+                    }
+                    else
+                    {
+                        res.StatusCode = 400;
+                        return;
+                    }
+                }
+
                 var sessionDocs = await sessionRepo
                     .FindAll(filter, sorter, page);
 
@@ -428,6 +446,15 @@ namespace Carter.App.Route.Sessions
     }
     #pragma warning restore SA1201
 
+    #pragma warning disable SA1201
+    public enum SortOptions
+    {
+        Alphabetical,
+        NewestFirst,
+        OldestFirst,
+    }
+    #pragma warning restore SA1201
+
     public sealed class SessionRepository : RepositoryBase<SessionSchema>
     {
         public SessionRepository(IMongoDatabase database)
@@ -481,6 +508,20 @@ namespace Carter.App.Route.Sessions
         public CapturesRepository(IMongoDatabase database)
             : base(database, "sessions.this.is.temp")
         {
+        }
+    }
+
+    internal static class SortExtra
+    {
+        public static SortDefinition<SessionSchema> ToDefinition(this SortOptions option)
+        {
+            switch (option)
+            {
+                case SortOptions.Alphabetical: return Builders<SessionSchema>.Sort.Ascending(s => s.Id);
+                case SortOptions.NewestFirst: return Builders<SessionSchema>.Sort.Descending(s => s.CreatedAt);
+                case SortOptions.OldestFirst: return Builders<SessionSchema>.Sort.Ascending(s => s.CreatedAt);
+                default: throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

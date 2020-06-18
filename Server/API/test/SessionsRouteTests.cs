@@ -792,6 +792,85 @@ namespace Carter.Tests.Route.Sessions
         }
 
         [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        [InlineData(-10000)]
+        public async Task ZeroOrNegativePageIsBadGetSessions(int input)
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<IList<SessionSchema>>(() =>
+            {
+                return new List<SessionSchema>();
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindAll(
+                    It.IsAny<FilterDefinition<SessionSchema>>(),
+                    It.IsAny<SortDefinition<SessionSchema>>(),
+                    It.IsAny<int>()))
+                .Returns(result)
+                .Verifiable("Sessions are never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions?page={input}");
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.BadRequest,
+                "Gettings sessions with a negative page query is not a bad request.");
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(10, 1)]
+        [InlineData(800, 80)]
+        [InlineData(5, 1)]
+        [InlineData(11, 2)]
+        [InlineData(19, 2)]
+        [InlineData(101, 11)]
+        public async Task PageTotalIsCalculatedCorrectlyGetSessions(long output, long expectedTotal)
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<IList<SessionSchema>>(() =>
+            {
+                return new List<SessionSchema>();
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindAll(
+                    It.IsAny<FilterDefinition<SessionSchema>>(),
+                    It.IsAny<SortDefinition<SessionSchema>>(),
+                    It.IsAny<int>()))
+                .Returns(result)
+                .Verifiable("Sessions are never searched for.");
+
+            var resultCount = new Task<long>(() =>
+            {
+                return output;
+            });
+            resultCount.Start();
+
+            sessionMock.Setup(s => s.FindThenCount(It.IsAny<FilterDefinition<SessionSchema>>()))
+                .Returns(resultCount)
+                .Verifiable("Sessions counted.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+            var data = BsonSerializer.Deserialize<SessionsResponce>(body);
+
+            Assert.True(data.PageTotal == expectedTotal, "The page total is not calculated correctly.");
+        }
+
+        [Theory]
         [InlineData("")]
         [InlineData("/")]
         [InlineData("?")]
