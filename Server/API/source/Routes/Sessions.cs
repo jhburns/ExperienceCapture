@@ -136,15 +136,17 @@ namespace Carter.App.Route.Sessions
                     if (isOngoing)
                     {
                         filter &= builder.Where(s => s.IsOpen == true)
-                            & (builder.Where(s => s.CreatedAt > startMin)
-                            | (builder.Where(s => s.LastCaptureAt != null)
+                            & (builder.Exists(s => s.LastCaptureAt, false)
+                            & (builder.Where(s => s.CreatedAt > startMin))
+                            | (builder.Exists(s => s.LastCaptureAt, true)
                             & builder.Where(s => s.LastCaptureAt > closeMin)));
                     }
                     else
                     {
                         filter &= builder.Where(s => s.IsOpen == false)
-                            | (builder.Where(s => s.CreatedAt < startMin)
-                            | (builder.Where(s => s.LastCaptureAt != null)
+                            | (builder.Exists(s => s.LastCaptureAt, false)
+                            & (builder.Where(s => s.CreatedAt < startMin))
+                            | (builder.Exists(s => s.LastCaptureAt, true)
                             & builder.Where(s => s.LastCaptureAt < closeMin)));
                     }
                 }
@@ -378,10 +380,15 @@ namespace Carter.App.Route.Sessions
         [BsonElement("tags")]
         public List<string> Tags { get; set; }
 
+        // This is a proxy-property, and should only
+        // be set when returned 
         [BsonIgnoreIfNull]
         [BsonElement("isOngoing")]
         public bool? IsOngoing { get; set; } = null;
 
+        // Because this property doesn't exist when null
+        // Check with the .Exists(...) function,
+        // Not .Where(.. == null)
         [BsonIgnoreIfNull]
         [BsonElement("lastCaptureAt")]
         public BsonDateTime LastCaptureAt { get; set; } = null;
