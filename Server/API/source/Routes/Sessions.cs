@@ -420,6 +420,14 @@ namespace Carter.App.Route.Sessions
         public SessionRepository(IMongoDatabase database)
             : base(database, "sessions")
         {
+            var index = Builders<SessionSchema>.IndexKeys;
+            var keyCreated = index.Ascending(s => s.CreatedAt);
+
+            _ = this.Index(keyCreated);
+
+            var keyId = index.Ascending(s => s.Id);
+
+            _ = this.Index(keyId);
         }
 
         public override async Task<SessionSchema> FindById(string id)
