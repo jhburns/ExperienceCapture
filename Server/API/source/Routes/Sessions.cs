@@ -151,9 +151,35 @@ namespace Carter.App.Route.Sessions
                     }
                 }
 
-                var sorter = Builders<SessionSchema>.Sort.Descending(s => s.CreatedAt);
+                var page = req.Query.As<int?>("page") ?? 1;
+                if (page < 1)
+                {
+                    // Page query needs to be possible
+                    res.StatusCode = 400;
+                    return;
+                }
+
+                var direction = req.Query.As<string>("sort");
+                SortDefinition<SessionSchema> sorter;
+                if (direction == null)
+                {
+                    sorter = Builders<SessionSchema>.Sort.Descending(s => s.CreatedAt);
+                }
+                else
+                {
+                    if (Enum.TryParse(typeof(SortOptions), direction, true, out object options))
+                    {
+                        sorter = ((SortOptions)options).ToDefinition();
+                    }
+                    else
+                    {
+                        res.StatusCode = 400;
+                        return;
+                    }
+                }
+
                 var sessionDocs = await sessionRepo
-                    .FindAll(filter, sorter);
+                    .FindAll(filter, sorter, page);
 
                 var sessionsDocsWithOngoing = sessionDocs.Select((s) =>
                 {
@@ -183,10 +209,12 @@ namespace Carter.App.Route.Sessions
                     return s;
                 });
 
+                var count = await sessionRepo.FindThenCount(filter);
                 var clientValues = new SessionsResponce
                 {
                     // Bson documents can't start with an array like Json, so a wrapping object is used instead
                     ContentList = sessionsDocsWithOngoing.ToList(),
+                    PageTotal = (long)Math.Ceiling((double)count / 10d),
                 };
 
                 string json = JsonQuery.FulfilEncoding(req.Query, clientValues);
@@ -401,6 +429,9 @@ namespace Carter.App.Route.Sessions
         [BsonElement("contentArray")]
         public List<SessionSchema> ContentList { get; set; }
 
+        [BsonElement("pageTotal")]
+        public long PageTotal { get; set; }
+
         #pragma warning restore SA1516
     }
 
@@ -415,11 +446,47 @@ namespace Carter.App.Route.Sessions
     }
     #pragma warning restore SA1201
 
+    #pragma warning disable SA1201
+    public enum SortOptions
+    {
+        Alphabetical,
+        NewestFirst,
+        OldestFirst,
+    }
+    #pragma warning restore SA1201
+
     public sealed class SessionRepository : RepositoryBase<SessionSchema>
     {
         public SessionRepository(IMongoDatabase database)
             : base(database, "sessions")
         {
+            var index = Builders<SessionSchema>.IndexKeys;
+            var keyCreated = index.Ascending(s => s.CreatedAt);
+
+            _ = this.Index(keyCreated);
+
+            var keyId = index.Ascending(s => s.Id);
+
+            _ = this.Index(keyId);
+        }
+
+        public override async Task<IList<SessionSchema>> FindAll(
+            FilterDefinition<SessionSchema> filter,
+            SortDefinition<SessionSchema> sorter,
+            int page)
+        {
+            var projection = Builders<SessionSchema>.Projection
+                .Exclude(s => s.InternalId);
+
+            int limit = 10;
+
+            return await this.Collection
+                .Find(filter)
+                .Skip((page - 1) * limit)
+                .Limit(limit)
+                .Sort(sorter)
+                .Project<SessionSchema>(projection)
+                .ToListAsync();
         }
 
         public override async Task<SessionSchema> FindById(string id)
@@ -441,6 +508,20 @@ namespace Carter.App.Route.Sessions
         public CapturesRepository(IMongoDatabase database)
             : base(database, "sessions.this.is.temp")
         {
+        }
+    }
+
+    internal static class SortExtra
+    {
+        public static SortDefinition<SessionSchema> ToDefinition(this SortOptions option)
+        {
+            switch (option)
+            {
+                case SortOptions.Alphabetical: return Builders<SessionSchema>.Sort.Ascending(s => s.Id);
+                case SortOptions.NewestFirst: return Builders<SessionSchema>.Sort.Descending(s => s.CreatedAt);
+                case SortOptions.OldestFirst: return Builders<SessionSchema>.Sort.Ascending(s => s.CreatedAt);
+                default: throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }
