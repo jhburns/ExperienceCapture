@@ -7,7 +7,7 @@ RUN npm ci --silent
 
 ARG REACT_APP_GOOGLE_CLIENT_ID
 
-COPY jsconfig.json .
+COPY jsconfig.json config-overrides.js ./
 COPY public ./public
 COPY src ./src
 
