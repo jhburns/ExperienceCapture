@@ -17,7 +17,9 @@ services:
     deploy:
       labels:
         - "swarm.cronjob.enable=true"
-        - "swarm.cronjob.schedule=*/30 * * * *"  # At every 30th minute
+        # Every day at 3AM PST
+        # Or 11AM UTC
+        - "swarm.cronjob.schedule=0 11 * * *"
         - "swarm.cronjob.skip-running=true"
       mode: global
       restart_policy:
