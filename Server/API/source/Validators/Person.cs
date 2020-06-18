@@ -2,7 +2,7 @@ namespace Carter.App.Validation.Person
 {
     using FluentValidation;
 
-    public class Person
+    public class PersonRequest
     {
         #pragma warning disable SA1516, SA1300
         public string idToken { get; set; }
@@ -10,7 +10,7 @@ namespace Carter.App.Validation.Person
         #pragma warning restore SA151, SA1300
     }
 
-    public class PersonValidator : AbstractValidator<Person>
+    public class PersonValidator : AbstractValidator<PersonRequest>
     {
         public PersonValidator()
         {

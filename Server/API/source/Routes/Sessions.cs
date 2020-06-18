@@ -398,7 +398,6 @@ namespace Carter.App.Route.Sessions
     public class SessionsResponce
     {
         #pragma warning disable SA1516
-        // TODO: rename this to list something, its not an array
         [BsonElement("contentArray")]
         public List<SessionSchema> ContentList { get; set; }
 
