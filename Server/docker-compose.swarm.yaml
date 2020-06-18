@@ -20,7 +20,7 @@ services:
       timeout: 10s
     image: 127.0.0.1:5000/ec-api
     volumes:
-      - ./API/appsettings.production.json:/app/appsettings.json
+      - ./API/source/appsettings.production.json:/app/appsettings.json
 
   bu:
     deploy:
