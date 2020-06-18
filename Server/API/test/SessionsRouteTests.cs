@@ -823,6 +823,38 @@ namespace Carter.Tests.Route.Sessions
         }
 
         [Theory]
+        [InlineData("a")]
+        [InlineData("alphabetically")]
+        [InlineData("newest")]
+        [InlineData("Newest")]
+        public async Task NonEnumValueIsBadGetSessions(string input)
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<IList<SessionSchema>>(() =>
+            {
+                return new List<SessionSchema>();
+            });
+            result.Start();
+
+            sessionMock.Setup(s => s.FindAll(
+                    It.IsAny<FilterDefinition<SessionSchema>>(),
+                    It.IsAny<SortDefinition<SessionSchema>>(),
+                    It.IsAny<int>()))
+                .Returns(result)
+                .Verifiable("Sessions are never searched for.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, $"/sessions?sort={input}");
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.BadRequest,
+                "Gettings sessions with a wrong sort enum value is not a bad request.");
+        }
+
+        [Theory]
         [InlineData(0, 0)]
         [InlineData(10, 1)]
         [InlineData(800, 80)]
