@@ -115,6 +115,11 @@
       async: 600  # Ten minutes
       poll: 0
 
+    - name: Copy Docker daemon file
+      copy:
+        src: /deploy/daemon.json
+        dest: /etc/docker/daemon.json
+
     - name: Set key for ssh authorization
       authorized_key:
         user: ec-debug
