@@ -279,7 +279,6 @@ namespace Carter.App.Route.Users
                     return;
                 }
 
-                // TODO: add a test for skipping validation
                 if (!PasswordHasher.Check(newAdmin.Data.password, env.PasswordHash) && env.SkipValidation != "true")
                 {
                     res.StatusCode = Status401Unauthorized;
