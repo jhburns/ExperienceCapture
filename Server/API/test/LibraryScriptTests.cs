@@ -23,7 +23,6 @@ namespace Carter.Tests.LibraryScripts
 
     using Xunit;
 
-    // TODO: Test timer with mocks
     public class TimerTests
     {
         [Fact]
@@ -40,6 +39,57 @@ namespace Carter.Tests.LibraryScripts
             var date = new BsonDateTime(DateTime.UtcNow);
 
             Assert.True(date.IsAfter(new DateProvider(), -100000), "IsAfter is false when parameter expirationTime is negative.");
+        }
+
+        [Theory]
+        [InlineData(1000, 0)]
+        [InlineData(1, 0)]
+        [InlineData(10, 1)]
+        [InlineData(1000, 100)]
+        public void IsAfterFutureTime(int change, int range)
+        {
+            var fixedDate = DateTime.UtcNow;
+            var date = new BsonDateTime(fixedDate);
+
+            var dateMock = new Mock<IDateExtra>();
+            dateMock.Setup(d => d.UtcNow)
+                .Returns(fixedDate.AddSeconds(change));
+
+            Assert.True(date.IsAfter(dateMock.Object, range), "IsAfter is false when the date is not expired.");
+        }
+
+        [Theory]
+        [InlineData(0, 1000)]
+        [InlineData(0, 1)]
+        [InlineData(1, 10)]
+        [InlineData(100, 1000)]
+        public void IsNotAfterFutureTime(int change, int range)
+        {
+            var fixedDate = DateTime.UtcNow;
+            var date = new BsonDateTime(fixedDate);
+
+            var dateMock = new Mock<IDateExtra>();
+            dateMock.Setup(d => d.UtcNow)
+                .Returns(fixedDate.AddSeconds(change));
+
+            Assert.False(date.IsAfter(dateMock.Object, range), "IsAfter is true when the date is expired.");
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(10)]
+        [InlineData(100000000)]
+        public void DateIsProjectedForwardCorrectly(int input)
+        {
+            var fixedDate = DateTime.UtcNow;
+
+            var dateMock = new Mock<IDateExtra>();
+            dateMock.Setup(d => d.UtcNow)
+                .Returns(fixedDate);
+
+            Assert.True(
+                TimerExtra.ProjectSeconds(dateMock.Object, input) > new BsonDateTime(fixedDate),
+                "ProjectSeconds is larger when projecting into the future.");
         }
     }
 
