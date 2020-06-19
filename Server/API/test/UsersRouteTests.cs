@@ -1190,6 +1190,27 @@ namespace Carter.Tests.Route.Users
         }
 
         [Fact]
+        public async Task SkipWhenNotTrueIsUnauthorizedPostAdmin()
+        {
+            var envMock = new Mock<IAppEnvironment>();
+            envMock.SetupGet(e => e.PasswordHash)
+                .Returns("CLi4XS7q4DNwiYSWI6JI7rqEz9KHvI27E3mm9i0Xr6Q=");
+
+            envMock.SetupGet(e => e.SkipValidation)
+                .Returns("false");
+
+            var client = CustomHost.Create(envMock: envMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/admin");
+            request.Content = new StringContent("{ \"password\": \"fail\" }", Encoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.Unauthorized,
+                "Creating a new sign-up token from admin is allowed.");
+        }
+
+        [Fact]
         public async Task ResponceIsValidPostAdmin()
         {
             var envMock = new Mock<IAppEnvironment>();
