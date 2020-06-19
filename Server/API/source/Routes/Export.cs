@@ -24,6 +24,8 @@ namespace Carter.App.Route.Export
 
     using MongoDB.Driver;
 
+    using static Microsoft.AspNetCore.Http.StatusCodes;
+
     public class Export : CarterModule
     {
         public Export(
@@ -45,7 +47,7 @@ namespace Carter.App.Route.Export
 
                 if (sessionDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
@@ -84,13 +86,13 @@ namespace Carter.App.Route.Export
 
                 if (sessionDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
                 if (sessionDoc.ExportState == ExportOptions.Pending)
                 {
-                    res.StatusCode = 202;
+                    res.StatusCode = Status202Accepted;
                     await res.FromString("PENDING");
                     return;
                 }
@@ -98,14 +100,14 @@ namespace Carter.App.Route.Export
                 // Export job hasn't been created, so return not found
                 if (sessionDoc.ExportState == ExportOptions.NotStarted)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
                 // Not sure what to do about an error
                 if (sessionDoc.ExportState == ExportOptions.Error)
                 {
-                    res.StatusCode = 500;
+                    res.StatusCode = Status500InternalServerError;
                     return;
                 }
 

@@ -24,6 +24,8 @@ namespace Carter.App.Route.Users
     using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
 
+    using static Microsoft.AspNetCore.Http.StatusCodes;
+
     public class Users : CarterModule
     {
         public Users(
@@ -41,14 +43,14 @@ namespace Carter.App.Route.Users
 
                 if (!newPerson.ValidationResult.IsValid)
                 {
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return;
                 }
 
                 var person = await GoogleApi.ValidateUser(newPerson.Data.idToken, env);
                 if (person == null)
                 {
-                    res.StatusCode = 401;
+                    res.StatusCode = Status401Unauthorized;
                     return;
                 }
 
@@ -59,7 +61,7 @@ namespace Carter.App.Route.Users
 
                 if (signUpDoc == null || signUpDoc.CreatedAt.IsAfter(date, signUpDoc.ExpirationSeconds))
                 {
-                    res.StatusCode = 401;
+                    res.StatusCode = Status401Unauthorized;
                     return;
                 }
 
@@ -67,7 +69,7 @@ namespace Carter.App.Route.Users
 
                 if (existingPerson != null)
                 {
-                    res.StatusCode = 409;
+                    res.StatusCode = Status409Conflict;
                     return;
                 }
 
@@ -94,27 +96,27 @@ namespace Carter.App.Route.Users
 
                 if (userDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
                 var newAccessRequest = await req.BindAndValidate<AccessTokenRequest>();
                 if (!newAccessRequest.ValidationResult.IsValid)
                 {
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return;
                 }
 
                 var person = await GoogleApi.ValidateUser(newAccessRequest.Data.idToken, env);
                 if (person == null)
                 {
-                    res.StatusCode = 401;
+                    res.StatusCode = Status401Unauthorized;
                     return;
                 }
 
                 if (person.Subject != userID)
                 {
-                    res.StatusCode = 409;
+                    res.StatusCode = Status409Conflict;
                     return;
                 }
 
@@ -141,7 +143,7 @@ namespace Carter.App.Route.Users
                     // 401 returned twice, which may be hard for the client to interpret
                     if (claimDoc == null || claimDoc.CreatedAt.IsAfter(date, claimDoc.ExpirationSeconds))
                     {
-                        res.StatusCode = 401;
+                        res.StatusCode = Status401Unauthorized;
                         return;
                     }
 
@@ -215,7 +217,7 @@ namespace Carter.App.Route.Users
                 string claimToken = req.Cookies["ExperienceCapture-Claim-Token"];
                 if (claimToken == null)
                 {
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return;
                 }
 
@@ -225,19 +227,19 @@ namespace Carter.App.Route.Users
 
                 if (claimDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
                 if (!claimDoc.IsExisting || claimDoc.CreatedAt.IsAfter(date, claimDoc.ExpirationSeconds))
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
                 if (claimDoc.Access == null)
                 {
-                    res.StatusCode = 202;
+                    res.StatusCode = Status202Accepted;
                     await res.FromString("PENDING");
                     return;
                 }
@@ -273,14 +275,13 @@ namespace Carter.App.Route.Users
                 var newAdmin = await req.BindAndValidate<AdminPasswordRequest>();
                 if (!newAdmin.ValidationResult.IsValid)
                 {
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return;
                 }
 
-                // TODO: add a test for skipping validation
                 if (!PasswordHasher.Check(newAdmin.Data.password, env.PasswordHash) && env.SkipValidation != "true")
                 {
-                    res.StatusCode = 401;
+                    res.StatusCode = Status401Unauthorized;
                     return;
                 }
 

@@ -14,6 +14,8 @@ namespace Carter.App.Route.Tags
 
     using MongoDB.Driver;
 
+    using static Microsoft.AspNetCore.Http.StatusCodes;
+
     public class Tags : CarterModule
     {
         public Tags(
@@ -32,7 +34,7 @@ namespace Carter.App.Route.Tags
 
                 if (sessionDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
@@ -62,7 +64,7 @@ namespace Carter.App.Route.Tags
 
                 if (sessionDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 

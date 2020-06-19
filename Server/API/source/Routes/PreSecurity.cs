@@ -13,6 +13,8 @@ namespace Carter.App.Route.PreSecurity
 
     using MongoDB.Driver;
 
+    using static Microsoft.AspNetCore.Http.StatusCodes;
+
     public static class PreSecurity
     {
         public static Func<HttpContext, Task<bool>> GetSecurityCheck(IRepository<AccessTokenSchema> repo, IDateExtra date)
@@ -22,7 +24,7 @@ namespace Carter.App.Route.PreSecurity
                 string token = req.Cookies["ExperienceCapture-Access-Token"];
                 if (token == null)
                 {
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return false;
                 }
 
@@ -34,7 +36,7 @@ namespace Carter.App.Route.PreSecurity
                 if (accessTokenDoc == null
                     || accessTokenDoc.CreatedAt.IsAfter(date, accessTokenDoc.ExpirationSeconds))
                 {
-                    res.StatusCode = 401;
+                    res.StatusCode = Status401Unauthorized;
                     return false;
                 }
 
