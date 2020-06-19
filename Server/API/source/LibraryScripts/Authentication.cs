@@ -62,7 +62,6 @@ namespace Carter.App.Lib.Authentication
             }
             catch
             {
-                // TODO: evaluate whether this should throw instead
                 return null;
             }
         }
@@ -82,7 +81,6 @@ namespace Carter.App.Lib.Authentication
             }
             catch
             {
-                // TODO: evaluate whether this should throw instead
                 return false;
             }
         }
