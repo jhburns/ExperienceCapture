@@ -26,6 +26,8 @@ namespace Carter.App.Route.Sessions
     using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
 
+    using static Microsoft.AspNetCore.Http.StatusCodes;
+
     public class Sessions : CarterModule
     {
         public Sessions(
@@ -155,7 +157,7 @@ namespace Carter.App.Route.Sessions
                 if (page < 1)
                 {
                     // Page query needs to be possible
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return;
                 }
 
@@ -173,7 +175,7 @@ namespace Carter.App.Route.Sessions
                     }
                     else
                     {
-                        res.StatusCode = 400;
+                        res.StatusCode = Status400BadRequest;
                         return;
                     }
                 }
@@ -236,13 +238,13 @@ namespace Carter.App.Route.Sessions
 
                 if (sessionDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
                 if (!sessionDoc.IsOpen)
                 {
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return;
                 }
 
@@ -261,7 +263,7 @@ namespace Carter.App.Route.Sessions
                         catch (Exception err)
                         {
                             logger.LogError(err.Message);
-                            res.StatusCode = 400;
+                            res.StatusCode = Status400BadRequest;
                             return;
                         }
                     }
@@ -277,7 +279,7 @@ namespace Carter.App.Route.Sessions
                     catch (Exception err)
                     {
                         logger.LogError(err.Message);
-                        res.StatusCode = 400;
+                        res.StatusCode = Status400BadRequest;
                         return;
                     }
                 }
@@ -288,7 +290,7 @@ namespace Carter.App.Route.Sessions
                     || !document["frameInfo"].AsBsonDocument.Contains("realtimeSinceStartup")
                     || document["frameInfo"]["realtimeSinceStartup"].BsonType != BsonType.Double)
                 {
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return;
                 }
 
@@ -317,7 +319,7 @@ namespace Carter.App.Route.Sessions
 
                 if (sessionDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
@@ -368,7 +370,7 @@ namespace Carter.App.Route.Sessions
 
                 if (sessionDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
