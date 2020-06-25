@@ -20,9 +20,9 @@ class SessionTable extends Component {
       isAllowedToPoll: true
     }
 
-    this.tagCallback = this.onTag.bind(this);
-    this.getSessionCallback = this.onSession.bind(this);
-    this.poll = this.pollSessions.bind(this);
+    this.onTag = this.onTag.bind(this);
+    this.getSessions = this.getSessions.bind(this);
+    this.poll = this.poll.bind(this);
   }
 
   async onTag(id) {
@@ -38,17 +38,17 @@ class SessionTable extends Component {
         throw Error(archiveRequest.status);
       }
 
-      await this.getSessionCallback();
+      await this.getSessions();
     } catch (err) {
       console.error(err);
     }
   }
 
-  async pollSessions() {
-      await this.getSessionCallback();
+  async poll() {
+    await this.getSessions();
   }
 
-  async onSession() {
+  async getSessions() {
     let queryOptions = this.props.queryOptions;
     queryOptions.ugly = true;
     const query = queryString.stringify(queryOptions);
@@ -76,7 +76,7 @@ class SessionTable extends Component {
   }
 
   async componentDidMount() {
-    await this.getSessionCallback();
+    await this.getSessions();
 
     this.poller = setInterval(() => this.poll(), 10000); // 10 seconds
   }
@@ -96,7 +96,7 @@ class SessionTable extends Component {
         sessionData={value} 
         buttonData={this.props.buttonData !== undefined ? {
           body: this.props.buttonData.body,
-          onClick: this.tagCallback
+          onClick: this.onTag
         } : undefined}
         isRenderingDate={this.props.isRenderingDate}
       />)

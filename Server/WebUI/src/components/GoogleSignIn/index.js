@@ -24,12 +24,13 @@ class SignIn extends Component {
 	    isDuplicateSignIn: false,
     }
 
-	  this.successCallback = this.onSuccess.bind(this);
-	  this.failureCallback = this.onFailure.bind(this);
-	  this.invalidCallback = this.onInvalidRequest.bind(this);
-	  this.signOutCallback = this.onSignOut.bind(this);
-    this.renderLoginCallback = this.renderLogin.bind(this);
-    this.duplicateCallback = this.onDuplicate.bind(this);
+    this.onSuccess = this.onSuccess.bind(this);
+    this.onFailure = this.onFailure.bind(this);
+    this.onInvalidRequest = this.onInvalidRequest.bind(this);
+    this.onSignOut = this.onSignOut.bind(this);
+    this.renderLogin = this.renderLogin.bind(this);
+    this.onDuplicate = this.onDuplicate.bind(this);
+    this.getContent = this.getContent.bind(this);
   }
 
   getContent() {
@@ -49,7 +50,7 @@ class SignIn extends Component {
           </Row>
           <Row className="justify-content-center">
             <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
-              <SignOutButton onClickCallback={this.signOutCallback} />
+              <SignOutButton onClickCallback={this.onSignOut} />
             </Col>
           </Row>
         </Wrapper>
@@ -73,7 +74,7 @@ class SignIn extends Component {
           </Row>
           <Row className="justify-content-center">
             <Col xs={6} sm={5} md={4} lg={3}>
-              <SignOutButton onClickCallback={this.signOutCallback} />
+              <SignOutButton onClickCallback={this.onSignOut} />
             </Col>
           </Row>
         </Wrapper>
@@ -98,7 +99,7 @@ class SignIn extends Component {
             </Row>
             <Row className="justify-content-center">
               <Col xs={6} sm={5} md={4} lg={3}>
-                <SignOutButton onClickCallback={this.signOutCallback} />
+                <SignOutButton onClickCallback={this.onSignOut} />
               </Col>
             </Row>
           </Wrapper>
@@ -155,8 +156,8 @@ class SignIn extends Component {
       width: 220,
       height: 50,
 	    longtitle: true,
-      onsuccess: this.successCallback,
-      onfailure: this.failureCallback
+      onsuccess: this.onSuccess,
+      onfailure: this.onFailure
     }
     
 	  if (!isMock) {
@@ -180,7 +181,7 @@ class SignIn extends Component {
       isSignedOut: true,
       isDuplicateSignIn: false,
       isUnableToSignIn: false,
-    }, () => gapi.load('signin2', this.renderLoginCallback(isMock)));
+    }, () => gapi.load('signin2', this.renderLogin(isMock)));
   }
 
   async onSuccess(user) {
@@ -188,7 +189,7 @@ class SignIn extends Component {
       signUpToken: this.props.signUpToken,
       claimToken: this.props.claimToken,
     };
-	  await submitUser(undefined, user, this.failureCallback, options, this.duplicateCallback);
+	  await submitUser(undefined, user, this.onFailure, options, this.onDuplicate);
 
     this.setState({
       isSignedIn: true,
@@ -208,7 +209,7 @@ class SignIn extends Component {
       signUpToken: this.props.signUpToken,
       claimToken: this.props.claimToken,
     };
-    await submitUser(true, null, this.failureCallback, options, this.duplicateCallback);
+    await submitUser(true, null, this.onFailure, options, this.onDuplicate);
     
   	this.setState({
 	    isSignedIn: true,
@@ -224,7 +225,7 @@ class SignIn extends Component {
         client_id: this.props.clientId,
       });
 
-      this.auth2.then(() => gapi.load('signin2', this.renderLoginCallback), this.invalidCallback);
+      this.auth2.then(() => gapi.load('signin2', this.renderLogin), this.onInvalidRequest);
     });
   }
 

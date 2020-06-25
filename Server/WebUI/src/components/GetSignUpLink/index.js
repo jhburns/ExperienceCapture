@@ -14,7 +14,7 @@ class GetSignUpLink extends Component {
       link: ""
     };
 
-    this.buttonCallback = this.onButtonCLick.bind(this);
+    this.onButtonCLick = this.onButtonCLick.bind(this);
   }
 
   async onButtonCLick() {
@@ -42,7 +42,7 @@ class GetSignUpLink extends Component {
           </Text>
         }
         <button
-          onClick={this.buttonCallback}
+          onClick={this.onButtonCLick}
           className="btn btn-dark btn-block"
         >
           New Sign Up Link

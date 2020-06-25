@@ -16,7 +16,7 @@ class SettingsPage extends Component {
   constructor(props) {
     super(props)
     
-    this.signOutCallback = this.onSignOut.bind(this);
+    this.onSignOut = this.onSignOut.bind(this);
   }
 
   async onSignOut() {
@@ -36,7 +36,7 @@ class SettingsPage extends Component {
           </Row>
           <Row className="m-0 justify-content-center">
             <Col xs={7} md={4} xl={3}>
-              <SignOutButton onClickCallback={this.signOutCallback} />
+              <SignOutButton onClickCallback={this.onSignOut} />
             </Col>
           </Row>
           <Footer />
