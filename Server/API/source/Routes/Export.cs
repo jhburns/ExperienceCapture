@@ -118,6 +118,7 @@ namespace Carter.App.Route.Export
                 var about = new ContentDisposition { FileName = objectName };
                 using (var stream = new MemoryStream(body))
                 {
+                    res.ContentLength = body.Length;
                     await res.FromStream(stream, "application/zip", about);
                 }
             });
