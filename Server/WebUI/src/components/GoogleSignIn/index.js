@@ -35,7 +35,27 @@ class SignIn extends Component {
   }
 
   getContent() {
-    // TODO: refactor to a reusable architecture
+    const signOutRow =
+      <Row className="justify-content-center">
+        <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
+          <SignOutButton onClickCallback={this.onSignOut} />
+        </Col>
+      </Row>;
+
+    const homeRow =
+      <Row className="justify-content-center">
+        <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
+          <HomeButton />
+        </Col>
+      </Row>;
+
+    const googleRow =
+      <Row>
+        <Col className="text-center">
+          <Google id="loginButton" />
+        </Col>
+      </Row>;
+
   	if (this.state.isUnableToSignIn) {
       return (
         <Wrapper>
@@ -43,11 +63,7 @@ class SignIn extends Component {
             Sorry, there was an issue signing in. <br />
             Try a different account.
           </LoginBox>
-          <Row className="justify-content-center">
-            <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
-              <SignOutButton onClickCallback={this.onSignOut} />
-            </Col>
-          </Row>
+          {signOutRow}
         </Wrapper>
       )
     } else if (this.state.isDuplicateSignIn) {
@@ -56,16 +72,8 @@ class SignIn extends Component {
           <LoginBox>
             You're Already Signed Up
           </LoginBox>
-          <Row className="justify-content-center">
-            <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
-              <HomeButton />
-            </Col>
-          </Row>
-          <Row className="justify-content-center">
-            <Col xs={6} sm={5} md={4} lg={3}>
-              <SignOutButton onClickCallback={this.onSignOut} />
-            </Col>
-          </Row>
+          {homeRow}
+          {signOutRow}
         </Wrapper>
 	    )
     } else if (this.state.isSignedIn) {
@@ -75,16 +83,8 @@ class SignIn extends Component {
             <LoginBox>
               You're Signed In
             </LoginBox>
-            <Row className="justify-content-center">
-              <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
-                <HomeButton />
-              </Col>
-            </Row>
-            <Row className="justify-content-center">
-              <Col xs={6} sm={5} md={4} lg={3}>
-                <SignOutButton onClickCallback={this.onSignOut} />
-              </Col>
-            </Row>
+            {homeRow}
+            {signOutRow}
           </Wrapper>
         )
       } else {
@@ -99,11 +99,7 @@ class SignIn extends Component {
             You're Signed Out <br />
             Sign In Again
           </LoginBox>
-          <Row>
-            <Col className="text-center">
-              <Google id="loginButton" />
-            </Col>
-          </Row>
+          {googleRow}
         </Wrapper>
 	    )
     } else {
@@ -112,11 +108,7 @@ class SignIn extends Component {
           <LoginBox>
             Please Sign In
           </LoginBox>
-          <Row>
-            <Col className="text-center">
-              <Google id="loginButton" />
-            </Col>
-          </Row>
+          {googleRow}
         </Wrapper>
       )
     }   
