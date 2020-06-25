@@ -16,8 +16,8 @@ class Admin extends Component {
       accessToken: null,
     }
 
-    this.successCallback = this.onSuccess.bind(this);
-	  this.errorCallback = this.onError.bind(this);
+    this.onSuccess = this.onSuccess.bind(this);
+    this.onError = this.onError.bind(this);
   }
 
   onSuccess(response) {
@@ -45,13 +45,13 @@ class Admin extends Component {
       const reply = await postData("/api/v1/users/signUp/admin/", data);
 
       if (reply.ok) {
-        this.successCallback(await reply.json());
+        this.onSuccess(await reply.json());
       } else {
-        this.errorCallback();
+        this.onError();
         throw Error(reply.error);
       }
     } catch (error) {
-      this.errorCallback();
+      this.onError();
       console.error(error);
     }
   }

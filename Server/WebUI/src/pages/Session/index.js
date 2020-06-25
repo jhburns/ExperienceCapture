@@ -19,9 +19,9 @@ class SessionPage extends Component {
       session: null,
     }
 
-    this.exportCallback = this.onExport.bind(this);
-    this.sessionCallback = this.getSession.bind(this);
-    this.poll = this.pollSession.bind(this);
+    this.onExport = this.onExport.bind(this);
+    this.getSession = this.getSession.bind(this);
+    this.poll = this.poll.bind(this);
   }
 
   async getSession()
@@ -65,7 +65,7 @@ class SessionPage extends Component {
         throw Error(exportRequest.status);
       }
       
-      const currentSession = await this.sessionCallback();
+      const currentSession = await this.getSession();
       this.setState({
         session: currentSession,
       });
@@ -75,8 +75,8 @@ class SessionPage extends Component {
   }
 
 
-  async pollSession() {
-    const currentSession = await this.sessionCallback();
+  async poll() {
+    const currentSession = await this.getSession();
 
     // Very hacky, but easiest way to do abstract comparisons
     if (JSON.stringify(currentSession) !== JSON.stringify(this.state.session)) {
@@ -88,7 +88,7 @@ class SessionPage extends Component {
 
   async componentDidMount()
   {
-    const firstSessions = await this.sessionCallback();
+    const firstSessions = await this.getSession();
 
     this.setState({
       session: firstSessions,
@@ -110,7 +110,7 @@ class SessionPage extends Component {
               <Col>
                 <SingleSession
                   sessionData={this.state.session}
-                  onExport={this.exportCallback}
+                  onExport={this.onExport}
                 />
               </Col>
             </Row>
