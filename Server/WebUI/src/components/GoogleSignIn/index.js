@@ -8,9 +8,11 @@ import ClaimNotify from "components/ClaimNotify";
 
 import HomeButton from 'components/HomeButton';
 
-import { Wrapper, Info, Google, } from 'components/GoogleSignIn/style';
+import { Wrapper, Google, } from 'components/GoogleSignIn/style';
 
-import { P, Row, Col, } from '@bootstrap-styled/v4';
+import { Row, Col, } from '@bootstrap-styled/v4';
+
+import LoginBox from 'components/LoginBox';
 
 class SignIn extends Component {
   constructor(props) {
@@ -37,16 +39,10 @@ class SignIn extends Component {
   	if (this.state.isUnableToSignIn) {
       return (
         <Wrapper>
-          <Row className="justify-content-center">
-            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
-              <Info className="rounded align-middle">
-                <h5 className="mt-0 mb-0">
-                  Sorry, there was an issue signing in. <br />
-                  Try a different account.
-                </h5>
-              </Info>
-            </Col>
-          </Row>
+          <LoginBox>
+            Sorry, there was an issue signing in. <br />
+            Try a different account.
+          </LoginBox>
           <Row className="justify-content-center">
             <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
               <SignOutButton onClickCallback={this.onSignOut} />
@@ -57,15 +53,9 @@ class SignIn extends Component {
     } else if (this.state.isDuplicateSignIn) {
       return (
         <Wrapper>
-          <Row className="justify-content-center">
-            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
-              <Info className="rounded align-middle">
-                <h5 className="mt-0 mb-0">
-                  You're Already Signed Up
-                </h5>
-              </Info>
-            </Col>
-          </Row>
+          <LoginBox>
+            You're Already Signed Up
+          </LoginBox>
           <Row className="justify-content-center">
             <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
               <HomeButton />
@@ -82,15 +72,9 @@ class SignIn extends Component {
       if (this.props.claimToken === undefined) {
         return (
           <Wrapper>
-            <Row className="justify-content-center">
-              <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
-                <Info className="rounded align-middle">
-                  <h5 className="mt-0 mb-0">
-                    You're Signed In
-                  </h5>
-                </Info>
-              </Col>
-            </Row>
+            <LoginBox>
+              You're Signed In
+            </LoginBox>
             <Row className="justify-content-center">
               <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
                 <HomeButton />
@@ -111,16 +95,10 @@ class SignIn extends Component {
 	  } else if (this.state.isSignedOut) {
 	    return (
         <Wrapper>
-          <Row className="justify-content-center">
-            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
-              <Info className="rounded align-middle">
-                <h5 className="mt-0 mb-0">
-                  You're Signed Out <br />
-                  Sign In Again
-               </h5>
-              </Info>
-            </Col>
-          </Row>
+          <LoginBox>
+            You're Signed Out <br />
+            Sign In Again
+          </LoginBox>
           <Row>
             <Col className="text-center">
               <Google id="loginButton" />
@@ -131,15 +109,9 @@ class SignIn extends Component {
     } else {
       return (
         <Wrapper>
-          <Row className="justify-content-center">
-            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
-              <Info className="rounded align-middle">
-                <h5 className="mt-0 mb-0">
-                  <P>Please Sign In</P>
-                </h5>
-              </Info>
-            </Col>
-          </Row>
+          <LoginBox>
+            Please Sign In
+          </LoginBox>
           <Row>
             <Col className="text-center">
               <Google id="loginButton" />
