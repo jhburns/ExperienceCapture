@@ -1716,12 +1716,10 @@ MonoBehaviour:
   gameVersion: 
   clientVersion: 
   defaultUrl: https://expcap.xyz
+  limitOutputToSpecified: []
   offlineMode: 1
   printAdditionalCaptureInfo: 0
-  findObjectsInEachFrame: 1
   doNotPrintToConsole: 0
-  doNotThrowNotFound: 1
-  limitOutputToSpecified: []
   handler: {fileID: 114421317242070260, guid: 16284608f5e17b9419c1b59da5a4e2e2, type: 2}
   nameTitle: {fileID: 212993455}
   nameInput: {fileID: 1037184061}
