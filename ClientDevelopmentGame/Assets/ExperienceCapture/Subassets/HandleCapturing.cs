@@ -15,6 +15,8 @@
 
     using Capture.Internal.InputStructure;
 
+    using Capture.Internal.Debug;
+
     public class HandleCapturing : MonoBehaviour
     {
         public string url { get; set; }
@@ -43,12 +45,12 @@
 
         private int openRequests;
         private float averageOpenRequests;
-        private int minOpenRequests;
-        private int maxOpenRequests;
+        private MinMax minOpenRequests;
+        private MinMax maxOpenRequests;
 
-        private float minResponceTime;
+        private MinMax minResponceTime;
         private float averageResponceTime;
-        private float maxResponceTime;
+        private MinMax maxResponceTime;
         private int responceCount;
 
         public bool isIgnoringNotFound { get; set; }
@@ -68,9 +70,9 @@
             frameCount = 0;
 
             openRequests = 0;
-            minOpenRequests = int.MaxValue;
+            minOpenRequests = new MinMax(true);
             averageOpenRequests = 1f;
-            maxOpenRequests = -1;
+            maxOpenRequests = new MinMax(false);
 
             // Start not capturing so the Setup scene isn't captured
             isCapturing = false;
@@ -78,9 +80,9 @@
             responceCount = 0;
 
             // These values mean measurements aren't perfect, but it is good enough
-            minResponceTime = float.MaxValue;
+            minResponceTime = new MinMax(true);
             averageResponceTime = 1f;
-            maxResponceTime = -1f;
+            maxResponceTime = new MinMax(false);
         }
 
         void Update()
@@ -167,10 +169,10 @@
 
                 for (int i = 0; i < pairs.Length; i++)
                 {
-                    string name = pairs[i].name;
                     string key = pairs[i].key;
+                    string value = pairs[i].value;
 
-                    if (!gameData.ContainsKey(name))
+                    if (!gameData.ContainsKey(key))
                     {
                         if (isIgnoringNotFound)
                         {
@@ -181,19 +183,19 @@
                     }
                     object currentCapture = gameData[name];
 
-                    if (currentCapture.GetType().GetProperty(key) == null)
+                    if (currentCapture.GetType().GetProperty(value) == null)
                     {
                         if (isIgnoringNotFound)
                         {
                             continue;
                         }
 
-                        throw new SpecificPairsNotFoundException("Lacking key", name, key);
+                        throw new SpecificPairsNotFoundException("Lacking key", key, value);
                     }
 
                     // Reflection has to be used here as object type is unknown
                     // But should be safe as it is checked above
-                    tempData.Add(key, currentCapture.GetType().GetProperty(key).GetValue(currentCapture, null));
+                    tempData.Add(value, currentCapture.GetType().GetProperty(value).GetValue(currentCapture, null));
                 }
 
                 data = tempData;
@@ -236,23 +238,11 @@
 
                     averageOpenRequests = (averageOpenRequests * responceCount + openRequests) / (responceCount + 1);
 
-                    if (openRequests < minOpenRequests)
-                    {
-                        minOpenRequests = openRequests;
-                    }
-                    else if (openRequests > maxOpenRequests)
-                    {
-                        maxOpenRequests = openRequests;
-                    }
+                    minOpenRequests.Include(openRequests);
+                    maxOpenRequests.Include(openRequests);
 
-                    if (responceTime < minResponceTime)
-                    {
-                        minResponceTime = responceTime;
-                    }
-                    else if (responceTime > maxResponceTime)
-                    {
-                        maxResponceTime = responceTime;
-                    }
+                    minResponceTime.Include(responceTime);
+                    maxResponceTime.Include(responceTime);
                 },
                 (error) =>
                 {
@@ -275,13 +265,13 @@
                 }
 
                 extra += "Open requests: current=" + openRequests;
-                extra += " min=" + minOpenRequests;
+                extra += " min=" + minOpenRequests.Value;
                 extra += " mean=" + averageOpenRequests;
-                extra += " max=" + maxOpenRequests + "\n";
+                extra += " max=" + maxOpenRequests.Value + "\n";
 
-                extra += "Request response time: min=" + minResponceTime;
+                extra += "Request response time: min=" + minResponceTime.Value;
                 extra += " mean=" + averageResponceTime;
-                extra += " max=" + maxResponceTime + "\n";
+                extra += " max=" + maxResponceTime.Value + "\n";
 
                 Debug.Log(extra);
             }

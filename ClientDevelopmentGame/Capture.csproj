@@ -66,6 +66,7 @@
     <Compile Include="Assets\ExperienceCapture\Subassets\CaptureSetup.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\HandleCapturing.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\InputStructure.cs" />
+    <Compile Include="Assets\ExperienceCapture\Subassets\LibraryScripts\Debug.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\LibraryScripts\Network.cs" />
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.11f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
