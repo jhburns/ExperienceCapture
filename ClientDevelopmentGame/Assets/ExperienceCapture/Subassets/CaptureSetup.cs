@@ -34,13 +34,10 @@
 
         [Tooltip("Extra debugging data.")]
         public bool printAdditionalCaptureInfo;
-        [Tooltip("Handles game objects being instantiated and destroyed.")]
-        public bool findObjectsInEachFrame;
+
         [Tooltip("Still capture data, but don't print it.")]
         public bool doNotPrintToConsole;
 
-        [Tooltip("Prevents Exceptions when Specified game objects/keys aren't found. Useful when dynamically created objects.")]
-        public bool doNotThrowNotFound;
         public string[] limitOutputToSpecified;
 
         public HandleCapturing handler;
@@ -321,7 +318,6 @@
             newHandler.sendToConsole = offlineMode;
 
             newHandler.isCapturing = false;
-            newHandler.isFindingOften = findObjectsInEachFrame;
 
             newHandler.isVerbose = printAdditionalCaptureInfo;
             newHandler.isSilent = doNotPrintToConsole;
@@ -335,7 +331,6 @@
                 gameVersion,
             };
 
-            newHandler.isIgnoringNotFound = doNotThrowNotFound;
             newHandler.pairs = pairs;
 
             SceneManager.LoadScene(sceneToLoad);
