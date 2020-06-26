@@ -8,7 +8,7 @@ import { Image } from "components/Brand/style";
 class Brand extends Component {
   render() {
     return (
-      <Link to={this.props.to} className={this.props.className}>
+      <Link to={this.props.to} className={this.props.className} data-cy="menu-brand">
         <Image
           className="d-inline-block align-top mr-3"
           src={logo}

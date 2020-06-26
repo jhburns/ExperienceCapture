@@ -70,7 +70,7 @@ namespace Carter.Tests.Route.Tags
                     InternalId = ObjectId.GenerateNewId(),
                     Id = string.Empty,
                     User = null,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
                     Tags = new List<string>(),
                 };
             });
@@ -99,7 +99,7 @@ namespace Carter.Tests.Route.Tags
                     InternalId = ObjectId.GenerateNewId(),
                     Id = string.Empty,
                     User = null,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
                     Tags = new List<string>(),
                 };
             });
@@ -129,7 +129,7 @@ namespace Carter.Tests.Route.Tags
                     InternalId = ObjectId.GenerateNewId(),
                     Id = string.Empty,
                     User = null,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
                     Tags = new List<string>(),
                 };
             });
@@ -172,7 +172,7 @@ namespace Carter.Tests.Route.Tags
                     InternalId = ObjectId.GenerateNewId(),
                     Id = string.Empty,
                     User = null,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
                     Tags = new List<string>(),
                 };
             });
@@ -200,7 +200,7 @@ namespace Carter.Tests.Route.Tags
                     InternalId = ObjectId.GenerateNewId(),
                     Id = string.Empty,
                     User = null,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
                     Tags = new List<string>(),
                 };
             });
@@ -275,7 +275,7 @@ namespace Carter.Tests.Route.Tags
                     InternalId = ObjectId.GenerateNewId(),
                     Id = string.Empty,
                     User = null,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
                     Tags = new List<string>(),
                 };
             });
@@ -304,7 +304,7 @@ namespace Carter.Tests.Route.Tags
                     InternalId = ObjectId.GenerateNewId(),
                     Id = string.Empty,
                     User = null,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
                     Tags = new List<string>(),
                 };
             });
@@ -334,7 +334,7 @@ namespace Carter.Tests.Route.Tags
                     InternalId = ObjectId.GenerateNewId(),
                     Id = string.Empty,
                     User = null,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
                     Tags = new List<string>(),
                 };
             });
@@ -369,7 +369,7 @@ namespace Carter.Tests.Route.Tags
                     InternalId = ObjectId.GenerateNewId(),
                     Id = string.Empty,
                     User = null,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
                     Tags = new List<string>(),
                 };
             });
@@ -413,7 +413,7 @@ namespace Carter.Tests.Route.Tags
                     InternalId = ObjectId.GenerateNewId(),
                     Id = string.Empty,
                     User = null,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
                     Tags = new List<string>(),
                 };
             });
@@ -445,7 +445,7 @@ namespace Carter.Tests.Route.Tags
                     InternalId = ObjectId.GenerateNewId(),
                     Id = string.Empty,
                     User = null,
-                    CreatedAt = new BsonDateTime(DateTime.Now),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
                     Tags = new List<string>(),
                 };
             });

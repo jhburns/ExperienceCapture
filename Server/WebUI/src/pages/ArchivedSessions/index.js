@@ -20,13 +20,12 @@ class ArchivedSessionsPage extends Component {
           <Row className="justify-content-center">
             <Col lg={10} className="pr-0">
               <SessionTable
-                sessionsQuery={"isOngoing=false"}
+                queryOptions={{ isOngoing: false, hasTags: "archived" }}
                 buttonData={{
                   isAdd: false,
                   body: "Unarchive",
                   header: ""
                 }}
-                hasTag={"archived"}
                 isRenderingDate={true}
                 emptyMessage="No archived sessions."
                 title="Archived Sessions"

@@ -19,9 +19,9 @@ class SessionPage extends Component {
       session: null,
     }
 
-    this.exportCallback = this.onExport.bind(this);
-    this.sessionCallback = this.getSession.bind(this);
-    this.poll = this.pollSession.bind(this);
+    this.onExport = this.onExport.bind(this);
+    this.getSession = this.getSession.bind(this);
+    this.poll = this.poll.bind(this);
   }
 
   async getSession()
@@ -42,6 +42,15 @@ class SessionPage extends Component {
       isOngoing: sessionsData.isOngoing
     }
 
+    // Poll based on session state
+    if (["Done", "NotStarted", "Error"].includes(cleanedSession.exportState)) {
+      clearInterval(this.poller);
+      this.poller = setInterval(() => this.poll(), 10000); // 10 seconds
+    } else {
+      clearInterval(this.poller);
+      this.poller = setInterval(() => this.poll(), 250); // 0.25 seconds
+    }
+
     return cleanedSession;
   }
 
@@ -56,7 +65,7 @@ class SessionPage extends Component {
         throw Error(exportRequest.status);
       }
       
-      const currentSession = await this.sessionCallback();
+      const currentSession = await this.getSession();
       this.setState({
         session: currentSession,
       });
@@ -66,7 +75,7 @@ class SessionPage extends Component {
   }
 
 
-  async pollSession() {
+  async poll() {
     const currentSession = await this.getSession();
 
     // Very hacky, but easiest way to do abstract comparisons
@@ -84,8 +93,6 @@ class SessionPage extends Component {
     this.setState({
       session: firstSessions,
     });
-
-    this.poller = setInterval(() => this.poll(), 10000); // 10 seconds
   }
 
   componentWillUnmount() {
@@ -94,8 +101,7 @@ class SessionPage extends Component {
   }
 
   render() {
-    if (this.state.session != null)
-    {
+    if (this.state.session != null) {
       return (
         <Wrapper>
           <Container className="p-0">
@@ -104,7 +110,7 @@ class SessionPage extends Component {
               <Col>
                 <SingleSession
                   sessionData={this.state.session}
-                  onExport={this.exportCallback}
+                  onExport={this.onExport}
                 />
               </Col>
             </Row>

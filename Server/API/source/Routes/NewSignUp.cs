@@ -36,7 +36,7 @@ namespace Carter.App.Route.NewSignUp
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = PasswordHasher.Hash(newToken),
-                    CreatedAt = new BsonDateTime(date.Now),
+                    CreatedAt = new BsonDateTime(date.UtcNow),
                 };
 
                 await signUpRepo.Add(tokenDoc);

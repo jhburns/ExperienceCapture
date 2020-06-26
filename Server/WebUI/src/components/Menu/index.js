@@ -36,8 +36,9 @@ class Menu extends Component {
             <NavbarToggler
               onClick={() => this.setState({ isOpen: !this.state.isOpen })}
               className="ml-auto"
+              data-cy="menu-hamburger"
             />
-            <Collapse navbar isOpen={this.state.isOpen}>
+            <Collapse navbar isOpen={this.state.isOpen} data-cy="menu-collapse">
               <Nav navbar className="mr-auto">
                 <MenuLink locationPath={location.pathname} to="/home/start" linkText="Home" />
                 <MenuLink locationPath={location.pathname} to="/home/sessions" linkText="Sessions" />

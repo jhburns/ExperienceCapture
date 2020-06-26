@@ -26,6 +26,8 @@ namespace Carter.App.Route.Sessions
     using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
 
+    using static Microsoft.AspNetCore.Http.StatusCodes;
+
     public class Sessions : CarterModule
     {
         public Sessions(
@@ -68,7 +70,7 @@ namespace Carter.App.Route.Sessions
                     InternalId = ObjectId.GenerateNewId(),
                     Id = uniqueID,
                     User = user, // Copying user data instead of referencing so it can never change in the session
-                    CreatedAt = new BsonDateTime(date.Now),
+                    CreatedAt = new BsonDateTime(date.UtcNow),
                     Tags = new List<string>(),
                 };
 
@@ -102,36 +104,84 @@ namespace Carter.App.Route.Sessions
             this.Get("/", async (req, res) =>
             {
                 var builder = Builders<SessionSchema>.Filter;
+
+                // Note: only use `&=` for adding to the filter,
+                // Or else the filter cannot handle multiple query string options
                 FilterDefinition<SessionSchema> filter = builder.Empty;
 
-                var startRange = new BsonDateTime(date.Now.AddSeconds(-300)); // 5 minutes
-                var closeRange = new BsonDateTime(date.Now.AddSeconds(-5)); // 5 seconds
+                var startMin = new BsonDateTime(date.UtcNow.AddSeconds(-300)); // 5 minutes
+                var closeMin = new BsonDateTime(date.UtcNow.AddSeconds(-5)); // 5 seconds
 
-                // TODO: add a way to query based on tag
+                var hasTags = req.Query.AsMultiple<string>("hasTags").ToList();
+                if (hasTags.Count > 0)
+                {
+                    foreach (var tag in hasTags)
+                    {
+                        filter &= builder.Where(s => s.Tags.Contains(tag));
+                    }
+                }
+
+                var lacksTags = req.Query.AsMultiple<string>("lacksTags").ToList();
+                if (lacksTags.Count > 0)
+                {
+                    foreach (var tag in lacksTags)
+                    {
+                        filter &= builder.Where(s => !s.Tags.Contains(tag));
+                    }
+                }
 
                 // Three potential options: null, true, or false
                 if (req.Query.As<bool?>("isOngoing") != null)
                 {
                     bool isOngoing = req.Query.As<bool>("isOngoing");
-                    filter &= builder.Where(s => s.IsOpen == isOngoing);
 
                     if (isOngoing)
                     {
-                        filter &= (builder.Where(s => s.LastCaptureAt == null)
-                            & builder.Where(s => s.CreatedAt > startRange))
-                            | builder.Where(s => s.LastCaptureAt > closeRange);
+                        filter &= builder.Where(s => s.IsOpen == true)
+                            & ((builder.Exists(s => s.LastCaptureAt, false)
+                            & builder.Where(s => s.CreatedAt > startMin))
+                            | (builder.Exists(s => s.LastCaptureAt, true)
+                            & builder.Where(s => s.LastCaptureAt > closeMin)));
                     }
                     else
                     {
-                        filter |= (builder.Where(s => s.LastCaptureAt == null)
-                            & builder.Where(s => s.CreatedAt < startRange))
-                            | builder.Where(s => s.LastCaptureAt < closeRange);
+                        filter &= builder.Where(s => s.IsOpen == false)
+                            | ((builder.Exists(s => s.LastCaptureAt, false)
+                            & builder.Where(s => s.CreatedAt < startMin))
+                            | (builder.Exists(s => s.LastCaptureAt, true)
+                            & builder.Where(s => s.LastCaptureAt < closeMin)));
                     }
                 }
 
-                var sorter = Builders<SessionSchema>.Sort.Descending(s => s.CreatedAt);
+                var page = req.Query.As<int?>("page") ?? 1;
+                if (page < 1)
+                {
+                    // Page query needs to be possible
+                    res.StatusCode = Status400BadRequest;
+                    return;
+                }
+
+                var direction = req.Query.As<string>("sort");
+                SortDefinition<SessionSchema> sorter;
+                if (direction == null)
+                {
+                    sorter = Builders<SessionSchema>.Sort.Descending(s => s.CreatedAt);
+                }
+                else
+                {
+                    if (Enum.TryParse(typeof(SortOptions), direction, true, out object options))
+                    {
+                        sorter = ((SortOptions)options).ToDefinition();
+                    }
+                    else
+                    {
+                        res.StatusCode = Status400BadRequest;
+                        return;
+                    }
+                }
+
                 var sessionDocs = await sessionRepo
-                    .FindAll(filter, sorter);
+                    .FindAll(filter, sorter, page);
 
                 var sessionsDocsWithOngoing = sessionDocs.Select((s) =>
                 {
@@ -145,9 +195,9 @@ namespace Carter.App.Route.Sessions
                     if (s.IsOpen)
                     {
                         isOngoing = (!isStarted
-                            && startRange.CompareTo(s.CreatedAt) < 0)
+                            && startMin < s.CreatedAt)
                             || (isStarted
-                            && closeRange.CompareTo(s.LastCaptureAt) < 0);
+                            && closeMin < s.LastCaptureAt);
                     }
                     else
                     {
@@ -161,10 +211,12 @@ namespace Carter.App.Route.Sessions
                     return s;
                 });
 
+                var count = await sessionRepo.FindThenCount(filter);
                 var clientValues = new SessionsResponce
                 {
                     // Bson documents can't start with an array like Json, so a wrapping object is used instead
                     ContentList = sessionsDocsWithOngoing.ToList(),
+                    PageTotal = (long)Math.Ceiling((double)count / 10d),
                 };
 
                 string json = JsonQuery.FulfilEncoding(req.Query, clientValues);
@@ -186,13 +238,13 @@ namespace Carter.App.Route.Sessions
 
                 if (sessionDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
                 if (!sessionDoc.IsOpen)
                 {
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return;
                 }
 
@@ -211,7 +263,7 @@ namespace Carter.App.Route.Sessions
                         catch (Exception err)
                         {
                             logger.LogError(err.Message);
-                            res.StatusCode = 400;
+                            res.StatusCode = Status400BadRequest;
                             return;
                         }
                     }
@@ -227,7 +279,7 @@ namespace Carter.App.Route.Sessions
                     catch (Exception err)
                     {
                         logger.LogError(err.Message);
-                        res.StatusCode = 400;
+                        res.StatusCode = Status400BadRequest;
                         return;
                     }
                 }
@@ -238,7 +290,7 @@ namespace Carter.App.Route.Sessions
                     || !document["frameInfo"].AsBsonDocument.Contains("realtimeSinceStartup")
                     || document["frameInfo"]["realtimeSinceStartup"].BsonType != BsonType.Double)
                 {
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return;
                 }
 
@@ -250,7 +302,7 @@ namespace Carter.App.Route.Sessions
                 // This lastCaptureAt is undefined on the session document until the first call of this endpoint
                 // Export flags are reset so the session can be re-exported
                 var update = Builders<SessionSchema>.Update
-                    .Set(s => s.LastCaptureAt, new BsonDateTime(date.Now))
+                    .Set(s => s.LastCaptureAt, new BsonDateTime(date.UtcNow))
                     .Set(s => s.ExportState, ExportOptions.NotStarted);
 
                 await sessionRepo.Update(filter, update);
@@ -267,12 +319,12 @@ namespace Carter.App.Route.Sessions
 
                 if (sessionDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
-                var startRange = new BsonDateTime(date.Now.AddSeconds(-300)); // 5 minutes
-                var closeRange = new BsonDateTime(date.Now.AddSeconds(-5)); // 5 seconds
+                var startRange = new BsonDateTime(date.UtcNow.AddSeconds(-300)); // 5 minutes
+                var closeRange = new BsonDateTime(date.UtcNow.AddSeconds(-5)); // 5 seconds
                 bool isStarted = false;
 
                 // Check if key exists
@@ -318,7 +370,7 @@ namespace Carter.App.Route.Sessions
 
                 if (sessionDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
@@ -358,10 +410,15 @@ namespace Carter.App.Route.Sessions
         [BsonElement("tags")]
         public List<string> Tags { get; set; }
 
+        // This is a proxy-property, and should only
+        // Be set when returned
         [BsonIgnoreIfNull]
         [BsonElement("isOngoing")]
         public bool? IsOngoing { get; set; } = null;
 
+        // Because this property doesn't exist when null
+        // Check with the .Exists(...) function,
+        // Not .Where(.. == null)
         [BsonIgnoreIfNull]
         [BsonElement("lastCaptureAt")]
         public BsonDateTime LastCaptureAt { get; set; } = null;
@@ -371,9 +428,11 @@ namespace Carter.App.Route.Sessions
     public class SessionsResponce
     {
         #pragma warning disable SA1516
-        // TODO: rename this to list something, its not an array
         [BsonElement("contentArray")]
         public List<SessionSchema> ContentList { get; set; }
+
+        [BsonElement("pageTotal")]
+        public long PageTotal { get; set; }
 
         #pragma warning restore SA1516
     }
@@ -389,11 +448,47 @@ namespace Carter.App.Route.Sessions
     }
     #pragma warning restore SA1201
 
+    #pragma warning disable SA1201
+    public enum SortOptions
+    {
+        Alphabetical,
+        NewestFirst,
+        OldestFirst,
+    }
+    #pragma warning restore SA1201
+
     public sealed class SessionRepository : RepositoryBase<SessionSchema>
     {
         public SessionRepository(IMongoDatabase database)
             : base(database, "sessions")
         {
+            var index = Builders<SessionSchema>.IndexKeys;
+            var keyCreated = index.Ascending(s => s.CreatedAt);
+
+            _ = this.Index(keyCreated);
+
+            var keyId = index.Ascending(s => s.Id);
+
+            _ = this.Index(keyId);
+        }
+
+        public override async Task<IList<SessionSchema>> FindAll(
+            FilterDefinition<SessionSchema> filter,
+            SortDefinition<SessionSchema> sorter,
+            int page)
+        {
+            var projection = Builders<SessionSchema>.Projection
+                .Exclude(s => s.InternalId);
+
+            int limit = 10;
+
+            return await this.Collection
+                .Find(filter)
+                .Skip((page - 1) * limit)
+                .Limit(limit)
+                .Sort(sorter)
+                .Project<SessionSchema>(projection)
+                .ToListAsync();
         }
 
         public override async Task<SessionSchema> FindById(string id)
@@ -415,6 +510,20 @@ namespace Carter.App.Route.Sessions
         public CapturesRepository(IMongoDatabase database)
             : base(database, "sessions.this.is.temp")
         {
+        }
+    }
+
+    internal static class SortExtra
+    {
+        public static SortDefinition<SessionSchema> ToDefinition(this SortOptions option)
+        {
+            switch (option)
+            {
+                case SortOptions.Alphabetical: return Builders<SessionSchema>.Sort.Ascending(s => s.Id);
+                case SortOptions.NewestFirst: return Builders<SessionSchema>.Sort.Descending(s => s.CreatedAt);
+                case SortOptions.OldestFirst: return Builders<SessionSchema>.Sort.Ascending(s => s.CreatedAt);
+                default: throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

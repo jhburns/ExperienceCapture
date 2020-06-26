@@ -39,6 +39,9 @@
         - 'software-properties-common=0.96.*'
         - 'rsync=3.1.*'
         - 'fish=3.1.*'
+        - 'python3=3.6.7*'
+        # This works, despite the symlinking
+        - 'python3-pip=9.0.*'
 
     - name: Add Docker GPG apt Key
       apt_key:
@@ -112,7 +115,12 @@
       async: 600  # Ten minutes
       poll: 0
 
-    - name: Set authorized key
+    - name: Copy Docker daemon file
+      copy:
+        src: /deploy/daemon.json
+        dest: /etc/docker/daemon.json
+
+    - name: Set key for ssh authorization
       authorized_key:
         user: ec-debug
         state: present
@@ -160,6 +168,29 @@
                infra
       args:
         chdir: /srv
+
+    - name: Install packages needed for testing
+      pip:
+        name: "{{ item }}"
+        executable: pip3
+      loop:
+        - 'pytest==5.4.3'
+        - 'testinfra==5.1.0'
+      when: packer_debug == 'true'
+
+    - name: Copy test file
+      copy:
+        src: /deploy/tests.py
+        dest: ~/tests.py
+        owner: ec-debug
+        mode: '0644'
+      when: packer_debug == 'true'
+
+    - name: Run test file
+      command: python3 -m pytest tests.py
+      args:
+        chdir: ~/
+      when: packer_debug == 'true'
 
     - name: Create production Docker Swarm services
       at:

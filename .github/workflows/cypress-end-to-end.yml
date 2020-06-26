@@ -1,0 +1,28 @@
+---
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: ./Server
+    name: End-To-End Checks
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create .env file
+        run: cp template.env .env
+      - name: Pull images
+        run: docker-compose pull --quiet db os rp
+      - name: Build images (is a separate step so --parallel flag can speed things up)
+        run: docker-compose build --parallel --quiet api web cy
+      - name: Run Docker Compose
+        run: docker-compose run cy
+
+name: Cypress
+
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'Server/**'
+      - '.github/workflows/cypress-end-to-end.yml'

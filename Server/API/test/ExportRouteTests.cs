@@ -592,6 +592,59 @@ namespace Carter.Tests.Route.Export
             });
         }
 
+        [Fact]
+        public async Task ContentLengthIsCorrectGetExport()
+        {
+            var sessionMock = new Mock<IRepository<SessionSchema>>();
+
+            var result = new Task<SessionSchema>(() =>
+            {
+                return new SessionSchema
+                {
+                    InternalId = null,
+                    Id = null,
+                    User = null,
+                    CreatedAt = null,
+                    Tags = null,
+                    ExportState = ExportOptions.Done,
+                };
+            });
+            result.Start();
+
+            sessionMock.Setup(a => a.FindById(It.IsAny<string>()))
+                .Returns(result)
+                .Verifiable("A session was never searched for.");
+
+            var minioMock = new Mock<IMinioClient>();
+            UTF8Encoding utf8 = new UTF8Encoding();
+
+            var content = "test";
+            var bytes = new Task<byte[]>(() =>
+            {
+                return utf8.GetBytes(content);
+            });
+            bytes.Start();
+
+            minioMock.Setup(m => m.GetBytesAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>()))
+                .Returns(bytes)
+                .Verifiable("Export did not call GetBytesAsync.");
+
+            var client = CustomHost.Create(sessionMock: sessionMock, objectStoreMock: minioMock);
+
+            var request = CustomRequest.Create(HttpMethod.Get, "/sessions/EXEX/export");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsByteArrayAsync();
+
+            Assert.True(
+                body.Length == utf8.GetBytes(content).Length,
+                "The Content-Length header has a different length from the content.");
+        }
+
         [Theory]
         [InlineData("")]
         [InlineData("?")]

@@ -16,11 +16,11 @@ services:
     healthcheck:
       interval: 1m30s
       retries: 3
-      test: wget --quiet --tries=1 -O /dev/null http://localhost/health/ || exit 1
+      test: ["CMD", "curl", "-f", "http://localhost/health/"]
       timeout: 10s
     image: 127.0.0.1:5000/ec-api
     volumes:
-      - ./API/appsettings.production.json:/app/appsettings.json
+      - ./API/source/appsettings.production.json:/app/appsettings.json
 
   bu:
     deploy:
@@ -45,7 +45,7 @@ services:
     healthcheck:
       interval: 1m30s
       retries: 3
-      test: mongo --quiet --eval "db.adminCommand('ping')"
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping')"]
       timeout: 10s
 
   os:
@@ -94,7 +94,7 @@ services:
     healthcheck:
       interval: 1m30s
       retries: 3
-      test: wget --quiet --tries=1 -O /dev/null http://localhost:2015/ || exit 1
+      test: ["CMD-SHELL", "wget --quiet --tries=1 -O /dev/null http://localhost:2015/ || exit 1"]
       timeout: 10s
     image: 127.0.0.1:5000/ec-web
     ports:

@@ -24,6 +24,8 @@ namespace Carter.App.Route.Users
     using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
 
+    using static Microsoft.AspNetCore.Http.StatusCodes;
+
     public class Users : CarterModule
     {
         public Users(
@@ -37,18 +39,18 @@ namespace Carter.App.Route.Users
         {
             this.Post("/", async (req, res) =>
             {
-                var newPerson = await req.BindAndValidate<Person>();
+                var newPerson = await req.BindAndValidate<PersonRequest>();
 
                 if (!newPerson.ValidationResult.IsValid)
                 {
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return;
                 }
 
                 var person = await GoogleApi.ValidateUser(newPerson.Data.idToken, env);
                 if (person == null)
                 {
-                    res.StatusCode = 401;
+                    res.StatusCode = Status401Unauthorized;
                     return;
                 }
 
@@ -59,7 +61,7 @@ namespace Carter.App.Route.Users
 
                 if (signUpDoc == null || signUpDoc.CreatedAt.IsAfter(date, signUpDoc.ExpirationSeconds))
                 {
-                    res.StatusCode = 401;
+                    res.StatusCode = Status401Unauthorized;
                     return;
                 }
 
@@ -67,7 +69,7 @@ namespace Carter.App.Route.Users
 
                 if (existingPerson != null)
                 {
-                    res.StatusCode = 409;
+                    res.StatusCode = Status409Conflict;
                     return;
                 }
 
@@ -79,7 +81,7 @@ namespace Carter.App.Route.Users
                     Firstname = person.GivenName,
                     Lastname = person.FamilyName,
                     Email = person.Email,
-                    CreatedAt = new BsonDateTime(date.Now),
+                    CreatedAt = new BsonDateTime(date.UtcNow),
                 };
 
                 await personRepo.Add(personObject);
@@ -94,27 +96,27 @@ namespace Carter.App.Route.Users
 
                 if (userDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
-                var newAccessRequest = await req.BindAndValidate<AccessToken>();
+                var newAccessRequest = await req.BindAndValidate<AccessTokenRequest>();
                 if (!newAccessRequest.ValidationResult.IsValid)
                 {
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return;
                 }
 
                 var person = await GoogleApi.ValidateUser(newAccessRequest.Data.idToken, env);
                 if (person == null)
                 {
-                    res.StatusCode = 401;
+                    res.StatusCode = Status401Unauthorized;
                     return;
                 }
 
                 if (person.Subject != userID)
                 {
-                    res.StatusCode = 409;
+                    res.StatusCode = Status409Conflict;
                     return;
                 }
 
@@ -126,7 +128,7 @@ namespace Carter.App.Route.Users
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = newHash,
                     User = userDoc.InternalId,
-                    CreatedAt = new BsonDateTime(date.Now),
+                    CreatedAt = new BsonDateTime(date.UtcNow),
                 };
 
                 await accessRepo.Add(tokenObject);
@@ -141,7 +143,7 @@ namespace Carter.App.Route.Users
                     // 401 returned twice, which may be hard for the client to interpret
                     if (claimDoc == null || claimDoc.CreatedAt.IsAfter(date, claimDoc.ExpirationSeconds))
                     {
-                        res.StatusCode = 401;
+                        res.StatusCode = Status401Unauthorized;
                         return;
                     }
 
@@ -189,7 +191,7 @@ namespace Carter.App.Route.Users
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = newHash,
-                    CreatedAt = new BsonDateTime(date.Now),
+                    CreatedAt = new BsonDateTime(date.UtcNow),
                 };
 
                 await claimRepo.Add(tokenDoc);
@@ -215,7 +217,7 @@ namespace Carter.App.Route.Users
                 string claimToken = req.Cookies["ExperienceCapture-Claim-Token"];
                 if (claimToken == null)
                 {
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return;
                 }
 
@@ -225,19 +227,19 @@ namespace Carter.App.Route.Users
 
                 if (claimDoc == null)
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
                 if (!claimDoc.IsExisting || claimDoc.CreatedAt.IsAfter(date, claimDoc.ExpirationSeconds))
                 {
-                    res.StatusCode = 404;
+                    res.StatusCode = Status404NotFound;
                     return;
                 }
 
                 if (claimDoc.Access == null)
                 {
-                    res.StatusCode = 202;
+                    res.StatusCode = Status202Accepted;
                     await res.FromString("PENDING");
                     return;
                 }
@@ -270,16 +272,16 @@ namespace Carter.App.Route.Users
 
             this.Post("/signUp/admin/", async (req, res) =>
             {
-                var newAdmin = await req.BindAndValidate<AdminPassword>();
+                var newAdmin = await req.BindAndValidate<AdminPasswordRequest>();
                 if (!newAdmin.ValidationResult.IsValid)
                 {
-                    res.StatusCode = 400;
+                    res.StatusCode = Status400BadRequest;
                     return;
                 }
 
-                if (!PasswordHasher.Check(newAdmin.Data.password, env.PasswordHash))
+                if (!PasswordHasher.Check(newAdmin.Data.password, env.PasswordHash) && env.SkipValidation != "true")
                 {
-                    res.StatusCode = 401;
+                    res.StatusCode = Status401Unauthorized;
                     return;
                 }
 
@@ -289,7 +291,7 @@ namespace Carter.App.Route.Users
                 {
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = PasswordHasher.Hash(newToken),
-                    CreatedAt = new BsonDateTime(date.Now),
+                    CreatedAt = new BsonDateTime(date.UtcNow),
                 };
 
                 await signUpRepo.Add(tokenDoc);

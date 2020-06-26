@@ -15,6 +15,8 @@ import NotFoundPage from 'pages/NotFound';
 
 import BootstrapProvider from '@bootstrap-styled/provider/lib/BootstrapProvider';
 
+import { verifyEnvironment } from "libs/environment";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const theme = {
@@ -25,6 +27,8 @@ const theme = {
   //'$btn-border-radius': '.035rem',
   //'$link-color': '#000000',
 };
+
+verifyEnvironment(["REACT_APP_GOOGLE_CLIENT_ID"]);
 
 function App() {
   return (

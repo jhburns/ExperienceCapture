@@ -9,6 +9,6 @@ RUN apk update \
     && rm -rf /tmp/* \
     && rm -rf /var/cache/apk/*
 
-COPY build.json playbook.yaml ./
+COPY . .
 
 CMD ["build", "-on-error=ask", "build.json"]

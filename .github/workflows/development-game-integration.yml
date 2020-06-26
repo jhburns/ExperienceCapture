@@ -15,6 +15,7 @@ jobs:
           context: ./ClientDevelopmentGame
           image_name: jhburns/ec-games-cache
           password: "${{ secrets.DOCKER_PASSWORD }}"
+          push_image_and_stages: false
           username: "${{ secrets.DOCKER_USERNAME }}"
 
 name: DevelopmentGame

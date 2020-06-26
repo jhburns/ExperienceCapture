@@ -6,6 +6,26 @@ services:
       # It shims Google Authentication instead of doing a real check
       - unsafe_do_no_validate_user=true
 
+  cy:
+    build:
+      context: ./Cypress
+    command: ["sh", "-c", "/wait && npm run start -- --browser chrome"]
+    depends_on:
+      - rp
+      - api
+      - web
+    environment:
+      # 'COMPOSE_INTERACTIVE_NO_CLI' needed so the docker cli doesn't also need to be installed
+      # See: https://docs.docker.com/compose/reference/envvars/#compose_interactive_no_cli
+      COMPOSE_INTERACTIVE_NO_CLI: "true"
+      WAIT_HOSTS: rp:2015, api:80 , web:3000
+      WAIT_HOSTS_TIMEOUT: 180
+    networks:
+      - ec-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  # This service is a work in progress
   redoc:
     depends_on:
       - rp
@@ -32,6 +52,10 @@ services:
     stdin_open: true
     volumes:
       - ./WebUI/:/app/
+      # This is a work-around so that local modules aren't used.
+      # Keep in mind the volume needs to be deleted whenever
+      # Modules are reinstalled in the docker container,
+      # Or else a package may not be found
       - /app/node_modules
 
 version: '3.5'

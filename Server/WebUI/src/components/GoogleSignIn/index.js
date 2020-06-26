@@ -8,11 +8,12 @@ import ClaimNotify from "components/ClaimNotify";
 
 import HomeButton from 'components/HomeButton';
 
-import { Wrapper, Info, Google, } from 'components/GoogleSignIn/style';
+import { Wrapper, Google, } from 'components/GoogleSignIn/style';
 
-import { P, Row, Col, } from '@bootstrap-styled/v4';
+import { Row, Col, } from '@bootstrap-styled/v4';
 
-// TODO: Consider using a state string to model sign-in
+import LoginBox from 'components/LoginBox';
+
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -24,83 +25,66 @@ class SignIn extends Component {
 	    isDuplicateSignIn: false,
     }
 
-	  this.successCallback = this.onSuccess.bind(this);
-	  this.failureCallback = this.onFailure.bind(this);
-	  this.invalidCallback = this.onInvalidRequest.bind(this);
-	  this.signOutCallback = this.onSignOut.bind(this);
-    this.renderLoginCallback = this.renderLogin.bind(this);
-    this.duplicateCallback = this.onDuplicate.bind(this);
+    this.onSuccess = this.onSuccess.bind(this);
+    this.onFailure = this.onFailure.bind(this);
+    this.onInvalidRequest = this.onInvalidRequest.bind(this);
+    this.onSignOut = this.onSignOut.bind(this);
+    this.renderLogin = this.renderLogin.bind(this);
+    this.onDuplicate = this.onDuplicate.bind(this);
+    this.getContent = this.getContent.bind(this);
   }
 
   getContent() {
-    // TODO: refactor to a reusable architecture
+    const signOutRow =
+      <Row className="justify-content-center">
+        <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
+          <SignOutButton onClickCallback={this.onSignOut} />
+        </Col>
+      </Row>;
+
+    const homeRow =
+      <Row className="justify-content-center">
+        <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
+          <HomeButton />
+        </Col>
+      </Row>;
+
+    const googleRow =
+      <Row>
+        <Col className="text-center">
+          <Google id="loginButton" />
+        </Col>
+      </Row>;
+
   	if (this.state.isUnableToSignIn) {
       return (
         <Wrapper>
-          <Row className="justify-content-center">
-            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
-              <Info className="rounded align-middle">
-                <h5 className="mt-0 mb-0">
-                  Sorry, there was an issue signing in. <br />
-                  Try a different account.
-                </h5>
-              </Info>
-            </Col>
-          </Row>
-          <Row className="justify-content-center">
-            <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
-              <SignOutButton onClickCallback={this.signOutCallback} />
-            </Col>
-          </Row>
+          <LoginBox>
+            Sorry, there was an issue signing in. <br />
+            Try a different account.
+          </LoginBox>
+          {signOutRow}
         </Wrapper>
       )
     } else if (this.state.isDuplicateSignIn) {
       return (
         <Wrapper>
-          <Row className="justify-content-center">
-            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
-              <Info className="rounded align-middle">
-                <h5 className="mt-0 mb-0">
-                  You're Already Signed Up
-                </h5>
-              </Info>
-            </Col>
-          </Row>
-          <Row className="justify-content-center">
-            <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
-              <HomeButton />
-            </Col>
-          </Row>
-          <Row className="justify-content-center">
-            <Col xs={6} sm={5} md={4} lg={3}>
-              <SignOutButton onClickCallback={this.signOutCallback} />
-            </Col>
-          </Row>
+          <LoginBox>
+            You're Already Signed Up
+          </LoginBox>
+          {homeRow}
+          {signOutRow}
         </Wrapper>
 	    )
     } else if (this.state.isSignedIn) {
       if (this.props.claimToken === undefined) {
         return (
           <Wrapper>
-            <Row className="justify-content-center">
-              <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
-                <Info className="rounded align-middle">
-                  <h5 className="mt-0 mb-0">
-                    You're Signed In
-                  </h5>
-                </Info>
-              </Col>
-            </Row>
-            <Row className="justify-content-center">
-              <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
-                <HomeButton />
-              </Col>
-            </Row>
-            <Row className="justify-content-center">
-              <Col xs={6} sm={5} md={4} lg={3}>
-                <SignOutButton onClickCallback={this.signOutCallback} />
-              </Col>
-            </Row>
+            <LoginBox>
+              You're Signed In
+            </LoginBox>
+            {homeRow}
+            {signOutRow}
           </Wrapper>
         )
       } else {
@@ -111,55 +95,37 @@ class SignIn extends Component {
 	  } else if (this.state.isSignedOut) {
 	    return (
         <Wrapper>
-          <Row className="justify-content-center">
-            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
-              <Info className="rounded align-middle">
-                <h5 className="mt-0 mb-0">
-                  You're Signed Out <br />
-                  Sign In Again
-               </h5>
-              </Info>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="text-center">
-              <Google id="loginButton" />
-            </Col>
-          </Row>
+          <LoginBox>
+            You're Signed Out <br />
+            Sign In Again
+          </LoginBox>
+          {googleRow}
         </Wrapper>
 	    )
     } else {
       return (
         <Wrapper>
-          <Row className="justify-content-center">
-            <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
-              <Info className="rounded align-middle">
-                <h5 className="mt-0 mb-0">
-                  <P>Please Sign In</P>
-                </h5>
-              </Info>
-            </Col>
-          </Row>
-          <Row>
-            <Col className="text-center">
-              <Google id="loginButton" />
-            </Col>
-          </Row>
+          <LoginBox>
+            Please Sign In
+          </LoginBox>
+          {googleRow}
         </Wrapper>
       )
     }   
   }
 
-  renderLogin() {
+  renderLogin(isMock) {
     const opts = {
       width: 220,
       height: 50,
 	    longtitle: true,
-      onsuccess: this.successCallback,
-      onfailure: this.failureCallback
+      onsuccess: this.onSuccess,
+      onfailure: this.onFailure
     }
     
-	  gapi.signin2.render('loginButton', opts);
+	  if (!isMock) {
+      gapi.signin2.render('loginButton', opts);
+    }
   }
 
   onDuplicate() {
@@ -170,13 +136,15 @@ class SignIn extends Component {
   }
 
   async onSignOut() {
-    await signOutUser(this.state.isMock);
+    const isMock = this.state.isMock;
+
+    await signOutUser(isMock);
     this.setState({
 	    isSignedIn: false,
       isSignedOut: true,
       isDuplicateSignIn: false,
       isUnableToSignIn: false,
-    }, () => gapi.load('signin2', this.renderLoginCallback));
+    }, () => gapi.load('signin2', this.renderLogin(isMock)));
   }
 
   async onSuccess(user) {
@@ -184,7 +152,7 @@ class SignIn extends Component {
       signUpToken: this.props.signUpToken,
       claimToken: this.props.claimToken,
     };
-	  await submitUser(undefined, user, this.failureCallback, options, this.duplicateCallback);
+	  await submitUser(undefined, user, this.onFailure, options, this.onDuplicate);
 
     this.setState({
       isSignedIn: true,
@@ -197,14 +165,14 @@ class SignIn extends Component {
     });
   }
 
-  onInvalidRequest(err) {
-    console.log("Site is running locally, using mock data.");
+  async onInvalidRequest(err) {
+    console.log("Site is running locally, using mock data. See printed error.");
 
     const options = {
       signUpToken: this.props.signUpToken,
       claimToken: this.props.claimToken,
     };
-    submitUser(true, null, this.failureCallback, options, this.duplicateCallback);
+    await submitUser(true, null, this.onFailure, options, this.onDuplicate);
     
   	this.setState({
 	    isSignedIn: true,
@@ -220,8 +188,7 @@ class SignIn extends Component {
         client_id: this.props.clientId,
       });
 
-	    this.auth2.then(() => {}, this.invalidCallback);
-      gapi.load('signin2', this.renderLoginCallback);
+      this.auth2.then(() => gapi.load('signin2', this.renderLogin), this.onInvalidRequest);
     });
   }
 
