@@ -4,8 +4,8 @@ import { getData } from 'libs/fetchExtra';
 
 import SessionRow from 'components/SessionRow';
 
-import { P, Row, Col, } from '@bootstrap-styled/v4';
-import { Wrapper } from 'components/SessionTable/style';
+import { P, Row, Col, Button, } from '@bootstrap-styled/v4';
+import { Wrapper, } from 'components/SessionTable/style';
 
 import { postData, deleteData, } from 'libs/fetchExtra';
 
@@ -17,12 +17,18 @@ class SessionTable extends Component {
 
     this.state = {
       sessions: [],
-      isAllowedToPoll: true
+      isAllowedToPoll: true,
+      pageNumber: 1,
+      pageTotal: 0,
     }
 
     this.onTag = this.onTag.bind(this);
     this.getSessions = this.getSessions.bind(this);
+    this.updateSessions = this.updateSessions.bind(this);
+    this.navigatePages = this.navigatePages.bind(this);
     this.poll = this.poll.bind(this);
+
+    this.topReference = React.createRef();
   }
 
   async onTag(id) {
@@ -45,12 +51,23 @@ class SessionTable extends Component {
   }
 
   async poll() {
-    await this.getSessions();
+    await this.updateSessions();
   }
 
-  async getSessions() {
+  async updateSessions() {
+    const sessions = await this.getSessions(this.state.pageNumber);
+
+    // Very hacky, but easiest way to do abstract comparisons
+    if (JSON.stringify(sessions) !== JSON.stringify(this.state.sessions)
+      || this.state.pageTotal !== sessions.pageTotal) {
+      this.setState(sessions);
+    }
+  }
+
+  async getSessions(page) {
     let queryOptions = this.props.queryOptions;
     queryOptions.ugly = true;
+    queryOptions.page = page;
     const query = queryString.stringify(queryOptions);
 
     const url = `/api/v1/sessions?${query}`;
@@ -67,16 +84,23 @@ class SessionTable extends Component {
       }
     });
 
-    // Very hacky, but easiest way to do abstract comparisons
-    if (JSON.stringify(sessionsConverted) !== JSON.stringify(this.state.sessions)) {
-      this.setState({
-        sessions: sessionsConverted
-      });
-    }
+    return {
+      sessions: sessionsConverted,
+      pageTotal: sessionsData.pageTotal,
+    };
+  }
+
+  async navigatePages(change) {
+    const nextPage = this.state.pageNumber + change;
+    const sessions = await this.getSessions(nextPage);
+
+    this.setState(Object.assign(sessions, { pageNumber: nextPage }));
+
+    window.scrollTo(0, this.topReference.current.offsetTop);
   }
 
   async componentDidMount() {
-    await this.getSessions();
+    await this.updateSessions();
 
     this.poller = setInterval(() => this.poll(), 10000); // 10 seconds
   }
@@ -103,11 +127,11 @@ class SessionTable extends Component {
     }
 
     return (
-      <Wrapper>
-        <h2 className="mb-3 pl-3 pl-lg-0">
+      <Wrapper className="mb-5" ref={this.topReference}>
+        <h2 className="mb-3 pl-3 pl-lg-0" id="start-of-sessions">
           {this.props.title}
         </h2>
-        <table className="table mb-5">
+        <table className="table mb-4">
           <thead className="thead-dark">
             <tr>
               <th scope="col m-0">ID</th>
@@ -122,14 +146,32 @@ class SessionTable extends Component {
             {items}
           </tbody>
         </table>
-        
         {isEmpty() &&
-          <Row className="m-0 justify-content-center mb-5">
+          <Row className="m-0 justify-content-center mb-4">
             <Col>
               <P className="text-center">{this.props.emptyMessage}</P>
             </Col>
           </Row>
         }
+        <Row>
+          <Col className="text-center">
+            <Button
+              className="mr-2"
+              color="white"
+              disabled={this.state.pageNumber === 1}
+              onClick={async () => this.navigatePages(-1)}
+            >
+              &lt; Previous
+            </Button>
+            <Button
+              color="white"
+              disabled={this.state.pageNumber >= this.state.pageTotal}
+              onClick={async () => this.navigatePages(1)}
+            >
+              Next &gt;
+            </Button>
+          </Col>
+        </Row>
       </Wrapper>
     )
   }

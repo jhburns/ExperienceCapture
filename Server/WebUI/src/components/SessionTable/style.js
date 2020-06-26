@@ -4,4 +4,4 @@ const Wrapper = styled.section`
 
 `;
 
-export { Wrapper };
+export { Wrapper, };
