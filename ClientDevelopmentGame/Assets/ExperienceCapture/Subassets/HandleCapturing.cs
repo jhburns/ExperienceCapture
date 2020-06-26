@@ -167,10 +167,10 @@
 
                 for (int i = 0; i < pairs.Length; i++)
                 {
-                    string name = pairs[i].name;
                     string key = pairs[i].key;
+                    string value = pairs[i].value;
 
-                    if (!gameData.ContainsKey(name))
+                    if (!gameData.ContainsKey(key))
                     {
                         if (isIgnoringNotFound)
                         {
@@ -181,19 +181,19 @@
                     }
                     object currentCapture = gameData[name];
 
-                    if (currentCapture.GetType().GetProperty(key) == null)
+                    if (currentCapture.GetType().GetProperty(value) == null)
                     {
                         if (isIgnoringNotFound)
                         {
                             continue;
                         }
 
-                        throw new SpecificPairsNotFoundException("Lacking key", name, key);
+                        throw new SpecificPairsNotFoundException("Lacking key", key, value);
                     }
 
                     // Reflection has to be used here as object type is unknown
                     // But should be safe as it is checked above
-                    tempData.Add(key, currentCapture.GetType().GetProperty(key).GetValue(currentCapture, null));
+                    tempData.Add(value, currentCapture.GetType().GetProperty(value).GetValue(currentCapture, null));
                 }
 
                 data = tempData;

@@ -23,8 +23,8 @@ public class ClientTests
         var result = setupComponent.parseSpecific();
 
         Assert.AreEqual(result.Length, 1, "Parsing pairs does not have the same length");
-        Assert.AreEqual(result[0].name, "left", "Parsing pairs does not have the correct left value");
-        Assert.AreEqual(result[0].key, "right", "Parsing pairs does not have the correct right value");
+        Assert.AreEqual(result[0].key, "left", "Parsing pairs does not have the correct left value");
+        Assert.AreEqual(result[0].value, "right", "Parsing pairs does not have the correct right value");
     }
 
     [Test]
@@ -48,23 +48,23 @@ public class ClientTests
 
         Assert.AreEqual(result.Length, 6, "Parsing pairs does not have the same length");
 
-        Assert.AreEqual(result[0].name, "1", "Parsing pairs does not have the correct left value");
-        Assert.AreEqual(result[0].key, "2", "Parsing pairs does not have the correct right value");
+        Assert.AreEqual(result[0].key, "1", "Parsing pairs does not have the correct left value");
+        Assert.AreEqual(result[0].value, "2", "Parsing pairs does not have the correct right value");
 
-        Assert.AreEqual(result[1].name, "3", "Parsing pairs does not have the correct left value");
-        Assert.AreEqual(result[1].key, "4", "Parsing pairs does not have the correct right value");
+        Assert.AreEqual(result[1].key, "3", "Parsing pairs does not have the correct left value");
+        Assert.AreEqual(result[1].value, "4", "Parsing pairs does not have the correct right value");
 
-        Assert.AreEqual(result[2].name, "5", "Parsing pairs does not have the correct left value");
-        Assert.AreEqual(result[2].key, "6", "Parsing pairs does not have the correct right value");
+        Assert.AreEqual(result[2].key, "5", "Parsing pairs does not have the correct left value");
+        Assert.AreEqual(result[2].value, "6", "Parsing pairs does not have the correct right value");
 
-        Assert.AreEqual(result[3].name, "7", "Parsing pairs does not have the correct left value");
-        Assert.AreEqual(result[3].key, "8", "Parsing pairs does not have the correct right value");
+        Assert.AreEqual(result[3].key, "7", "Parsing pairs does not have the correct left value");
+        Assert.AreEqual(result[3].value, "8", "Parsing pairs does not have the correct right value");
 
-        Assert.AreEqual(result[4].name, "9", "Parsing pairs does not have the correct left value");
-        Assert.AreEqual(result[4].key, "10", "Parsing pairs does not have the correct right value");
+        Assert.AreEqual(result[4].key, "9", "Parsing pairs does not have the correct left value");
+        Assert.AreEqual(result[4].value, "10", "Parsing pairs does not have the correct right value");
 
-        Assert.AreEqual(result[5].name, "11", "Parsing pairs does not have the correct left value");
-        Assert.AreEqual(result[5].key, "12", "Parsing pairs does not have the correct right value");
+        Assert.AreEqual(result[5].key, "11", "Parsing pairs does not have the correct left value");
+        Assert.AreEqual(result[5].value, "12", "Parsing pairs does not have the correct right value");
     }
 
     [Test]

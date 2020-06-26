@@ -6,13 +6,13 @@ namespace Capture.Internal.InputStructure
     {
         // TODO: change this to not be names so confusing
         // key: value is much more clear
-        public string name {  get; private set; }
-        public string key { get; private set; }
+        public string key {  get; private set; }
+        public string value { get; private set; }
 
-        public SpecificPair(string n, string k)
+        public SpecificPair(string k, string v)
         {
-            name = n;
-            key = k;
+            this.key = k;
+            this.value = v;
         }
     }
 
