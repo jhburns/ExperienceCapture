@@ -5,12 +5,16 @@ Options are in order.
 
 ## Capture Rate
 
+This has to be a number greater than 0.
+
 The rate is how often the `GetCapture()` function is called, with respect to frame rate.
 A value of 1 means `GetCapture()` is called every frame. A value of 2 means `GetCapture()`
 is called every other frame. Two games with different frame rates and the same value for this
 will result in one capturing more often than the other.
 
 ## Scene To Load
+
+This cannot be empty.
 
 The name of the scene to load when pressing the "Start Session" button.
 
@@ -20,33 +24,11 @@ String version of your game, useful for matching up captured data with specific 
 
 ## Client Version
 
-Readonly, the version of the client installed.
+Read-only, the version of the client installed.
 
 ## Default Url
 
 The URL that the client starts with. Recommended to be https://expcap.xyz.
-
-## Offline Mode
-
-When checked, skip connecting to the data capture server.
-
-## Print Additional Capture Info
-
-When checked, prints debugging info every frame.
-
-## Find Objects In Each Frame
-
-When checked, the client will look for `ICapturable` objects every frame instead of only at the start of a scene.
-Useful when a game creates/destroys objects dynamically.
-
-## Do Not Print To Console
-
-When checked, nothing will be printed to console.
-
-## Do Not Throw Not Found
-
-When checked, objects/keys not found by the Limit list will be ignored.
-Useful when a game creates/destroys objects dynamically.
 
 ## Limit Output To Specified
 
@@ -59,6 +41,18 @@ Player:positionX
 ```
 
 This entry would ignore every key except `positionX` on the `Player` game object.
+
+## Offline Mode
+
+When checked, skip connecting to the data capture server and print all of the capture data to the console instead. The captures printed to the console are the **exact** same as would be sent to the Server. 
+
+## Print Additional Capture Info
+
+When checked, prints debugging info every frame.
+
+## Do Not Print To Console
+
+When checked, nothing will be printed to console.
 
 ## Configuration API
 

@@ -146,4 +146,4 @@ firstObject.AngleWith(secondObject, true);
 
 If all the checks are fine, everything should be setup. Next Section: [How Your Data is Captured (optional).](About-Capture.md).
 
-Additionally, there is [extra documentation on configuration (optional).](Configure.md)
+Additionally, there is [extra documentation on client configuration (optional).](Configure.md)
