@@ -94,9 +94,9 @@ class SessionTable extends Component {
     const nextPage = this.state.pageNumber + change;
     const sessions = await this.getSessions(nextPage);
 
-    this.setState(Object.assign(sessions, { pageNumber: nextPage }));
+    this.topReference.current.scrollIntoView();
 
-    window.scrollTo(0, this.topReference.current.offsetTop);
+    this.setState(Object.assign(sessions, { pageNumber: nextPage }));
   }
 
   async componentDidMount() {
@@ -128,7 +128,7 @@ class SessionTable extends Component {
 
     return (
       <Wrapper className="mb-5" ref={this.topReference}>
-        <h2 className="mb-3 pl-3 pl-lg-0" id="start-of-sessions">
+        <h2 className="mb-3 pl-3 pl-lg-0">
           {this.props.title}
         </h2>
         <table className="table mb-4">
