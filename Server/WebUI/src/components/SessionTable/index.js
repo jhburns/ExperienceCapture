@@ -44,7 +44,7 @@ class SessionTable extends Component {
         throw Error(archiveRequest.status);
       }
 
-      await this.getSessions();
+      await this.updateSessions();
     } catch (err) {
       console.error(err);
     }
@@ -71,8 +71,8 @@ class SessionTable extends Component {
     const query = queryString.stringify(queryOptions);
 
     const url = `/api/v1/sessions?${query}`;
-    const getSessions = await getData(url);
-    const sessionsData = await getSessions.json();
+    const request = await getData(url);
+    const sessionsData = await request.json();
     const sessions = sessionsData.contentArray;
 
     // Removing all the extra data from each session, and flattening
