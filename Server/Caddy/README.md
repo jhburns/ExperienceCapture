@@ -12,4 +12,4 @@ There are two different configurations used, one for local development, `Caddyfi
 and one for production, `Caddyfile.production`. Routing should behave the same between
 both, with the main difference being SSL is disabled for local development.
 
-[comment]: <> (TODO: add rate-limiting, only in production)
+[comment]: <> (TODO: add rate-limiting, only in production, this should work: https://hub.docker.com/r/xuqingfeng/caddy-rate-limit)
