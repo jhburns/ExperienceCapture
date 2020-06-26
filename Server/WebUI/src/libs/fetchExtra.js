@@ -1,4 +1,3 @@
-// TODO: check or recover from access token expiration
 function config(customizations = {}) {
   const base = {
     mode: 'cors',
@@ -21,21 +20,39 @@ async function postData(url = '', data = {}) {
     method: 'POST',
     body: JSON.stringify(data) // body data type must match "Content-Type" header
   }));
-  return await response;
+
+  const responseFinished = await response;
+  if (responseFinished.status === 401){
+    throw new Error("Posting data is unauthorized.");
+  }
+
+  return responseFinished;
 }
 
 async function getData(url = '') {
   const response = await fetch(url, config({
     method: 'GET',
   }));
-  return await response;
+  
+  const responseFinished = await response;
+  if (responseFinished.status === 401) {
+    throw new Error("Response says unauthorized.");
+  }
+
+  return responseFinished;
 }
 
 async function deleteData(url = '') {
   const response = await fetch(url, config({
     method: 'DELETE',
   }));
-  return await response;
+
+  const responseFinished = await response;
+  if (responseFinished.status === 401) {
+    throw new Error("Response says unauthorized.");
+  }
+
+  return responseFinished;
 }
 
 export { postData, getData, deleteData, };
