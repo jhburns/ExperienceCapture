@@ -495,7 +495,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Login
+  m_Text: Sign In
 --- !u!222 &457832238
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1558,7 +1558,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 224, y: -384.2}
+  m_AnchoredPosition: {x: 175, y: -376}
   m_SizeDelta: {x: 686.1, y: 135.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1203841337
@@ -1594,7 +1594,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: This opens an URL in your browser.
+  m_Text: Clicking this will open a URL in your browser.
 --- !u!222 &1203841338
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1637,7 +1637,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -96, y: 80}
+  m_AnchoredPosition: {x: -87, y: 81}
   m_SizeDelta: {x: 271.85, y: 108.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1314527947
@@ -1681,7 +1681,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Open URL
+  m_Text: Server URL
 --- !u!1 &1456736643
 GameObject:
   m_ObjectHideFlags: 0
@@ -1716,12 +1716,10 @@ MonoBehaviour:
   gameVersion: 
   clientVersion: 
   defaultUrl: https://expcap.xyz
+  limitOutputToSpecified: []
   offlineMode: 1
   printAdditionalCaptureInfo: 0
-  findObjectsInEachFrame: 1
   doNotPrintToConsole: 0
-  doNotThrowNotFound: 1
-  limitOutputToSpecified: []
   handler: {fileID: 114421317242070260, guid: 16284608f5e17b9419c1b59da5a4e2e2, type: 2}
   nameTitle: {fileID: 212993455}
   nameInput: {fileID: 1037184061}

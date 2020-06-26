@@ -14,34 +14,32 @@
 
     public class CaptureSetup : MonoBehaviour
     {
-        [Tooltip("How faster data is collect, in frames. For example 60 = every 1 second @60fps.")]
+        [Tooltip("How faster data is collect, in frames. For example 60 = every 1 second @60fps. Should be greater than 0.")]
         public int captureRate;
 
-        [Tooltip("First scene to load.")]
+        [Tooltip("First scene to load. Required.")]
         public string sceneToLoad;
 
         [Tooltip("Label the game version before releasing.")]
         public string gameVersion;
         public const string clientVersionLocked = "1.2.1";
-        [Tooltip("Don't edit, is readonly and only informational.")]
+        [Tooltip("Don't edit, is read-only and only informational.")]
         public string clientVersion;
 
-        [Tooltip("Url to fill in automatically on the login page. Examples: 'http://192.168.99.100:3003', 'https://expcap.xyz'")]
+        [Tooltip("URL to default to on the login page. Example: 'https://expcap.xyz'")]
         public string defaultUrl;
 
-        [Tooltip("If checked, print data to console and don't attempt to connect to a server.")]
+        [Tooltip("Only capture certain properties. Increase the size and add an entry like: [GameObject]:[Property]. Disabled outside the Editor.")]
+        public string[] limitOutputToSpecified;
+
+        [Tooltip("If checked, print data to console and don't attempt to connect to a server. Disabled outside the Editor.")]
         public bool offlineMode;
 
         [Tooltip("Extra debugging data.")]
         public bool printAdditionalCaptureInfo;
-        [Tooltip("Handles game objects being instantiated and destroyed.")]
-        public bool findObjectsInEachFrame;
+
         [Tooltip("Still capture data, but don't print it.")]
         public bool doNotPrintToConsole;
-
-        [Tooltip("Prevents Exceptions when Specified game objects/keys aren't found. Useful when dynamically created objects.")]
-        public bool doNotThrowNotFound;
-        public string[] limitOutputToSpecified;
 
         public HandleCapturing handler;
 
@@ -71,12 +69,15 @@
             // Don't allow the game to run in offline mode in production
             #if !UNITY_EDITOR
                 offlineMode = false;
+                limitOutputToSpecified 
             #endif
 
-            setupDefaults();
+            setup();
+
+            validateArguments();
         }
 
-        private void setupDefaults()
+        private void setup()
         {
             // In case an event system doesn't exist in client
             if (GameObject.Find("EventSystem") == null)
@@ -112,6 +113,19 @@
             start.onClick.AddListener(delegate () { onStartClick(); });
 
             clientVersion = clientVersionLocked;
+        }
+
+        public void validateArguments()
+        {
+            if (captureRate <= 0)
+            {
+                throw new ArgumentException("Capture Rate needs to be a positive, non-zero number.");
+            }
+
+            if (sceneToLoad == string.Empty)
+            {
+                throw new ArgumentException("Scene to load needs to not empty.");
+            }
         }
 
         private void onLoginClick()
@@ -321,7 +335,6 @@
             newHandler.sendToConsole = offlineMode;
 
             newHandler.isCapturing = false;
-            newHandler.isFindingOften = findObjectsInEachFrame;
 
             newHandler.isVerbose = printAdditionalCaptureInfo;
             newHandler.isSilent = doNotPrintToConsole;
@@ -335,7 +348,6 @@
                 gameVersion,
             };
 
-            newHandler.isIgnoringNotFound = doNotThrowNotFound;
             newHandler.pairs = pairs;
 
             SceneManager.LoadScene(sceneToLoad);

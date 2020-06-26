@@ -32,7 +32,6 @@
         public bool sendToConsole { get; set; }
         public string id { get; set; }
         public bool isCapturing { get; set; }
-        public bool isFindingOften { get; set; }
 
         private bool isFirst;
 
@@ -53,7 +52,6 @@
         private MinMax maxResponceTime;
         private int responceCount;
 
-        public bool isIgnoringNotFound { get; set; }
         public SpecificPair[] pairs { get; set; }
 
         public SecretStorage store { get; set; }
@@ -120,18 +118,7 @@
                 return;
             }
 
-            if (isFindingOften)
-            {
-                for (int i = 0; i < allCapturable.Count; i++)
-                {
-                    if (!ReferenceEquals(allCapturable[i], null))
-                    {
-                        allCapturable.RemoveAt(i);
-                    }
-                }
-
-                findCapturable();
-            }
+            findCapturable();
 
             // Dictionaries used for easier manipulation
             Dictionary<string, object> captureData = new Dictionary<string, object>();
@@ -174,23 +161,13 @@
 
                     if (!gameData.ContainsKey(key))
                     {
-                        if (isIgnoringNotFound)
-                        {
-                            continue;
-                        }
-
-                        throw new SpecificPairsNotFoundException("Game object with name not found", name, key);
+                        continue;
                     }
                     object currentCapture = gameData[name];
 
                     if (currentCapture.GetType().GetProperty(value) == null)
                     {
-                        if (isIgnoringNotFound)
-                        {
-                            continue;
-                        }
-
-                        throw new SpecificPairsNotFoundException("Lacking key", key, value);
+                        continue;
                     }
 
                     // Reflection has to be used here as object type is unknown
@@ -282,7 +259,6 @@
             if (scene.name != "CleanupEC")
             {
                 isCapturing = true;
-                findCapturable();
                 sendInitialMessage();
                 sendSceneLoadMessage(scene);
             }
@@ -305,7 +281,7 @@
 
         private void findCapturable()
         {
-            // Apparently slow, use FindObjectsOfType, but hasn't been a problem so far
+            // Apparently slow, uses FindObjectsOfType, but hasn't been a problem so far
             var capturableQuery = FindObjectsOfType<MonoBehaviour>().OfType<ICapturable>();
             allCapturable = capturableQuery.Cast<ICapturable>().ToList();
 
@@ -428,11 +404,11 @@
 
         private void quit()
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
+            #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+            #else
+                Application.Quit();
+            #endif
         }
     }
 
