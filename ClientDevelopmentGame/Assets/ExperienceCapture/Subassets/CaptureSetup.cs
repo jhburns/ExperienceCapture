@@ -68,9 +68,10 @@
 
         private void Start()
         {
-#if !UNITY_EDITOR
-            offlineMode = false;
-#endif
+            // Don't allow the game to run in offline mode in production
+            #if !UNITY_EDITOR
+                offlineMode = false;
+            #endif
 
             setupDefaults();
         }
@@ -83,20 +84,16 @@
                 Instantiate(eventSystem);
             }
 
-            if (offlineMode)
-            {
-                newSession.gameObject.SetActive(false);
-                urlTitle.gameObject.SetActive(false);
-                urlInput.gameObject.SetActive(false);
-                warningInfo.gameObject.SetActive(false);
-            }
-            else
-            {
-                nameTitle.gameObject.SetActive(false);
-                nameInput.gameObject.SetActive(false);
-                start.gameObject.SetActive(false);
-                dataInfo.gameObject.SetActive(false);
-            }
+            newSession.gameObject.SetActive(!offlineMode);
+            urlTitle.gameObject.SetActive(!offlineMode);
+            urlInput.gameObject.SetActive(!offlineMode);
+            warningInfo.gameObject.SetActive(!offlineMode);
+
+            nameTitle.gameObject.SetActive(offlineMode);
+            nameInput.gameObject.SetActive(offlineMode);
+            start.gameObject.SetActive(offlineMode);
+            dataInfo.gameObject.SetActive(offlineMode);
+
 
             urlInput.text = defaultUrl;
 

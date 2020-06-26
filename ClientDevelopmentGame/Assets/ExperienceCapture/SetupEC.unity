@@ -130,7 +130,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &131234997
 RectTransform:
   m_ObjectHideFlags: 0
@@ -209,7 +209,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &212993453
 RectTransform:
   m_ObjectHideFlags: 0
@@ -712,7 +712,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &595639459
 RectTransform:
   m_ObjectHideFlags: 0
@@ -864,7 +864,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &750448094
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1323,7 +1323,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1037184058
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1462,7 +1462,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1056220004
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1716,7 +1716,7 @@ MonoBehaviour:
   gameVersion: 
   clientVersion: 
   defaultUrl: https://expcap.xyz
-  offlineMode: 0
+  offlineMode: 1
   printAdditionalCaptureInfo: 0
   findObjectsInEachFrame: 1
   doNotPrintToConsole: 0
@@ -1771,7 +1771,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1565757945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2083,7 +2083,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1955953886
 RectTransform:
   m_ObjectHideFlags: 0
