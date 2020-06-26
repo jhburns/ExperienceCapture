@@ -1,4 +1,3 @@
-// TODO: refactor this to use less repetition
 // TODO: check or recover from access token expiration
 function config(customizations = {}) {
   const base = {
