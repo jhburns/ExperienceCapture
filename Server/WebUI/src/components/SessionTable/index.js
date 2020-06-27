@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { getData } from 'libs/fetchExtra';
 
 import SessionRow from 'components/SessionRow';
+import Dropdown from 'components/Dropdown';
 
 import { P, Row, Col, Button, } from '@bootstrap-styled/v4';
 import { Wrapper, } from 'components/SessionTable/style';
@@ -20,12 +21,14 @@ class SessionTable extends Component {
       isAllowedToPoll: true,
       pageNumber: 1,
       pageTotal: 0,
+      sort: 'newestFirst'
     }
 
     this.onTag = this.onTag.bind(this);
     this.getSessions = this.getSessions.bind(this);
     this.updateSessions = this.updateSessions.bind(this);
     this.navigatePages = this.navigatePages.bind(this);
+    this.onSort = this.onSort.bind(this);
     this.poll = this.poll.bind(this);
 
     this.topReference = React.createRef();
@@ -64,14 +67,18 @@ class SessionTable extends Component {
     }
   }
 
-  async getSessions(page) {
+  async getSessions(page, sort = null) {
+    const nextSort = sort ?? this.state.sort;
+
     let queryOptions = this.props.queryOptions;
     queryOptions.ugly = true;
     queryOptions.page = page;
+    queryOptions.sort = nextSort;
     const query = queryString.stringify(queryOptions);
 
     const url = `/api/v1/sessions?${query}`;
     const request = await getData(url);
+    // TODO: add status code checks to this request
     const sessionsData = await request.json();
     const sessions = sessionsData.contentArray;
 
@@ -87,16 +94,38 @@ class SessionTable extends Component {
     return {
       sessions: sessionsConverted,
       pageTotal: sessionsData.pageTotal,
+      sort: nextSort
     };
   }
 
-  async navigatePages(change) {
-    const nextPage = this.state.pageNumber + change;
-    const sessions = await this.getSessions(nextPage);
+  async navigatePages(nextPage, sort = null) {
+    const sessions = await this.getSessions(nextPage, sort);
 
     this.topReference.current.scrollIntoView();
 
-    this.setState(Object.assign(sessions, { pageNumber: nextPage }));
+    this.setState(Object.assign(sessions, {
+      pageNumber: nextPage,
+    }));
+  }
+
+  async onSort(option) {
+    let mappedOption = null;
+
+    switch (option) {
+      case "Alphabetically":
+        mappedOption = "alphabetical";
+        break;
+      case "Oldest First":
+        mappedOption = "oldestFirst";
+        break;
+      case "Newest First":
+        mappedOption = "newestFirst";
+        break;
+      default:
+        throw new Error("Returned option to Session Table is not valid.");
+    }
+
+    await this.navigatePages(1, mappedOption);
   }
 
   async componentDidMount() {
@@ -131,6 +160,15 @@ class SessionTable extends Component {
         <h2 className="mb-3 pl-3 pl-lg-0">
           {this.props.title}
         </h2>
+        <Row className="mb-2">
+          <Col>
+            <Dropdown
+              title="Sort By"
+              options={["Alphabetically", "Oldest First", "Newest First"]}
+              onClick={this.onSort}
+            />
+          </Col>
+        </Row>
         <table className="table mb-4">
           <thead className="thead-dark">
             <tr>
@@ -159,14 +197,14 @@ class SessionTable extends Component {
               className="mr-2"
               color="white"
               disabled={this.state.pageNumber === 1}
-              onClick={async () => this.navigatePages(-1)}
+              onClick={async () => this.navigatePages(this.state.pageNumber - 1)}
             >
               &lt; Previous
             </Button>
             <Button
               color="white"
               disabled={this.state.pageNumber >= this.state.pageTotal}
-              onClick={async () => this.navigatePages(1)}
+              onClick={async () => this.navigatePages(this.state.pageNumber + 1)}
             >
               Next &gt;
             </Button>
