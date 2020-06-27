@@ -1,0 +1,44 @@
+import React, { Component } from 'react';
+
+import { Wrapper } from 'components/Dropdown/style';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, } from '@bootstrap-styled/v4';
+
+class OptionSelector extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      isOpen: false
+    }
+  }
+
+  render() {
+
+    const items = [];
+    for (const [index, value] of this.props.options.entries()) {
+      items.push(
+        <DropdownItem
+          key={index}
+          onClick={() => { 
+            this.props.onClick(value)
+            this.setState({ isOpen: false });
+          }}
+        >
+          {value}
+        </DropdownItem>);
+    }
+
+    return (
+      <Wrapper>
+        <Dropdown isOpen={this.state.isOpen} toggle={() => this.setState({ isOpen: !this.state.isOpen })}>
+          <DropdownToggle caret>{this.props.title}</DropdownToggle>
+          <DropdownMenu>
+            {items}
+          </DropdownMenu>
+        </Dropdown>
+      </Wrapper>
+    )
+  }
+}
+
+export default OptionSelector;

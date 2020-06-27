@@ -3,9 +3,10 @@ import React, { Component } from 'react';
 import { getData } from 'libs/fetchExtra';
 
 import SessionRow from 'components/SessionRow';
+import Dropdown from 'components/Dropdown';
 
-import { P, Row, Col, } from '@bootstrap-styled/v4';
-import { Wrapper } from 'components/SessionTable/style';
+import { P, Row, Col, Button, } from '@bootstrap-styled/v4';
+import { Wrapper, } from 'components/SessionTable/style';
 
 import { postData, deleteData, } from 'libs/fetchExtra';
 
@@ -17,12 +18,20 @@ class SessionTable extends Component {
 
     this.state = {
       sessions: [],
-      isAllowedToPoll: true
+      isAllowedToPoll: true,
+      pageNumber: 1,
+      pageTotal: 0,
+      sort: 'newestFirst'
     }
 
     this.onTag = this.onTag.bind(this);
     this.getSessions = this.getSessions.bind(this);
+    this.updateSessions = this.updateSessions.bind(this);
+    this.navigatePages = this.navigatePages.bind(this);
+    this.onSort = this.onSort.bind(this);
     this.poll = this.poll.bind(this);
+
+    this.topReference = React.createRef();
   }
 
   async onTag(id) {
@@ -38,24 +47,39 @@ class SessionTable extends Component {
         throw Error(archiveRequest.status);
       }
 
-      await this.getSessions();
+      await this.updateSessions();
     } catch (err) {
       console.error(err);
     }
   }
 
   async poll() {
-    await this.getSessions();
+    await this.updateSessions();
   }
 
-  async getSessions() {
+  async updateSessions() {
+    const sessions = await this.getSessions(this.state.pageNumber);
+
+    // Very hacky, but easiest way to do abstract comparisons
+    if (JSON.stringify(sessions) !== JSON.stringify(this.state.sessions)
+      || this.state.pageTotal !== sessions.pageTotal) {
+      this.setState(sessions);
+    }
+  }
+
+  async getSessions(page, sort = null) {
+    const nextSort = sort ?? this.state.sort;
+
     let queryOptions = this.props.queryOptions;
     queryOptions.ugly = true;
+    queryOptions.page = page;
+    queryOptions.sort = nextSort;
     const query = queryString.stringify(queryOptions);
 
     const url = `/api/v1/sessions?${query}`;
-    const getSessions = await getData(url);
-    const sessionsData = await getSessions.json();
+    const request = await getData(url);
+    // TODO: add status code checks to this request
+    const sessionsData = await request.json();
     const sessions = sessionsData.contentArray;
 
     // Removing all the extra data from each session, and flattening
@@ -67,16 +91,45 @@ class SessionTable extends Component {
       }
     });
 
-    // Very hacky, but easiest way to do abstract comparisons
-    if (JSON.stringify(sessionsConverted) !== JSON.stringify(this.state.sessions)) {
-      this.setState({
-        sessions: sessionsConverted
-      });
+    return {
+      sessions: sessionsConverted,
+      pageTotal: sessionsData.pageTotal,
+      sort: nextSort
+    };
+  }
+
+  async navigatePages(nextPage, sort = null) {
+    const sessions = await this.getSessions(nextPage, sort);
+
+    this.topReference.current.scrollIntoView();
+
+    this.setState(Object.assign(sessions, {
+      pageNumber: nextPage,
+    }));
+  }
+
+  async onSort(option) {
+    let mappedOption = null;
+
+    switch (option) {
+      case "Alphabetically":
+        mappedOption = "alphabetical";
+        break;
+      case "Oldest First":
+        mappedOption = "oldestFirst";
+        break;
+      case "Newest First":
+        mappedOption = "newestFirst";
+        break;
+      default:
+        throw new Error("Returned option to Session Table is not valid.");
     }
+
+    await this.navigatePages(1, mappedOption);
   }
 
   async componentDidMount() {
-    await this.getSessions();
+    await this.updateSessions();
 
     this.poller = setInterval(() => this.poll(), 10000); // 10 seconds
   }
@@ -103,11 +156,20 @@ class SessionTable extends Component {
     }
 
     return (
-      <Wrapper>
+      <Wrapper className="mb-5" ref={this.topReference}>
         <h2 className="mb-3 pl-3 pl-lg-0">
           {this.props.title}
         </h2>
-        <table className="table mb-5">
+        <Row className="mb-2">
+          <Col>
+            <Dropdown
+              title="Sort By"
+              options={["Alphabetically", "Oldest First", "Newest First"]}
+              onClick={this.onSort}
+            />
+          </Col>
+        </Row>
+        <table className="table mb-4">
           <thead className="thead-dark">
             <tr>
               <th scope="col m-0">ID</th>
@@ -122,14 +184,32 @@ class SessionTable extends Component {
             {items}
           </tbody>
         </table>
-        
         {isEmpty() &&
-          <Row className="m-0 justify-content-center mb-5">
+          <Row className="m-0 justify-content-center mb-4">
             <Col>
               <P className="text-center">{this.props.emptyMessage}</P>
             </Col>
           </Row>
         }
+        <Row>
+          <Col className="text-center">
+            <Button
+              className="mr-2"
+              color="white"
+              disabled={this.state.pageNumber === 1}
+              onClick={async () => this.navigatePages(this.state.pageNumber - 1)}
+            >
+              &lt; Previous
+            </Button>
+            <Button
+              color="white"
+              disabled={this.state.pageNumber >= this.state.pageTotal}
+              onClick={async () => this.navigatePages(this.state.pageNumber + 1)}
+            >
+              Next &gt;
+            </Button>
+          </Col>
+        </Row>
       </Wrapper>
     )
   }
