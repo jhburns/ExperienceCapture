@@ -27,7 +27,7 @@ class SessionsPage extends Component {
                   header: ""
                 }}
                 isRenderingDate={true}
-                emptyMessage="No unarchived sessions."
+                emptyMessage="No complete sessions."
                 title="Completed Sessions"
               />
             </Col>
