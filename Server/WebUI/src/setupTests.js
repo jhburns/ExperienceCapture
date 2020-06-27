@@ -16,3 +16,5 @@ if (!process.env.LISTENING_TO_UNHANDLED_REJECTION) {
   // Avoid memory leak by adding too many listeners
   process.env.LISTENING_TO_UNHANDLED_REJECTION = true;
 }
+
+process.env.REACT_APP_GOOGLE_CLIENT_ID = "test";
