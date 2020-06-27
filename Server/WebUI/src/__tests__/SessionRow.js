@@ -71,7 +71,7 @@ it('does have button when defined', () => {
   expect(row.find('td')).toHaveLength(3);
 });
 
-it('calls no click', () => {
+it('calls on click', () => {
   const callback = jest.fn();
 
   const jsx =

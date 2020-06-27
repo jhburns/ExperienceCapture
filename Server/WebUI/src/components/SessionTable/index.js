@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { getData } from 'libs/fetchExtra';
 
 import SessionRow from 'components/SessionRow';
-import Dropdown from 'components/Dropdown';
+import Dropdown from 'components/OptionSelector';
 
 import { P, Row, Col, Button, } from '@bootstrap-styled/v4';
 import { Wrapper, } from 'components/SessionTable/style';

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Wrapper } from 'components/Dropdown/style';
+import { Wrapper } from 'components/OptionSelector/style';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, } from '@bootstrap-styled/v4';
 
 class OptionSelector extends Component {
@@ -13,8 +13,8 @@ class OptionSelector extends Component {
   }
 
   render() {
-
     const items = [];
+
     for (const [index, value] of this.props.options.entries()) {
       items.push(
         <DropdownItem

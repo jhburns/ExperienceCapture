@@ -14,7 +14,7 @@ it('exists', () => {
   expect(message.find('a').exists()).toBeTruthy();
 });
 
-it('Initial state is closed', () => {
+it('has an initial state of closed', () => {
   const message = mount(<About />);
 
   expect(message.state().isOpen).toBe(false);
