@@ -163,7 +163,7 @@ namespace Carter.Tests.Route.NewSignUp
                 .Verifiable();
 
             var client = CustomHost.Create(accessMock);
- 
+
             var request = CustomRequest.Create(HttpMethod.Post, $"/users/signUp{input}");
             var response = await client.SendAsync(request);
 
