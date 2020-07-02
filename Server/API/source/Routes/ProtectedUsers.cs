@@ -1,4 +1,4 @@
-namespace Carter.App.Route.NewSignUp
+namespace Carter.App.Route.ProtectedUsers
 {
     using Carter;
 

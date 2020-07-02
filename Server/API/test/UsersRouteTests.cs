@@ -8,7 +8,7 @@ namespace Carter.Tests.Route.Users
     using Carter.App.Lib.Environment;
     using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
-    using Carter.App.Route.NewSignUp;
+    using Carter.App.Route.ProtectedUsers;
     using Carter.App.Route.Users;
 
     using Carter.Tests.HostingExtra;

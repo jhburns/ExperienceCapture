@@ -9,7 +9,7 @@ namespace Carter.App.Hosting
     using Carter.App.Lib.Timer;
 
     using Carter.App.Route.Export;
-    using Carter.App.Route.NewSignUp;
+    using Carter.App.Route.ProtectedUsers;
     using Carter.App.Route.Sessions;
     using Carter.App.Route.Users;
 

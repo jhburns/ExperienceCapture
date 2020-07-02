@@ -11,7 +11,7 @@ namespace Carter.App.Route.Users
     using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
 
-    using Carter.App.Route.NewSignUp;
+    using Carter.App.Route.ProtectedUsers;
 
     using Carter.App.Validation.AccessTokenRequest;
     using Carter.App.Validation.AdminPassword;

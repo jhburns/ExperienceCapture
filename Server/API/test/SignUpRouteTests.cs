@@ -6,7 +6,7 @@ namespace Carter.Tests.Route.NewSignUp
     using System.Threading.Tasks;
 
     using Carter.App.Lib.Repository;
-    using Carter.App.Route.NewSignUp;
+    using Carter.App.Route.ProtectedUsers;
     using Carter.App.Route.Users;
 
     using Carter.Tests.HostingExtra;
