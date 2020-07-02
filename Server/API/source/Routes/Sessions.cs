@@ -39,7 +39,7 @@ namespace Carter.App.Route.Sessions
             IDateExtra date)
             : base("/sessions")
         {
-            this.Before += PreSecurity.GetSecurityCheck(accessRepo, date);
+            this.Before += PreSecurity.CheckAccess(accessRepo, date);
 
             this.Post("/", async (req, res) =>
             {

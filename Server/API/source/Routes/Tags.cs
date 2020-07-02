@@ -24,7 +24,7 @@ namespace Carter.App.Route.Tags
             IDateExtra date)
             : base("/sessions/{id}/tags")
         {
-            this.Before += PreSecurity.GetSecurityCheck(accessRepo, date);
+            this.Before += PreSecurity.CheckAccess(accessRepo, date);
 
             this.Post("/{tagName}", async (req, res) =>
             {

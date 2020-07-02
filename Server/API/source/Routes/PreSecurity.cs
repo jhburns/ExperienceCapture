@@ -17,7 +17,7 @@ namespace Carter.App.Route.PreSecurity
 
     public static class PreSecurity
     {
-        public static Func<HttpContext, Task<bool>> GetSecurityCheck(
+        public static Func<HttpContext, Task<bool>> CheckAccess(
             IRepository<AccessTokenSchema> repo,
             IDateExtra date,
             RoleOptions minimumRole = RoleOptions.Normal)
