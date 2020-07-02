@@ -78,6 +78,7 @@ namespace Carter.Tests.Route.PreSecurity
                     Hash = string.Empty,
                     User = ObjectId.GenerateNewId(),
                     CreatedAt = new BsonDateTime(DateTime.UtcNow.AddSeconds(-value)),
+                    Role = RoleOptions.Admin,
                 };
             });
             result.Start();
@@ -99,9 +100,58 @@ namespace Carter.Tests.Route.PreSecurity
         }
 
         [Fact]
+        public async Task LowerRoleIsUnauthorizedPresecurity()
+        {
+            var accessMock = new Mock<IRepository<AccessTokenSchema>>();
+            var result = new Task<AccessTokenSchema>(() =>
+            {
+                return new AccessTokenSchema
+                {
+                    InternalId = ObjectId.GenerateNewId(),
+                    Hash = string.Empty,
+                    User = ObjectId.GenerateNewId(),
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
+                    Role = RoleOptions.Normal,
+                };
+            });
+            result.Start();
+
+            accessMock.Setup(a => a.FindOne(It.IsAny<FilterDefinition<AccessTokenSchema>>()))
+                .Returns(result)
+                .Verifiable();
+
+            var client = CustomHost.Create(accessMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/", false);
+            request.Headers.TryAddWithoutValidation("Cookie", "ExperienceCapture-Access-Token=" + "ok");
+
+            var response = await client.SendAsync(request);
+
+            Console.WriteLine(response.StatusCode);
+            Assert.True(
+                response.StatusCode == HttpStatusCode.Unauthorized,
+                "Triggering pre-security with a lower role is not unauthorized.");
+        }
+
+        [Fact]
         public async Task AllowedTokenIsOkPresecurity()
         {
-            var client = CustomHost.Create();
+            var accessMock = new Mock<IRepository<AccessTokenSchema>>();
+            var result = new Task<AccessTokenSchema>(() =>
+            {
+                return new AccessTokenSchema
+                {
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
+                    Role = RoleOptions.Admin,
+                };
+            });
+            result.Start();
+
+            accessMock.Setup(a => a.FindOne(It.IsAny<FilterDefinition<AccessTokenSchema>>()))
+                .Returns(result)
+                .Verifiable();
+
+            var client = CustomHost.Create(accessMock);
 
             var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/");
 

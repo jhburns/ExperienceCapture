@@ -26,7 +26,7 @@ namespace Carter.App.Route.NewSignUp
             : base("/users")
         {
             // TODO: only allow admins to create sign-up tokens, or another restriction
-            this.Before += PreSecurity.GetSecurityCheck(accessRepo, date);
+            this.Before += PreSecurity.GetSecurityCheck(accessRepo, date, RoleOptions.Admin);
 
             this.Post("/signUp", async (req, res) =>
             {
@@ -74,6 +74,9 @@ namespace Carter.App.Route.NewSignUp
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
+
+        [BsonElement("role")]
+        public RoleOptions Role { get; set; } = RoleOptions.Normal;
         #pragma warning restore SA1516
     }
 
