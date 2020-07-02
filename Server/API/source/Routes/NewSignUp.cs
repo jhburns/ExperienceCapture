@@ -26,7 +26,7 @@ namespace Carter.App.Route.NewSignUp
             : base("/users")
         {
             // TODO: only allow admins to create sign-up tokens, or another restriction
-            this.Before += PreSecurity.GetSecurityCheck(accessRepo, date);
+            this.Before += PreSecurity.GetSecurityCheck(accessRepo, date, RoleOptions.Admin);
 
             this.Post("/signUp", async (req, res) =>
             {

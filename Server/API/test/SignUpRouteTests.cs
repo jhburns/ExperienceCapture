@@ -49,6 +49,7 @@ namespace Carter.Tests.Route.NewSignUp
 
                     // A day so the token can't expire while running
                     CreatedAt = new BsonDateTime(DateTime.UtcNow.AddSeconds(86400)),
+                    Role = RoleOptions.Admin,
                 };
             });
             result.Start();
@@ -70,7 +71,22 @@ namespace Carter.Tests.Route.NewSignUp
         [Fact]
         public async Task ResponceIsValidPostSignUp()
         {
-            var client = CustomHost.Create();
+            var accessMock = new Mock<IRepository<AccessTokenSchema>>();
+            var result = new Task<AccessTokenSchema>(() =>
+            {
+                return new AccessTokenSchema
+                {
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
+                    Role = RoleOptions.Admin,
+                };
+            });
+            result.Start();
+
+            accessMock.Setup(a => a.FindOne(It.IsAny<FilterDefinition<AccessTokenSchema>>()))
+                .Returns(result)
+                .Verifiable();
+
+            var client = CustomHost.Create(accessMock);
 
             var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp");
             var response = await client.SendAsync(request);
@@ -92,7 +108,22 @@ namespace Carter.Tests.Route.NewSignUp
         [InlineData("/?sdfsdf=sdfdsf34543&")]
         public async Task ResponceIsValidBsonPostSignUp(string input)
         {
-            var client = CustomHost.Create();
+            var accessMock = new Mock<IRepository<AccessTokenSchema>>();
+            var result = new Task<AccessTokenSchema>(() =>
+            {
+                return new AccessTokenSchema
+                {
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
+                    Role = RoleOptions.Admin,
+                };
+            });
+            result.Start();
+
+            accessMock.Setup(a => a.FindOne(It.IsAny<FilterDefinition<AccessTokenSchema>>()))
+                .Returns(result)
+                .Verifiable();
+
+            var client = CustomHost.Create(accessMock);
 
             var request = CustomRequest.Create(HttpMethod.Post, $"/users/signUp{input}bson=true");
             var response = await client.SendAsync(request);
@@ -116,8 +147,23 @@ namespace Carter.Tests.Route.NewSignUp
         [InlineData("/?test=sdkfjsdlfksdf&blak=sdfsfds")]
         public async Task MultipleRoutesPostSignUp(string input)
         {
-            var client = CustomHost.Create();
+            var accessMock = new Mock<IRepository<AccessTokenSchema>>();
+            var result = new Task<AccessTokenSchema>(() =>
+            {
+                return new AccessTokenSchema
+                {
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
+                    Role = RoleOptions.Admin,
+                };
+            });
+            result.Start();
 
+            accessMock.Setup(a => a.FindOne(It.IsAny<FilterDefinition<AccessTokenSchema>>()))
+                .Returns(result)
+                .Verifiable();
+
+            var client = CustomHost.Create(accessMock);
+ 
             var request = CustomRequest.Create(HttpMethod.Post, $"/users/signUp{input}");
             var response = await client.SendAsync(request);
 
@@ -128,7 +174,23 @@ namespace Carter.Tests.Route.NewSignUp
         public async Task ResponceExpirationIsInTheFuturePostSignUp()
         {
             var now = new BsonDateTime(DateTime.UtcNow);
-            var client = CustomHost.Create();
+
+            var accessMock = new Mock<IRepository<AccessTokenSchema>>();
+            var result = new Task<AccessTokenSchema>(() =>
+            {
+                return new AccessTokenSchema
+                {
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
+                    Role = RoleOptions.Admin,
+                };
+            });
+            result.Start();
+
+            accessMock.Setup(a => a.FindOne(It.IsAny<FilterDefinition<AccessTokenSchema>>()))
+                .Returns(result)
+                .Verifiable();
+
+            var client = CustomHost.Create(accessMock);
 
             var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp");
             var response = await client.SendAsync(request);
@@ -144,7 +206,22 @@ namespace Carter.Tests.Route.NewSignUp
         [Fact]
         public async Task ResponceTokensAreDifferentPostSignUp()
         {
-            var client = CustomHost.Create();
+            var accessMock = new Mock<IRepository<AccessTokenSchema>>();
+            var result = new Task<AccessTokenSchema>(() =>
+            {
+                return new AccessTokenSchema
+                {
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
+                    Role = RoleOptions.Admin,
+                };
+            });
+            result.Start();
+
+            accessMock.Setup(a => a.FindOne(It.IsAny<FilterDefinition<AccessTokenSchema>>()))
+                .Returns(result)
+                .Verifiable();
+
+            var client = CustomHost.Create(accessMock);
 
             var requestFirst = CustomRequest.Create(HttpMethod.Post, "/users/signUp");
             var responseFirst = await client.SendAsync(requestFirst);

@@ -38,7 +38,7 @@ namespace Carter.App.Route.PreSecurity
 
                 if (accessTokenDoc == null
                     || accessTokenDoc.CreatedAt.IsAfter(date, accessTokenDoc.ExpirationSeconds)
-                    || (int)accessTokenDoc.Role > (int)minimumRole)
+                    || (int)accessTokenDoc.Role < (int)minimumRole)
                 {
                     res.StatusCode = Status401Unauthorized;
                     return false;
