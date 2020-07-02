@@ -40,6 +40,7 @@ namespace Carter.App.Hosting
 
             // Add repositories based on Mongo
             BsonSerializer.RegisterSerializer(new EnumSerializer<ExportOptions>(BsonType.String));
+            BsonSerializer.RegisterSerializer(new EnumSerializer<RoleOptions>(BsonType.String));
 
             string mongoUrl = $"mongodb://{AppConfiguration.Mongo.ConnectionString}:{AppConfiguration.Mongo.Port}";
             var client = new MongoClient(mongoUrl);

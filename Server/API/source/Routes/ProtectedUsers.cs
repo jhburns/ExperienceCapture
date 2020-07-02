@@ -1,5 +1,8 @@
 namespace Carter.App.Route.ProtectedUsers
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     using Carter;
 
     using Carter.App.Lib.Authentication;
@@ -21,12 +24,41 @@ namespace Carter.App.Route.ProtectedUsers
         public NewSignUp(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SignUpTokenSchema> signUpRepo,
+            IRepository<PersonSchema> personRepo,
             IAppEnvironment env,
             IDateExtra date)
             : base("/users")
         {
-            // TODO: only allow admins to create sign-up tokens, or another restriction
             this.Before += PreSecurity.CheckAccess(accessRepo, date, RoleOptions.Admin);
+
+            this.Get("/", async (req, res) =>
+            {
+                var filter = Builders<PersonSchema>.Filter.Empty;
+                var sorter = Builders<PersonSchema>.Sort
+                    .Descending(p => p.Fullname);
+
+                var persons = await personRepo.FindAll(filter, sorter);
+
+                var personsWithoutId = persons.Select((p) =>
+                {
+                    p.InternalId = null;
+                    return p;
+                });
+
+                var responceBody = new PersonsResponce
+                {
+                    ContentList = new List<PersonSchema>(persons),
+                };
+
+                string json = JsonQuery.FulfilEncoding(req.Query, personsWithoutId);
+                if (json != null)
+                {
+                    await res.FromJson(json);
+                    return;
+                }
+
+                await res.FromBson(personsWithoutId);
+            });
 
             this.Post("/signUp", async (req, res) =>
             {
@@ -58,6 +90,14 @@ namespace Carter.App.Route.ProtectedUsers
                 await res.FromBson(responceDoc);
             });
         }
+    }
+
+    public class PersonsResponce
+    {
+        #pragma warning disable SA1516
+        [BsonElement("contentArray")]
+        public List<PersonSchema> ContentList { get; set; }
+        #pragma warning restore SA1516
     }
 
     public class SignUpTokenSchema
