@@ -74,6 +74,9 @@ namespace Carter.App.Route.NewSignUp
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
+
+        [BsonElement("role")]
+        public RoleOptions Role { get; set; } = RoleOptions.Normal;
         #pragma warning restore SA1516
     }
 

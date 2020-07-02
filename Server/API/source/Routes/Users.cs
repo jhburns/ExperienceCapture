@@ -82,6 +82,7 @@ namespace Carter.App.Route.Users
                     Lastname = person.FamilyName,
                     Email = person.Email,
                     CreatedAt = new BsonDateTime(date.UtcNow),
+                    Role = signUpDoc.Role,
                 };
 
                 await personRepo.Add(personObject);
@@ -129,6 +130,7 @@ namespace Carter.App.Route.Users
                     Hash = newHash,
                     User = userDoc.InternalId,
                     CreatedAt = new BsonDateTime(date.UtcNow),
+                    Role = userDoc.Role,
                 };
 
                 await accessRepo.Add(tokenObject);
@@ -292,6 +294,7 @@ namespace Carter.App.Route.Users
                     InternalId = ObjectId.GenerateNewId(),
                     Hash = PasswordHasher.Hash(newToken),
                     CreatedAt = new BsonDateTime(date.UtcNow),
+                    Role = RoleOptions.Admin,
                 };
 
                 await signUpRepo.Add(tokenDoc);
@@ -338,8 +341,20 @@ namespace Carter.App.Route.Users
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
+
+        [BsonElement("role")]
+        public RoleOptions Role { get; set; }
         #pragma warning restore SA1516
     }
+
+    // See Startup.cs for the code on how this is serlizalized
+    #pragma warning disable SA1201
+    public enum RoleOptions
+    {
+        Normal,
+        Admin,
+    }
+    #pragma warning restore SA1201
 
     public sealed class PersonRepository : RepositoryBase<PersonSchema>
     {
@@ -375,6 +390,9 @@ namespace Carter.App.Route.Users
 
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
+
+        [BsonElement("role")]
+        public RoleOptions Role { get; set; }
         #pragma warning restore SA1516
     }
 

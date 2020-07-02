@@ -17,7 +17,10 @@ namespace Carter.App.Route.PreSecurity
 
     public static class PreSecurity
     {
-        public static Func<HttpContext, Task<bool>> GetSecurityCheck(IRepository<AccessTokenSchema> repo, IDateExtra date)
+        public static Func<HttpContext, Task<bool>> GetSecurityCheck(
+            IRepository<AccessTokenSchema> repo,
+            IDateExtra date,
+            RoleOptions minimumRole = RoleOptions.Normal)
         {
             Func<HttpRequest, HttpResponse, Task<bool>> check = async (req, res) =>
             {
@@ -34,7 +37,8 @@ namespace Carter.App.Route.PreSecurity
                         .Where(a => a.Hash == PasswordHasher.Hash(token)));
 
                 if (accessTokenDoc == null
-                    || accessTokenDoc.CreatedAt.IsAfter(date, accessTokenDoc.ExpirationSeconds))
+                    || accessTokenDoc.CreatedAt.IsAfter(date, accessTokenDoc.ExpirationSeconds)
+                    || (int) accessTokenDoc.Role > (int) minimumRole)
                 {
                     res.StatusCode = Status401Unauthorized;
                     return false;
