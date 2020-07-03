@@ -57,10 +57,6 @@ namespace Carter.Tests.HostingExtra
                             {
                                 return new AccessTokenSchema
                                 {
-                                    InternalId = ObjectId.GenerateNewId(),
-                                    Hash = string.Empty,
-                                    User = ObjectId.GenerateNewId(),
-
                                     // A day so the token can't expire while running
                                     CreatedAt = new BsonDateTime(DateTime.UtcNow.AddSeconds(86400)),
                                     Role = RoleOptions.Normal,

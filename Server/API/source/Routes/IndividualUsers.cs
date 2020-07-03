@@ -49,7 +49,7 @@ namespace Carter.App.Route.ProtectedUsers
                         .Filter
                         .Where(a => a.Hash == PasswordHasher.Hash(token)));
 
-                if (person.InternalId != accessToken.User)
+                if (person.InternalId != accessToken.User && accessToken.Role != RoleOptions.Admin)
                 {
                     res.StatusCode = Status401Unauthorized;
                     return;
