@@ -20,7 +20,7 @@
     public class HandleCapturing : MonoBehaviour
     {
         public string url { get; set; }
-        public string sessionPath;
+        private string sessionPath = "/api/v1/sessions/";
 
         public string playerName { get; set; }
 
