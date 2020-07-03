@@ -272,7 +272,7 @@ namespace Carter.App.Route.Users
                 await res.FromBson(responce.ToBsonDocument());
             });
 
-            this.Post("authentication/admin/", async (req, res) =>
+            this.Post("authentication/admins/", async (req, res) =>
             {
                 var newAdmin = await req.BindAndValidate<AdminPasswordRequest>();
                 if (!newAdmin.ValidationResult.IsValid)

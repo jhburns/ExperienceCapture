@@ -1127,7 +1127,7 @@ namespace Carter.Tests.Route.Users
         {
             var client = CustomHost.Create();
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/admin");
+            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/admins");
             request.Content = new StringContent(input, Encoding.UTF8, "application/json");
             var response = await client.SendAsync(request);
 
@@ -1145,7 +1145,7 @@ namespace Carter.Tests.Route.Users
 
             var client = CustomHost.Create(envMock: envMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/admin");
+            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/admins");
             request.Content = new StringContent("{ \"password\": \"fail\" }", Encoding.UTF8, "application/json");
             var response = await client.SendAsync(request);
 
@@ -1168,7 +1168,7 @@ namespace Carter.Tests.Route.Users
 
             var client = CustomHost.Create(signUpMock: signUpMock, envMock: envMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/admin");
+            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/admins");
             request.Content = new StringContent("{ \"password\": \"7JO8e1TmORUCSvHAdcp2eBFAdwh02o+WwLiLjdF4Kkc=\" }", Encoding.UTF8, "application/json");
             var response = await client.SendAsync(request);
 
@@ -1187,7 +1187,7 @@ namespace Carter.Tests.Route.Users
 
             var client = CustomHost.Create(envMock: envMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/admin");
+            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/admins");
             request.Content = new StringContent("{ \"password\": \"fail\" }", Encoding.UTF8, "application/json");
             var response = await client.SendAsync(request);
 
@@ -1210,7 +1210,7 @@ namespace Carter.Tests.Route.Users
 
             var client = CustomHost.Create(signUpMock: signUpMock, envMock: envMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/admin");
+            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/admins");
             request.Content = new StringContent("{ \"password\": \"7JO8e1TmORUCSvHAdcp2eBFAdwh02o+WwLiLjdF4Kkc=\" }", Encoding.UTF8, "application/json");
             var response = await client.SendAsync(request);
 
@@ -1238,7 +1238,7 @@ namespace Carter.Tests.Route.Users
 
             var client = CustomHost.Create(signUpMock: signUpMock, envMock: envMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/admin?bson=true");
+            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/admins?bson=true");
             request.Content = new StringContent("{ \"password\": \"7JO8e1TmORUCSvHAdcp2eBFAdwh02o+WwLiLjdF4Kkc=\" }", Encoding.UTF8, "application/json");
             var response = await client.SendAsync(request);
 
@@ -1262,28 +1262,28 @@ namespace Carter.Tests.Route.Users
         {
             var client = CustomHost.Create();
 
-            var requestPut = CustomRequest.Create(HttpMethod.Put, $"/authentication/admin{input}");
+            var requestPut = CustomRequest.Create(HttpMethod.Put, $"/authentication/admins{input}");
             var responsePut = await client.SendAsync(requestPut);
 
             Assert.True(
                 responsePut.StatusCode == HttpStatusCode.MethodNotAllowed,
                 "Putting admin is an allowed method.");
 
-            var requestPatch = CustomRequest.Create(HttpMethod.Patch, $"/authentication/admin{input}");
+            var requestPatch = CustomRequest.Create(HttpMethod.Patch, $"/authentication/admins{input}");
             var responsePatch = await client.SendAsync(requestPatch);
 
             Assert.True(
                 responsePatch.StatusCode == HttpStatusCode.MethodNotAllowed,
                 "Patching admin is an allowed method.");
 
-            var requestDelete = CustomRequest.Create(HttpMethod.Delete, $"/authentication/admin{input}");
+            var requestDelete = CustomRequest.Create(HttpMethod.Delete, $"/authentication/admins{input}");
             var responseDelete = await client.SendAsync(requestDelete);
 
             Assert.True(
                 responseDelete.StatusCode == HttpStatusCode.MethodNotAllowed,
                 "Deleting admin is an allowed method.");
 
-            var requestGet = CustomRequest.Create(HttpMethod.Get, $"/authentication/admin{input}");
+            var requestGet = CustomRequest.Create(HttpMethod.Get, $"/authentication/admins{input}");
             var responseGet = await client.SendAsync(requestGet);
 
             Assert.True(
