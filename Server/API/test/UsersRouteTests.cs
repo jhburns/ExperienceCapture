@@ -21,8 +21,6 @@ namespace Carter.Tests.Route.Users
 
     using Xunit;
 
-    using System;
-
     public class UsersTests
     {
         [Theory]
@@ -289,7 +287,6 @@ namespace Carter.Tests.Route.Users
             var request = CustomRequest.Create(HttpMethod.Post, "/users/123456789109876543210/tokens");
             var response = await client.SendAsync(request);
 
-            Console.WriteLine(response.StatusCode);
             Assert.True(
                 response.StatusCode == HttpStatusCode.NotFound,
                 "Creating an access token with a missing person is not 'not found'.");
