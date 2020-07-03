@@ -80,7 +80,7 @@ class SessionTable extends Component {
     const request = await getData(url);
     // TODO: add status code checks to this request
     const sessionsData = await request.json();
-    const sessions = sessionsData.contentArray;
+    const sessions = sessionsData.contentList;
 
     // Removing all the extra data from each session, and flattening
     const sessionsConverted = sessions.map((s) => {

@@ -47,17 +47,17 @@ namespace Carter.App.Route.ProtectedUsers
 
                 var responceBody = new PersonsResponce
                 {
-                    ContentList = new List<PersonSchema>(persons),
+                    ContentList = new List<PersonSchema>(personsWithoutId),
                 };
 
-                string json = JsonQuery.FulfilEncoding(req.Query, personsWithoutId);
+                string json = JsonQuery.FulfilEncoding(req.Query, responceBody);
                 if (json != null)
                 {
                     await res.FromJson(json);
                     return;
                 }
 
-                await res.FromBson(personsWithoutId);
+                await res.FromBson(responceBody);
             });
 
             this.Post("authorization/signUp", async (req, res) =>
@@ -95,7 +95,7 @@ namespace Carter.App.Route.ProtectedUsers
     public class PersonsResponce
     {
         #pragma warning disable SA1516
-        [BsonElement("contentArray")]
+        [BsonElement("contentList")]
         public List<PersonSchema> ContentList { get; set; }
         #pragma warning restore SA1516
     }

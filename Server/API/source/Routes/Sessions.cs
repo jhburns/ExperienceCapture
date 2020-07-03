@@ -428,7 +428,7 @@ namespace Carter.App.Route.Sessions
     public class SessionsResponce
     {
         #pragma warning disable SA1516
-        [BsonElement("contentArray")]
+        [BsonElement("contentList")]
         public List<SessionSchema> ContentList { get; set; }
 
         [BsonElement("pageTotal")]
