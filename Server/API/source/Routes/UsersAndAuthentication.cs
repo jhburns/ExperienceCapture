@@ -67,9 +67,26 @@ namespace Carter.App.Route.UsersAndAuthentication
 
                 var existingPerson = await personRepo.FindById(person.Subject);
 
+                // Check if the person already exists
                 if (existingPerson != null)
                 {
-                    res.StatusCode = Status409Conflict;
+                    // Recreate them if they where deleted
+                    if (!existingPerson.IsExisting)
+                    {
+                        var filter = Builders<PersonSchema>.Filter
+                            .Where(p => p.Id == person.Subject);
+
+                        var update = Builders<PersonSchema>.Update
+                            .Set(p => p.IsExisting, true);
+
+                        await res.FromString();
+                    }
+                    else
+                    {
+                        // Return error is they really exist
+                        res.StatusCode = Status409Conflict;
+                    }
+
                     return;
                 }
 
@@ -95,7 +112,7 @@ namespace Carter.App.Route.UsersAndAuthentication
                 string userID = req.RouteValues.As<string>("id");
                 var userDoc = await personRepo.FindById(userID);
 
-                if (userDoc == null)
+                if (userDoc == null || !userDoc.IsExisting)
                 {
                     res.StatusCode = Status404NotFound;
                     return;

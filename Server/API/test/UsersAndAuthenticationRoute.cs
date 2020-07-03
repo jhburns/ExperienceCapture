@@ -137,6 +137,7 @@ namespace Carter.Tests.Route.UsersAndAuthentication
             });
             personResult.Start();
 
+            // TODO: remove token
             personMock.Setup(p => p.FindById(It.IsAny<string>()))
                 .Returns(personResult)
                 .Verifiable("A person token was not looked for.");
@@ -150,6 +151,63 @@ namespace Carter.Tests.Route.UsersAndAuthentication
             Assert.True(
                 response.StatusCode == HttpStatusCode.Conflict,
                 "User creation does not return a conflict.");
+        }
+
+        [Fact]
+        public async Task RevivingAPersonIsOkPostUsers()
+        {
+            var setTime = new DateProvider().UtcNow;
+            var dateMock = new Mock<IDateExtra>();
+            dateMock.SetupGet(d => d.UtcNow)
+                .Returns(setTime)
+                .Verifiable("Now was never called.");
+
+            var signUpMock = new Mock<IRepository<SignUpTokenSchema>>();
+
+            var result = new Task<SignUpTokenSchema>(() =>
+            {
+                return new SignUpTokenSchema
+                {
+                    CreatedAt = new BsonDateTime(setTime.AddSeconds(1)),
+                };
+            });
+            result.Start();
+
+            signUpMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SignUpTokenSchema>>()))
+                .Returns(result)
+                .Verifiable("A sign-up token was not looked for.");
+
+            var personMock = new Mock<IRepository<PersonSchema>>();
+
+            var personResult = new Task<PersonSchema>(() =>
+            {
+                return new PersonSchema
+                {
+                    IsExisting = false,
+                };
+            });
+            personResult.Start();
+
+            personMock.Setup(p => p.FindById(It.IsAny<string>()))
+                .Returns(personResult)
+                .Verifiable("A person was not looked for.");
+
+            personMock.Setup(p => p.Update(
+                It.IsAny<FilterDefinition<PersonSchema>>(),
+                It.IsAny<UpdateDefinition<PersonSchema>>()))
+                .Verifiable("A person was not updated.");
+
+            var client = CustomHost.Create(signUpMock: signUpMock, dateMock: dateMock, personMock: personMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/users");
+            request.Content = new StringContent("{ \"signUpToken\": \"b\", \"idToken\": \"a\" }", Encoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var body = await response.Content.ReadAsStringAsync();
+
+            Assert.True(body == "OK", "Recreating a user does not have a body of 'OK'.");
         }
 
         [Fact]
@@ -280,7 +338,7 @@ namespace Carter.Tests.Route.UsersAndAuthentication
         }
 
         [Fact]
-        public async Task MissingUserIsNotFoundPostAccessToken()
+        public async Task MissingPersonIsNotFoundPostAccessToken()
         {
             var client = CustomHost.Create();
 
@@ -293,13 +351,16 @@ namespace Carter.Tests.Route.UsersAndAuthentication
         }
 
         [Fact]
-        public async Task MissingPersonIsNotFoundPostAccessToken()
+        public async Task NonExistantIsNotFoundPostAccessToken()
         {
             var personMock = new Mock<IRepository<PersonSchema>>();
 
             var result = new Task<PersonSchema>(() =>
             {
-                return null;
+                return new PersonSchema()
+                {
+                    IsExisting = false,
+                };
             });
             result.Start();
 
@@ -314,7 +375,7 @@ namespace Carter.Tests.Route.UsersAndAuthentication
 
             Assert.True(
                 response.StatusCode == HttpStatusCode.NotFound,
-                "Creating an access token with a missing person is not 'not found'.");
+                "Creating an access token with a non existing person is not 'not found'.");
         }
 
         [Theory]
