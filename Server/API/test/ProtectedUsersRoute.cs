@@ -168,6 +168,52 @@ namespace Carter.Tests.Route.ProtectedUsers
             Assert.True(data.ContentList[0].InternalId == null, "Get users does null the internal id field.");
         }
 
+        [Theory]
+        [InlineData("")]
+        [InlineData("/")]
+        [InlineData("?")]
+        [InlineData("/?")]
+        [InlineData("/?test=sdkfjsdlfksdf&blak=sdfsfds")]
+        public async Task MultipleRoutesGetUsers(string input)
+        {
+            var accessMock = new Mock<IRepository<AccessTokenSchema>>();
+            var result = new Task<AccessTokenSchema>(() =>
+            {
+                return new AccessTokenSchema
+                {
+                    CreatedAt = new BsonDateTime(DateTime.UtcNow),
+                    Role = RoleOptions.Admin,
+                };
+            });
+            result.Start();
+
+            accessMock.Setup(a => a.FindOne(It.IsAny<FilterDefinition<AccessTokenSchema>>()))
+                .Returns(result)
+                .Verifiable();
+
+            var personMock = new Mock<IRepository<PersonSchema>>();
+            var personResult = new Task<IList<PersonSchema>>(() =>
+            {
+                return new List<PersonSchema>()
+                {
+                };
+            });
+            personResult.Start();
+
+            personMock.Setup(p => p.FindAll(
+                It.IsAny<FilterDefinition<PersonSchema>>(),
+                It.IsAny<SortDefinition<PersonSchema>>(),
+                It.IsAny<int>()))
+                .Returns(personResult)
+                .Verifiable("Persons were never search for.");
+
+            var client = CustomHost.Create(accessMock: accessMock, personMock: personMock);
+            var request = CustomRequest.Create(HttpMethod.Get, $"/users{input}");
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+        }
+
         [Fact]
         public async Task RequiresAccessPostSignUp()
         {
