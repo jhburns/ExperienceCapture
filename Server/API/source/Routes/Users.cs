@@ -184,7 +184,7 @@ namespace Carter.App.Route.Users
                 }
             });
 
-            this.Post("authorization/claims/", async (req, res) =>
+            this.Post("authentication/claims/", async (req, res) =>
             {
                 string newToken = Generate.GetRandomToken();
                 string newHash = PasswordHasher.Hash(newToken);
@@ -214,7 +214,7 @@ namespace Carter.App.Route.Users
                 await res.FromBson(responce.ToBsonDocument());
             });
 
-            this.Get("authorization/claims/", async (req, res) =>
+            this.Get("authentication/claims/", async (req, res) =>
             {
                 string claimToken = req.Cookies["ExperienceCapture-Claim-Token"];
                 if (claimToken == null)
@@ -272,7 +272,7 @@ namespace Carter.App.Route.Users
                 await res.FromBson(responce.ToBsonDocument());
             });
 
-            this.Post("authorization/admin/", async (req, res) =>
+            this.Post("authentication/admin/", async (req, res) =>
             {
                 var newAdmin = await req.BindAndValidate<AdminPasswordRequest>();
                 if (!newAdmin.ValidationResult.IsValid)

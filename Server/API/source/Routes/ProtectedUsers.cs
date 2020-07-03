@@ -60,7 +60,7 @@ namespace Carter.App.Route.ProtectedUsers
                 await res.FromBson(responceBody);
             });
 
-            this.Post("authorization/signUp", async (req, res) =>
+            this.Post("authentication/signUps", async (req, res) =>
             {
                 string newToken = Generate.GetRandomToken();
 
