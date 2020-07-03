@@ -120,7 +120,7 @@
         src: /deploy/daemon.json
         dest: /etc/docker/daemon.json
 
-    - name: Set key for ssh authorization
+    - name: Set key for ssh authentication
       authorized_key:
         user: ec-debug
         state: present

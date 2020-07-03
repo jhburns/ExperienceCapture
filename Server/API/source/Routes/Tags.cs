@@ -8,7 +8,7 @@ namespace Carter.App.Route.Tags
 
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.Sessions;
-    using Carter.App.Route.Users;
+    using Carter.App.Route.UsersAndAuthentication;
 
     using Carter.Request;
 

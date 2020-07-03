@@ -13,7 +13,7 @@ namespace Carter.Tests.LibraryScripts
     using Carter.App.Lib.Timer;
 
     using Carter.App.Route.Sessions;
-    using Carter.App.Route.Users;
+    using Carter.App.Route.UsersAndAuthentication;
 
     using Carter.Tests.HostingExtra;
 

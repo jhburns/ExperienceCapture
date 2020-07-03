@@ -69,7 +69,6 @@
             // Don't allow the game to run in offline mode in production
             #if !UNITY_EDITOR
                 offlineMode = false;
-                limitOutputToSpecified 
             #endif
 
             setup();
@@ -142,7 +141,7 @@
             string emptyBody = new { }.ToString();
             url = urlInput.text.Trim('/');
 
-            StartCoroutine(HTTPHelpers.post(url + "/api/v1/authorization/claims?bson=true", emptyBody,
+            StartCoroutine(HTTPHelpers.post(url + "/api/v1/authentication/claims?bson=true", emptyBody,
                 (data) =>
                 {
                     openingInfo.gameObject.SetActive(true);
@@ -195,7 +194,7 @@
 
         private void pollClaim(string claimToken)
         {
-            StartCoroutine(HTTPHelpers.pollGet(url + "/api/v1/authorization/claims?bson=true", claimToken,
+            StartCoroutine(HTTPHelpers.pollGet(url + "/api/v1/authentication/claims?bson=true", claimToken,
                 (data) =>
                 {
                     try

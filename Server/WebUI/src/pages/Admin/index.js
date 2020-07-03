@@ -42,7 +42,7 @@ class Admin extends Component {
         password: query.password
       };
 
-      const reply = await postData("/api/v1/authorization/admin/", data);
+      const reply = await postData("/api/v1/authentication/admins/", data);
 
       if (reply.ok) {
         this.onSuccess(await reply.json());

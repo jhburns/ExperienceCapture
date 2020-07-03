@@ -1,4 +1,4 @@
-namespace Carter.App.Route.Users
+namespace Carter.App.Route.UsersAndAuthentication
 {
     using System.Threading.Tasks;
 
@@ -11,7 +11,7 @@ namespace Carter.App.Route.Users
     using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
 
-    using Carter.App.Route.ProtectedUsers;
+    using Carter.App.Route.ProtectedUsersAndAuthentication;
 
     using Carter.App.Validation.AccessTokenRequest;
     using Carter.App.Validation.AdminPassword;
@@ -26,9 +26,9 @@ namespace Carter.App.Route.Users
 
     using static Microsoft.AspNetCore.Http.StatusCodes;
 
-    public class Users : CarterModule
+    public class UsersAndAuthentication : CarterModule
     {
-        public Users(
+        public UsersAndAuthentication(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SignUpTokenSchema> signUpRepo,
             IRepository<ClaimTokenSchema> claimRepo,
@@ -184,7 +184,7 @@ namespace Carter.App.Route.Users
                 }
             });
 
-            this.Post("authorization/claims/", async (req, res) =>
+            this.Post("authentication/claims/", async (req, res) =>
             {
                 string newToken = Generate.GetRandomToken();
                 string newHash = PasswordHasher.Hash(newToken);
@@ -214,7 +214,7 @@ namespace Carter.App.Route.Users
                 await res.FromBson(responce.ToBsonDocument());
             });
 
-            this.Get("authorization/claims/", async (req, res) =>
+            this.Get("authentication/claims/", async (req, res) =>
             {
                 string claimToken = req.Cookies["ExperienceCapture-Claim-Token"];
                 if (claimToken == null)
@@ -272,7 +272,7 @@ namespace Carter.App.Route.Users
                 await res.FromBson(responce.ToBsonDocument());
             });
 
-            this.Post("authorization/admin/", async (req, res) =>
+            this.Post("authentication/admins/", async (req, res) =>
             {
                 var newAdmin = await req.BindAndValidate<AdminPasswordRequest>();
                 if (!newAdmin.ValidationResult.IsValid)

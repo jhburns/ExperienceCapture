@@ -7,7 +7,7 @@ namespace Carter.Tests.Route.PreSecurity
     using System.Threading.Tasks;
 
     using Carter.App.Lib.Repository;
-    using Carter.App.Route.Users;
+    using Carter.App.Route.UsersAndAuthentication;
 
     using Carter.Tests.HostingExtra;
 
@@ -27,7 +27,7 @@ namespace Carter.Tests.Route.PreSecurity
             var client = CustomHost.Create();
 
             var stringContent = new StringContent(string.Empty, Encoding.UTF8, "application/json");
-            var response = await client.PostAsync("/authorization/signUp/", stringContent);
+            var response = await client.PostAsync("/authentication/signUps/", stringContent);
 
             Assert.True(
                 response.StatusCode == HttpStatusCode.BadRequest,
@@ -54,7 +54,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp/", false);
+            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/signUps/", false);
             request.Headers.TryAddWithoutValidation("Cookie", "ExperienceCapture-Access-Token=" + value);
 
             var response = await client.SendAsync(request);
@@ -89,7 +89,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp/", false);
+            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/signUps/", false);
             request.Headers.TryAddWithoutValidation("Cookie", "ExperienceCapture-Access-Token=" + "ok");
 
             var response = await client.SendAsync(request);
@@ -122,7 +122,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp/", false);
+            var request = CustomRequest.Create(HttpMethod.Get, "/users/", false);
             request.Headers.TryAddWithoutValidation("Cookie", "ExperienceCapture-Access-Token=" + "ok");
 
             var response = await client.SendAsync(request);
@@ -152,7 +152,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp/");
+            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/signUps/");
 
             var response = await client.SendAsync(request);
 
