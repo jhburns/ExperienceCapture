@@ -1,14 +1,9 @@
 namespace Carter.App.Route.ProtectedUsers
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
     using Carter;
-    using Carter.Request;
 
     using Carter.App.Lib.Authentication;
     using Carter.App.Lib.Environment;
-    using Carter.App.Lib.Generate;
     using Carter.App.Lib.Network;
     using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
@@ -16,8 +11,8 @@ namespace Carter.App.Route.ProtectedUsers
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.Users;
 
-    using MongoDB.Bson;
-    using MongoDB.Bson.Serialization.Attributes;
+    using Carter.Request;
+
     using MongoDB.Driver;
 
     using static Microsoft.AspNetCore.Http.StatusCodes;

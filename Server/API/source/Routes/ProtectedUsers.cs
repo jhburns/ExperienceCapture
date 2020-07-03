@@ -27,11 +27,11 @@ namespace Carter.App.Route.ProtectedUsers
             IRepository<PersonSchema> personRepo,
             IAppEnvironment env,
             IDateExtra date)
-            : base("/users")
+            : base("/")
         {
             this.Before += PreSecurity.CheckAccess(accessRepo, date, RoleOptions.Admin);
 
-            this.Get("/", async (req, res) =>
+            this.Get("users", async (req, res) =>
             {
                 var filter = Builders<PersonSchema>.Filter.Empty;
                 var sorter = Builders<PersonSchema>.Sort
@@ -60,7 +60,7 @@ namespace Carter.App.Route.ProtectedUsers
                 await res.FromBson(personsWithoutId);
             });
 
-            this.Post("/signUp", async (req, res) =>
+            this.Post("authorization/signUp", async (req, res) =>
             {
                 string newToken = Generate.GetRandomToken();
 

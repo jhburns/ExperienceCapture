@@ -35,9 +35,9 @@ namespace Carter.App.Route.Users
             IRepository<PersonSchema> personRepo,
             IAppEnvironment env,
             IDateExtra date)
-            : base("/users")
+            : base("/")
         {
-            this.Post("/", async (req, res) =>
+            this.Post("users/", async (req, res) =>
             {
                 var newPerson = await req.BindAndValidate<PersonRequest>();
 
@@ -90,7 +90,7 @@ namespace Carter.App.Route.Users
                 await res.FromString();
             });
 
-            this.Post("/{id}/tokens/", async (req, res) =>
+            this.Post("users/{id}/tokens/", async (req, res) =>
             {
                 string userID = req.RouteValues.As<string>("id");
                 var userDoc = await personRepo.FindById(userID);
@@ -184,7 +184,7 @@ namespace Carter.App.Route.Users
                 }
             });
 
-            this.Post("/claims/", async (req, res) =>
+            this.Post("authorization/claims/", async (req, res) =>
             {
                 string newToken = Generate.GetRandomToken();
                 string newHash = PasswordHasher.Hash(newToken);
@@ -214,7 +214,7 @@ namespace Carter.App.Route.Users
                 await res.FromBson(responce.ToBsonDocument());
             });
 
-            this.Get("/claims/", async (req, res) =>
+            this.Get("authorization/claims/", async (req, res) =>
             {
                 string claimToken = req.Cookies["ExperienceCapture-Claim-Token"];
                 if (claimToken == null)
@@ -272,7 +272,7 @@ namespace Carter.App.Route.Users
                 await res.FromBson(responce.ToBsonDocument());
             });
 
-            this.Post("/signUp/admin/", async (req, res) =>
+            this.Post("authorization/admin/", async (req, res) =>
             {
                 var newAdmin = await req.BindAndValidate<AdminPasswordRequest>();
                 if (!newAdmin.ValidationResult.IsValid)
