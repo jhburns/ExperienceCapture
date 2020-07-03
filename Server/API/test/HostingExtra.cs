@@ -12,9 +12,9 @@ namespace Carter.Tests.HostingExtra
     using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
 
-    using Carter.App.Route.ProtectedUsers;
+    using Carter.App.Route.ProtectedUsersAndAuthentication;
     using Carter.App.Route.Sessions;
-    using Carter.App.Route.Users;
+    using Carter.App.Route.UsersAndAuthentication;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;

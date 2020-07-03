@@ -1,4 +1,4 @@
-namespace Carter.Tests.Route.Users
+namespace Carter.Tests.Route.UsersAndAuthentication
 {
     using System.Net;
     using System.Net.Http;
@@ -8,8 +8,8 @@ namespace Carter.Tests.Route.Users
     using Carter.App.Lib.Environment;
     using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
-    using Carter.App.Route.ProtectedUsers;
-    using Carter.App.Route.Users;
+    using Carter.App.Route.ProtectedUsersAndAuthentication;
+    using Carter.App.Route.UsersAndAuthentication;
 
     using Carter.Tests.HostingExtra;
 
@@ -21,7 +21,7 @@ namespace Carter.Tests.Route.Users
 
     using Xunit;
 
-    public class UsersTests
+    public class UsersAndAuthenticationTests
     {
         [Theory]
         [InlineData("{}")]

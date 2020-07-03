@@ -1,8 +1,5 @@
-namespace Carter.App.Route.ProtectedUsers
+namespace Carter.App.Route.ProtectedUsersAndAuthentication
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
     using Carter;
 
     using Carter.App.Lib.Authentication;
@@ -13,15 +10,19 @@ namespace Carter.App.Route.ProtectedUsers
     using Carter.App.Lib.Timer;
 
     using Carter.App.Route.PreSecurity;
-    using Carter.App.Route.Users;
+    using Carter.App.Route.UsersAndAuthentication;
+
+    using Carter.Request;
 
     using MongoDB.Bson;
     using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
 
-    public class ProtectedUsers : CarterModule
+    using static Microsoft.AspNetCore.Http.StatusCodes;
+
+    public class ProtectedUsersAndAuthentication : CarterModule
     {
-        public ProtectedUsers(
+        public ProtectedUsersAndAuthentication(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SignUpTokenSchema> signUpRepo,
             IRepository<PersonSchema> personRepo,
@@ -29,35 +30,81 @@ namespace Carter.App.Route.ProtectedUsers
             IDateExtra date)
             : base("/")
         {
-            this.Before += PreSecurity.CheckAccess(accessRepo, date, RoleOptions.Admin);
+            this.Before += PreSecurity.CheckAccess(accessRepo, date);
 
-            this.Get("users", async (req, res) =>
+            this.Get("users/{id}/", async (req, res) =>
             {
-                var filter = Builders<PersonSchema>.Filter.Empty;
-                var sorter = Builders<PersonSchema>.Sort
-                    .Descending(p => p.Fullname);
+                string userID = req.RouteValues.As<string>("id");
+                var person = await personRepo.FindById(userID);
 
-                var persons = await personRepo.FindAll(filter, sorter);
-
-                var personsWithoutId = persons.Select((p) =>
+                if (person == null)
                 {
-                    p.InternalId = null;
-                    return p;
-                });
+                    res.StatusCode = Status404NotFound;
+                    return;
+                }
 
-                var responceBody = new PersonsResponce
+                person.InternalId = null;
+
+                // Has to exit due to pre-security check
+                string token = req.Cookies["ExperienceCapture-Access-Token"];
+                var accessToken = await accessRepo.FindOne(
+                    Builders<AccessTokenSchema>
+                        .Filter
+                        .Where(a => a.Hash == PasswordHasher.Hash(token)));
+
+                if (person.InternalId != accessToken.User && accessToken.Role != RoleOptions.Admin)
                 {
-                    ContentList = new List<PersonSchema>(personsWithoutId),
-                };
+                    res.StatusCode = Status401Unauthorized;
+                    return;
+                }
 
-                string json = JsonQuery.FulfilEncoding(req.Query, responceBody);
+                string json = JsonQuery.FulfilEncoding(req.Query, person);
                 if (json != null)
                 {
                     await res.FromJson(json);
                     return;
                 }
 
-                await res.FromBson(responceBody);
+                await res.FromBson(person);
+            });
+
+            this.Delete("users/{id}/", async (req, res) =>
+            {
+                string userID = req.RouteValues.As<string>("id");
+                var person = await personRepo.FindById(userID);
+
+                if (person == null)
+                {
+                    res.StatusCode = Status404NotFound;
+                    return;
+                }
+
+                person.InternalId = null;
+
+                // Has to exit due to pre-security check
+                string token = req.Cookies["ExperienceCapture-Access-Token"];
+                var accessFilter = Builders<AccessTokenSchema>
+                        .Filter
+                        .Where(a => a.Hash == PasswordHasher.Hash(token));
+                var accessToken = await accessRepo.FindOne(accessFilter);
+
+                // Check if the user being requested is the same
+                // As the one requesting, unless they have the admin role
+                if (person.InternalId != accessToken.User && accessToken.Role != RoleOptions.Admin)
+                {
+                    res.StatusCode = Status401Unauthorized;
+                    return;
+                }
+
+                var filter = Builders<PersonSchema>.Filter
+                    .Where(p => p.Id == userID);
+
+                var update = Builders<PersonSchema>.Update
+                    .Set(p => p.IsExisting, false);
+
+                await personRepo.Update(filter, update);
+
+                await res.FromString();
             });
 
             this.Post("authentication/signUps", async (req, res) =>
@@ -90,14 +137,6 @@ namespace Carter.App.Route.ProtectedUsers
                 await res.FromBson(responceDoc);
             });
         }
-    }
-
-    public class PersonsResponce
-    {
-        #pragma warning disable SA1516
-        [BsonElement("contentList")]
-        public List<PersonSchema> ContentList { get; set; }
-        #pragma warning restore SA1516
     }
 
     public class SignUpTokenSchema

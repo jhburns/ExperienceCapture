@@ -1,4 +1,4 @@
-namespace Carter.App.Route.Users
+namespace Carter.App.Route.UsersAndAuthentication
 {
     using System.Threading.Tasks;
 
@@ -11,7 +11,7 @@ namespace Carter.App.Route.Users
     using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
 
-    using Carter.App.Route.ProtectedUsers;
+    using Carter.App.Route.ProtectedUsersAndAuthentication;
 
     using Carter.App.Validation.AccessTokenRequest;
     using Carter.App.Validation.AdminPassword;
@@ -26,9 +26,9 @@ namespace Carter.App.Route.Users
 
     using static Microsoft.AspNetCore.Http.StatusCodes;
 
-    public class Users : CarterModule
+    public class UsersAndAuthentication : CarterModule
     {
-        public Users(
+        public UsersAndAuthentication(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SignUpTokenSchema> signUpRepo,
             IRepository<ClaimTokenSchema> claimRepo,

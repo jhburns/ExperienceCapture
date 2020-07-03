@@ -7,7 +7,7 @@ namespace Carter.Tests.Route.PreSecurity
     using System.Threading.Tasks;
 
     using Carter.App.Lib.Repository;
-    using Carter.App.Route.Users;
+    using Carter.App.Route.UsersAndAuthentication;
 
     using Carter.Tests.HostingExtra;
 
@@ -122,7 +122,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/authentication/signUps/", false);
+            var request = CustomRequest.Create(HttpMethod.Get, "/users/", false);
             request.Headers.TryAddWithoutValidation("Cookie", "ExperienceCapture-Access-Token=" + "ok");
 
             var response = await client.SendAsync(request);

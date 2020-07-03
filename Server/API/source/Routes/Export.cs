@@ -17,7 +17,7 @@ namespace Carter.App.Route.Export
 
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.Sessions;
-    using Carter.App.Route.Users;
+    using Carter.App.Route.UsersAndAuthentication;
 
     using Carter.Request;
     using Carter.Response;
