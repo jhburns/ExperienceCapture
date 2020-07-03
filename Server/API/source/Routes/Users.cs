@@ -339,6 +339,9 @@ namespace Carter.App.Route.Users
         [BsonElement("email")]
         public string Email { get; set; }
 
+        [BsonElement("isExisting")]
+        public bool IsExisting { get; set; } = true;
+
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
 

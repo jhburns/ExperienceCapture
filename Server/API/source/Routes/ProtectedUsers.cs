@@ -19,9 +19,9 @@ namespace Carter.App.Route.ProtectedUsers
     using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
 
-    public class NewSignUp : CarterModule
+    public class ProtectedUsers : CarterModule
     {
-        public NewSignUp(
+        public ProtectedUsers(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SignUpTokenSchema> signUpRepo,
             IRepository<PersonSchema> personRepo,
