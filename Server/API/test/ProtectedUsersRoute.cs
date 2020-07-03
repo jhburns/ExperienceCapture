@@ -91,7 +91,7 @@ namespace Carter.Tests.Route.ProtectedUsers
                 It.IsAny<SortDefinition<PersonSchema>>(),
                 It.IsAny<int>()))
                 .Returns(personResult)
-                .Verifiable("Persons were never search for.");
+                .Verifiable("Persons are never searched for.");
 
             var client = CustomHost.Create(accessMock: accessMock, personMock: personMock);
             var request = CustomRequest.Create(HttpMethod.Get, "/users");
@@ -151,7 +151,7 @@ namespace Carter.Tests.Route.ProtectedUsers
                 It.IsAny<SortDefinition<PersonSchema>>(),
                 It.IsAny<int>()))
                 .Returns(personResult)
-                .Verifiable("Persons were never search for.");
+                .Verifiable("Persons are never searched for.");
 
             var client = CustomHost.Create(accessMock: accessMock, personMock: personMock);
             var request = CustomRequest.Create(HttpMethod.Get, "/users?bson=true");
@@ -205,7 +205,7 @@ namespace Carter.Tests.Route.ProtectedUsers
                 It.IsAny<SortDefinition<PersonSchema>>(),
                 It.IsAny<int>()))
                 .Returns(personResult)
-                .Verifiable("Persons were never search for.");
+                .Verifiable("Persons are never searched for.");
 
             var client = CustomHost.Create(accessMock: accessMock, personMock: personMock);
             var request = CustomRequest.Create(HttpMethod.Get, $"/users{input}");
@@ -264,7 +264,7 @@ namespace Carter.Tests.Route.ProtectedUsers
                 .Returns(result);
 
             accessMock.Setup(s => s.Add(It.IsAny<AccessTokenSchema>()))
-                .Verifiable("An access token was never added.");
+                .Verifiable("An access token is never added.");
 
             var client = CustomHost.Create(accessMock: accessMock);
 
