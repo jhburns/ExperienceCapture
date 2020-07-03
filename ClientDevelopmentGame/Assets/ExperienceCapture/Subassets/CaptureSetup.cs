@@ -69,7 +69,6 @@
             // Don't allow the game to run in offline mode in production
             #if !UNITY_EDITOR
                 offlineMode = false;
-                limitOutputToSpecified 
             #endif
 
             setup();
