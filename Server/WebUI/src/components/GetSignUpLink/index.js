@@ -18,7 +18,7 @@ class GetSignUpLink extends Component {
   }
 
   async onButtonCLick() {
-    const signUpRequest = await postData("/api/v1/users/signUp/", {});
+    const signUpRequest = await postData("/api/v1/users/authorization/signUp/", {});
 
     if (!signUpRequest.ok) {
       throw new Error(signUpRequest.status);
