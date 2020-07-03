@@ -28,7 +28,10 @@ Cypress.Screenshot.defaults({
 beforeEach(() => {
   // Seed
   // Wipe the database first
-  cy.exec('docker-compose -f docker-compose.clone.yaml --project-name server exec -T db mongo ec --eval "db.dropDatabase();"');
+  cy.exec(`docker-compose -f\
+    docker-compose.clone.yaml\
+    --project-name server \
+    exec -T db mongo ec --eval "db.dropDatabase();"`);
 
   // Visit the admin signup path
   cy.visit("/admin?password=validationIsTurnOff");
