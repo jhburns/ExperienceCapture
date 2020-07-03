@@ -1,4 +1,4 @@
-namespace Carter.Tests.Route.NewSignUp
+namespace Carter.Tests.Route.ProtectedUsers
 {
     using System;
     using System.Net;
@@ -6,7 +6,7 @@ namespace Carter.Tests.Route.NewSignUp
     using System.Threading.Tasks;
 
     using Carter.App.Lib.Repository;
-    using Carter.App.Route.NewSignUp;
+    using Carter.App.Route.ProtectedUsers;
     using Carter.App.Route.Users;
 
     using Carter.Tests.HostingExtra;
@@ -19,14 +19,14 @@ namespace Carter.Tests.Route.NewSignUp
 
     using Xunit;
 
-    public class SignUpTests
+    public class ProtectedUsersRoute
     {
         [Fact]
         public async Task RequiresAccessPostSignUp()
         {
             var client = CustomHost.Create();
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp", false);
+            var request = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp", false);
             var response = await client.SendAsync(request);
 
             Assert.True(
@@ -62,7 +62,7 @@ namespace Carter.Tests.Route.NewSignUp
 
             var client = CustomHost.Create(accessMock: accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp");
+            var request = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp");
             var response = await client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
@@ -88,7 +88,7 @@ namespace Carter.Tests.Route.NewSignUp
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp");
+            var request = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp");
             var response = await client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
@@ -125,7 +125,7 @@ namespace Carter.Tests.Route.NewSignUp
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, $"/users/signUp{input}bson=true");
+            var request = CustomRequest.Create(HttpMethod.Post, $"/authorization/signUp{input}bson=true");
             var response = await client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
@@ -164,7 +164,7 @@ namespace Carter.Tests.Route.NewSignUp
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, $"/users/signUp{input}");
+            var request = CustomRequest.Create(HttpMethod.Post, $"/authorization/signUp{input}");
             var response = await client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
@@ -192,7 +192,7 @@ namespace Carter.Tests.Route.NewSignUp
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp");
+            var request = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp");
             var response = await client.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
@@ -223,7 +223,7 @@ namespace Carter.Tests.Route.NewSignUp
 
             var client = CustomHost.Create(accessMock);
 
-            var requestFirst = CustomRequest.Create(HttpMethod.Post, "/users/signUp");
+            var requestFirst = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp");
             var responseFirst = await client.SendAsync(requestFirst);
             responseFirst.EnsureSuccessStatusCode();
 
@@ -231,7 +231,7 @@ namespace Carter.Tests.Route.NewSignUp
 
             var dataFirst = BsonSerializer.Deserialize<SignUpTokenResponce>(bodyFirst);
 
-            var requestSecond = CustomRequest.Create(HttpMethod.Post, "/users/signUp");
+            var requestSecond = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp");
             var responseSecond = await client.SendAsync(requestSecond);
             responseFirst.EnsureSuccessStatusCode();
 
@@ -252,28 +252,28 @@ namespace Carter.Tests.Route.NewSignUp
         {
             var client = CustomHost.Create();
 
-            var requestPut = CustomRequest.Create(HttpMethod.Put, $"/users/signUp{input}");
+            var requestPut = CustomRequest.Create(HttpMethod.Put, $"/authorization/signUp{input}");
             var responsePut = await client.SendAsync(requestPut);
 
             Assert.True(
                 responsePut.StatusCode == HttpStatusCode.MethodNotAllowed,
                 "Putting SignUp is an allowed method.");
 
-            var requestPatch = CustomRequest.Create(HttpMethod.Patch, $"/users/signUp{input}");
+            var requestPatch = CustomRequest.Create(HttpMethod.Patch, $"/authorization/signUp{input}");
             var responsePatch = await client.SendAsync(requestPatch);
 
             Assert.True(
                 responsePatch.StatusCode == HttpStatusCode.MethodNotAllowed,
                 "Patching SignUp is an allowed method.");
 
-            var requestGet = CustomRequest.Create(HttpMethod.Get, $"/users/signUp{input}");
+            var requestGet = CustomRequest.Create(HttpMethod.Get, $"/authorization/signUp{input}");
             var responseGet = await client.SendAsync(requestGet);
 
             Assert.True(
                 responseGet.StatusCode == HttpStatusCode.MethodNotAllowed,
                 "Gettings SignUp is an allowed method.");
 
-            var requestDelete = CustomRequest.Create(HttpMethod.Delete, $"/users/signUp{input}");
+            var requestDelete = CustomRequest.Create(HttpMethod.Delete, $"/authorization/signUp{input}");
             var responseDelete = await client.SendAsync(requestDelete);
 
             Assert.True(

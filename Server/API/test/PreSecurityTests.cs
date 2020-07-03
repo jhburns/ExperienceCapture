@@ -27,7 +27,7 @@ namespace Carter.Tests.Route.PreSecurity
             var client = CustomHost.Create();
 
             var stringContent = new StringContent(string.Empty, Encoding.UTF8, "application/json");
-            var response = await client.PostAsync("/users/signUp/", stringContent);
+            var response = await client.PostAsync("/authorization/signUp/", stringContent);
 
             Assert.True(
                 response.StatusCode == HttpStatusCode.BadRequest,
@@ -54,7 +54,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/", false);
+            var request = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp/", false);
             request.Headers.TryAddWithoutValidation("Cookie", "ExperienceCapture-Access-Token=" + value);
 
             var response = await client.SendAsync(request);
@@ -89,7 +89,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/", false);
+            var request = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp/", false);
             request.Headers.TryAddWithoutValidation("Cookie", "ExperienceCapture-Access-Token=" + "ok");
 
             var response = await client.SendAsync(request);
@@ -122,12 +122,11 @@ namespace Carter.Tests.Route.PreSecurity
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/", false);
+            var request = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp/", false);
             request.Headers.TryAddWithoutValidation("Cookie", "ExperienceCapture-Access-Token=" + "ok");
 
             var response = await client.SendAsync(request);
 
-            Console.WriteLine(response.StatusCode);
             Assert.True(
                 response.StatusCode == HttpStatusCode.Unauthorized,
                 "Triggering pre-security with a lower role is not unauthorized.");
@@ -153,7 +152,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Post, "/users/signUp/");
+            var request = CustomRequest.Create(HttpMethod.Post, "/authorization/signUp/");
 
             var response = await client.SendAsync(request);
 
