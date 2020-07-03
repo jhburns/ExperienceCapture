@@ -3,13 +3,13 @@ describe('navbar tests.', () => {
     cy.visit("/home/start");
 
     cy.get('[data-cy=menu-hamburger]')
-      .click()
+      .click({ timeout: 10000 })
       .then(() => {
         cy.get('[data-cy=menu-collapse]')
           .should('have.class', 'show')
           .then(() => {
             cy.get('[data-cy=menu-hamburger]')
-              .click()
+              .click({ timeout: 10000 })
               .then(() => {
                 cy.get('[data-cy=menu-collapse]')
                   .should('not.have.class', 'show');
@@ -30,23 +30,23 @@ describe('navbar tests.', () => {
 
             // Yes, this is messy, but its the only practical way to test each menu link
             cy.wrap(links[1])
-              .click()
+              .click({ timeout: 10000 })
               .then(() => {
                 cy.get('[data-cy=menu-hamburger]')
-                  .click()
+                  .click({ timeout: 10000 })
                   .then(() => {
                     cy.get('[data-cy=menu-link]')
                       .then((links2) => {
                         cy.wrap(links2[2])
-                          .click()
+                          .click({ timeout: 10000 })
                           .then(() => {
                             cy.get('[data-cy=menu-hamburger]')
-                              .click()
+                              .click({ timeout: 10000 })
                               .then(() => {
                                 cy.get('[data-cy=menu-link]')
                                   .then((links3) => {
                                     cy.wrap(links3[1])
-                                      .click();
+                                      .click({ timeout: 10000 });
                                   });
                               });
                           });
@@ -61,6 +61,6 @@ describe('navbar tests.', () => {
     cy.visit("/home/start");
 
     cy.get('[data-cy=menu-brand]')
-      .click();
+      .click({ timeout: 10000 });
   });
 });
