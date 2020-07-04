@@ -32,7 +32,9 @@ namespace Carter.App.Route.AdminUsers
 
             this.Get("users", async (req, res) =>
             {
-                var filter = Builders<PersonSchema>.Filter.Empty;
+                var filter = Builders<PersonSchema>.Filter
+                    .Where(p => p.IsExisting == true);
+
                 var sorter = Builders<PersonSchema>.Sort
                     .Descending(p => p.Fullname);
 

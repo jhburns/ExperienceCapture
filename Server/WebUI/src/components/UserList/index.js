@@ -38,7 +38,6 @@ class UserList extends Component {
     }
 
     const usersData = await request.json();
-    console.log(usersData);
 
     this.setState({
       users: usersData.contentList,
