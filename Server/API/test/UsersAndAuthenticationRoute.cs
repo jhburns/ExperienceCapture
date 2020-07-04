@@ -192,6 +192,7 @@ namespace Carter.Tests.Route.UsersAndAuthentication
                 .Returns(personResult)
                 .Verifiable("A person was not looked for.");
 
+            // TODO: fix because this did not fail even when update was not called
             personMock.Setup(p => p.Update(
                 It.IsAny<FilterDefinition<PersonSchema>>(),
                 It.IsAny<UpdateDefinition<PersonSchema>>()))

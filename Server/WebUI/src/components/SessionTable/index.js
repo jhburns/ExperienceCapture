@@ -140,7 +140,7 @@ class SessionTable extends Component {
   }
 
   render() {
-    const items = []
+    const items = [];
     const isEmpty = () => items.length === 0;
 
     for (const [index, value] of this.state.sessions.entries()) {
