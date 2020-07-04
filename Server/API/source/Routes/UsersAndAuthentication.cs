@@ -79,6 +79,8 @@ namespace Carter.App.Route.UsersAndAuthentication
                         var update = Builders<PersonSchema>.Update
                             .Set(p => p.IsExisting, true);
 
+                        await personRepo.Update(filter, update);
+
                         await res.FromString();
                     }
                     else

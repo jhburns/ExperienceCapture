@@ -53,7 +53,7 @@ class UserList extends Component {
 
     for (const [index, value] of this.state.users.entries()) {
       items.push(<Row key={index}>
-        <Col>
+        <Col className="d-inline-block">
           <p>{value.fullname}</p>
           <Button onClick={() => this.onDelete(value.id)} >Delete</Button>
         </Col>
