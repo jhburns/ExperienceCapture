@@ -40,7 +40,7 @@ class SettingsPage extends Component {
     const request = await getData(url);
     
     if (!request.ok) {
-      throw new Error(`Getting user information failed.`);
+      throw new Error(request.status);
     }
 
     const userData = await request.json();
