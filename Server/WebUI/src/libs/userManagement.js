@@ -125,9 +125,13 @@ async function signOutUser(isMock=false) {
 function getUserId() {
 	try {
 		const auth2 = gapi.auth2.getAuthInstance();
-		const user = auth2.getUser();
-		
-		return user.getId();
+
+		if (auth2.isSignedIn.get()) {
+			var profile = auth2.currentUser.get().getBasicProfile();
+			return profile.getId();
+		} else {
+			throw new Error("User is not signed-in when loading the settings page.");
+		}
 	} catch (err) {
 		console.log("Application is running using mock data.");
 		console.log(err);
