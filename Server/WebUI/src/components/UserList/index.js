@@ -54,14 +54,24 @@ class UserList extends Component {
     for (const [index, value] of this.state.users.entries()) {
       items.push(<Row key={index}>
         <Col className="d-inline-block">
-          <p>{value.fullname}</p>
-          <Button onClick={() => this.onDelete(value.id)} >Delete</Button>
+          <p className="d-inline-block mr-3">{value.fullname}</p>
+          <button
+            className="btn btn-outline-dark"
+            onClick={() => this.onDelete(value.id)}
+          >
+            Delete
+          </button>
         </Col>
       </Row>);
     }
 
     return (
-      <Wrapper>
+      <Wrapper className="text-center mt-5">
+        <Row className="mb-3">
+          <Col>
+            <h3>Admin Controls</h3>
+          </Col>
+        </Row>
         {items}
       </Wrapper>
     )
