@@ -4,7 +4,12 @@ import { postData } from 'libs/fetchExtra';
 import { createCookie } from 'libs/cookieExtra';
 
 // TODO: refactor this to reduce repetition
-async function submitUser(isMock=false, user, onError, options={ signUpToken: undefined, claimToken: undefined }, onDuplicate) {
+async function submitUser(
+	isMock = false,
+	user,
+	onError,
+	options = { signUpToken: undefined, claimToken: undefined },
+	onDuplicate) {
 	if (options.signUpToken !== undefined) {
 		await signUpUser(isMock, user, options.signUpToken, onError, onDuplicate);
 		return;
@@ -18,7 +23,7 @@ async function submitUser(isMock=false, user, onError, options={ signUpToken: un
 	await signInUser(isMock, user, onError);
 }
 
-async function signUpUser(isMock=true, user, signUpToken, onError, onDuplicate) {
+async function signUpUser(isMock = true, user, signUpToken, onError, onDuplicate) {
 	let userData = {
 		idToken: "This.is.not.a.real.id.token",
 		signUpToken: signUpToken
@@ -49,7 +54,7 @@ async function signUpUser(isMock=true, user, signUpToken, onError, onDuplicate) 
 	}
 }
 
-async function fulfillClaim(isMock=true, user, claimToken, onError) {
+async function fulfillClaim(isMock = true, user, claimToken, onError) {
 	let userData = {
 		idToken: "This.is.not.a.real.id.token",
 		claimToken: claimToken
@@ -79,7 +84,7 @@ async function fulfillClaim(isMock=true, user, claimToken, onError) {
 		onError();
 	}}
 
-async function signInUser(isMock=true, user, onError) {
+async function signInUser(isMock = true, user, onError) {
 	let userData = {
 		idToken: "This.is.not.a.real.id.token",
 	};
@@ -109,7 +114,7 @@ async function signInUser(isMock=true, user, onError) {
 	}
 }
 
-async function signOutUser(isMock=false) {
+async function signOutUser(isMock = false) {
   if (isMock) {
 		return;
   }
