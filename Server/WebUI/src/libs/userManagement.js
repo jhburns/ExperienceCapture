@@ -122,4 +122,18 @@ async function signOutUser(isMock=false) {
 	}
 }
 
-export { submitUser, signOutUser, };
+function getUserId() {
+	try {
+		const auth2 = gapi.auth2.getAuthInstance();
+		const user = auth2.getUser();
+		
+		return user.getId();
+	} catch (err) {
+		console.log("Application is running using mock data.");
+		console.log(err);
+
+		return "123456789109876543210";
+	}
+}
+
+export { submitUser, signOutUser, getUserId, };

@@ -12,16 +12,42 @@ import { Wrapper } from 'components/SingleSession/style';
 
 import Footer from "components/Footer";
 
+import { getUserId } from 'libs/userManagement';
+import { getData } from 'libs/fetchExtra';
+
+import UserList from 'components/UserList';
+
 class SettingsPage extends Component {
   constructor(props) {
     super(props)
     
+    this.state = {
+      isAdmin: false,
+    };
+
     this.onSignOut = this.onSignOut.bind(this);
   }
 
   async onSignOut() {
     await signOutUser(undefined); // Whether this is mock is unknown because that state is in a different component
     this.props.history.push('/');
+  }
+
+  async componentDidMount() {
+    const id = getUserId();
+
+    const url = `/api/v1/users/${id}/`;
+    const request = await getData(url);
+    
+    if (!request.ok) {
+      throw new Error(`Getting user information failed.`);
+    }
+
+    const userData = await request.json();
+
+    this.setState({
+      isAdmin: userData.role === "Admin",
+    });
   }
 
   render() {
@@ -39,6 +65,7 @@ class SettingsPage extends Component {
               <SignOutButton onClickCallback={this.onSignOut} />
             </Col>
           </Row>
+          {this.state.isAdmin && <UserList />}
           <Footer />
         </Container>
       </Wrapper>
