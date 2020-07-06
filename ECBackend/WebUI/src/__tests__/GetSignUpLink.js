@@ -3,28 +3,28 @@ import { shallow, mount, } from 'enzyme';
 import GetSignUpLink from 'components/GetSignUpLink';
 
 it('has non-empty content', () => {
-  const button = shallow(<GetSignUpLink />);
+  const wrapper = shallow(<GetSignUpLink />);
 
-  expect(button.text().length).toBeGreaterThan(0);
+  expect(wrapper.text().length).toBeGreaterThan(0);
 });
 
 it('is empty at on creation', () => {
-  const button = mount(<GetSignUpLink />);
+  const wrapper = mount(<GetSignUpLink />);
 
-  expect(button.state().link).toBe("");
+  expect(wrapper.state().link).toBe("");
 });
 
 it('is lacks text on creation', () => {
-  const button = mount(<GetSignUpLink />);
+  const wrapper = mount(<GetSignUpLink />);
 
-  expect(button.find('p').exists()).toBe(false);
+  expect(wrapper.find('p').exists()).toBe(false);
 });
 
 it('presents link when created', () => {
-  const button = mount(<GetSignUpLink />);
+  const wrapper = mount(<GetSignUpLink />);
 
-  button.setState({ link: "something"});
+  wrapper.setState({ link: "something"});
 
-  expect(button.find('p').exists()).toBeTruthy();
-  expect(button.find('p').text()).toBe('something');
+  expect(wrapper.find('p').exists()).toBeTruthy();
+  expect(wrapper.find('p').text()).toBe('something');
 });

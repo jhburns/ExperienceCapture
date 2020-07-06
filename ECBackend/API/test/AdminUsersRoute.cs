@@ -165,7 +165,6 @@ namespace Carter.Tests.Route.AdminUserRoutes
 
             Assert.True(data.ContentList.Count == 1, "Get users does not return given array.");
 
-            // TODO: Add this test in more places where it is relevant
             Assert.True(data.ContentList[0].InternalId == null, "Get users does null the internal id field.");
         }
 

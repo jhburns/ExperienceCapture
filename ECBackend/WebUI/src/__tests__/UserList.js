@@ -3,41 +3,43 @@ import { shallow, mount, } from 'enzyme';
 import UserList from 'components/UserList';
 
 it('has non-empty content', () => {
-  const users = shallow(<UserList />);
+  const wrapper = shallow(<UserList />);
 
-  expect(users.find('h3').text().length).toBeGreaterThan(0);
+  expect(wrapper.find('h3').text().length).toBeGreaterThan(0);
 });
 
 
 it('lacks rows when users is empty', () => {
-  const users = mount(<UserList />);
+  const wrapper = mount(<UserList />);
 
-  expect(users.find('p')).toHaveLength(0);
-  expect(users.find('button')).toHaveLength(0);
+  expect(wrapper.find('p')).toHaveLength(0);
+  expect(wrapper.find('button')).toHaveLength(0);
 });
 
 
 it('has row when there are some users', () => {
-  const users = mount(<UserList />);
+  const wrapper = mount(<UserList />);
 
   const sampleUser = {
     fullname: 'Smitty Jensens',
     id: '1234'
   };
-  users.setState({ users: [sampleUser, sampleUser] });
 
-  expect(users.find('p').length).toBeGreaterThan(0);
-  expect(users.find('button').length).toBeGreaterThan(0);
+  wrapper.setState({ users: [sampleUser, sampleUser] });
+
+  expect(wrapper.find('p').length).toBeGreaterThan(0);
+  expect(wrapper.find('button').length).toBeGreaterThan(0);
 });
 
 it('has clickable buttons', () => {
-  const users = mount(<UserList />);
+  const wrapper = mount(<UserList />);
 
   const sampleUser = {
     fullname: 'Smitty Jensens',
     id: '1234'
   };
-  users.setState({ users: [sampleUser] });
 
-  users.find('button').simulate('click');
+  wrapper.setState({ users: [sampleUser] });
+
+  wrapper.find('button').simulate('click');
 });

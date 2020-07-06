@@ -78,7 +78,11 @@ class SessionTable extends Component {
 
     const url = `/api/v1/sessions?${query}`;
     const request = await getData(url);
-    // TODO: add status code checks to this request
+    
+    if (!request.ok) {
+      throw new Error(request.status);
+    }
+
     const sessionsData = await request.json();
     const sessions = sessionsData.contentList;
 

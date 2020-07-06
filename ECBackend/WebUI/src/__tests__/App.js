@@ -7,7 +7,7 @@ it('renders without crashing', () => {
 });
 
 it('exists and has class name App', () => {
-  const app = shallow(<App />);
+  const wrapper = shallow(<App />);
 
-  expect(app.find('.App').exists()).toBeTruthy();
+  expect(wrapper.find('.App').exists()).toBeTruthy();
 });

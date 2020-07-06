@@ -3,22 +3,22 @@ import { shallow, mount, } from 'enzyme';
 import SignOutButton from 'components/SignOutButton';
 
 it('has non-empty content', () => {
-  const button = shallow(<SignOutButton />);
+  const wrapper = shallow(<SignOutButton />);
 
-  expect(button.text().length).toBeGreaterThan(0);
+  expect(wrapper.text().length).toBeGreaterThan(0);
 });
 
 it('exists', () => {
-  const button = mount(<SignOutButton />);
+  const wrapper = mount(<SignOutButton />);
 
-  expect(button.find('button').exists()).toBeTruthy();
+  expect(wrapper.find('button').exists()).toBeTruthy();
 });
 
 it('callback is called on change', () => {
   const callback = jest.fn();
-  const button = mount(<SignOutButton onClickCallback={callback} />);
+  const wrapper = mount(<SignOutButton onClickCallback={callback} />);
 
-  button.find('button').simulate('click');
+  wrapper.find('button').simulate('click');
 
   expect(callback).toHaveBeenCalledTimes(1);
 });

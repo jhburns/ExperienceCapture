@@ -84,7 +84,7 @@ namespace Carter.App.Hosting
             var env = ConfigureAppEnvironment.FromEnv();
             services.AddSingleton<IAppEnvironment>(env);
 
-            // TODO: Fix this so that LogDebug() isn't ignored
+            // Note: logger.LogInfo does not work
             var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
             var logger = loggerFactory.CreateLogger<Program>();
             services.AddSingleton<ILogger>(logger);
