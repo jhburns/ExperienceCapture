@@ -28,7 +28,7 @@ The major subparts of this project are:
 - `DemoGame/` is a basic 'test your reaction time' game showing off the technology.
 - `ExampleAnalyzers/` is examples in different languages of how to analyze the exported data.
 - `ClientDevelopmentGame/` is the game used to develop the client.
-- `Server/` is a collection of back-end services for collection and processing data.
+- `ECBackend/` is a collection of back-end services for collection and processing data.
 - `Deploy/` is an automated system to build and deploy the server to AWS.
 - `SetupTestGame/` is a game used for testing the Unity client integration, to maintain backwards compatibility.
 - `Documentation/` is documentation.
@@ -40,7 +40,7 @@ All of the games need Unity version [2018.2.11f](https://unity3d.com/unity/whats
 
 ## Other Setup
 
-The other parts (`Server/`, `Deploy/`) require the following installed:
+The other parts (`ECBackend/`, `Deploy/`) require the following installed:
 
 [comment1]: <> (/* yaspeller ignore:start */)
 

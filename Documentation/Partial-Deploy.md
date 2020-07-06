@@ -6,13 +6,13 @@ This tutorial assume someone has already given you all of the files and username
 
 Create the following files and copy their provided contents into each:
 
-- `Server/.env`
+- `ECBackend/.env`
 - `Deploy/.env`
 - `Deploy/.deploy.env`
 
 ## Change Build Arg
 
-In the file `Server/docker-compose.yaml` you may need to change Google client id if it is supplied, on the following line:
+In the file `ECBackend/docker-compose.yaml` you may need to change Google client id if it is supplied, on the following line:
 
 ```yaml
   web:
@@ -40,7 +40,7 @@ When done with the service, take it down with `docker-compose pulumi destroy`. A
 
 When changing deploy target to production or staging, check that the following are done:
 
-- Change `aws_domain_name` in the `Server/.env` file to reflect the domain it is being deployed too.
+- Change `aws_domain_name` in the `ECBackend/.env` file to reflect the domain it is being deployed too.
 - Set `packer_debug_option` in the `Deploy/.deploy.env` file to false if deploying to production to follow best security practices.
-- Change `aws_deploy_target` in the `Server/.deploy.env` file to the correct one, either production or staging.
+- Change `aws_deploy_target` in the `ECBackend/.deploy.env` file to the correct one, either production or staging.
 - Rebuild the AMI with `docker-compose up packer`.

@@ -3,9 +3,9 @@
 using System.Threading.Tasks;
 
 using Pulumi;
-using Pulumi.App.WebServerStack;
+using Pulumi.App.WebECBackendStack;
 
 public class Program
 {
-    public static Task<int> Main() => Deployment.RunAsync<WebServerStack>();
+    public static Task<int> Main() => Deployment.RunAsync<WebECBackendStack>();
 }

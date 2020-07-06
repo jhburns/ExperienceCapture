@@ -8,7 +8,7 @@ jobs:
       - name: Run Docker
         uses: whoan/docker-build-with-cache-action@v3.1.1
         with:
-          context: ./Server/API
+          context: ./ECBackend/API
           dockerfile: integration.Dockerfile
           image_name: jhburns/ec-receiver-cache
           password: "${{ secrets.DOCKER_PASSWORD }}"
@@ -21,5 +21,5 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - master
     paths:
-      - 'Server/API/**'
+      - 'ECBackend/API/**'
       - '.github/workflows/api-integration.yml'

@@ -1,4 +1,4 @@
-describe('navbar tests.', () => {
+describe('Navbar', () => {
   it('Toggles.', () => {
     cy.visit("/home/start");
 

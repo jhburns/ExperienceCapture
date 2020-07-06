@@ -1,4 +1,4 @@
-describe('rootpage navigation tests.', () => {
+describe('Root Page', () => {
   it('Goes to the correct home.', () => {
     cy.visit("/");
 

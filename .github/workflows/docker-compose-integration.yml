@@ -21,7 +21,7 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - master
     paths:
-      - 'Server/**'
+      - 'ECBackend/**'
       - 'Deploy/**'
       - '.github/workflows/docker-compose-integration.yml'
       - 'docker-compose.integration.Dockerfile'

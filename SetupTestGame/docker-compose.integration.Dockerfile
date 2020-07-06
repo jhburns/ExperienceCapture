@@ -9,32 +9,32 @@ COPY . .
 
 RUN cp ./Deploy/template.deploy.env ./Deploy/.deploy.env && \
 	cp ./Deploy/template.env ./Deploy/.env && \
-	cp ./Server/template.env ./Server/.env
+	cp ./ECBackend/template.env ./ECBackend/.env
 
 RUN docker-compose \
-	-f ./Server/docker-compose.yaml \
-	-f ./Server/docker-compose.override.yaml \
+	-f ./ECBackend/docker-compose.yaml \
+	-f ./ECBackend/docker-compose.override.yaml \
 	config
 
 RUN docker-compose \
-	-f ./Server/docker-compose.yaml \
-	-f ./Server/docker-compose.swarm.yaml \
-	-f ./Server/docker-compose.swarm.production.yaml \
+	-f ./ECBackend/docker-compose.yaml \
+	-f ./ECBackend/docker-compose.swarm.yaml \
+	-f ./ECBackend/docker-compose.swarm.production.yaml \
 	config
 
 RUN docker-compose \
-	-f ./Server/docker-compose.yaml \
-	-f ./Server/docker-compose.swarm.yaml \
-	-f ./Server/docker-compose.swarm.staging.yaml \
+	-f ./ECBackend/docker-compose.yaml \
+	-f ./ECBackend/docker-compose.swarm.yaml \
+	-f ./ECBackend/docker-compose.swarm.staging.yaml \
 	config
 
 RUN docker-compose \
-	-f ./Server/docker-compose.infra.early.yaml \
+	-f ./ECBackend/docker-compose.infra.early.yaml \
 	config
 
 RUN docker-compose \
-	-f ./Server/docker-compose.infra.early.yaml \
-	-f ./Server/docker-compose.infra.yaml \
+	-f ./ECBackend/docker-compose.infra.early.yaml \
+	-f ./ECBackend/docker-compose.infra.yaml \
 	config
 
 RUN docker-compose \

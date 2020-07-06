@@ -117,7 +117,8 @@
     "ec",
     "xUnit",
     "Dockerfile",
-    "Cypress"
+    "Cypress",
+    "ECBackend"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true

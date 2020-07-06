@@ -1,4 +1,4 @@
-# Server
+# ECBackend
 
 ## Setup
 
@@ -19,7 +19,7 @@ Run `docker-compose build` first to develop locally.
 - Backupper: `docker-compose up bu` which will dump MongoDB's data into S3.
 - Cypress: `docker-compose up cy` which runs automated end-to-end tests. Also see the `Cypress/` folder for how to run tests in your browser.
 
-`Ctrl-C` stops any service, that was named in the `docker-compose up`. To stop all services, run `docker-compose down`. See the `Server/docker-compose.yaml` file for the port mappings on any service besides the API or WebUI.
+`Ctrl-C` stops any service, that was named in the `docker-compose up`. To stop all services, run `docker-compose down`. See the `ECBackend/docker-compose.yaml` file for the port mappings on any service besides the API or WebUI.
 
 ## About Docker Compose
 

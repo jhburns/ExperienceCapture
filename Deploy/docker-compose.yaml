@@ -13,7 +13,7 @@ services:
       - ec-deploy-network
     volumes:
       - ./.secrets/id_rsa.pub:/deploy/id_rsa.pub
-      - ../Server:/deploy/Server
+      - ../ECBackend:/deploy/ECBackend
 
   pulumi:
     build:

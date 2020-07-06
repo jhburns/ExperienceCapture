@@ -3,7 +3,7 @@ jobs:
   build:
     defaults:
       run:
-        working-directory: ./Server
+        working-directory: ./ECBackend
     name: End-To-End Checks
     runs-on: ubuntu-18.04
     steps:

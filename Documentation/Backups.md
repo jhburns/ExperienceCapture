@@ -5,7 +5,7 @@
 The following steps should be followed to ensure a safe restore:
 
 1. Backup the current MongoDB state if possible, either by waiting a day for an automatic backup or running the Backupper command in production. Taking a snapshot of the EBS volume is also a good idea.
-1. Mirror MongoDB by deleting the local database volume, and running the restore script pointed at a production dump. Example commands, executed in the `Server/` folder:
+1. Mirror MongoDB by deleting the local database volume, and running the restore script pointed at a production dump. Example commands, executed in the `ECBackend/` folder:
 
 ```shell
     $ docker-compose down
