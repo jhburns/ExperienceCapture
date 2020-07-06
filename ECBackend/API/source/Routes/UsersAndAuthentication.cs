@@ -54,16 +54,26 @@ namespace Carter.App.Route.UsersAndAuthentication
                     return;
                 }
 
-                var signUpDoc = await signUpRepo.FindOne(
-                    Builders<SignUpTokenSchema>
+                var filter = Builders<SignUpTokenSchema>
                         .Filter
-                        .Where(t => t.Hash == PasswordHasher.Hash(newPerson.Data.signUpToken)));
+                        .Where(t => t.Hash == PasswordHasher.Hash(newPerson.Data.signUpToken));
+
+                var signUpDoc = await signUpRepo.FindOne(filter);
 
                 if (signUpDoc == null || signUpDoc.CreatedAt.IsAfter(date, signUpDoc.ExpirationSeconds))
                 {
                     res.StatusCode = Status401Unauthorized;
                     return;
                 }
+
+                if (!signUpDoc.IsExisting)
+                {
+                    res.StatusCode = Status404NotFound;
+                    return;
+                }
+
+                var update = Builders<SignUpTokenSchema>.Update
+                    .Set(s => s.IsExisting, false);
 
                 var existingPerson = await personRepo.FindById(person.Subject);
 
@@ -73,13 +83,14 @@ namespace Carter.App.Route.UsersAndAuthentication
                     // Recreate them if they where deleted
                     if (!existingPerson.IsExisting)
                     {
-                        var filter = Builders<PersonSchema>.Filter
+                        var filterPerson = Builders<PersonSchema>.Filter
                             .Where(p => p.Id == person.Subject);
 
-                        var update = Builders<PersonSchema>.Update
+                        var updatePerson = Builders<PersonSchema>.Update
                             .Set(p => p.IsExisting, true);
 
-                        await personRepo.Update(filter, update);
+                        await personRepo.Update(filterPerson, updatePerson);
+                        await signUpRepo.Update(filter, update);
 
                         await res.FromString();
                     }
@@ -105,6 +116,7 @@ namespace Carter.App.Route.UsersAndAuthentication
                 };
 
                 await personRepo.Add(personObject);
+                await signUpRepo.Update(filter, update);
 
                 await res.FromString();
             });
