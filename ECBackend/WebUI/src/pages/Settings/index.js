@@ -88,6 +88,7 @@ class SettingsPage extends Component {
               <Button
                 className="btn btn-danger btn-block"
                 onClick={this.onDelete}
+                data-cy="delete-account"
               >Delete Account</Button>
             </Col>
           </Row>

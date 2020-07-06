@@ -58,6 +58,7 @@ class UserList extends Component {
           <button
             className="btn btn-outline-dark"
             onClick={() => this.onDelete(value.id)}
+            data-cy="delete-others"
           >
             Delete
           </button>
