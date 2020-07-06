@@ -39,13 +39,23 @@ class UserList extends Component {
 
     const usersData = await request.json();
 
-    this.setState({
-      users: usersData.contentList,
-    });
+    if (this.isCurrentlyMounted) {
+      this.setState({
+        users: usersData.contentList,
+      });
+    }
   }
 
   async componentDidMount() {
+    // Setups a check, because component may
+    // Be re-rendered before fetch is complete
+    this.isCurrentlyMounted = true;
+
     await this.getUsers();
+  }
+
+  componentWillUnmount() {
+    this.isCurrentlyMounted = false;
   }
 
   render() {
@@ -58,6 +68,7 @@ class UserList extends Component {
           <button
             className="btn btn-outline-dark"
             onClick={() => this.onDelete(value.id)}
+            data-cy="delete-others"
           >
             Delete
           </button>

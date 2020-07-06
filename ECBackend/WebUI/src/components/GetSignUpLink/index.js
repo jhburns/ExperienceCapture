@@ -37,13 +37,14 @@ class GetSignUpLink extends Component {
     return (
       <Wrapper>
         {this.state.link !== "" &&
-          <Text className="mt-4 mb-4">
+          <Text className="mt-4 mb-4" data-cy="sign-up-link">
             {this.state.link}
           </Text>
         }
         <button
           onClick={this.onButtonCLick}
           className="btn btn-dark btn-block"
+          data-cy="new-sign-up"
         >
           New Sign Up Link
         </button>
