@@ -3,19 +3,19 @@ import { shallow, mount, } from 'enzyme';
 import About from 'components/About';
 
 it('has non-empty content', () => {
-  const message = shallow(<About />);
+  const wrapper = shallow(<About />);
 
-  expect(message.text().length).toBeGreaterThan(0);
+  expect(wrapper.text().length).toBeGreaterThan(0);
 });
 
 it('exists', () => {
-  const message = mount(<About />);
+  const wrapper = mount(<About />);
 
-  expect(message.find('a').exists()).toBeTruthy();
+  expect(wrapper.find('a').exists()).toBeTruthy();
 });
 
 it('has an initial state of closed', () => {
-  const message = mount(<About />);
+  const wrapper = mount(<About />);
 
-  expect(message.state().isOpen).toBe(false);
+  expect(wrapper.state().isOpen).toBe(false);
 });

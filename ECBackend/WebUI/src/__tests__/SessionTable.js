@@ -3,25 +3,25 @@ import { shallow, mount, } from 'enzyme';
 import SessionTable from 'components/SessionTable';
 
 it('has non-empty content', () => {
-  const table = shallow(<SessionTable queryOptions={{}} />);
+  const wrapper = shallow(<SessionTable queryOptions={{}} />);
 
-  expect(table.text().length).toBeGreaterThan(0);
+  expect(wrapper.text().length).toBeGreaterThan(0);
 });
 
 it('lacks button header when undefined', () => {
-  const table = mount(<SessionTable queryOptions={{}} />);
+  const wrapper = mount(<SessionTable queryOptions={{}} />);
 
-  expect(table.find('th')).toHaveLength(3);
+  expect(wrapper.find('th')).toHaveLength(3);
 });
 
 it('has button header when defined', () => {
-  const table = mount(<SessionTable queryOptions={{}} buttonData={{}} />);
+  const wrapper = mount(<SessionTable queryOptions={{}} buttonData={{}} />);
 
-  expect(table.find('th')).toHaveLength(4);
+  expect(wrapper.find('th')).toHaveLength(4);
 });
 
 it('uses empty text when items is empty', () => {
-  const table = mount(<SessionTable queryOptions={{}} sessions={[]} emptyMessage="example" />);
+  const wrapper = mount(<SessionTable queryOptions={{}} sessions={[]} emptyMessage="example" />);
 
-  expect(table.text().includes("example")).toBeTruthy();
+  expect(wrapper.text().includes("example")).toBeTruthy();
 });

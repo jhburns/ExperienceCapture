@@ -5,15 +5,15 @@ import Tutorial from 'components/Tutorial';
 import validator from 'validator';
 
 it('has non-empty content', () => {
-  const tutorial = shallow(<Tutorial />);
+  const wrapper = shallow(<Tutorial />);
 
-  expect(tutorial.text().length).toBeGreaterThan(0);
+  expect(wrapper.text().length).toBeGreaterThan(0);
 });
 
 it('has valid links', () => {
-  const tutorial = shallow(<Tutorial />);
+  const wrapper = shallow(<Tutorial />);
 
-  tutorial.find('a').forEach((node) => {
+  wrapper.find('a').forEach((node) => {
     if (!node.props().href.includes('localhost'))
     {
       expect(validator.isURL(node.props().href)).toBeTruthy();

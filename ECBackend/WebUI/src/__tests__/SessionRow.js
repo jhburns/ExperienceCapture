@@ -6,9 +6,9 @@ import { StaticRouter as Router } from "react-router-dom";
 import validator from 'validator';
 
 it('has non-empty content', () => {
-  const row = shallow(<SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871}} />);
+  const wrapper = shallow(<SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871}} />);
 
-  expect(row.text().length).toBeGreaterThan(0);
+  expect(wrapper.text().length).toBeGreaterThan(0);
 });
 
 it('has valid link', () => {
@@ -21,9 +21,9 @@ it('has valid link', () => {
       </table>
     </Router>;
 
-  const row = mount(jsx);
+  const wrapper = mount(jsx);
 
-  expect(validator.isURL(row.find('a').props().href, { require_host: false, })).toBeTruthy();
+  expect(validator.isURL(wrapper.find('a').props().href, { require_host: false, })).toBeTruthy();
 });
 
 it('has valid link when complex', () => {
@@ -36,9 +36,9 @@ it('has valid link when complex', () => {
       </table>
     </Router>;
 
-  const row = mount(jsx);
+  const wrapper = mount(jsx);
 
-  expect(validator.isURL(row.find('a').props().href, { require_host: false, })).toBeTruthy();
+  expect(validator.isURL(wrapper.find('a').props().href, { require_host: false, })).toBeTruthy();
 });
 
 it('does not have button when undefined', () => {
@@ -51,9 +51,9 @@ it('does not have button when undefined', () => {
       </table>
     </Router>;
 
-  const row = mount(jsx);
+  const wrapper = mount(jsx);
 
-  expect(row.find('td')).toHaveLength(2);
+  expect(wrapper.find('td')).toHaveLength(2);
 });
 
 it('does have button when defined', () => {
@@ -66,9 +66,9 @@ it('does have button when defined', () => {
       </table>
     </Router>;
 
-  const row = mount(jsx);
+  const wrapper = mount(jsx);
 
-  expect(row.find('td')).toHaveLength(3);
+  expect(wrapper.find('td')).toHaveLength(3);
 });
 
 it('calls on click', () => {
@@ -83,9 +83,9 @@ it('calls on click', () => {
       </table>
     </Router>;
 
-  const row = mount(jsx);
+  const wrapper = mount(jsx);
 
-  row.find('button').simulate('click');
+  wrapper.find('button').simulate('click');
 
   expect(callback).toHaveBeenCalledTimes(1);
 });
