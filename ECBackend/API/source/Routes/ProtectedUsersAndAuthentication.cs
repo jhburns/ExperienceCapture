@@ -156,6 +156,9 @@ namespace Carter.App.Route.ProtectedUsersAndAuthentication
 
         [BsonElement("role")]
         public RoleOptions Role { get; set; } = RoleOptions.Normal;
+
+        [BsonElement("isExisting")]
+        public bool IsExisting { get; set; } = true;
         #pragma warning restore SA1516
     }
 

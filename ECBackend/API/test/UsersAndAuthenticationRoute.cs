@@ -211,6 +211,42 @@ namespace Carter.Tests.Route.UsersAndAuthentication
         }
 
         [Fact]
+        public async Task AlreadyRedeemedIsNotFoundPostUsers()
+        {
+            var setTime = new DateProvider().UtcNow;
+            var dateMock = new Mock<IDateExtra>();
+            dateMock.SetupGet(d => d.UtcNow)
+                .Returns(setTime)
+                .Verifiable("Now was never called.");
+
+            var signUpMock = new Mock<IRepository<SignUpTokenSchema>>();
+
+            var result = new Task<SignUpTokenSchema>(() =>
+            {
+                return new SignUpTokenSchema
+                {
+                    CreatedAt = new BsonDateTime(setTime),
+                    IsExisting = false,
+                };
+            });
+            result.Start();
+
+            signUpMock.Setup(s => s.FindOne(It.IsAny<FilterDefinition<SignUpTokenSchema>>()))
+                .Returns(result)
+                .Verifiable("A sign-up token was not looked for.");
+
+            var client = CustomHost.Create(signUpMock: signUpMock, dateMock: dateMock);
+
+            var request = CustomRequest.Create(HttpMethod.Post, "/users");
+            request.Content = new StringContent("{ \"signUpToken\": \"b\", \"idToken\": \"a\" }", Encoding.UTF8, "application/json");
+            var response = await client.SendAsync(request);
+
+            Assert.True(
+                response.StatusCode == HttpStatusCode.NotFound,
+                "An already redeemed sign-up token is not 'not found'");
+        }
+
+        [Fact]
         public async Task AddIsCalledPostUsers()
         {
             var setTime = new DateProvider().UtcNow;
