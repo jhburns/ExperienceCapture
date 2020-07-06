@@ -137,7 +137,6 @@ namespace Carter.Tests.Route.UsersAndAuthentication
             });
             personResult.Start();
 
-            // TODO: remove token
             personMock.Setup(p => p.FindById(It.IsAny<string>()))
                 .Returns(personResult)
                 .Verifiable("A person token was not looked for.");
