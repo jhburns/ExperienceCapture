@@ -68,7 +68,7 @@ class SignIn extends Component {
       )
     } else if (this.state.isDuplicateSignIn) {
       return (
-        <Wrapper>
+        <Wrapper data-cy="already-notify">
           <LoginBox>
             You're Already Signed Up
           </LoginBox>

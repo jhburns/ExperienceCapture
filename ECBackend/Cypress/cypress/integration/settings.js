@@ -32,7 +32,10 @@ describe('Settings Page', () => {
 
             // A 409 conflict is expected, as there can only
             // Be the shimmed user
-            cy.visit(url);
+            cy.visit(url)
+              .then(() => {
+                cy.get('[data-cy=already-notify]');
+              });
           });
       });
   });
