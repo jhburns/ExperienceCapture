@@ -30,7 +30,7 @@ beforeEach(() => {
   // Wipe the database first
   cy.exec(`docker-compose -f\
     docker-compose.clone.yaml\
-    --project-name server \
+    --project-name ecbackend \
     exec -T db mongo ec --eval "db.dropDatabase();"`);
 
   // Visit the admin signup path
