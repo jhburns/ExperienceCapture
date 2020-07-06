@@ -107,7 +107,7 @@ namespace Carter.App.Route.Export
                 // Not sure what to do about an error
                 if (sessionDoc.ExportState == ExportOptions.Error)
                 {
-                    res.StatusCode = Status500InternalECBackendError;
+                    res.StatusCode = Status500InternalServerError;
                     return;
                 }
 
