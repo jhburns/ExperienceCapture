@@ -5,6 +5,6 @@ Deploy/.secrets/
 Dockerfile
 Dockerfile.dockerignore
 
-Server/
+ECBackend/
 Deploy/
 DemoGame/

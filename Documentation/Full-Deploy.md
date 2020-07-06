@@ -14,10 +14,10 @@ Domain names can be very cheap, `expcap.xyz` and `expcap2.xyz` in total costs $2
 A deploy can be done with only one domain name, but two is recommend so that a staging
 environment can also be created.
 
-## Downloading a Server Package
+## Downloading a ECBackend Package
 
-Go to the [releases page](https://github.com/jhburns/ExperienceCapture/releases) and download `Server.zip`
-from one of the 'Server' releases. The most recent server and client versions should work together.
+Go to the [releases page](https://github.com/jhburns/ExperienceCapture/releases) and download `ECBackend.zip`
+from one of the 'ECBackend' releases. The most recent server and client versions should work together.
 Extract the zip.
 
 ## Create Env Files
@@ -25,7 +25,7 @@ Extract the zip.
 Next, the environmental files have to be created and then have their template's content copied into them.
 This is the mapping:
 
-- `Server/template.env` -> `Server/.env`
+- `ECBackend/template.env` -> `ECBackend/.env`
 - `Deploy/template.env` -> `Deploy/.env`
 - `Deploy/template.deploy.env` -> `Deploy/.deploy.env`
 
@@ -214,7 +214,7 @@ AWS_SECRET_ACCESS_KEY=[Secret Access Key for Pulumi account]
 }
 ```
 
-In `Server/.env` file:
+In `ECBackend/.env` file:
 
 ```text
 aws_backupper_access_id=[Access Key ID for Backupper account]
@@ -252,7 +252,7 @@ Go to Profile Icon > Settings > Access Tokens > New Access Token and copy the to
 
 ## Google Sign-In
 
-Go [here](https://developers.google.com/identity/sign-in/web/sign-in#before_you_begin) and select Configure a project. Then get a client id by going [to the console](https://console.developers.google.com/) then Credentials, and copying "Web client (Auto-created for Google Sign-in)". It should be copied into `Server/.env` AND `Server/docker-compose.yaml`. Copy it into this part of the compose file:
+Go [here](https://developers.google.com/identity/sign-in/web/sign-in#before_you_begin) and select Configure a project. Then get a client id by going [to the console](https://console.developers.google.com/) then Credentials, and copying "Web client (Auto-created for Google Sign-in)". It should be copied into `ECBackend/.env` AND `ECBackend/docker-compose.yaml`. Copy it into this part of the compose file:
 
 ```yaml
   web:
@@ -266,17 +266,17 @@ Next, add both of the domains by clicking on "Web client (Auto-created for Googl
 
 ## Change Domain
 
-Set `aws_domain_name` variable in the `Server/.env` file to whichever domain is be deployed with, ex expcap.xyz. This is the domain used by Caddy to get Let's Encrypt certificated.
+Set `aws_domain_name` variable in the `ECBackend/.env` file to whichever domain is be deployed with, ex expcap.xyz. This is the domain used by Caddy to get Let's Encrypt certificated.
 
 ## Generate Password
 
-Run `docker-compose run api dotnet API.dll --passwordGenerate` and copy the 'Hash' value into the `admin_password_hash` variable in the `Server/.env`file. This is used to bootstrap the website by visiting, `http://[your domain]/admin?password=[Password for URL value]` in the browser, two preformatted versions are print for convenience.
+Run `docker-compose run api dotnet API.dll --passwordGenerate` and copy the 'Hash' value into the `admin_password_hash` variable in the `ECBackend/.env`file. This is used to bootstrap the website by visiting, `http://[your domain]/admin?password=[Password for URL value]` in the browser, two preformatted versions are print for convenience.
 
 ## Optional Environmental Variables
 
 The following variables aren't required to be changed in order to deploy.
 
-In `Server/.deploy.env`:
+In `ECBackend/.deploy.env`:
 
 - `aws_region_name` where to deploy the service too, default us-west-1.
 - `aws_ami_version_number` version to give built AMI, ex 1.1.4 .

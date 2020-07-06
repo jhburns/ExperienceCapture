@@ -42,7 +42,7 @@ namespace Carter.Tests.HostingExtra
             Mock<IDateExtra> dateMock = null,
             Mock<IAppEnvironment> envMock = null)
         {
-            var server = new TestServer(
+            var server = new TestECBackend(
                 new WebHostBuilder()
                     .ConfigureServices(services =>
                     {

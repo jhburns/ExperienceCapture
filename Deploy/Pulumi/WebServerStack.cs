@@ -1,4 +1,4 @@
-namespace Pulumi.App.WebServerStack
+namespace Pulumi.App.WebECBackendStack
 {
     using System;
 
@@ -10,7 +10,7 @@ namespace Pulumi.App.WebServerStack
     using Pulumi.Aws.Ec2.Inputs;
     using Pulumi.Aws.Inputs;
 
-    public class WebServerStack : Stack
+    public class WebECBackendStack : Stack
     {
         private const string Ec2Size = "t2.medium";
 
@@ -32,7 +32,7 @@ namespace Pulumi.App.WebServerStack
         private static readonly string IsProduction = Environment.GetEnvironmentVariable("aws_deploy_target")
             ?? string.Empty;
 
-        public WebServerStack()
+        public WebECBackendStack()
         {
             var ami = Output.Create(GetAmi.InvokeAsync(new GetAmiArgs
             {

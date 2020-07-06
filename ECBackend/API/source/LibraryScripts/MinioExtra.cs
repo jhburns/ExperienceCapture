@@ -26,9 +26,9 @@ namespace Carter.App.Lib.MinioExtra
         /// <param name="bucketName">Bucket to retrieve object from</param>
         /// <param name="objectName">Name of object to retrieve</param>
         /// <param name="callback">A stream will be passed to the callback</param>
-        /// <param name="sse">Optional Server-side encryption option. Defaults to null.</param>
+        /// <param name="sse">Optional ECBackend-side encryption option. Defaults to null.</param>
         /// <param name="cancellationToken">Optional cancellation token to cancel the operation</param>
-        Task GetObjectAsync(string bucketName, string objectName, Action<Stream> callback, ServerSideEncryption sse = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task GetObjectAsync(string bucketName, string objectName, Action<Stream> callback, ECBackendSideEncryption sse = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Create a private bucket with the given name.
@@ -47,9 +47,9 @@ namespace Carter.App.Lib.MinioExtra
         /// <param name="filePath">Path of file to upload</param>
         /// <param name="contentType">Content type of the new object, null defaults to "application/octet-stream"</param>
         /// <param name="metaData">Optional Object metadata to be stored. Defaults to null.</param>
-        /// <param name="sse">Optional Server-side encryption option. Defaults to null.</param>
+        /// <param name="sse">Optional ECBackend-side encryption option. Defaults to null.</param>
         /// <param name="cancellationToken">Optional cancellation token to cancel the operation</param>
-        Task PutObjectAsync(string bucketName, string objectName, string filePath, string contentType = null, Dictionary<string, string> metaData = null, ServerSideEncryption sse = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task PutObjectAsync(string bucketName, string objectName, string filePath, string contentType = null, Dictionary<string, string> metaData = null, ECBackendSideEncryption sse = null, CancellationToken cancellationToken = default(CancellationToken));
 
         Task<byte[]> GetBytesAsync(string bucketName, string objectName);
     }

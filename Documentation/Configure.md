@@ -44,7 +44,7 @@ This entry would ignore every key except `positionX` on the `Player` game object
 
 ## Offline Mode
 
-When checked, skip connecting to the data capture server and print all of the capture data to the console instead. The captures printed to the console are the **exact** same as would be sent to the Server.
+When checked, skip connecting to the data capture server and print all of the capture data to the console instead. The captures printed to the console are the **exact** same as would be sent to the ECBackend.
 
 ## Print Additional Capture Info
 

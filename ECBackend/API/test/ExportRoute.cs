@@ -337,7 +337,7 @@ namespace Carter.Tests.Route.Export
             var response = await client.SendAsync(request);
 
             Assert.True(
-                response.StatusCode == HttpStatusCode.InternalServerError,
+                response.StatusCode == HttpStatusCode.InternalECBackendError,
                 "Getting export is not 'internal server error'.");
         }
 

@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Server/API/bin/Debug/netcoreapp2.2/API.dll",
+            "program": "${workspaceFolder}/ECBackend/API/bin/Debug/netcoreapp2.2/API.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/Server/API",
+            "cwd": "${workspaceFolder}/ECBackend/API",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false

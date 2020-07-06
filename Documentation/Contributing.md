@@ -12,7 +12,7 @@ I try to maintain a few principles to make developing/using Experience Capture e
 
 ### Everything As Code
 
-This means that not only is the application stuff (Server, Clients) in code, but as much as possible everything else too. This means the deploy, development process, documentation, etc are all done in some type of programming or configuration language. This means all changes can be tracked under version control, in this case git, so that its easy to capture the system at a point in time. [Here is more explanation](https://hackernoon.com/everything-as-code-explained-0ibg32a3).
+This means that not only is the application stuff (ECBackend, Clients) in code, but as much as possible everything else too. This means the deploy, development process, documentation, etc are all done in some type of programming or configuration language. This means all changes can be tracked under version control, in this case git, so that its easy to capture the system at a point in time. [Here is more explanation](https://hackernoon.com/everything-as-code-explained-0ibg32a3).
 
 ### Cross-platform
 
@@ -20,7 +20,7 @@ The reason for this a given, and it is achieved two ways. First, games in Unity 
 
 ### Transparency
 
- It is important to make sure that the data captured is valid, which means transparency of how this functions is a priority. This is implemented through everything as code as mentioned before and a discrete build system for the server. What that means is given a copy of the Server code, it should identically recreatable without anything irregular coming in to play.
+ It is important to make sure that the data captured is valid, which means transparency of how this functions is a priority. This is implemented through everything as code as mentioned before and a discrete build system for the server. What that means is given a copy of the ECBackend code, it should identically recreatable without anything irregular coming in to play.
 
 ## Open A Pull-Request
 
