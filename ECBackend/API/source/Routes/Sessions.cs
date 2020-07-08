@@ -138,17 +138,17 @@ namespace Carter.App.Route.Sessions
                     if (isOngoing)
                     {
                         filter &= builder.Where(s => s.IsOpen == true)
-                            & ((builder.Exists(s => s.LastCaptureAt, false)
+                            & ((builder.Where(s => s.LastCaptureAt != BsonNull.Value)
                             & builder.Where(s => s.CreatedAt > startMin))
-                            | (builder.Exists(s => s.LastCaptureAt, true)
+                            | (builder.Where(s => s.LastCaptureAt == BsonNull.Value)
                             & builder.Where(s => s.LastCaptureAt > closeMin)));
                     }
                     else
                     {
                         filter &= builder.Where(s => s.IsOpen == false)
-                            | ((builder.Exists(s => s.LastCaptureAt, false)
+                            | ((builder.Where(s => s.LastCaptureAt != BsonNull.Value)
                             & builder.Where(s => s.CreatedAt < startMin))
-                            | (builder.Exists(s => s.LastCaptureAt, true)
+                            | (builder.Where(s => s.LastCaptureAt == BsonNull.Value)
                             & builder.Where(s => s.LastCaptureAt < closeMin)));
                     }
                 }
@@ -186,7 +186,7 @@ namespace Carter.App.Route.Sessions
                 var sessionsDocsWithOngoing = sessionDocs.Select((s) =>
                 {
                     bool isStarted = false;
-                    if (s.LastCaptureAt != null)
+                    if (s.LastCaptureAt != BsonNull.Value)
                     {
                         isStarted = true;
                     }
@@ -328,7 +328,7 @@ namespace Carter.App.Route.Sessions
                 bool isStarted = false;
 
                 // Check if key exists
-                if (sessionDoc.LastCaptureAt != null)
+                if (sessionDoc.LastCaptureAt != BsonNull.Value)
                 {
                     isStarted = true;
                 }
@@ -416,12 +416,11 @@ namespace Carter.App.Route.Sessions
         [BsonElement("isOngoing")]
         public bool? IsOngoing { get; set; } = null;
 
-        // Because this property doesn't exist when null
-        // Check with the .Exists(...) function,
-        // Not .Where(.. == null)
-        [BsonIgnoreIfNull]
+        // Is really type 'BsonDateTime', but needs to be
+        // A BsonValue in order to serialize null properly
+        // See: https://jira.mongodb.org/browse/CSHARP-863
         [BsonElement("lastCaptureAt")]
-        public BsonDateTime LastCaptureAt { get; set; } = null;
+        public BsonValue LastCaptureAt { get; set; } = BsonNull.Value;
         #pragma warning restore SA1516
     }
 
