@@ -170,6 +170,7 @@ class SessionTable extends Component {
               title="Sort By"
               options={["Alphabetically", "Oldest First", "Newest First"]}
               onClick={this.onSort}
+              data-cy="sort-dropdown"
             />
           </Col>
         </Row>

@@ -4,10 +4,10 @@ describe('Claim Page', () => {
       .then((response) => {
         const encodedClaim = encodeURIComponent(response.body.claimToken);
         cy.visit(`/signInFor?claimToken=${encodedClaim}`)
-          .then(() => {
-            cy.get('[data-cy=go-root]')
-              .click();
-          });
+      })
+      .then(() => {
+        cy.get('[data-cy=go-root]')
+          .click();
       });
   });
 });
