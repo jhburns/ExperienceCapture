@@ -704,7 +704,7 @@ namespace Carter.Tests.Route.Sessions
                         CreatedAt = new BsonDateTime(setTime),
 
                         // Being explicit, so its clear the session doesn't have any captures yet
-                        LastCaptureAt = null,
+                        LastCaptureAt = BsonNull.Value,
                     },
                 };
             });
@@ -1385,7 +1385,7 @@ namespace Carter.Tests.Route.Sessions
                     CreatedAt = new BsonDateTime(setTime),
 
                     // Being explicit, so its clear the session doesn't have any captures yet
-                    LastCaptureAt = null,
+                    LastCaptureAt = BsonNull.Value,
                 };
             });
             result.Start();
