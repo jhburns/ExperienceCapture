@@ -44,6 +44,6 @@ describe('Completed sessions page', () => {
       .then((row) => {
         assert.isNotNull(row, 'Completed sessions should display a session row.');
         assert.isTrue(row.length === 1, 'Completed sessions should display only one session.');
-      })
+      });
   });
 });
