@@ -6,6 +6,7 @@ namespace Carter.App.Route.Export
 
     using Carter;
 
+    using Carter.App.Export.Hosting;
     using Carter.App.Export.Main;
     using Carter.App.Hosting;
 
@@ -53,12 +54,12 @@ namespace Carter.App.Route.Export
 
                 var exporterConfig = new ExporterConfiguration
                 {
-                    Mongo = new ServiceConfiguration
+                    Mongo = new ConnectionConfiguration
                     {
                         ConnectionString = AppConfiguration.Mongo.ConnectionString,
                         Port = AppConfiguration.Mongo.Port,
                     },
-                    Minio = new ServiceConfiguration
+                    Minio = new ConnectionConfiguration
                     {
                         ConnectionString = AppConfiguration.Minio.ConnectionString,
                         Port = AppConfiguration.Minio.Port,

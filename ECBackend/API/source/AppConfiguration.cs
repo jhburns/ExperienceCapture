@@ -2,31 +2,29 @@ namespace Carter.App.Hosting
 {
     public class AppConfiguration
     {
-        public static ServiceConfiguration Mongo
-        {
-            get;
-            set;
-        }
+        public static ConnectionConfiguration Mongo { get; set; }
 
-        public static ServiceConfiguration Minio
-        {
-            get;
-            set;
-        }
+        public static ConnectionConfiguration Minio { get; set; }
+
+        public CarterOptions CarterOptions { get; set; }
     }
 
-    public class ServiceConfiguration
+    public class CarterOptions
     {
-        public string ConnectionString
-        {
-            get;
-            set;
-        }
+        public OpenApi OpenApi { get; set; }
+    }
 
-        public int Port
-        {
-            get;
-            set;
-        }
+    public class OpenApi
+    {
+        public string DocumentTitle { get; set; }
+
+        public string Version { get; set; }
+    }
+
+    public class ConnectionConfiguration
+    {
+        public string ConnectionString { get; set; }
+
+        public int Port { get; set; }
     }
 }

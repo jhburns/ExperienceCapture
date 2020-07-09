@@ -1,5 +1,7 @@
 namespace Carter.App.Hosting
 {
+    using System.Collections.Generic;
+
     using Carter;
 
     using Carter.App.Lib.Environment;
@@ -36,12 +38,36 @@ namespace Carter.App.Hosting
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCarter();
+            // Add and configure Carter
+            services.AddCarter((options) =>
+            {
+                options.OpenApi.DocumentTitle = this.appConfig.CarterOptions.OpenApi.DocumentTitle;
+                options.OpenApi.ServerUrls = new[]
+                {
+                    "http://localhost:8090/api/v1",
+                    "https://expcap.xyz",
+                    "https://expcap2.xyz",
+                };
 
-            // Add repositories based on Mongo
+                options.OpenApi.Securities = new Dictionary<string, OpenApiSecurity>
+                {
+                    {
+                        "TokenAuthorization",
+                        new OpenApiSecurity
+                        {
+                            Type = OpenApiSecurityType.apiKey,
+                            Name = "ExperienceCapture-Access-Token",
+                            In = OpenApiIn.cookie,
+                        }
+                    },
+                };
+            });
+
+            // Add custom serialization logic for Enums
             BsonSerializer.RegisterSerializer(new EnumSerializer<ExportOptions>(BsonType.String));
             BsonSerializer.RegisterSerializer(new EnumSerializer<RoleOptions>(BsonType.String));
 
+            // Add repositories based on Mongo
             string mongoUrl = $"mongodb://{AppConfiguration.Mongo.ConnectionString}:{AppConfiguration.Mongo.Port}";
             var client = new MongoClient(mongoUrl);
             var db = client.GetDatabase("ec");
@@ -84,7 +110,7 @@ namespace Carter.App.Hosting
             var env = ConfigureAppEnvironment.FromEnv();
             services.AddSingleton<IAppEnvironment>(env);
 
-            // Note: logger.LogInfo does not work
+            // Add logging
             var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
             var logger = loggerFactory.CreateLogger<Program>();
             services.AddSingleton<ILogger>(logger);
@@ -93,6 +119,18 @@ namespace Carter.App.Hosting
         public void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
+
+            app.UseSwaggerUI((options) =>
+            {
+                options.RoutePrefix = "openapi/ui";
+
+                // Because the site will try to get the page from root,
+                // We need to direct it to /api/v1
+                options.SwaggerEndpoint("/api/v1/openapi", this.appConfig.CarterOptions.OpenApi.DocumentTitle);
+
+                // TODO: add a proper header
+                options.HeadContent = string.Empty;
+            });
 
             app.UseEndpoints(builder => builder.MapCarter());
         }
