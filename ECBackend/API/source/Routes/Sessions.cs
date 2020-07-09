@@ -138,17 +138,17 @@ namespace Carter.App.Route.Sessions
                     if (isOngoing)
                     {
                         filter &= builder.Where(s => s.IsOpen == true)
-                            & ((builder.Where(s => s.LastCaptureAt != BsonNull.Value)
+                            & ((builder.Eq(s => s.LastCaptureAt, BsonNull.Value)
                             & builder.Where(s => s.CreatedAt > startMin))
-                            | (builder.Where(s => s.LastCaptureAt == BsonNull.Value)
+                            | (builder.Eq(s => s.LastCaptureAt, BsonNull.Value)
                             & builder.Where(s => s.LastCaptureAt > closeMin)));
                     }
                     else
                     {
                         filter &= builder.Where(s => s.IsOpen == false)
-                            | ((builder.Where(s => s.LastCaptureAt != BsonNull.Value)
+                            | ((builder.Eq(s => s.LastCaptureAt, BsonNull.Value)
                             & builder.Where(s => s.CreatedAt < startMin))
-                            | (builder.Where(s => s.LastCaptureAt == BsonNull.Value)
+                            | (builder.Eq(s => s.LastCaptureAt, BsonNull.Value)
                             & builder.Where(s => s.LastCaptureAt < closeMin)));
                     }
                 }
