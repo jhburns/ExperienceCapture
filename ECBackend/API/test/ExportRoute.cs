@@ -26,13 +26,13 @@ namespace Carter.Tests.Route.Export
         // Setting to some defaults
         public ExportTests()
         {
-            AppConfiguration.Mongo = new ServiceConfiguration
+            AppConfiguration.Mongo = new ConnectionConfiguration
             {
                 ConnectionString = null,
                 Port = 0,
             };
 
-            AppConfiguration.Minio = new ServiceConfiguration
+            AppConfiguration.Minio = new ConnectionConfiguration
             {
                 ConnectionString = null,
                 Port = 0,

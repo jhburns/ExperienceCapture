@@ -1,14 +1,16 @@
-namespace Carter.App.Hosting
+namespace Carter.App.Export.Hosting
 {
+    using Carter.App.Hosting;
+
     public class ExporterConfiguration
     {
-        public ServiceConfiguration Mongo
+        public ConnectionConfiguration Mongo
         {
             get;
             set;
         }
 
-        public ServiceConfiguration Minio
+        public ConnectionConfiguration Minio
         {
             get;
             set;

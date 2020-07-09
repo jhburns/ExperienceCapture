@@ -25,19 +25,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
-  # This service is a work in progress
-  redoc:
-    depends_on:
-      - rp
-    environment:
-      - SPEC_URL=http://localhost:8090/api/v1/openapi
-    hostname: redoc
-    image: redocly/redoc:v2.0.0-rc.20
-    networks:
-      - ec-network
-    ports:
-      - "4322:80"
-
   rp:
     ports:
       - "8090:2015"

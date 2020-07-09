@@ -10,6 +10,7 @@ namespace Carter.App.Export.Main
     using System.Text;
     using System.Threading.Tasks;
 
+    using Carter.App.Export.Hosting;
     using Carter.App.Export.JsonExtra;
     using Carter.App.Hosting;
     using Carter.App.Lib.MinioExtra;
