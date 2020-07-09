@@ -23,6 +23,7 @@ class OptionSelector extends Component {
             this.props.onClick(value)
             this.setState({ isOpen: false });
           }}
+          data-cy={`session-sort-${value.replace(' ', '-')}`}
         >
           {value}
         </DropdownItem>);
@@ -30,8 +31,13 @@ class OptionSelector extends Component {
 
     return (
       <Wrapper>
-        <Dropdown isOpen={this.state.isOpen} toggle={() => this.setState({ isOpen: !this.state.isOpen })}>
-          <DropdownToggle caret>{this.props.title}</DropdownToggle>
+        <Dropdown
+          isOpen={this.state.isOpen}
+          toggle={() => this.setState({ isOpen: !this.state.isOpen })}
+        >
+          <DropdownToggle caret data-cy="sort-dropdown">
+            {this.props.title}
+          </DropdownToggle>
           <DropdownMenu>
             {items}
           </DropdownMenu>

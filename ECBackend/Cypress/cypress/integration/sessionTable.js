@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 describe('Session Table', () => {
   it('Is empty when there are no sessions.', () => {
     cy.visit("/home/sessions")
@@ -34,20 +32,26 @@ describe('Session Table', () => {
       });
   });
 
-  it('Is sorted by newest first.', () => {
-    cy.createClosedSessions(10)
+  it('Can navigate between pages.', () => {
+    cy.createClosedSessions(35)
       .then(() => {
         cy.visit("/home/sessions");
       })
       .then(() => {
-        cy.get('[data-cy=session-date]')
+        cy.get('[data-cy=sessions-next]')
+          .click();
       })
-      .then((dateElements) => {
-        const dates = dateElements.map((date) => moment(date.textContent));
-
-        for (let i = 0; i < dates.length - 1; i++) {
-          assert.isTrue(dates[i] <= dates[i + 1], 'Sessions are not in newest first order.');
-        }
+      .then(() => {
+        cy.get('[data-cy=sessions-next]')
+          .click();
       })
+      .then(() => {
+        cy.get('[data-cy=sessions-previous]')
+          .click();
+      })
+      .then(() => {
+        cy.get('[data-cy=sessions-previous]')
+          .click();
+      });
   });
 });
