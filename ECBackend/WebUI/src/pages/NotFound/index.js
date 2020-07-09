@@ -26,8 +26,9 @@ class NotFound extends Component {
               <Link
                 to="/"
                 className="btn btn-outline-dark btn-block"
+                data-cy="sign-in-link"
               >
-                Try Logging In
+                Try Signing In
               </Link>
             </Col>
           </Row>
