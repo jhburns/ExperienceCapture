@@ -28,7 +28,7 @@ class SessionRow extends Component {
             <button
               onClick={() => this.props.buttonData.onClick(this.props.sessionData.id)}
               className="btn btn-outline-dark mr-2 mr-lg-0"
-              data-cy={`session-button-${this.props.sessionData.id}`}
+              data-cy={`session-button`}
             >
               {this.props.buttonData.body}
             </button>

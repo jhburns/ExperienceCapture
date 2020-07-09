@@ -34,7 +34,11 @@ class SessionsPage extends Component {
           </Row>
           <Row className="m-0 mt-3 mb-5">
             <Col className="text-center">
-              <Link to="/home/sessions/archived" className="btn btn-outline-dark">
+              <Link
+                to="/home/sessions/archived"
+                className="btn btn-outline-dark"
+                data-cy="archive-link"
+              >
                 Archived
               </Link>
             </Col>
