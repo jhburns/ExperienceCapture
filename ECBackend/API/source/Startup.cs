@@ -126,10 +126,10 @@ namespace Carter.App.Hosting
 
                 // Because the site will try to get the page from root,
                 // We need to direct it to /api/v1
-                options.SwaggerEndpoint("/api/v1/openapi", appConfig.CarterOptions.OpenApi.DocumentTitle);
+                options.SwaggerEndpoint("/api/v1/openapi", this.appConfig.CarterOptions.OpenApi.DocumentTitle);
 
                 // TODO: add a proper header
-                options.HeadContent = "";
+                options.HeadContent = string.Empty;
             });
 
             app.UseEndpoints(builder => builder.MapCarter());
