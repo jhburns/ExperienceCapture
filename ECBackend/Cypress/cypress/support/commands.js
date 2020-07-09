@@ -23,3 +23,14 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('createClosedSessions', (count) => {
+  [...Array(count)].forEach(() => {
+    cy.request({ method: 'POST', url: '/api/v1/sessions', failOnStatusCode: true })
+      .then((response) => {
+        const sessionId = response.body.id;
+
+        cy.request({ method: 'DELETE', url: `/api/v1/sessions/${sessionId}`, failOnStatusCode: true });
+      });
+  });
+});

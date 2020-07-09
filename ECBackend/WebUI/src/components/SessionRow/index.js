@@ -18,7 +18,7 @@ class SessionRow extends Component {
           </Link>
         </th>
         <td>{this.props.sessionData.fullname}</td>
-        <td>{
+        <td data-cy="session-date">{
           this.props.isRenderingDate ?
             moment(this.props.sessionData.createdAt).format("MMM Do, YYYY, h:mm A") :
             moment(this.props.sessionData.createdAt).fromNow()

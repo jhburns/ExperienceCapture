@@ -31,12 +31,14 @@ beforeEach(() => {
   cy.exec(`docker-compose -f\
     docker-compose.clone.yaml\
     --project-name ecbackend \
-    exec -T db mongo ec --eval "db.dropDatabase();"`);
-
-  // Visit the admin signup path
-  cy.visit("/admin?password=validationIsTurnOff");
-
-  // Wait until it can sign In
-  cy.get('[data-cy=go-home]');
+    exec -T db mongo ec --eval "db.dropDatabase();"`)
+    .then(() => {
+      // Visit the admin signup path
+      cy.visit("/admin?password=validationIsTurnOff");
+    })
+    .then(() => {
+      // Wait until it can sign In
+      cy.get('[data-cy=go-home]');
+    })    
 });
 
