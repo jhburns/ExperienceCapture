@@ -45,6 +45,7 @@ class SingleSession extends Component {
                   onClick={this.props.onExport}
                   disabled={isExportDisabled}
                   className="btn btn-outline-dark"
+                  data-cy="session-export"
                 >
                   Export
                 </button>
@@ -57,6 +58,7 @@ class SingleSession extends Component {
                 rel="noopener noreferrer"
                 download
                 className="btn btn-outline-dark"
+                data-cy="session-download"
               >
                 Download
               </Link>

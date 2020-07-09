@@ -27,16 +27,16 @@ describe('Settings Page', () => {
       .click()
       .then(() => {
         cy.get('[data-cy=sign-up-link]')
-          .then((link) => {
-            const url = link.text();
+      })
+      .then((link) => {
+        const url = link.text();
 
-            // A 409 conflict is expected, as there can only
-            // Be the shimmed user
-            cy.visit(url)
-              .then(() => {
-                cy.get('[data-cy=already-notify]');
-              });
-          });
+        // A 409 conflict is expected, as there can only
+        // Be one shimmed user
+        cy.visit(url);
+      })
+      .then(() => {
+        cy.get('[data-cy=already-notify]');
       });
   });
 });

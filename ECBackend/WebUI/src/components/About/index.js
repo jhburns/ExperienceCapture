@@ -20,6 +20,7 @@ class About extends Component {
         <Prompt
           className="d-inline-block"
           id="about-tooltip"
+          data-cy="about-prompt"
         >
           ?
         </Prompt>
@@ -32,6 +33,7 @@ class About extends Component {
               isOpen: !this.state.isOpen
             });
           }}
+          data-cy="about-tooltip"
         >
           {this.props.message}
         </Tooltip>

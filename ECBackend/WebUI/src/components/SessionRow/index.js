@@ -9,13 +9,16 @@ class SessionRow extends Component {
   render() {
     return (
       <Wrapper>
-        <th scope="row">
-          <Link to={`/home/sessions/id/${this.props.sessionData.id}/`}>
+        <th scope="row" data-cy="session-row">
+          <Link
+            to={`/home/sessions/id/${this.props.sessionData.id}/`}
+            data-cy="session-link"
+          >
             {this.props.sessionData.id}
           </Link>
         </th>
         <td>{this.props.sessionData.fullname}</td>
-        <td>{
+        <td data-cy="session-date">{
           this.props.isRenderingDate ?
             moment(this.props.sessionData.createdAt).format("MMM Do, YYYY, h:mm A") :
             moment(this.props.sessionData.createdAt).fromNow()
@@ -25,6 +28,7 @@ class SessionRow extends Component {
             <button
               onClick={() => this.props.buttonData.onClick(this.props.sessionData.id)}
               className="btn btn-outline-dark mr-2 mr-lg-0"
+              data-cy={`session-button`}
             >
               {this.props.buttonData.body}
             </button>

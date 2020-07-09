@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { getData } from 'libs/fetchExtra';
 
 import SessionRow from 'components/SessionRow';
-import Dropdown from 'components/OptionSelector';
+import OptionSelector from 'components/OptionSelector';
 
 import { P, Row, Col, Button, } from '@bootstrap-styled/v4';
 import { Wrapper, } from 'components/SessionTable/style';
@@ -166,7 +166,7 @@ class SessionTable extends Component {
         </h2>
         <Row className="mb-2">
           <Col>
-            <Dropdown
+            <OptionSelector
               title="Sort By"
               options={["Alphabetically", "Oldest First", "Newest First"]}
               onClick={this.onSort}
@@ -191,7 +191,7 @@ class SessionTable extends Component {
         {isEmpty() &&
           <Row className="m-0 justify-content-center mb-4">
             <Col>
-              <P className="text-center">{this.props.emptyMessage}</P>
+              <P className="text-center" data-cy="sessions-empty">{this.props.emptyMessage}</P>
             </Col>
           </Row>
         }
@@ -202,6 +202,7 @@ class SessionTable extends Component {
               color="white"
               disabled={this.state.pageNumber === 1}
               onClick={async () => this.navigatePages(this.state.pageNumber - 1)}
+              data-cy="sessions-previous"
             >
               &lt; Previous
             </Button>
@@ -209,6 +210,7 @@ class SessionTable extends Component {
               color="white"
               disabled={this.state.pageNumber >= this.state.pageTotal}
               onClick={async () => this.navigatePages(this.state.pageNumber + 1)}
+              data-cy="sessions-next"
             >
               Next &gt;
             </Button>
