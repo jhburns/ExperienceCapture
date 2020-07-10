@@ -98,9 +98,9 @@
     <Rule Id="SA1026" Action="Warning" /> <!-- An implicitly typed new array allocation within a C# code file is not spaced correctly -->
     <Rule Id="SA1027" Action="Warning" /> <!-- The code contains a tab or space character which is not consistent with the current project settings -->
     <Rule Id="SA1028" Action="Warning" /> <!-- A line of code ends with a space, tab, or other whitespace characters before the end of line character(s) -->
-    <Rule Id="SA1600" Action="Warning" /> <!-- Elements should be documented -->
+    <Rule Id="SA1600" Action="None" /> <!-- Elements should be documented -->
     <Rule Id="SA1633" Action="None" /> <!-- File should have header -->
-    <Rule Id="SA0001" Action="None" /> <!-- XML comments -->
+    <Rule Id="SA0001" Action="Warning" /> <!-- XML comments -->
     <Rule Id="SA1101" Action="Warning" /> <!-- Prefix local calls with this -->
     <Rule Id="SA1407" Action="Warning" /> <!-- Arithmetic expressions should declare precedence -->
     <Rule Id="SA1116" Action="Warning" /> <!-- Split parameters should start on line after declaration -->
