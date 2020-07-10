@@ -9,13 +9,17 @@
       name="description"
       content="A video game to spreadsheet converter."
     />
-    <!-- TODO: Add more icons for various browsers -->
-    <link rel="apple-touch-icon" href="logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Icons, see the icons/README.md for more information -->
+    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/icons/apple-touch-icon.png?v=GvbzxrBBGz">
+    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/icons/favicon-32x32.png?v=GvbzxrBBGz">
+    <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/icons/favicon-16x16.png?v=GvbzxrBBGz">
+    <link rel="manifest" href="%PUBLIC_URL%/icons/site.webmanifest?v=GvbzxrBBGz">
+    <link rel="mask-icon" href="%PUBLIC_URL%/icons/safari-pinned-tab.svg?v=GvbzxrBBGz" color="#5bbad5">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/icons/favicon.ico?v=GvbzxrBBGz">
+    <meta name="msapplication-TileColor" content="#00aba9">
+    <meta name="msapplication-config" content="%PUBLIC_URL%/icons/browserconfig.xml?v=GvbzxrBBGz">
+    <meta name="theme-color" content="#ffffff">
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -26,7 +30,6 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Experience Capture</title>
-
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -47,6 +50,6 @@
       The platform.js is loaded from CDN because statically loading may
       may result in things breaking if google updates things.
     -->
-    <script src="https://apis.google.com/js/platform.js" ></script>
+    <script src="https://apis.google.com/js/platform.js"></script>
   </body>
 </html>
