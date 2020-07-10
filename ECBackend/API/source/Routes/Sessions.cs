@@ -14,6 +14,8 @@ namespace Carter.App.Route.Sessions
     using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
 
+    using Carter.App.MetaData.Sessions;
+
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.UsersAndAuthentication;
 
@@ -101,7 +103,7 @@ namespace Carter.App.Route.Sessions
                 await res.FromBson(sessionDoc);
             });
 
-            this.Get("/", async (req, res) =>
+            this.Get<GetSessionsMetaData>("/", async (req, res) =>
             {
                 var builder = Builders<SessionSchema>.Filter;
 
