@@ -17,6 +17,10 @@ Written in .Net Core (C#) and has the following dependencies:
 
 This is the bulk of the logic in the application. Also, this will start the exporter from an api call.
 
+## Documentation
+
+API documentation is available in [OpenAPI format](https://swagger.io/docs/specification/about/) at `http://localhost:8090/api/v1/openapi/ui` after starting the server.
+
 ## Folder Breakdown
 
 - `source/LibraryScripts/` a collection of common logic.

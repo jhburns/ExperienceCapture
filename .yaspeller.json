@@ -118,7 +118,8 @@
     "xUnit",
     "Dockerfile",
     "Cypress",
-    "ECBackend"
+    "ECBackend",
+    "OpenAPI"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
