@@ -101,48 +101,34 @@ class SessionPage extends Component {
   }
 
   render() {
-    if (this.state.session != null) {
-      return (
-        <Wrapper>
-          <Container className="p-0">
-            <Menu />
-            <Row className="mb-3 p-5">
-              <Col>
-                <SingleSession
-                  sessionData={this.state.session}
-                  onExport={this.onExport}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col className="text-center">
-                {this.state.session.exportState === "Pending" &&
-                  <h5>Exporting...</h5>
-                }
-              </Col>
-            </Row>
-            <Footer />
-          </Container>
-        </Wrapper>
-      )
-    } else {
-      // TODO: Fix the component so this loading screen doesn't need to be shown
-      return (
-        <Wrapper>
-          <Container className="p-0">
-            <Menu />
-            <Row>
-              <Col className="text-center">
-                <h3>
-                  Fetching session...
-                </h3>
-              </Col>
-            </Row>
-            <Footer />
-          </Container>
-        </Wrapper>
-      )
+    if (this.state.session === null)
+    {
+      return null;
     }
+
+    return (
+      <Wrapper>
+        <Container className="p-0">
+          <Menu />
+          <Row className="mb-3 p-5">
+            <Col>
+              <SingleSession
+                sessionData={this.state.session}
+                onExport={this.onExport}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col className="text-center">
+              {this.state.session.exportState === "Pending" &&
+                <h5>Exporting...</h5>
+              }
+            </Col>
+          </Row>
+          <Footer />
+        </Container>
+      </Wrapper>
+    )
   }
 }
 

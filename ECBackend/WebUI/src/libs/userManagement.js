@@ -3,7 +3,12 @@
 import { postData } from 'libs/fetchExtra';
 import { createCookie } from 'libs/cookieExtra';
 
-// TODO: refactor this to reduce repetition
+// Has to be the same as the backend shim
+// Long to match the length of real subjects
+const mockId = "123456789109876543210";
+
+const mockToken = "This.is.not.a.real.id.token";
+
 async function submitUser(
 	isMock = false,
 	user,
@@ -25,7 +30,7 @@ async function submitUser(
 
 async function signUpUser(isMock = true, user, signUpToken, onError, onDuplicate) {
 	let userData = {
-		idToken: "This.is.not.a.real.id.token",
+		idToken: mockToken,
 		signUpToken: signUpToken
 	};
 
@@ -56,13 +61,11 @@ async function signUpUser(isMock = true, user, signUpToken, onError, onDuplicate
 
 async function fulfillClaim(isMock = true, user, claimToken, onError) {
 	let userData = {
-		idToken: "This.is.not.a.real.id.token",
+		idToken: mockToken,
 		claimToken: claimToken
 	};
 
-	// Has to be the same as the backend shim
-	// Long to match the length of real subjects
-	let userId = "123456789109876543210";
+	let userId = mockId;
 
 	if (!isMock) {
 		userData = {
@@ -86,10 +89,10 @@ async function fulfillClaim(isMock = true, user, claimToken, onError) {
 
 async function signInUser(isMock = true, user, onError) {
 	let userData = {
-		idToken: "This.is.not.a.real.id.token",
+		idToken: mockToken,
 	};
 
-	let userId = "123456789109876543210"; // Has to be the same as the backend shim
+	let userId = mockId;
 
 	if (!isMock) {
 		userData = {
@@ -124,6 +127,10 @@ async function signOutUser(isMock = false) {
 		await auth2.signOut();
 	} catch (err) {
 		console.error(err);
+
+		if (!isMock) {
+			throw err;
+		}
 	}
 }
 
@@ -141,7 +148,7 @@ function getUserId() {
 		console.log("Application is running using mock data.");
 		console.log(err);
 
-		return "123456789109876543210";
+		return mockId;
 	}
 }
 

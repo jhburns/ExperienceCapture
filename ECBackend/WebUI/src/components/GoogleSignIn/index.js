@@ -70,7 +70,7 @@ class SignIn extends Component {
       return (
         <Wrapper data-cy="already-notify">
           <LoginBox>
-            You're Already Signed Up
+            You're Already Signed Up.
           </LoginBox>
           {homeRow}
           {signOutRow}
@@ -81,7 +81,7 @@ class SignIn extends Component {
         return (
           <Wrapper>
             <LoginBox>
-              You're Signed In
+              You're Signed In.
             </LoginBox>
             {homeRow}
             {signOutRow}
@@ -96,8 +96,8 @@ class SignIn extends Component {
 	    return (
         <Wrapper>
           <LoginBox>
-            You're Signed Out <br />
-            Sign In Again
+            You're Signed Out. <br />
+            Sign In Again.
           </LoginBox>
           {googleRow}
         </Wrapper>
@@ -106,7 +106,7 @@ class SignIn extends Component {
       return (
         <Wrapper>
           <LoginBox>
-            Please Sign In
+            Please Sign In.
           </LoginBox>
           {googleRow}
         </Wrapper>
