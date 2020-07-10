@@ -390,6 +390,7 @@ namespace Carter.App.Route.UsersAndAuthentication
     }
     #pragma warning restore SA1201
 
+    /// <inheritdoc />
     public sealed class PersonRepository : RepositoryBase<PersonSchema>
     {
         public PersonRepository(IMongoDatabase database)
@@ -430,6 +431,7 @@ namespace Carter.App.Route.UsersAndAuthentication
         #pragma warning restore SA1516
     }
 
+    /// <inheritdoc />
     public sealed class AccessTokenRepository : RepositoryBase<AccessTokenSchema>
     {
         public AccessTokenRepository(IMongoDatabase database)
@@ -475,6 +477,7 @@ namespace Carter.App.Route.UsersAndAuthentication
         #pragma warning restore SA1516
     }
 
+    /// <inheritdoc />
     public sealed class ClaimTokenRepository : RepositoryBase<ClaimTokenSchema>
     {
         public ClaimTokenRepository(IMongoDatabase database)

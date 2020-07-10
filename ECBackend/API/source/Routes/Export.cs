@@ -128,6 +128,7 @@ namespace Carter.App.Route.Export
 
     public sealed class ExportThreader : IThreadExtra
     {
+        /// <inheritdoc />
         public void Run(ParameterizedThreadStart method, object parameter = null)
         {
             var export = new Thread(ExportHandler.Entry);

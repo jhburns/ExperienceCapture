@@ -458,6 +458,7 @@ namespace Carter.App.Route.Sessions
     }
     #pragma warning restore SA1201
 
+    /// <inheritdoc />
     public sealed class SessionRepository : RepositoryBase<SessionSchema>
     {
         public SessionRepository(IMongoDatabase database)
@@ -473,6 +474,7 @@ namespace Carter.App.Route.Sessions
             _ = this.Index(keyId);
         }
 
+        /// <inheritdoc />
         public override async Task<IList<SessionSchema>> FindAll(
             FilterDefinition<SessionSchema> filter,
             SortDefinition<SessionSchema> sorter,
@@ -492,6 +494,7 @@ namespace Carter.App.Route.Sessions
                 .ToListAsync();
         }
 
+        /// <inheritdoc />
         public override async Task<SessionSchema> FindById(string id)
         {
             var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == id);
@@ -504,6 +507,7 @@ namespace Carter.App.Route.Sessions
         }
     }
 
+    /// <inheritdoc />
     public sealed class CapturesRepository : RepositoryBase<BsonDocument>
     {
         // The session Id isn't know until runtime,

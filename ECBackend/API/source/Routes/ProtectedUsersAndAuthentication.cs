@@ -162,8 +162,10 @@ namespace Carter.App.Route.ProtectedUsersAndAuthentication
         #pragma warning restore SA1516
     }
 
+    /// <inheritdoc />
     public sealed class SignUpTokenRepository : RepositoryBase<SignUpTokenSchema>
     {
+        /// <inheritdoc />
         public SignUpTokenRepository(IMongoDatabase database)
             : base(database, "persons.tokens.signUps")
         {

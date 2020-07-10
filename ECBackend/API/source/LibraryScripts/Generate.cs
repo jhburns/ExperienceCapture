@@ -4,6 +4,9 @@ namespace Carter.App.Lib.Generate
     using System.Linq;
     using System.Security.Cryptography;
 
+    /// <summary>
+    /// Generates various tokens.
+    /// </summary>
     public class Generate
     {
         internal static readonly string LettersForId = "ABCEFGHJKLMNPQRUVWXY";
@@ -11,7 +14,13 @@ namespace Carter.App.Lib.Generate
 
         private static Random random = new Random();
 
-        // Should NOT be considered secure
+        /// <summary>
+        /// Creates an id, for humans. Should NOT be considered secure.
+        /// </summary>
+        /// <returns>
+        /// An id.
+        /// </returns>
+        /// <param name="length">How long to make the id, cannot be zero or negative.</param>
         public static string GetRandomId(int length)
         {
             if (length < 0)
@@ -39,7 +48,12 @@ namespace Carter.App.Lib.Generate
             }
         }
 
-        // Should be considered secure
+        /// <summary>
+        /// Creates a token, that should be considered to be secure.
+        /// </summary>
+        /// <returns>
+        /// A token, base64 encoded.
+        /// </returns>
         public static string GetRandomToken()
         {
             var key = new byte[32];
