@@ -30,8 +30,20 @@ namespace Carter.App.Route.Sessions
 
     using static Microsoft.AspNetCore.Http.StatusCodes;
 
+    /// <summary>
+    /// Session routes.
+    /// </summary>
     public class Sessions : CarterModule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sessions"/> class.
+        /// </summary>
+        /// <param name="accessRepo">Supplied through DI.</param>
+        /// <param name="sessionRepo">Supplied through DI.</param>
+        /// <param name="personRepo">Supplied through DI.</param>
+        /// <param name="captureRepo">Supplied through DI.</param>
+        /// <param name="logger">Supplied through DI.</param>
+        /// <param name="date">Supplied through DI.</param>
         public Sessions(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SessionSchema> sessionRepo,
@@ -385,35 +397,48 @@ namespace Carter.App.Route.Sessions
         }
     }
 
+    /// <summary>
+    /// Database schema for a session.
+    /// </summary>
     public class SessionSchema
     {
         #pragma warning disable SA1516
+        /// <summary>Id in MongoDB.</summary>
         [BsonIgnoreIfNull]
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
+        /// <summary>A human usable unique value.</summary>
         [BsonElement("id")]
         public string Id { get; set; }
 
+        /// <summary>Whether the session was deleted yet.</summary>
         [BsonElement("isOpen")]
         public bool IsOpen { get; set; } = true;
 
+        /// <summary>Progress towards the session being exported.</summary>
         [BsonElement("exportState")]
         public ExportOptions ExportState { get; set; } = ExportOptions.NotStarted;
 
         // Copying user data instead of referencing so it can never change with the session
         // Also so that it is easy to include when exporting
+
+        /// <summary>A copy the user who created this session's information.</summary>
         [BsonElement("user")]
         public PersonSchema User { get; set; }
 
+        /// <summary>When the session was created.</summary>
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
 
+        /// <summary>Optional metadata.</summary>
         [BsonElement("tags")]
         public List<string> Tags { get; set; }
 
         // This is a proxy-property, and should only
         // Be set when returned
+
+        /// <summary>Whether there has been any recent captured added to this session.</summary>
         [BsonIgnoreIfNull]
         [BsonElement("isOngoing")]
         public bool? IsOngoing { get; set; } = null;
@@ -421,17 +446,25 @@ namespace Carter.App.Route.Sessions
         // Is really type 'BsonDateTime', but needs to be
         // A BsonValue in order to serialize null properly
         // See: https://jira.mongodb.org/browse/CSHARP-863
+
+        /// <summary>Datetime of when the last capture was added.</summary>
         [BsonElement("lastCaptureAt")]
         public BsonValue LastCaptureAt { get; set; } = BsonNull.Value;
         #pragma warning restore SA1516
     }
 
+    /// <summary>
+    /// Responce schema for a list of sessions.
+    /// </summary>
     public class SessionsResponce
     {
         #pragma warning disable SA1516
+
+        /// <summary>Ordered group of sessions.</summary>
         [BsonElement("contentList")]
         public List<SessionSchema> ContentList { get; set; }
 
+        /// <summary>How many pages exist for this query.</summary>
         [BsonElement("pageTotal")]
         public long PageTotal { get; set; }
 
@@ -439,27 +472,51 @@ namespace Carter.App.Route.Sessions
     }
 
     // See Startup.cs for the code on how this is serlizalized
+
+    /// <summary>
+    /// Possible states of a session export.
+    /// </summary>
     #pragma warning disable SA1201
     public enum ExportOptions
     {
+        /// <summary>When the export is started.</summary>
         NotStarted,
+
+        /// <summary>When the session is being exported</summary>
         Pending,
+
+        /// <summary>When the session can be downloaded</summary>
         Done,
+
+        /// <summary>When the session export needs debugging</summary>
         Error,
     }
     #pragma warning restore SA1201
 
     #pragma warning disable SA1201
+    /// <summary>
+    /// Directions to sort in.
+    /// </summary>
     public enum SortOptions
     {
+        /// <summary>0-9, A-Z. But session ids have to always start with a letter</summary>
         Alphabetical,
+
+        /// <summary>Datetime descending</summary>
         NewestFirst,
+
+        /// <summary>Datetime ascending</summary>
         OldestFirst,
     }
     #pragma warning restore SA1201
 
+    /// <inheritdoc />
     public sealed class SessionRepository : RepositoryBase<SessionSchema>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SessionRepository"/> class.
+        /// </summary>
+        /// <param name="database">A MongoDB database connection.</param>
         public SessionRepository(IMongoDatabase database)
             : base(database, "sessions")
         {
@@ -473,6 +530,7 @@ namespace Carter.App.Route.Sessions
             _ = this.Index(keyId);
         }
 
+        /// <inheritdoc />
         public override async Task<IList<SessionSchema>> FindAll(
             FilterDefinition<SessionSchema> filter,
             SortDefinition<SessionSchema> sorter,
@@ -492,6 +550,13 @@ namespace Carter.App.Route.Sessions
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Custom implementation to be session oriented.
+        /// </summary>
+        /// <returns>
+        /// A document.
+        /// </returns>
+        /// <param name="id">An id to query the database for.</param>
         public override async Task<SessionSchema> FindById(string id)
         {
             var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == id);
@@ -504,16 +569,25 @@ namespace Carter.App.Route.Sessions
         }
     }
 
+    /// <inheritdoc />
     public sealed class CapturesRepository : RepositoryBase<BsonDocument>
     {
         // The session Id isn't know until runtime,
         // So it is constructed as temp
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CapturesRepository"/> class.
+        /// </summary>
+        /// <param name="database">A MongoDB database connection.</param>
         public CapturesRepository(IMongoDatabase database)
             : base(database, "sessions.this.is.temp")
         {
         }
     }
 
+    /// <summary>
+    /// Sorting helper that maps options to sorters.
+    /// </summary>
     internal static class SortExtra
     {
         public static SortDefinition<SessionSchema> ToDefinition(this SortOptions option)

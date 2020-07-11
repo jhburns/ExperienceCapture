@@ -15,8 +15,20 @@ namespace Carter.App.Route.PreSecurity
 
     using static Microsoft.AspNetCore.Http.StatusCodes;
 
+    /// <summary>
+    /// Sessions routes.
+    /// </summary>
     public static class PreSecurity
     {
+        /// <summary>
+        /// Checks the access token.
+        /// </summary>
+        /// <returns>
+        /// A function that returns true if the access token is valid.
+        /// </returns>
+        /// <param name="repo">Provides the access collection.</param>
+        /// <param name="date">Provides the datetime.</param>
+        /// <param name="minimumRole">The minimum role needed to access a module.</param>
         public static Func<HttpContext, Task<bool>> CheckAccess(
             IRepository<AccessTokenSchema> repo,
             IDateExtra date,

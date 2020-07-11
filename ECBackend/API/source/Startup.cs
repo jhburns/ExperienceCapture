@@ -25,6 +25,7 @@ namespace Carter.App.Hosting
     using MongoDB.Bson.Serialization.Serializers;
     using MongoDB.Driver;
 
+    #pragma warning disable CS1591
     public class Startup
     {
         private readonly AppConfiguration appConfig;
@@ -134,4 +135,5 @@ namespace Carter.App.Hosting
             app.UseEndpoints(builder => builder.MapCarter());
         }
     }
+    #pragma warning restore CS1591
 }

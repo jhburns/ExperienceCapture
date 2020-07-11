@@ -12,8 +12,19 @@ namespace Carter.App.Lib.Authentication
 
     using Google.Apis.Auth;
 
+    /// <summary>
+    /// Performs authentication through Google.
+    /// </summary>
     public class GoogleApi
     {
+        /// <summary>
+        /// Sends the jwt token to Google's Servers to be validated.
+        /// </summary>
+        /// <returns>
+        /// The payload received from Google, or null if the token is invalid.
+        /// </returns>
+        /// <param name="token">A JWT.</param>
+        /// <param name="env">The environment, used to check if validation should be skipped.</param>
         public static async Task<GoogleJsonWebSignature.Payload> ValidateUser(string token, IAppEnvironment env)
         {
             if (env.SkipValidation == "true")
@@ -45,8 +56,20 @@ namespace Carter.App.Lib.Authentication
         }
     }
 
+    /// <summary>
+    /// Hashes tokens for security purposes.
+    /// Keep in mind this only hashes once,
+    /// so using this with low entropy passwords is insecure.
+    /// </summary>
     public class PasswordHasher
     {
+        /// <summary>
+        /// Takes a password and computes its SHA256 hash.
+        /// </summary>
+        /// <returns>
+        /// A hash, or null if the given password is not a base64 string.
+        /// </returns>
+        /// <param name="password">A highly random string, encoded in base64.</param>
         public static string Hash(string password)
         {
             try
@@ -66,6 +89,14 @@ namespace Carter.App.Lib.Authentication
             }
         }
 
+        /// <summary>
+        /// Checks whether a password is hashed to a value.
+        /// </summary>
+        /// <returns>
+        /// True, when the password is hashed to the value.
+        /// </returns>
+        /// <param name="password">A highly random string, encoded in base64.</param>
+        /// <param name="hash">A hash value, encoded in base64.</param>
         public static bool Check(string password, string hash)
         {
             try
@@ -85,6 +116,10 @@ namespace Carter.App.Lib.Authentication
             }
         }
 
+        /// <summary>
+        /// Prints out a new password pretty.
+        /// </summary>
+        /// <param name="domain">A domain to generate the admin sign up link. Example: localhost:8090 .</param>
         public static void OutputNew(string domain)
         {
             string password = Generate.GetRandomToken();

@@ -6,8 +6,15 @@ namespace Carter.App.Route.Health
 
     using Microsoft.Extensions.Logging;
 
+    /// <summary>
+    /// Health and root routes.
+    /// </summary>
     public class Health : CarterModule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Health"/> class.
+        /// </summary>
+        /// <param name="logger">Supplied through DI.</param>
         public Health(ILogger logger)
         {
             this.Get("/", async (req, res) =>

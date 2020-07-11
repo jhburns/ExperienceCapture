@@ -26,8 +26,20 @@ namespace Carter.App.Route.UsersAndAuthentication
 
     using static Microsoft.AspNetCore.Http.StatusCodes;
 
+    /// <summary>
+    /// User and authentication routes that anyone can access.
+    /// </summary>
     public class UsersAndAuthentication : CarterModule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UsersAndAuthentication"/> class.
+        /// </summary>
+        /// <param name="accessRepo">Supplied through DI.</param>
+        /// <param name="signUpRepo">Supplied through DI.</param>
+        /// <param name="claimRepo">Supplied through DI.</param>
+        /// <param name="personRepo">Supplied through DI.</param>
+        /// <param name="env">Supplied through DI.</param>
+        /// <param name="date">Supplied through DI.</param>
         public UsersAndAuthentication(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SignUpTokenSchema> signUpRepo,
@@ -348,55 +360,80 @@ namespace Carter.App.Route.UsersAndAuthentication
         }
     }
 
+    /// <summary>
+    /// Database schema for a user.
+    /// </summary>
     public class PersonSchema
     {
         #pragma warning disable SA1516
+        /// <summary>Id in MongoBD.</summary>
         [BsonIgnoreIfNull]
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
+        /// <summary>Subject provided by Google.</summary>
         [BsonElement("id")]
         public string Id { get; set; }
 
+        /// <summary>Both first and last name.</summary>
         [BsonElement("fullname")]
         public string Fullname { get; set; }
 
+        /// <summary>Also called given name.</summary>
         [BsonElement("firstname")]
         public string Firstname { get; set; }
 
+        /// <summary>Also called surname/family name.</summary>
         [BsonElement("lastname")]
         public string Lastname { get; set; }
 
+        /// <summary>Google provided email address.</summary>
         [BsonElement("email")]
         public string Email { get; set; }
 
+        /// <summary>Wether the user should be considered deleted.</summary>
         [BsonElement("isExisting")]
         public bool IsExisting { get; set; } = true;
 
+        /// <summary>Datetime the user was created.</summary>
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
 
+        /// <summary>Needed for accessing routes.</summary>
         [BsonElement("role")]
         public RoleOptions Role { get; set; }
         #pragma warning restore SA1516
     }
 
     // See Startup.cs for the code on how this is serlizalized
+
+    /// <summary>
+    /// Role types for users.
+    /// </summary>
     #pragma warning disable SA1201
     public enum RoleOptions
     {
+        /// <summary>Can access most routes.</summary>
         Normal,
+
+        /// <summary>Can access everything.</summary>
         Admin,
     }
     #pragma warning restore SA1201
 
+    /// <inheritdoc />
     public sealed class PersonRepository : RepositoryBase<PersonSchema>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PersonRepository"/> class.
+        /// </summary>
+        /// <param name="database">A MongoDB database connection.</param>
         public PersonRepository(IMongoDatabase database)
             : base(database, "persons")
         {
         }
 
+        /// <inheritdoc />
         public override async Task<PersonSchema> FindById(string id)
         {
             return await this.Collection.Find(
@@ -407,88 +444,127 @@ namespace Carter.App.Route.UsersAndAuthentication
         }
     }
 
+    /// <summary>
+    /// Database schema for an access token.
+    /// </summary>
     public class AccessTokenSchema
     {
         #pragma warning disable SA1516
+        /// <summary>Id in MongoDB.</summary>
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
+        /// <summary>Hash of the token.</summary>
         [BsonElement("hash")]
         public string Hash { get; set; }
 
+        /// <summary>User who created the token.</summary>
         [BsonElement("user")]
         public BsonObjectId User { get; set; }
 
+        /// <summary>How long for the token to be valid.</summary>
         [BsonElement("expirationSeconds")]
         public int ExpirationSeconds { get; set; } = 259200; // Three days
 
+        /// <summary>Datetime the token was created.</summary>
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
 
+        /// <summary>Role of the user who created the token. Prevents an extra lookup.</summary>
         [BsonElement("role")]
         public RoleOptions Role { get; set; }
         #pragma warning restore SA1516
     }
 
+    /// <inheritdoc />
     public sealed class AccessTokenRepository : RepositoryBase<AccessTokenSchema>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccessTokenRepository"/> class.
+        /// </summary>
+        /// <param name="database">A MongoDB database connection.</param>
         public AccessTokenRepository(IMongoDatabase database)
             : base(database, "persons.tokens.accesses")
         {
         }
     }
 
+    /// <summary>
+    /// Responce schema for an access token.
+    /// </summary>
     public class AccessTokenResponce
     {
         #pragma warning disable SA1516
+        /// <summary>Base64 string.</summary>
         [BsonElement("accessToken")]
         public string AccessToken { get; set; }
 
+        /// <summary>UTC datetime until this token is valid.</summary>
         [BsonElement("expiration")]
         public BsonDateTime Expiration { get; set; }
         #pragma warning restore SA1516
     }
 
+    /// <summary>
+    /// Database schema for a claim token.
+    /// </summary>
     public class ClaimTokenSchema
     {
         #pragma warning disable SA1516
+        /// <summary>Id in MongoDB.</summary>
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
+        /// <summary>Hash of a token.</summary>
         [BsonElement("hash")]
         public string Hash { get; set; }
 
+        /// <summary>Temporarily held access token.</summary>
         [BsonElement("accessToken")]
         public string AccessToken { get; set; } = null;
 
+        /// <summary>Key to the associated access token.</summary>
         [BsonElement("Access")]
         public BsonObjectId Access { get; set; } = null;
 
+        /// <summary>Datetime until the token is no longer valid.</summary>
         [BsonElement("expirationSeconds")]
         public int ExpirationSeconds { get; set; } = 3600; // One hour
 
+        /// <summary>Whether the token has been used yet.</summary>
         [BsonElement("isExisting")]
         public bool IsExisting { get; set; } = true;
 
+        /// <summary>Datetime the token was created.</summary>
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
         #pragma warning restore SA1516
     }
 
+    /// <inheritdoc />
     public sealed class ClaimTokenRepository : RepositoryBase<ClaimTokenSchema>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ClaimTokenRepository"/> class.
+        /// </summary>
+        /// <param name="database">A MongoDB database connection.</param>
         public ClaimTokenRepository(IMongoDatabase database)
             : base(database, "persons.tokens.claims")
         {
         }
     }
 
+    /// <summary>
+    /// Responce schema for claim tokens.
+    /// </summary>
     public class ClaimTokenResponce
     {
         #pragma warning disable SA1516
+        /// <summary>Base64 string.</summary>
         [BsonElement("claimToken")]
         public string ClaimToken { get; set; }
 
+        /// <summary>UTC datetime of when the token is no longer valid.</summary>
         [BsonElement("expiration")]
         public BsonDateTime Expiration { get; set; }
         #pragma warning restore SA1516

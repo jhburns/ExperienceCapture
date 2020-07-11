@@ -12,8 +12,19 @@ namespace Carter.App.Lib.Network
     using MongoDB.Bson;
     using MongoDB.Bson.IO;
 
+    /// <summary>
+    /// HttpResponse extensions.
+    /// </summary>
     public static class ResponceExtra
     {
+        /// <summary>
+        /// Send a string responce.
+        /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
+        /// <param name="response">A responce to write to.</param>
+        /// <param name="body">The body sent.</param>
         public static async Task FromString(this HttpResponse response, string body = "OK")
         {
             response.ContentType = "text/plain; charset=utf-8";
@@ -21,6 +32,14 @@ namespace Carter.App.Lib.Network
             return;
         }
 
+        /// <summary>
+        /// Send a JSON responce.
+        /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
+        /// <param name="response">A responce to write to.</param>
+        /// <param name="json">The json sent.</param>
         public static async Task FromJson(this HttpResponse response, string json)
         {
             response.ContentType = "application/json; charset=utf-8";
@@ -28,6 +47,15 @@ namespace Carter.App.Lib.Network
             return;
         }
 
+        /// <summary>
+        /// Sends a BSON responce.
+        /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
+        /// <typeparam name="T">BSON serialzable.</typeparam>
+        /// <param name="response">A responce to write to.</param>
+        /// <param name="doc">A document to serialize then send.</param>
         public static async Task FromBson<T>(this HttpResponse response, T doc)
         {
             byte[] clientBson = doc.ToBson();
@@ -41,8 +69,22 @@ namespace Carter.App.Lib.Network
         }
     }
 
+    /// <summary>
+    /// Helpers for query string parameters.
+    /// </summary>
     public class JsonQuery
     {
+        /// <summary>
+        /// Determines the proper responce encoding, then applies it.
+        /// </summary>
+        /// <returns>
+        /// Am encoded string, or null if the encoding needs to be BSON.
+        /// </returns>
+        /// <typeparam name="T">JSON        /// <summary>
+        /// Constructor with message.
+        /// </summary> serializable.</typeparam>
+        /// <param name="query">Queries to read.</param>
+        /// <param name="document">A document to be encoded.</param>
         public static string FulfilEncoding<T>(IQueryCollection query, T document)
         {
             if (query.As<bool>("bson"))
@@ -67,6 +109,13 @@ namespace Carter.App.Lib.Network
             }
         }
 
+        /// <summary>
+        /// Determines the encoding of the request.
+        /// </summary>
+        /// <returns>
+        /// True if there is a request for BSON encoding.
+        /// </returns>
+        /// <param name="query">Queries to read.</param>
         public static bool CheckDecoding(IQueryCollection query)
         {
             return query.As<bool>("bson");

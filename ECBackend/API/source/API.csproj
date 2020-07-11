@@ -7,6 +7,7 @@
 
   <PropertyGroup>
     <CodeAnalysisRuleSet>./StyleCop.ruleset</CodeAnalysisRuleSet>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(GHA_Build)' == 'True'">

@@ -27,8 +27,19 @@ namespace Carter.App.Route.Export
 
     using static Microsoft.AspNetCore.Http.StatusCodes;
 
+    /// <summary>
+    /// Export routes.
+    /// </summary>
     public class Export : CarterModule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Export"/> class.
+        /// </summary>
+        /// <param name="accessRepo">Supplied through DI.</param>
+        /// <param name="sessionRepo">Supplied through DI.</param>
+        /// <param name="threader">Supplied through DI.</param>
+        /// <param name="os">Supplied through DI.</param>
+        /// <param name="date">Supplied through DI.</param>
         public Export(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SessionSchema> sessionRepo,
@@ -126,8 +137,12 @@ namespace Carter.App.Route.Export
         }
     }
 
+    /// <summary>
+    /// Implementation of IThreadExtra.
+    /// </summary>
     public sealed class ExportThreader : IThreadExtra
     {
+        /// <inheritdoc />
         public void Run(ParameterizedThreadStart method, object parameter = null)
         {
             var export = new Thread(ExportHandler.Entry);
