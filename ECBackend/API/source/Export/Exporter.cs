@@ -57,6 +57,9 @@ namespace Carter.App.Export.Main
         /// <summary>
         /// Needed so async methods can be used.
         /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
         /// <param name="config">Global configuration for a thread.</param>
         protected static async Task MainAsync(ExporterConfiguration config)
         {
@@ -113,6 +116,9 @@ namespace Carter.App.Export.Main
         /// <summary>
         /// Process captures then writes them to files.
         /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
         protected static async Task ExportSession()
         {
             currentHeader = new List<string>();
@@ -622,9 +628,13 @@ namespace Carter.App.Export.Main
         }
 
         // From: https://docs.min.io/docs/dotnet-client-quickstart-guide.html
+
         /// <summary>
         /// Uploads a file to Minio.
         /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
         /// <param name="fileLocation">Where the file to upload can be found.</param>
         protected static async Task Upload(string fileLocation)
         {
@@ -657,6 +667,9 @@ namespace Carter.App.Export.Main
         /// <summary>
         /// Updates the session document when done exporting.
         /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
         /// <param name="status">Information on what caused the end of an export.</param>
         protected static async Task UpdateDoc(ExportOptions status)
         {
@@ -679,16 +692,16 @@ namespace Carter.App.Export.Main
     {
         #pragma warning disable SA1516
 
-        /// <value>Scene name, which is non-unique.</value>
+        /// <summary>Scene name, which is non-unique.</summary>
         public string Name { get; set; }
 
-        /// <value>Timestamp the scene was started.</value>
+        /// <summary>Timestamp the scene was started.</summary>
         public double StartTime { get; set; }
 
-        /// <value>Number of times the scene was restarted. Begins at zero.</value>
+        /// <summary>Number of times the scene was restarted. Begins at zero.</summary>
         public int Index { get; set; }
 
-        /// <value>Captures belonging to this block.</value>
+        /// <summary>Captures belonging to this block.</summary>
         public List<BsonDocument> Docs { get; set; }
         #pragma warning restore SA151
     }

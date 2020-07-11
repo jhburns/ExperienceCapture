@@ -168,5 +168,7 @@
     <Rule Id="SA1407" Action="Warning" /> <!-- A C# statement contains a complex arithmetic expression which omits parenthesis around operators -->
     <Rule Id="SA1408" Action="Warning" /> <!-- A C# statement contains a complex conditional expression which omits parenthesis around operators -->
     <Rule Id="SA1411" Action="Warning" /> <!-- An attribute declaration does not contain any parameters, yet it still includes parenthesis -->
+    <Rule Id="SA1623" Action="None" /> <!-- The documentation text within a C# property's <summary> tag does not match the accessors within the property. -->
+    <Rule Id="SA1625" Action="None" /> <!-- The Xml documentation for a C# element contains two or more identical entries, indicating that the documentation has been copied and pasted.. -->
   </Rules>
 </RuleSet>

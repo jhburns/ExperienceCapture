@@ -8,7 +8,7 @@ namespace Carter.App.Lib.Timer
     /// </summary>
     public interface IDateExtra
     {
-        /// <value>The UTC value according to the system.</value>
+        /// <summary>The UTC value according to the system.</summary>
         DateTime UtcNow { get; }
     }
 
@@ -23,7 +23,7 @@ namespace Carter.App.Lib.Timer
         /// <returns>
         /// True if the start date and offset combined is after the current date.
         /// </returns>
-        /// <param name="start">When to start counting from</param>
+        /// <param name="start">When to start counting from.</param>
         /// <param name="date">Provides the current date.</param>
         /// <param name="expirationTime">An offset to be added on.</param>
         public static bool IsAfter(this BsonDateTime start, IDateExtra date, int expirationTime)
@@ -38,7 +38,7 @@ namespace Carter.App.Lib.Timer
         /// <returns>
         /// A projected date in the future.
         /// </returns>
-        /// <param name="date">Provides the current date</param>
+        /// <param name="date">Provides the current date.</param>
         /// <param name="expirationTime">An offset to be added on.</param>
         public static BsonDateTime ProjectSeconds(IDateExtra date, int expirationTime)
         {

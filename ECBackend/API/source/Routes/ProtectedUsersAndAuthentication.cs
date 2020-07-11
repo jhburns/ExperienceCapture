@@ -28,6 +28,11 @@ namespace Carter.App.Route.ProtectedUsersAndAuthentication
         /// <summary>
         /// Initializes a new instance of the <see cref="ProtectedUsersAndAuthentication"/> class.
         /// </summary>
+        /// <param name="accessRepo">Supplied through DI.</param>
+        /// <param name="signUpRepo">Supplied through DI.</param>
+        /// <param name="personRepo">Supplied through DI.</param>
+        /// <param name="env">Supplied through DI.</param>
+        /// <param name="date">Supplied through DI.</param>
         public ProtectedUsersAndAuthentication(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SignUpTokenSchema> signUpRepo,
@@ -151,27 +156,27 @@ namespace Carter.App.Route.ProtectedUsersAndAuthentication
     public class SignUpTokenSchema
     {
         #pragma warning disable SA1516
-        /// <value>Id in MongoDB.</value>
+        /// <summary>Id in MongoDB.</summary>
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
-        /// <value>A sign up token's hash.</value>
+        /// <summary>A sign up token's hash.</summary>
         [BsonElement("hash")]
         public string Hash { get; set; }
 
-        /// <value>How long for the token to be valid.</value>
+        /// <summary>How long for the token to be valid.</summary>
         [BsonElement("expirationSeconds")]
         public int ExpirationSeconds { get; set; } = 86400; // One day
 
-        /// <value>When the token was created.</value>
+        /// <summary>When the token was created.</summary>
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
 
-        /// <value>The role to grant the new user.</value>
+        /// <summary>The role to grant the new user.</summary>
         [BsonElement("role")]
         public RoleOptions Role { get; set; } = RoleOptions.Normal;
 
-        /// <value>Whether the token should be considered deleted.</value>
+        /// <summary>Whether the token should be considered deleted.</summary>
         [BsonElement("isExisting")]
         public bool IsExisting { get; set; } = true;
         #pragma warning restore SA1516
@@ -183,6 +188,7 @@ namespace Carter.App.Route.ProtectedUsersAndAuthentication
         /// <summary>
         /// Initializes a new instance of the <see cref="SignUpTokenRepository"/> class.
         /// </summary>
+        /// <param name="database">A MongoDB database connection.</param>
         public SignUpTokenRepository(IMongoDatabase database)
             : base(database, "persons.tokens.signUps")
         {
@@ -195,12 +201,12 @@ namespace Carter.App.Route.ProtectedUsersAndAuthentication
     public class SignUpTokenResponce
     {
         #pragma warning disable SA1516
-        /// <value>Base64 encoded.</value>
+        /// <summary>Base64 encoded.</summary>
         [BsonRequired]
         [BsonElement("signUpToken")]
         public string SignUpToken { get; set; }
 
-        /// <value>UTC timestamp until the token is no longer valid.</value>
+        /// <summary>UTC timestamp until the token is no longer valid.</summary>
         [BsonRequired]
         [BsonElement("expiration")]
         public BsonDateTime Expiration { get; set; }

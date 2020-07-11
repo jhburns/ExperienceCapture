@@ -9,10 +9,10 @@ namespace Carter.App.Validation.Person
     {
         #pragma warning disable SA1516, SA1300
 
-        /// <value>Google JWT to be verified.</value>
+        /// <summary>Google JWT to be verified.</summary>
         public string idToken { get; set; }
 
-        /// <value>Base64 encoded.</value>
+        /// <summary>Base64 encoded.</summary>
         public string signUpToken { get; set; }
         #pragma warning restore SA151, SA1300
     }

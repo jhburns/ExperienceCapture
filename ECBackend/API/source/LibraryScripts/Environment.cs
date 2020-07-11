@@ -36,7 +36,6 @@ namespace Carter.App.Lib.Environment
     /// </summary>
     public static class ConfigureAppEnvironment
     {
-
         /// <summary>
         /// Builds the app environment from environmental variables.
         /// </summary>
@@ -72,7 +71,7 @@ namespace Carter.App.Lib.Environment
         private string domain;
 
         /// <summary>
-        /// Constructor that requires each of the variable values.
+        /// Initializes a new instance of the <see cref="AppEnvironment"/> class.
         /// </summary>
         /// <returns>
         /// The app environment.
@@ -89,25 +88,25 @@ namespace Carter.App.Lib.Environment
             this.domain = d;
         }
 
-        /// <value>Gets the value of passwordHash.</value>
+        /// <summary>Gets the value of passwordHash.</summary>
         public string PasswordHash
         {
             get => this.passwordHash;
         }
 
-        /// <value>Gets the value of skipValidation.</value>
+        /// <summary>Gets the value of skipValidation.</summary>
         public string SkipValidation
         {
             get => this.skipValidation;
         }
 
-        /// <value>Gets the value of audience.</value>
+        /// <summary>Gets the value of audience.</summary>
         public string Audience
         {
             get => this.audience;
         }
 
-        /// <value>Gets the value of domain.</value>
+        /// <summary>Gets the value of domain.</summary>
         public string Domain
         {
             get => this.domain;
@@ -120,14 +119,14 @@ namespace Carter.App.Lib.Environment
     public class EnvironmentVarNotSet : Exception
     {
         /// <summary>
-        /// Constructor with no message.
+        /// Initializes a new instance of the <see cref="EnvironmentVarNotSet"/> class.
         /// </summary>
         public EnvironmentVarNotSet()
         {
         }
 
         /// <summary>
-        /// Constructor with message.
+        /// Initializes a new instance of the <see cref="EnvironmentVarNotSet"/> class.
         /// </summary>
         /// <param name="message">Information about why this exception is thrown.</param>
         public EnvironmentVarNotSet(string message)
@@ -136,7 +135,7 @@ namespace Carter.App.Lib.Environment
         }
 
         /// <summary>
-        /// Constructor with message.
+        /// Initializes a new instance of the <see cref="EnvironmentVarNotSet"/> class.
         /// </summary>
         /// <param name="message">Information about why this exception is thrown.</param>
         /// <param name="varName">The unset variable.</param>
@@ -146,8 +145,10 @@ namespace Carter.App.Lib.Environment
         }
 
         /// <summary>
-        /// Constructor with message.
+        /// Initializes a new instance of the <see cref="EnvironmentVarNotSet"/> class.
         /// </summary>
+        /// <param name="message">Information about why this exception is thrown.</param>
+        /// <param name="inner">Tracks context.</param>
         public EnvironmentVarNotSet(string message, Exception inner)
             : base(message, inner)
         {

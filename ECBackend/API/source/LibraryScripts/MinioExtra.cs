@@ -25,9 +25,12 @@ namespace Carter.App.Lib.MinioExtra
         /// <summary>
         /// Get an object. The object will be streamed to the callback given by the user.
         /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
         /// <param name="bucketName">Bucket to retrieve object from.</param>
         /// <param name="objectName">Name of object to retrieve.</param>
-        /// <param name="callback">A stream will be passed to the callback</param>
+        /// <param name="callback">A stream will be passed to the callback.</param>
         /// <param name="sse">Optional ECBackend-side encryption option. Defaults to null.</param>
         /// <param name="cancellationToken">Optional cancellation token to cancel the operation.</param>
         Task GetObjectAsync(string bucketName, string objectName, Action<Stream> callback, ServerSideEncryption sse = null, CancellationToken cancellationToken = default(CancellationToken));
@@ -35,15 +38,20 @@ namespace Carter.App.Lib.MinioExtra
         /// <summary>
         /// Create a private bucket with the given name.
         /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
         /// <param name="bucketName">Name of the new bucket.</param>
         /// <param name="location">Region.</param>
         /// <param name="cancellationToken">Optional cancellation token to cancel the operation.</param>
-        /// <returns>Task</returns>
         Task MakeBucketAsync(string bucketName, string location = "us-east-1", CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Creates an object from file.
         /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
         /// <param name="bucketName">Bucket to create object in.</param>
         /// <param name="objectName">Key of the new object.</param>
         /// <param name="filePath">Path of file to upload.</param>
@@ -85,6 +93,7 @@ namespace Carter.App.Lib.MinioExtra
 
         // Minio client expects the CopyTo to be both sync and async,
         // So it is wrapped in a function call.
+
         /// <inheritdoc cref="IMinioClient" />
         public async Task<byte[]> GetBytesAsync(string bucketName, string objectName)
         {

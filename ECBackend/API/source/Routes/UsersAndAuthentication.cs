@@ -34,6 +34,12 @@ namespace Carter.App.Route.UsersAndAuthentication
         /// <summary>
         /// Initializes a new instance of the <see cref="UsersAndAuthentication"/> class.
         /// </summary>
+        /// <param name="accessRepo">Supplied through DI.</param>
+        /// <param name="signUpRepo">Supplied through DI.</param>
+        /// <param name="claimRepo">Supplied through DI.</param>
+        /// <param name="personRepo">Supplied through DI.</param>
+        /// <param name="env">Supplied through DI.</param>
+        /// <param name="date">Supplied through DI.</param>
         public UsersAndAuthentication(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SignUpTokenSchema> signUpRepo,
@@ -360,46 +366,47 @@ namespace Carter.App.Route.UsersAndAuthentication
     public class PersonSchema
     {
         #pragma warning disable SA1516
-        /// <value>Id in MongoBD.</value>
+        /// <summary>Id in MongoBD.</summary>
         [BsonIgnoreIfNull]
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
-        /// <value>Subject provided by Google.</value>
+        /// <summary>Subject provided by Google.</summary>
         [BsonElement("id")]
         public string Id { get; set; }
 
-        /// <value>Both first and last name.</value>
+        /// <summary>Both first and last name.</summary>
         [BsonElement("fullname")]
         public string Fullname { get; set; }
 
-        /// <value>Also called given name.</value>
+        /// <summary>Also called given name.</summary>
         [BsonElement("firstname")]
         public string Firstname { get; set; }
 
-        /// <value>Also called surname/family name.</value>
+        /// <summary>Also called surname/family name.</summary>
         [BsonElement("lastname")]
         public string Lastname { get; set; }
 
-        /// <value>Google provided email address.</value>
+        /// <summary>Google provided email address.</summary>
         [BsonElement("email")]
         public string Email { get; set; }
 
-        /// <value>Wether the user should be considered deleted.</value>
+        /// <summary>Wether the user should be considered deleted.</summary>
         [BsonElement("isExisting")]
         public bool IsExisting { get; set; } = true;
 
-        /// <value>Datetime the user was created.</value>
+        /// <summary>Datetime the user was created.</summary>
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
 
-        /// <value>Needed for accessing routes.</value>
+        /// <summary>Needed for accessing routes.</summary>
         [BsonElement("role")]
         public RoleOptions Role { get; set; }
         #pragma warning restore SA1516
     }
 
     // See Startup.cs for the code on how this is serlizalized
+
     /// <summary>
     /// Role types for users.
     /// </summary>
@@ -408,6 +415,7 @@ namespace Carter.App.Route.UsersAndAuthentication
     {
         /// <summary>Can access most routes.</summary>
         Normal,
+
         /// <summary>Can access everything.</summary>
         Admin,
     }
@@ -419,6 +427,7 @@ namespace Carter.App.Route.UsersAndAuthentication
         /// <summary>
         /// Initializes a new instance of the <see cref="PersonRepository"/> class.
         /// </summary>
+        /// <param name="database">A MongoDB database connection.</param>
         public PersonRepository(IMongoDatabase database)
             : base(database, "persons")
         {
@@ -441,27 +450,27 @@ namespace Carter.App.Route.UsersAndAuthentication
     public class AccessTokenSchema
     {
         #pragma warning disable SA1516
-        /// <value>Id in MongoDB.</value>
+        /// <summary>Id in MongoDB.</summary>
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
-        /// <value>Hash of the token.</value>
+        /// <summary>Hash of the token.</summary>
         [BsonElement("hash")]
         public string Hash { get; set; }
 
-        /// <value>User who created the token.</value>
+        /// <summary>User who created the token.</summary>
         [BsonElement("user")]
         public BsonObjectId User { get; set; }
 
-        /// <value>How long for the token to be valid.</value>
+        /// <summary>How long for the token to be valid.</summary>
         [BsonElement("expirationSeconds")]
         public int ExpirationSeconds { get; set; } = 259200; // Three days
 
-        /// <value>Datetime the token was created.</value>
+        /// <summary>Datetime the token was created.</summary>
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
 
-        /// <value>Role of the user who created the token. Prevents an extra lookup.</value>
+        /// <summary>Role of the user who created the token. Prevents an extra lookup.</summary>
         [BsonElement("role")]
         public RoleOptions Role { get; set; }
         #pragma warning restore SA1516
@@ -473,6 +482,7 @@ namespace Carter.App.Route.UsersAndAuthentication
         /// <summary>
         /// Initializes a new instance of the <see cref="AccessTokenRepository"/> class.
         /// </summary>
+        /// <param name="database">A MongoDB database connection.</param>
         public AccessTokenRepository(IMongoDatabase database)
             : base(database, "persons.tokens.accesses")
         {
@@ -485,11 +495,11 @@ namespace Carter.App.Route.UsersAndAuthentication
     public class AccessTokenResponce
     {
         #pragma warning disable SA1516
-        /// <value>Base64 string.</value>
+        /// <summary>Base64 string.</summary>
         [BsonElement("accessToken")]
         public string AccessToken { get; set; }
 
-        /// <value>UTC datetime until this token is valid.</value>
+        /// <summary>UTC datetime until this token is valid.</summary>
         [BsonElement("expiration")]
         public BsonDateTime Expiration { get; set; }
         #pragma warning restore SA1516
@@ -501,31 +511,31 @@ namespace Carter.App.Route.UsersAndAuthentication
     public class ClaimTokenSchema
     {
         #pragma warning disable SA1516
-        /// <value>Id in MongoDB.</value>
+        /// <summary>Id in MongoDB.</summary>
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
-        /// <value>Hash of a token.</value>
+        /// <summary>Hash of a token.</summary>
         [BsonElement("hash")]
         public string Hash { get; set; }
 
-        /// <value>Temporarily held access token.</value>
+        /// <summary>Temporarily held access token.</summary>
         [BsonElement("accessToken")]
         public string AccessToken { get; set; } = null;
 
-        /// <value>Key to the associated access token.</value>
+        /// <summary>Key to the associated access token.</summary>
         [BsonElement("Access")]
         public BsonObjectId Access { get; set; } = null;
 
-        /// <value>Datetime until the token is no longer valid.</value>
+        /// <summary>Datetime until the token is no longer valid.</summary>
         [BsonElement("expirationSeconds")]
         public int ExpirationSeconds { get; set; } = 3600; // One hour
 
-        /// <value>Whether the token has been used yet.</value>
+        /// <summary>Whether the token has been used yet.</summary>
         [BsonElement("isExisting")]
         public bool IsExisting { get; set; } = true;
 
-        /// <value>Datetime the token was created.</value>
+        /// <summary>Datetime the token was created.</summary>
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
         #pragma warning restore SA1516
@@ -537,6 +547,7 @@ namespace Carter.App.Route.UsersAndAuthentication
         /// <summary>
         /// Initializes a new instance of the <see cref="ClaimTokenRepository"/> class.
         /// </summary>
+        /// <param name="database">A MongoDB database connection.</param>
         public ClaimTokenRepository(IMongoDatabase database)
             : base(database, "persons.tokens.claims")
         {
@@ -549,11 +560,11 @@ namespace Carter.App.Route.UsersAndAuthentication
     public class ClaimTokenResponce
     {
         #pragma warning disable SA1516
-        /// <value>Base64 string.</value>
+        /// <summary>Base64 string.</summary>
         [BsonElement("claimToken")]
         public string ClaimToken { get; set; }
 
-        /// <value>UTC datetime of when the token is no longer valid.</value>
+        /// <summary>UTC datetime of when the token is no longer valid.</summary>
         [BsonElement("expiration")]
         public BsonDateTime Expiration { get; set; }
         #pragma warning restore SA1516

@@ -26,6 +26,11 @@ namespace Carter.App.Route.AdminUsers
         /// <summary>
         /// Initializes a new instance of the <see cref="AdminUsers"/> class.
         /// </summary>
+        /// <param name="accessRepo">Supplied through DI.</param>
+        /// <param name="signUpRepo">Supplied through DI.</param>
+        /// <param name="personRepo">Supplied through DI.</param>
+        /// <param name="env">Supplied through DI.</param>
+        /// <param name="date">Supplied through DI.</param>
         public AdminUsers(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SignUpTokenSchema> signUpRepo,
@@ -76,7 +81,7 @@ namespace Carter.App.Route.AdminUsers
     {
         #pragma warning disable SA1516
 
-        /// <value>A list of users.</value>
+        /// <summary>A list of users.</summary>
         [BsonElement("contentList")]
         public List<PersonSchema> ContentList { get; set; }
         #pragma warning restore SA1516

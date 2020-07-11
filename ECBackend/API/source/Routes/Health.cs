@@ -14,6 +14,7 @@ namespace Carter.App.Route.Health
         /// <summary>
         /// Initializes a new instance of the <see cref="Health"/> class.
         /// </summary>
+        /// <param name="logger">Supplied through DI.</param>
         public Health(ILogger logger)
         {
             this.Get("/", async (req, res) =>

@@ -20,6 +20,9 @@ namespace Carter.App.Lib.Network
         /// <summary>
         /// Send a string responce.
         /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
         /// <param name="response">A responce to write to.</param>
         /// <param name="body">The body sent.</param>
         public static async Task FromString(this HttpResponse response, string body = "OK")
@@ -32,6 +35,9 @@ namespace Carter.App.Lib.Network
         /// <summary>
         /// Send a JSON responce.
         /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
         /// <param name="response">A responce to write to.</param>
         /// <param name="json">The json sent.</param>
         public static async Task FromJson(this HttpResponse response, string json)
@@ -44,6 +50,10 @@ namespace Carter.App.Lib.Network
         /// <summary>
         /// Sends a BSON responce.
         /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
+        /// <typeparam name="T">BSON serialzable.</typeparam>
         /// <param name="response">A responce to write to.</param>
         /// <param name="doc">A document to serialize then send.</param>
         public static async Task FromBson<T>(this HttpResponse response, T doc)
@@ -70,6 +80,9 @@ namespace Carter.App.Lib.Network
         /// <returns>
         /// Am encoded string, or null if the encoding needs to be BSON.
         /// </returns>
+        /// <typeparam name="T">JSON        /// <summary>
+        /// Constructor with message.
+        /// </summary> serializable.</typeparam>
         /// <param name="query">Queries to read.</param>
         /// <param name="document">A document to be encoded.</param>
         public static string FulfilEncoding<T>(IQueryCollection query, T document)

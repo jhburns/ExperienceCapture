@@ -5,13 +5,13 @@ namespace Carter.App.Hosting
     /// </summary>
     public class AppConfiguration
     {
-        /// <value>Configuration for MongoDB.</value>
+        /// <summary>Configuration for MongoDB.</summary>
         public static ConnectionConfiguration Mongo { get; set; }
 
-        /// <value>Configuration for Minio.</value>
+        /// <summary>Configuration for Minio.</summary>
         public static ConnectionConfiguration Minio { get; set; }
 
-        /// <value>Configuration for Carter.</value>
+        /// <summary>Configuration for Carter.</summary>
         public CarterOptions CarterOptions { get; set; }
     }
 
@@ -20,7 +20,7 @@ namespace Carter.App.Hosting
     /// </summary>
     public class CarterOptions
     {
-        /// <value>OpenAPI customization.</value>
+        /// <summary>OpenAPI customization.</summary>
         public OpenApi OpenApi { get; set; }
     }
 
@@ -29,10 +29,10 @@ namespace Carter.App.Hosting
     /// </summary>
     public class OpenApi
     {
-        /// <value>Title of the OpenAPI document.</value>
+        /// <summary>Title of the OpenAPI document.</summary>
         public string DocumentTitle { get; set; }
 
-        /// <value>Warning: this does not do anything.</value>
+        /// <summary>Warning: this does not do anything.</summary>
         public string Version { get; set; }
     }
 
@@ -41,10 +41,10 @@ namespace Carter.App.Hosting
     /// </summary>
     public class ConnectionConfiguration
     {
-        /// <value>The url that will be connected to.</value>
+        /// <summary>The url that will be connected to.</summary>
         public string ConnectionString { get; set; }
 
-        /// <value>The port that will be used.</value>
+        /// <summary>The port that will be used.</summary>
         public int Port { get; set; }
     }
 }

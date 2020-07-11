@@ -9,6 +9,7 @@ namespace Carter.App.Lib.Repository
     /// <summary>
     /// Proxies the MongoDB database to make things like unit testing easier.
     /// </summary>
+    /// <typeparam name="TSchema">A MongoDB schema.</typeparam>
     public interface IRepository<TSchema>
     {
         // Query
@@ -56,12 +57,18 @@ namespace Carter.App.Lib.Repository
         /// <summary>
         /// Add a document.
         /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
         /// <param name="item">A single item to be added.</param>
         Task Add(TSchema item);
 
         /// <summary>
         /// Update documents.
         /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
         /// <param name="filter">A criteria to decide with documents to update.</param>
         /// <param name="update">Applied to each document.</param>
         Task Update(FilterDefinition<TSchema> filter, UpdateDefinition<TSchema> update);
@@ -69,6 +76,9 @@ namespace Carter.App.Lib.Repository
         /// <summary>
         /// Index a collection.
         /// </summary>
+        /// <returns>
+        /// A Task.
+        /// </returns>
         /// <param name="key">Which key in the documents to index by.</param>
         /// <param name="options">Additional options for the index.</param>
         Task Index(IndexKeysDefinition<TSchema> key, CreateIndexOptions<TSchema> options = null);
@@ -84,10 +94,11 @@ namespace Carter.App.Lib.Repository
     /// Base implementation of IRepository.
     /// Overrode methods should be sealed to prevent too much nested inheritance.
     /// </summary>
+    /// <inheritdoc />
     public abstract class RepositoryBase<TSchema> : IRepository<TSchema>
     {
         /// <summary>
-        /// Gets the collection for a repository.
+        /// Initializes a new instance of the <see cref="RepositoryBase{TSchema}"/> class.
         /// </summary>
         /// <param name="db">A database.</param>
         /// <param name="collectionName">A collection name that will be associated with the TSchema.</param>
@@ -98,10 +109,10 @@ namespace Carter.App.Lib.Repository
             this.Collection = db.GetCollection<TSchema>(collectionName);
         }
 
-        /// <value>Gets the collection.</value>
+        /// <summary>Gets the collection.</summary>
         protected virtual IMongoCollection<TSchema> Collection { get; set; }
 
-        /// <value>Gets the database. Should only be used for changing collections</value>
+        /// <summary>Gets the database. Should only be used for changing collections.</summary>
         protected virtual IMongoDatabase Database { get; }
 
         /// <inheritdoc />
@@ -125,7 +136,8 @@ namespace Carter.App.Lib.Repository
         }
 
         // This method is going to be Collection specific,
-        // So it will have to overrode
+        // So it will have to be overrode
+
         /// <inheritdoc />
         public virtual Task<TSchema> FindById(string id)
         {

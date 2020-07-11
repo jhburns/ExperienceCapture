@@ -8,25 +8,13 @@ namespace Carter.App.Export.Hosting
     /// </summary>
     public class ExporterConfiguration
     {
-        /// <value>Configuration for MongoDB.</value>
-        public ConnectionConfiguration Mongo
-        {
-            get;
-            set;
-        }
+        /// <summary>Configuration for MongoDB.</summary>
+        public ConnectionConfiguration Mongo { get; set; }
 
-        /// <value>Configuration for Minio.</value>
-        public ConnectionConfiguration Minio
-        {
-            get;
-            set;
-        }
+        /// <summary>Configuration for Minio.</summary>
+        public ConnectionConfiguration Minio { get; set; }
 
-        /// <value>A session id passed to the exporter.</value>
-        public string Id
-        {
-            get;
-            set;
-        }
+        /// <summary>A session id passed to the exporter.</summary>
+        public string Id { get; set; }
     }
 }

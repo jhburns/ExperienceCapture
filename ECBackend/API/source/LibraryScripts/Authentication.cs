@@ -23,7 +23,7 @@ namespace Carter.App.Lib.Authentication
         /// <returns>
         /// The payload received from Google, or null if the token is invalid.
         /// </returns>
-        /// <param name="token">A JWT</param>
+        /// <param name="token">A JWT.</param>
         /// <param name="env">The environment, used to check if validation should be skipped.</param>
         public static async Task<GoogleJsonWebSignature.Payload> ValidateUser(string token, IAppEnvironment env)
         {
@@ -119,7 +119,7 @@ namespace Carter.App.Lib.Authentication
         /// <summary>
         /// Prints out a new password pretty.
         /// </summary>
-        /// <param name="domain">A domain to generate the admin sign up link. (Example: localhost:8090)</param>
+        /// <param name="domain">A domain to generate the admin sign up link. Example: localhost:8090 .</param>
         public static void OutputNew(string domain)
         {
             string password = Generate.GetRandomToken();

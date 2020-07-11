@@ -24,6 +24,9 @@ namespace Carter.App.Route.Tags
         /// <summary>
         /// Initializes a new instance of the <see cref="Tags"/> class.
         /// </summary>
+        /// <param name="accessRepo">Supplied through DI.</param>
+        /// <param name="sessionRepo">Supplied through DI.</param>
+        /// <param name="date">Supplied through DI.</param>
         public Tags(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SessionSchema> sessionRepo,

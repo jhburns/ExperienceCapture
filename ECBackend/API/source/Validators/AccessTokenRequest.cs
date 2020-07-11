@@ -9,10 +9,10 @@ namespace Carter.App.Validation.AccessTokenRequest
     {
         #pragma warning disable SA1516, SA1300
 
-        /// <value>Google JWT to be verified.</value>
+        /// <summary>Google JWT to be verified.</summary>
         public string idToken { get; set; }
 
-        /// <value>Base64 encoded. Optional.</value>
+        /// <summary>Base64 encoded. Optional.</summary>
         public string claimToken { get; set; }
         #pragma warning restore SA151, SA1300
     }

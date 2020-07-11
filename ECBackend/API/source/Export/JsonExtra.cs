@@ -11,6 +11,7 @@ namespace Carter.App.Export.JsonExtra
     public class JsonExtra
     {
         // https://stackoverflow.com/a/36348017
+
         /// <summary>
         /// Converts JSON to a DataTable.
         /// </summary>
@@ -24,6 +25,7 @@ namespace Carter.App.Export.JsonExtra
         }
 
         // https://stackoverflow.com/a/32800161
+
         /// <summary>
         /// Converts JSON into a flat, dictionary form.
         /// </summary>
@@ -74,6 +76,9 @@ namespace Carter.App.Export.JsonExtra
         /// <summary>
         /// An aide in flattening JSON.
         /// </summary>
+        /// <returns>
+        /// A joined, new prefix.
+        /// </returns>
         /// <param name="prefix">A start of a key.</param>
         /// <param name="name">A current key.</param>
         protected static string Join(string prefix, string name)
