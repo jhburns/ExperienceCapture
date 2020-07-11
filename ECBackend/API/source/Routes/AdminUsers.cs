@@ -18,8 +18,14 @@ namespace Carter.App.Route.AdminUsers
     using MongoDB.Bson.Serialization.Attributes;
     using MongoDB.Driver;
 
+    /// <summary>
+    /// Users routes that only administrators should be able to access.
+    /// </summary>
     public class AdminUsers : CarterModule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdminUsers"/> class.
+        /// </summary>
         public AdminUsers(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SignUpTokenSchema> signUpRepo,
@@ -63,9 +69,14 @@ namespace Carter.App.Route.AdminUsers
         }
     }
 
+    /// <summary>
+    /// Responce schema for a list of users.
+    /// </summary>
     public class PersonsResponce
     {
         #pragma warning disable SA1516
+
+        /// <value>A list of users.</value>
         [BsonElement("contentList")]
         public List<PersonSchema> ContentList { get; set; }
         #pragma warning restore SA1516

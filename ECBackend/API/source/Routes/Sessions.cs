@@ -30,8 +30,14 @@ namespace Carter.App.Route.Sessions
 
     using static Microsoft.AspNetCore.Http.StatusCodes;
 
+    /// <summary>
+    /// Session routes.
+    /// </summary>
     public class Sessions : CarterModule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Sessions"/> class.
+        /// </summary>
         public Sessions(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SessionSchema> sessionRepo,
@@ -385,35 +391,46 @@ namespace Carter.App.Route.Sessions
         }
     }
 
+    /// <summary>
+    /// Database schema for a session.
+    /// </summary>
     public class SessionSchema
     {
         #pragma warning disable SA1516
+        /// <value>Id in MongoDB.</value>
         [BsonIgnoreIfNull]
         [BsonId]
         public BsonObjectId InternalId { get; set; }
 
+        /// <value>A human usable unique value.</value>
         [BsonElement("id")]
         public string Id { get; set; }
 
+        /// <value>Whether the session was deleted yet.</value>
         [BsonElement("isOpen")]
         public bool IsOpen { get; set; } = true;
 
+        /// <value>Progress towards the session being exported.</value>
         [BsonElement("exportState")]
         public ExportOptions ExportState { get; set; } = ExportOptions.NotStarted;
 
         // Copying user data instead of referencing so it can never change with the session
         // Also so that it is easy to include when exporting
+        /// <value>A copy the user who created this session's information.</value>
         [BsonElement("user")]
         public PersonSchema User { get; set; }
 
+        /// <value>When the session was created.</value>
         [BsonElement("createdAt")]
         public BsonDateTime CreatedAt { get; set; }
 
+        /// <value>Optional metadata.</value>
         [BsonElement("tags")]
         public List<string> Tags { get; set; }
 
         // This is a proxy-property, and should only
         // Be set when returned
+        /// <value>Whether there has been any recent captured added to this session.</value>
         [BsonIgnoreIfNull]
         [BsonElement("isOngoing")]
         public bool? IsOngoing { get; set; } = null;
@@ -421,17 +438,24 @@ namespace Carter.App.Route.Sessions
         // Is really type 'BsonDateTime', but needs to be
         // A BsonValue in order to serialize null properly
         // See: https://jira.mongodb.org/browse/CSHARP-863
+        /// <value>Datetime of when the last capture was added.</value>
         [BsonElement("lastCaptureAt")]
         public BsonValue LastCaptureAt { get; set; } = BsonNull.Value;
         #pragma warning restore SA1516
     }
 
+    /// <summary>
+    /// Responce schema for a list of sessions.
+    /// </summary>
     public class SessionsResponce
     {
         #pragma warning disable SA1516
+
+        /// <value>Ordered group of sessions.</value>
         [BsonElement("contentList")]
         public List<SessionSchema> ContentList { get; set; }
 
+        /// <value>How many pages exist for this query.</value>
         [BsonElement("pageTotal")]
         public long PageTotal { get; set; }
 
@@ -439,21 +463,34 @@ namespace Carter.App.Route.Sessions
     }
 
     // See Startup.cs for the code on how this is serlizalized
+    /// <summary>
+    /// Possible states of a session export.
+    /// </summary>
     #pragma warning disable SA1201
     public enum ExportOptions
     {
+        /// <summary>When the export is started.</summary>
         NotStarted,
+        /// <summary>When the session is being exported</summary>
         Pending,
+        /// <summary>When the session can be downloaded</summary>
         Done,
+        /// <summary>When the session export needs debugging</summary>
         Error,
     }
     #pragma warning restore SA1201
 
     #pragma warning disable SA1201
+    /// <summary>
+    /// Directions to sort in.
+    /// </summary>
     public enum SortOptions
     {
+        /// <summary>0-9, A-Z. But session ids have to always start with a letter</summary>
         Alphabetical,
+        ///<summary>Datetime descending</summary>
         NewestFirst,
+        ///<summary>Datetime ascending</summary>
         OldestFirst,
     }
     #pragma warning restore SA1201
@@ -461,6 +498,9 @@ namespace Carter.App.Route.Sessions
     /// <inheritdoc />
     public sealed class SessionRepository : RepositoryBase<SessionSchema>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SessionRepository"/> class.
+        /// </summary>
         public SessionRepository(IMongoDatabase database)
             : base(database, "sessions")
         {
@@ -494,7 +534,13 @@ namespace Carter.App.Route.Sessions
                 .ToListAsync();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Custom implementation to be session oriented.
+        /// </summary>
+        /// <returns>
+        /// A document.
+        /// </returns>
+        /// <param name="id">An id to query the database for.</param>
         public override async Task<SessionSchema> FindById(string id)
         {
             var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == id);
@@ -512,12 +558,18 @@ namespace Carter.App.Route.Sessions
     {
         // The session Id isn't know until runtime,
         // So it is constructed as temp
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CapturesRepository"/> class.
+        /// </summary>
         public CapturesRepository(IMongoDatabase database)
             : base(database, "sessions.this.is.temp")
         {
         }
     }
 
+    /// <summary>
+    /// Sorting helper that maps options to sorters.
+    /// </summary>
     internal static class SortExtra
     {
         public static SortDefinition<SessionSchema> ToDefinition(this SortOptions option)

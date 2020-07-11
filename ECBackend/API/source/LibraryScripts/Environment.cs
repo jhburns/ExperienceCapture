@@ -2,7 +2,6 @@ namespace Carter.App.Lib.Environment
 {
     using System;
 
-
     /// <summary>
     /// Contains all of the environment variables needs by the application.
     /// </summary>

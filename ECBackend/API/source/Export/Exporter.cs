@@ -27,6 +27,9 @@ namespace Carter.App.Export.Main
     using MongoDB.Bson.IO;
     using MongoDB.Driver;
 
+    /// <summary>
+    /// Main class for exporting.
+    /// </summary>
     public class ExportHandler
     {
         private static readonly string Seperator = Path.DirectorySeparatorChar.ToString();
@@ -42,11 +45,19 @@ namespace Carter.App.Export.Main
         private static string currentSceneName;
         private static List<string> currentHeader;
 
-        public static void Entry(object id)
+        /// <summary>
+        /// Used when starting an exporter thread.
+        /// </summary>
+        /// <param name="config">Should be of type ExporterConfiguration.</param>
+        public static void Entry(object config)
         {
-            _ = MainAsync((ExporterConfiguration)id);
+            _ = MainAsync((ExporterConfiguration)config);
         }
 
+        /// <summary>
+        /// Needed so async methods can be used.
+        /// </summary>
+        /// <param name="config">Global configuration for a thread.</param>
         protected static async Task MainAsync(ExporterConfiguration config)
         {
             Setup(config);
@@ -84,6 +95,10 @@ namespace Carter.App.Export.Main
             Directory.Delete(prefix, true);
         }
 
+        /// <summary>
+        /// Sets up static properties that act as global variables.
+        /// </summary>
+        /// <param name="config">Contains the session id and connection information.</param>
         protected static void Setup(ExporterConfiguration config)
         {
             sessionId = config.Id;
@@ -95,6 +110,9 @@ namespace Carter.App.Export.Main
             os = new MinioClientExtra(minioHost, "minio", "minio123");
         }
 
+        /// <summary>
+        /// Process captures then writes them to files.
+        /// </summary>
         protected static async Task ExportSession()
         {
             currentHeader = new List<string>();
@@ -178,10 +196,13 @@ namespace Carter.App.Export.Main
             AppendToFile(CreateReadme(), "README.txt");
         }
 
-        /*
-         * Breaks the session collection into blocks, of a constant size or less
-         * Returns: Task<List<long>> of a broken down count of all the documents in a session
-         */
+        /// <summary>
+        /// Breaks the session collection into blocks, of a constant size or less.
+        /// Enables chunked processing of captures, so the process doesn't run out of memory.
+        /// </summary>
+        /// <returns>
+        /// A count of all of captures in each block.
+        /// </returns>
         protected static async Task<List<long>> GetWorkloads()
         {
             var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{sessionId}");
@@ -207,6 +228,14 @@ namespace Carter.App.Export.Main
             return workloads;
         }
 
+        /// <summary>
+        /// Gets captures in a range.
+        /// </summary>
+        /// <returns>
+        /// Captures in order by the 'realtimeSinceStartup' property.
+        /// </returns>
+        /// <param name="workload">How many captures to get.</param>
+        /// <param name="offset">Where to start getting captures from, begining at zero.</param>
         protected static async Task<List<BsonDocument>> SortSession(int workload, int offset)
         {
             var sessionCollection = db.GetCollection<BsonDocument>($"sessions.{sessionId}");
@@ -226,6 +255,12 @@ namespace Carter.App.Export.Main
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Gets metadata about a session.
+        /// </summary>
+        /// <returns>
+        /// Session metadata.
+        /// </returns>
         protected static async Task<SessionSchema> GetSessionInfo()
         {
             var sessions = db.GetCollection<SessionSchema>("sessions");
@@ -238,6 +273,15 @@ namespace Carter.App.Export.Main
                 .FirstOrDefaultAsync();
         }
 
+        /// <summary>
+        /// Converts a list of BSON documents into partial JSON.
+        /// </summary>
+        /// <returns>
+        /// JSON objects in an array, but without closing or ending [].
+        /// </returns>
+        /// <param name="sessionDocs">A group of captures to convert.</param>
+        /// <param name="isFirst">Should be true if these captures are the first in a collection.</param>
+        /// <param name="ws">Additional serialization options.</param>
         protected static string ToJson(List<BsonDocument> sessionDocs, bool isFirst, JsonWriterSettings ws = null)
         {
             StringBuilder docsTotal = new StringBuilder();
@@ -256,16 +300,37 @@ namespace Carter.App.Export.Main
             return docsTotal.ToString();
         }
 
+        /// <summary>
+        /// Converts a BSON document to JSON.
+        /// </summary>
+        /// <returns>
+        /// Serialized JSON, using default serialization settings.
+        /// </returns>
+        /// <param name="sessionDoc">A document.</param>
         protected static string ToJson(BsonDocument sessionDoc)
         {
             return sessionDoc.ToJson(JsonWriterSettings.Defaults);
         }
 
+        /// <summary>
+        /// Converts a session to JSON.
+        /// </summary>
+        /// <returns>
+        /// Serialized JSON, using default serialization settings.
+        /// </returns>
+        /// <param name="sessionDoc">A session.</param>
         protected static string ToJson(SessionSchema sessionDoc)
         {
             return sessionDoc.ToJson(JsonWriterSettings.Defaults);
         }
 
+        /// <summary>
+        /// Converts a list of BSON documents to flat JSON.
+        /// </summary>
+        /// <returns>
+        /// Serialized JSON, flattened into an array.
+        /// </returns>
+        /// <param name="sessionDocs">Documents.</param>
         protected static string ToFlatJson(List<BsonDocument> sessionDocs)
         {
             StringBuilder docsTotal = new StringBuilder();
@@ -290,6 +355,9 @@ namespace Carter.App.Export.Main
             return docsTotal.ToString();
         }
 
+        /// <summary>
+        /// Sets up the JSON writer with custom default settings.
+        /// </summary>
         protected static void ConfigureJsonWriter()
         {
             JsonWriterSettings.Defaults = new JsonWriterSettings()
@@ -299,6 +367,12 @@ namespace Carter.App.Export.Main
             };
         }
 
+        /// <summary>
+        /// Builds CSV configuration.
+        /// </summary>
+        /// <returns>
+        /// A base configuration.
+        /// </returns>
         protected static Configuration GetConfiguration()
         {
             return new Configuration
@@ -309,6 +383,13 @@ namespace Carter.App.Export.Main
             };
         }
 
+        /// <summary>
+        /// Takes a group of captures and separates special or normal ones.
+        /// </summary>
+        /// <returns>
+        /// A list of special captures and a list of normal scene blocks.
+        /// </returns>
+        /// <param name="sessionDocs">Captures.</param>
         protected static (List<BsonDocument> otherCaptures, List<SceneBlock> scenes) ProcessScenes(List<BsonDocument> sessionDocs)
         {
             var sceneDocs = sessionDocs.FindAll(d => d.Contains("sceneName"));
@@ -368,6 +449,13 @@ namespace Carter.App.Export.Main
             return (otherCaptures, sceneMap);
         }
 
+        /// <summary>
+        /// Converts a scene block to JSON.
+        /// </summary>
+        /// <returns>
+        /// A flattened CSV representation of the sceneblock.
+        /// </returns>
+        /// <param name="block">A scene block to serialize.</param>
         protected static string ToCsv(SceneBlock block)
         {
             string json = ToFlatJson(block.Docs);
@@ -375,6 +463,13 @@ namespace Carter.App.Export.Main
             return csv;
         }
 
+        /// <summary>
+        /// Converts JSON to CSV.
+        /// </summary>
+        /// <returns>
+        /// A CSV block.
+        /// </returns>
+        /// <param name="jsonContent">A JSON array.</param>
         protected static string JsonToCsv(string jsonContent)
         {
             StringWriter csvString = new StringWriter();
@@ -398,6 +493,11 @@ namespace Carter.App.Export.Main
             return csvString.ToString();
         }
 
+        /// <summary>
+        /// Copies temporary CSV files to finished files.
+        /// </summary>
+        /// <param name="block">Information for the finished files.</param>
+        /// <param name="about">Extra information for the finished files.</param>
         protected static void CopyCsv(SceneBlock block, string about)
         {
             StringWriter csvString = new StringWriter();
@@ -425,6 +525,13 @@ namespace Carter.App.Export.Main
             currentHeader = new List<string>();
         }
 
+        /// <summary>
+        /// Merges past and current headers together.
+        /// </summary>
+        /// <returns>
+        /// A data table with fixed headers.
+        /// </returns>
+        /// <param name="dt">A data table to merge with past headers.</param>
         protected static DataTable AlignHeaders(DataTable dt)
         {
             var header = dt.Columns.Cast<DataColumn>()
@@ -461,6 +568,12 @@ namespace Carter.App.Export.Main
             return dt;
         }
 
+        /// <summary>
+        /// Templates the README.
+        /// </summary>
+        /// <returns>
+        /// A README with values substituted in the template.
+        /// </returns>
         protected static string CreateReadme()
         {
             string source = System.IO.File.ReadAllText($".{Seperator}Templates{Seperator}README.txt.handlebars");
@@ -474,6 +587,12 @@ namespace Carter.App.Export.Main
             return template(data);
         }
 
+        /// <summary>
+        /// Appends chunks of data to a file.
+        /// </summary>
+        /// <param name="content">Data to be written.</param>
+        /// <param name="filename">Name of the file being appended.</param>
+        /// <param name="path">Location of the file.</param>
         protected static void AppendToFile(string content, string filename, string path = "")
         {
             string fullpath;
@@ -492,12 +611,21 @@ namespace Carter.App.Export.Main
             }
         }
 
+        /// <summary>
+        /// Zips a file and outputs it.
+        /// </summary>
+        /// <param name="location">Where to start zipping from.</param>
+        /// <param name="outName">Where to output the zip to.</param>
         protected static void ZipFolder(string location, string outName)
         {
             ZipFile.CreateFromDirectory(location, outName);
         }
 
         // From: https://docs.min.io/docs/dotnet-client-quickstart-guide.html
+        /// <summary>
+        /// Uploads a file to Minio.
+        /// </summary>
+        /// <param name="fileLocation">Where the file to upload can be found.</param>
         protected static async Task Upload(string fileLocation)
         {
             var bucketName = "sessions.exported";
@@ -526,6 +654,10 @@ namespace Carter.App.Export.Main
             }
         }
 
+        /// <summary>
+        /// Updates the session document when done exporting.
+        /// </summary>
+        /// <param name="status">Information on what caused the end of an export.</param>
         protected static async Task UpdateDoc(ExportOptions status)
         {
             var sessions = db.GetCollection<SessionSchema>("sessions");
@@ -540,13 +672,23 @@ namespace Carter.App.Export.Main
         }
     }
 
-    // Used to group together captures based on timestamps
+    /// <summary>
+    /// Groups captures together based on timestamps.
+    /// </summary>
     public class SceneBlock
     {
         #pragma warning disable SA1516
+
+        /// <value>Scene name, which is non-unique.</value>
         public string Name { get; set; }
+
+        /// <value>Timestamp the scene was started.</value>
         public double StartTime { get; set; }
+
+        /// <value>Number of times the scene was restarted. Begins at zero.</value>
         public int Index { get; set; }
+
+        /// <value>Captures belonging to this block.</value>
         public List<BsonDocument> Docs { get; set; }
         #pragma warning restore SA151
     }

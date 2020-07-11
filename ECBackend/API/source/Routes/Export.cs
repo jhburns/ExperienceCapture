@@ -27,8 +27,14 @@ namespace Carter.App.Route.Export
 
     using static Microsoft.AspNetCore.Http.StatusCodes;
 
+    /// <summary>
+    /// Export routes.
+    /// </summary>
     public class Export : CarterModule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Export"/> class.
+        /// </summary>
         public Export(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SessionSchema> sessionRepo,
@@ -126,6 +132,9 @@ namespace Carter.App.Route.Export
         }
     }
 
+    /// <summary>
+    /// Implementation of IThreadExtra.
+    /// </summary>
     public sealed class ExportThreader : IThreadExtra
     {
         /// <inheritdoc />

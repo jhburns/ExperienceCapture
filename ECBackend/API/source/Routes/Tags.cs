@@ -16,8 +16,14 @@ namespace Carter.App.Route.Tags
 
     using static Microsoft.AspNetCore.Http.StatusCodes;
 
+    /// <summary>
+    /// Tag routes.
+    /// </summary>
     public class Tags : CarterModule
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Tags"/> class.
+        /// </summary>
         public Tags(
             IRepository<AccessTokenSchema> accessRepo,
             IRepository<SessionSchema> sessionRepo,

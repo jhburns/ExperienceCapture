@@ -9,6 +9,7 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
 
+    #pragma warning disable CS1591
     public class Program
     {
         public static void Main(string[] args)
@@ -28,4 +29,5 @@
             host.Run();
         }
     }
+    #pragma warning restore CS1591
 }
