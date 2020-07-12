@@ -96,7 +96,7 @@ namespace Carter.App.Export.Main
                 await UpdateDoc(ExportOptions.Error);
             }
 
-            Directory.Delete(prefix, true);
+            //Directory.Delete(prefix, true);
         }
 
         /// <summary>
@@ -436,23 +436,21 @@ namespace Carter.App.Export.Main
             }
 
             // Otherwise, process each block by scene
-            int index = 0;
-            var currentScene = sceneMap[index];
+            sceneIndex = 0;
+            var currentScene = sceneMap[sceneIndex];
 
-            for (int i = 0; i < normalCaptures.Count; i++)
+            foreach (var doc in normalCaptures)
             {
-                var currentDoc = normalCaptures[i];
-                var currentTimestamp = currentDoc["frameInfo"]["realtimeSinceStartup"].AsDouble;
-                int tempIndex = sceneIndex + 1;
+                var currentTimestamp = doc["frameInfo"]["realtimeSinceStartup"].AsDouble;
 
-                if (tempIndex < sceneMap.Count
-                    && currentTimestamp > sceneMap[tempIndex].StartTime)
+                if (sceneIndex + 1 < sceneMap.Count
+                    && currentTimestamp > sceneMap[sceneIndex + 1].StartTime)
                 {
-                    index++;
-                    currentScene = sceneMap[index];
+                    sceneIndex++;
+                    currentScene = sceneMap[sceneIndex];
                 }
 
-                currentScene.Docs.Add(currentDoc);
+                currentScene.Docs.Add(doc);
             }
 
             return (otherCaptures, sceneMap);
