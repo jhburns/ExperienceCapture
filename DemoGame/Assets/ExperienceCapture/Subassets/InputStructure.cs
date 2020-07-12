@@ -1,16 +1,16 @@
-namespace InputStructure
+namespace Capture.Internal.InputStructure
 {
     using System;
 
     public class SpecificPair
     {
-        public string name {  get; private set; }
-        public string key { get; private set; }
+        public string key {  get; private set; }
+        public string value { get; private set; }
 
-        public SpecificPair(string n, string k)
+        public SpecificPair(string k, string v)
         {
-            name = n;
-            key = k;
+            this.key = k;
+            this.value = v;
         }
     }
 

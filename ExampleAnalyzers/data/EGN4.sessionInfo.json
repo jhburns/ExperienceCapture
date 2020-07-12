@@ -4,11 +4,11 @@
     "timeSinceLevelLoad" : -1.0,
     "unscaledDeltaTime" : -1.0
   },
-  "dateTime" : "2020-02-27T22:32:22.6025950Z",
+  "dateTime" : "2020-07-12T11:10:43.4515778Z",
   "description" : "Session Started",
   "captureRate" : 1,
   "extraInfo" : {
-    "clientVersion" : "1.1.10",
+    "clientVersion" : "1.2.1",
     "gameVersion" : ""
   },
   "special" : true,
@@ -16,27 +16,27 @@
   "playerName" : "Boyd"
 },{
   "frameInfo" : {
-    "realtimeSinceStartup" : 17.776723861694336,
+    "realtimeSinceStartup" : 28.192886352539062,
     "timeSinceLevelLoad" : 0.0,
-    "unscaledDeltaTime" : 0.016776084899902344
+    "unscaledDeltaTime" : 0.028424900025129318
   },
   "description" : "Scene Loaded",
   "sceneName" : "SampleScene",
   "special" : true
 },{
   "frameInfo" : {
-    "realtimeSinceStartup" : 24.578857421875,
+    "realtimeSinceStartup" : 35.284011840820312,
     "timeSinceLevelLoad" : 0.0,
-    "unscaledDeltaTime" : 0.014914989471435547
+    "unscaledDeltaTime" : 0.016452299430966377
   },
   "description" : "Scene Loaded",
   "sceneName" : "SampleScene",
   "special" : true
 },{
   "frameInfo" : {
-    "realtimeSinceStartup" : 31.207639694213867,
+    "realtimeSinceStartup" : 42.064994812011719,
     "timeSinceLevelLoad" : 0.0,
-    "unscaledDeltaTime" : 0.015173912048339844
+    "unscaledDeltaTime" : 0.017000799998641014
   },
   "description" : "Scene Loaded",
   "sceneName" : "SampleScene",

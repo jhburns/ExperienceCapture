@@ -75,6 +75,7 @@ namespace Carter.App.Export.Main
 
                 Directory.CreateDirectory(outFolder);
                 Directory.CreateDirectory($"{outFolder}CSVs{Seperator}");
+                Directory.CreateDirectory($"{outFolder}extras{Seperator}");
 
                 Directory.CreateDirectory(zipFolder);
                 Directory.CreateDirectory(tempFolder);
@@ -132,7 +133,9 @@ namespace Carter.App.Export.Main
                 OutputMode = JsonOutputMode.Strict,
             };
 
-            AppendToFile("[", $"{sessionId}.raw.json");
+            string extrasFolder = $"exported{Seperator}extras{Seperator}";
+
+            AppendToFile("[", $"{sessionId}.raw.json", extrasFolder);
             AppendToFile("[", $"{sessionId}.sessionInfo.json");
             AppendToFile("[", $"{sessionId}.onlyCaptures.json");
 
@@ -144,7 +147,7 @@ namespace Carter.App.Export.Main
                 List<BsonDocument> sessionSorted = await SortSession((int)workloads[i], offset);
 
                 bool isFirst = i == 0;
-                AppendToFile(ToJson(sessionSorted, isFirst, ws), $"{sessionId}.raw.json");
+                AppendToFile(ToJson(sessionSorted, isFirst, ws), $"{sessionId}.raw.json", extrasFolder);
 
                 var (otherCaptures, sceneBlocks) = ProcessScenes(sessionSorted);
                 if (otherCaptures.Count > 0)
@@ -191,13 +194,13 @@ namespace Carter.App.Export.Main
                 }
             }
 
-            AppendToFile("]", $"{sessionId}.raw.json");
+            AppendToFile("]", $"{sessionId}.raw.json", extrasFolder);
             AppendToFile("]", $"{sessionId}.sessionInfo.json");
             AppendToFile("]", $"{sessionId}.onlyCaptures.json");
 
-            AppendToFile("[", $"{sessionId}.database.json");
-            AppendToFile(ToJson(await GetSessionInfo()), $"{sessionId}.database.json");
-            AppendToFile("]", $"{sessionId}.database.json");
+            AppendToFile("[", $"{sessionId}.database.json", extrasFolder);
+            AppendToFile(ToJson(await GetSessionInfo()), $"{sessionId}.database.json", extrasFolder);
+            AppendToFile("]", $"{sessionId}.database.json", extrasFolder);
 
             AppendToFile(CreateReadme(), "README.txt");
         }
@@ -433,23 +436,21 @@ namespace Carter.App.Export.Main
             }
 
             // Otherwise, process each block by scene
-            int index = 0;
-            var currentScene = sceneMap[index];
+            sceneIndex = 0;
+            var currentScene = sceneMap[sceneIndex];
 
-            for (int i = 0; i < normalCaptures.Count; i++)
+            foreach (var doc in normalCaptures)
             {
-                var currentDoc = normalCaptures[i];
-                var currentTimestamp = currentDoc["frameInfo"]["realtimeSinceStartup"].AsDouble;
-                int tempIndex = sceneIndex + 1;
+                var currentTimestamp = doc["frameInfo"]["realtimeSinceStartup"].AsDouble;
 
-                if (tempIndex < sceneMap.Count
-                    && currentTimestamp > sceneMap[tempIndex].StartTime)
+                if (sceneIndex + 1 < sceneMap.Count
+                    && currentTimestamp > sceneMap[sceneIndex + 1].StartTime)
                 {
-                    index++;
-                    currentScene = sceneMap[index];
+                    sceneIndex++;
+                    currentScene = sceneMap[sceneIndex];
                 }
 
-                currentScene.Docs.Add(currentDoc);
+                currentScene.Docs.Add(doc);
             }
 
             return (otherCaptures, sceneMap);

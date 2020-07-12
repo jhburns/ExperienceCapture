@@ -1,0 +1,20 @@
+[{
+  "_id" : { "$oid" : "5f0aefaf37233400074359eb" },
+  "id" : "EGN4",
+  "isOpen" : false,
+  "exportState" : "Pending",
+  "user" : {
+    "_id" : { "$oid" : "5f0abd8e661a860007b87d28" },
+    "id" : "123456789109876543210",
+    "fullname" : "Smitty Jensens",
+    "firstname" : "Smitty",
+    "lastname" : "Jensens",
+    "email" : "smitty@jenkins.com",
+    "isExisting" : true,
+    "createdAt" : { "$date" : 1594539406325 },
+    "role" : "Admin"
+  },
+  "createdAt" : { "$date" : 1594552239515 },
+  "tags" : [],
+  "lastCaptureAt" : { "$date" : 1594552265764 }
+}]

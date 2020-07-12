@@ -44,7 +44,7 @@ Only the non-gameObjects frames, annotated example:
     "gameVersion" : ""
   },
   "special" : true,
-  "targetFrameRate" : -1, // framerate, -1 means VSYNC
+  "targetFrameRate" : -1, // framerate, -1 means the game is VSynced
   "playerName" : "Boyd", // Name of the player
   "frameInfo" : {
     "realtimeSinceStartup" : -1.0,
@@ -97,7 +97,7 @@ EXEX.sceneName.Main.3.csv
 
 Additionally because csv is a table format, all properties are flattened. So, an example header value would be `gameObjects.player.positionX`. And since columns are not flexible like json, `NULL` is used for real null values, undefined properties, and missing game object properties.
 
-## Session_ID.database.json
+## extras/Session_ID.database.json
 
 This data is a [MongoDB document](https://docs.mongodb.com/manual/core/document/) coming straight from the database which is used to store all of the session data. It is generated entirely by the API, meaning none of it comes from the game client.
 
@@ -129,8 +129,6 @@ Here is an example of this file type, with annotations:
 
 In addition, all of the nested keys starting with a dollar sign, `$`, are [extended JSON properties used by MongoDB](https://docs.mongodb.com/manual/reference/mongodb-extended-json/).
 
-## Session_ID.raw.json
+## extras/Session_ID.raw.json
 
 The capture data without any processing. Only useful if the data was exported improperly. This is the only JSON data that isn't formatted, to save space.
-
-[comment1]: <> (/* TODO: Update to latest API version. */)
