@@ -7,7 +7,7 @@ namespace Carter.App.MetaData.Sessions
     using Carter.OpenApi;
 
     #pragma warning disable CS1591
-    public class GetSessionsMetaData : RouteMetaData
+    public class GetSessions : RouteMetaData
     {
     }
     #pragma warning restore CS1591
