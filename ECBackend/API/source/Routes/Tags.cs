@@ -6,6 +6,8 @@ namespace Carter.App.Route.Tags
     using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
 
+    using Carter.App.MetaData.Tags;
+
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.Sessions;
     using Carter.App.Route.UsersAndAuthentication;
@@ -35,7 +37,7 @@ namespace Carter.App.Route.Tags
         {
             this.Before += PreSecurity.CheckAccess(accessRepo, date);
 
-            this.Post("/{tagName}", async (req, res) =>
+            this.Post<PostTags>("/{tagName}", async (req, res) =>
             {
                 string uniqueID = req.RouteValues.As<string>("id");
                 var sessionDoc = await sessionRepo
@@ -65,7 +67,7 @@ namespace Carter.App.Route.Tags
                 await res.FromString();
             });
 
-            this.Delete("/{tagName}", async (req, res) =>
+            this.Delete<DeleteTags>("/{tagName}", async (req, res) =>
             {
                 string uniqueID = req.RouteValues.As<string>("id");
                 var sessionDoc = await sessionRepo

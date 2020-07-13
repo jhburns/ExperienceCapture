@@ -115,7 +115,7 @@ namespace Carter.App.Route.Sessions
                 await res.FromBson(sessionDoc);
             });
 
-            this.Get<GetSessionsMetaData>("/", async (req, res) =>
+            this.Get<GetSessions>("/", async (req, res) =>
             {
                 var builder = Builders<SessionSchema>.Filter;
 
