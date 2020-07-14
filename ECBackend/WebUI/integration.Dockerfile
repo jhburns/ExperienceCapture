@@ -3,7 +3,7 @@ WORKDIR /app
 
 # Needed so that tests always run
 # See: https://create-react-app.dev/docs/running-tests/#continuous-integration
-ENV CI=true
+ENV CI=true EXTEND_ESLINT=true
 
 COPY package.json package-lock.json /app/
 RUN npm ci --silent

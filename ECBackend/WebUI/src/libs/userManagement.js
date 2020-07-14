@@ -9,6 +9,15 @@ const mockId = "123456789109876543210";
 
 const mockToken = "This.is.not.a.real.id.token";
 
+/**
+ * Decides whether to sign up a user, fulfil a claim, or sign in a user.
+ * 
+ * @param {boolean} isMock - When true the site is mocking Google Sign-in.
+ * @param {object} user - A user to submit.
+ * @param {Function} onError - Callback if an error occurs.
+ * @param {object} options - Choose which way to submit the user, default is a normal sign in.
+ * @param {Function} onDuplicate - Optional, and only needed when signing a user up.
+ */
 async function submitUser(
 	isMock = false,
 	user,
@@ -28,6 +37,15 @@ async function submitUser(
 	await signInUser(isMock, user, onError);
 }
 
+/**
+ * Sign up a user.
+ *
+ * @param {boolean} isMock - When true the site is mocking Google Sign-in.
+ * @param {object} user - A user to sign up.
+ * @param {string} signUpToken - Base64 token that is passed to the back-end to sign up.
+ * @param {Function} onError - Callback if an error occurs.
+ * @param {Function} onDuplicate - Callback if the user already exists.
+ */
 async function signUpUser(isMock = true, user, signUpToken, onError, onDuplicate) {
 	let userData = {
 		idToken: mockToken,
@@ -59,6 +77,14 @@ async function signUpUser(isMock = true, user, signUpToken, onError, onDuplicate
 	}
 }
 
+/**
+ * Fulfills a claim.
+ *
+ * @param {boolean} isMock - When true the site is mocking Google Sign-in.
+ * @param {object} user - A user to fulfill a claim for.
+ * @param {string} claimToken - Base64 token that is passed to the back-end.
+ * @param {Function} onError - Callback if an error occurs.
+ */
 async function fulfillClaim(isMock = true, user, claimToken, onError) {
 	let userData = {
 		idToken: mockToken,
@@ -85,8 +111,16 @@ async function fulfillClaim(isMock = true, user, claimToken, onError) {
 	} catch (error) {
 		console.error(error);
 		onError();
-	}}
+	}
+}
 
+/**
+ * Sign in a user.
+ *
+ * @param {boolean} isMock - When true the site is mocking Google Sign-in.
+ * @param {object} user - A user to submit.
+ * @param {Function} onError - Callback if an error occurs.
+ */
 async function signInUser(isMock = true, user, onError) {
 	let userData = {
 		idToken: mockToken,
@@ -117,6 +151,11 @@ async function signInUser(isMock = true, user, onError) {
 	}
 }
 
+/**
+ * Sign out a user.
+ *
+ * @param {boolean} isMock - When true the site is mocking Google Sign-in.
+ */
 async function signOutUser(isMock = false) {
   if (isMock) {
 		return;
@@ -134,6 +173,11 @@ async function signOutUser(isMock = false) {
 	}
 }
 
+/**
+ * Get the signed in user's id.
+ * 
+ * @returns {string} A user id, from Google.
+ */
 function getUserId() {
 	try {
 		const auth2 = gapi.auth2.getAuthInstance();
