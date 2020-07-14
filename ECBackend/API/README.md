@@ -26,6 +26,35 @@ However, there are some limitations to using OpenAPI right now:
 - Response schema in many cases can not be given. Instead, make a request to get the schema in the response informally.
 - The `?ugly=true` query parameter does work, but Swagger UI displays all json pretty anyway.
 
+## Local Authentication
+
+To start using the API locally, open the OpenAPI documentation as described above and follow these steps:
+
+- Create a user, if there isn't one yet, with the `POST /authentication/admins/` route. The response should look like:
+
+```text
+{
+  "signUpToken": "NDi2lOoY7rlxxH7iKlqKinOa3yOc5PCotZXWZAX9UaA=", // <- Copy this value
+  "expiration": {
+    "$date": 1594784700406
+  }
+}
+```
+
+- With the `POST /users/` route, copy the sign up token into the `signUpToken` property, like so:
+
+```plain
+{
+  "idToken": "string",
+  "signUpToken": "NDi2lOoY7rlxxH7iKlqKinOa3yOc5PCotZXWZAX9UaA="
+}
+```
+
+- With the `POST /users/{id}/tokens` route, change the id to: `123456789109876543210`, and delete the `claimToken` property in the request body. Next, copy the `accessToken` value.
+
+- At the top of the page, click on 'Authorize' and paste the token into the 'Value' field. Then select 'Authorize' and close.
+
+
 ## Folder Breakdown
 
 - `source/LibraryScripts/` a collection of common logic.
