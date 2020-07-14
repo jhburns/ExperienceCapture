@@ -122,7 +122,7 @@ namespace Carter.Tests.Route.PreSecurity
 
             var client = CustomHost.Create(accessMock);
 
-            var request = CustomRequest.Create(HttpMethod.Get, "/users/", false);
+            var request = CustomRequest.Create(HttpMethod.Get, "/allUsers/", false);
             request.Headers.TryAddWithoutValidation("Cookie", "ExperienceCapture-Access-Token=" + "ok");
 
             var response = await client.SendAsync(request);

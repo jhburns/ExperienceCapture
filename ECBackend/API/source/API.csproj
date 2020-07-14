@@ -17,6 +17,7 @@
   <ItemGroup>
     <None Include="appsettings.json" CopyToPublishDirectory="Always" />
     <None Include="Templates/README.txt.handlebars" CopyToPublishDirectory="Always" />
+        <None Include="Templates/OpenApiHeader.html" CopyToPublishDirectory="Always" />
   </ItemGroup>
   
   <ItemGroup>

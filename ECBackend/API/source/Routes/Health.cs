@@ -3,6 +3,7 @@ namespace Carter.App.Route.Health
     using Carter;
 
     using Carter.App.Lib.Network;
+    using Carter.App.MetaData.Health;
 
     using Microsoft.Extensions.Logging;
 
@@ -17,14 +18,14 @@ namespace Carter.App.Route.Health
         /// <param name="logger">Supplied through DI.</param>
         public Health(ILogger logger)
         {
-            this.Get("/", async (req, res) =>
+            this.Get<GetRoot>("/", async (req, res) =>
             {
                 // Print here for reference, and to make tutorials more clear
                 logger.LogInformation("Hello World!");
                 await res.FromString("The api server is running.");
             });
 
-            this.Get("/health", async (req, res) =>
+            this.Get<GetHealth>("/health", async (req, res) =>
             {
                 await res.FromString();
             });

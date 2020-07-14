@@ -10,6 +10,8 @@ namespace Carter.App.Route.AdminUsers
     using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
 
+    using Carter.App.MetaData.UsersAndAuthentication;
+
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.ProtectedUsersAndAuthentication;
     using Carter.App.Route.UsersAndAuthentication;
@@ -25,6 +27,7 @@ namespace Carter.App.Route.AdminUsers
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AdminUsers"/> class.
+        /// This is not on the /users/ path because OpenAPI will throw an error.
         /// </summary>
         /// <param name="accessRepo">Supplied through DI.</param>
         /// <param name="signUpRepo">Supplied through DI.</param>
@@ -37,11 +40,11 @@ namespace Carter.App.Route.AdminUsers
             IRepository<PersonSchema> personRepo,
             IAppEnvironment env,
             IDateExtra date)
-            : base("/")
+            : base("/allUsers")
         {
             this.Before += PreSecurity.CheckAccess(accessRepo, date, RoleOptions.Admin);
 
-            this.Get("users", async (req, res) =>
+            this.Get<GetUsers>("/", async (req, res) =>
             {
                 var filter = Builders<PersonSchema>.Filter
                     .Where(p => p.IsExisting == true);

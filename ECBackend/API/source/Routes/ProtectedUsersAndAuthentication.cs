@@ -9,6 +9,8 @@ namespace Carter.App.Route.ProtectedUsersAndAuthentication
     using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
 
+    using Carter.App.MetaData.UsersAndAuthentication;
+
     using Carter.App.Route.PreSecurity;
     using Carter.App.Route.UsersAndAuthentication;
 
@@ -43,12 +45,12 @@ namespace Carter.App.Route.ProtectedUsersAndAuthentication
         {
             this.Before += PreSecurity.CheckAccess(accessRepo, date);
 
-            this.Get("users/{id}/", async (req, res) =>
+            this.Get<GetUser>("users/{id}/", async (req, res) =>
             {
                 string userID = req.RouteValues.As<string>("id");
                 var person = await personRepo.FindById(userID);
 
-                if (person == null)
+                if (person == null || !person.IsExisting)
                 {
                     res.StatusCode = Status404NotFound;
                     return;
@@ -79,7 +81,7 @@ namespace Carter.App.Route.ProtectedUsersAndAuthentication
                 await res.FromBson(person);
             });
 
-            this.Delete("users/{id}/", async (req, res) =>
+            this.Delete<DeleteUser>("users/{id}/", async (req, res) =>
             {
                 string userID = req.RouteValues.As<string>("id");
                 var person = await personRepo.FindById(userID);
@@ -118,7 +120,7 @@ namespace Carter.App.Route.ProtectedUsersAndAuthentication
                 await res.FromString();
             });
 
-            this.Post("authentication/signUps", async (req, res) =>
+            this.Post<PostSignUp>("authentication/signUps", async (req, res) =>
             {
                 string newToken = Generate.GetRandomToken();
 
