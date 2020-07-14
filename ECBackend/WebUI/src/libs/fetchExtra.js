@@ -1,3 +1,9 @@
+/**
+ * Add more options to the base fetch configuration.
+ *
+ * @param {object} customizations - Optional, more configuration options.
+ * @returns {object} A fetch configuration.
+ */
 function config(customizations = {}) {
   const base = {
     mode: 'cors',
@@ -15,7 +21,14 @@ function config(customizations = {}) {
   return merged
 }
 
-async function postData(url = '', data = {}) {
+/**
+ * Make a HTTP POST request.
+ *
+ * @param {string} url - A URL to post.
+ * @param {object} data - Body of the request.
+ * @returns {Response} A server response.
+ */
+async function postData(url, data = {}) {
   const response = await fetch(url, config({
     method: 'POST',
     body: JSON.stringify(data) // body data type must match "Content-Type" header
@@ -29,7 +42,13 @@ async function postData(url = '', data = {}) {
   return responseFinished;
 }
 
-async function getData(url = '') {
+/**
+ * Make a HTTP GET request.
+ *
+ * @param {string} url - A URL to get.
+ * @returns {Response} A server response.
+ */
+async function getData(url) {
   const response = await fetch(url, config({
     method: 'GET',
   }));
@@ -42,7 +61,13 @@ async function getData(url = '') {
   return responseFinished;
 }
 
-async function deleteData(url = '') {
+/**
+ * Make a HTTP DELETE request.
+ *
+ * @param {string} url - A URL to get.
+ * @returns {Response} A server response.
+ */
+async function deleteData(url) {
   const response = await fetch(url, config({
     method: 'DELETE',
   }));
