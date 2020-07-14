@@ -1,6 +1,7 @@
 namespace Carter.App.Hosting
 {
     using System.Collections.Generic;
+    using System.IO;
 
     using Carter;
 
@@ -128,9 +129,10 @@ namespace Carter.App.Hosting
                 // We need to direct it to /api/v1
                 options.SwaggerEndpoint("/api/v1/openapi", this.appConfig.CarterOptions.OpenApi.DocumentTitle);
 
-                // TODO: add a proper header
-                options.HeadContent = string.Empty;
                 options.DocumentTitle = "Experience Capture API";
+
+                string seperator = Path.DirectorySeparatorChar.ToString();
+                options.HeadContent = File.ReadAllText($"Templates{seperator}OpenApiHeader.html");
             });
 
             app.UseEndpoints(builder => builder.MapCarter());
