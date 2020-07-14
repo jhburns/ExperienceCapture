@@ -130,6 +130,7 @@ namespace Carter.App.Hosting
 
                 // TODO: add a proper header
                 options.HeadContent = string.Empty;
+                options.DocumentTitle = "Experience Capture API";
             });
 
             app.UseEndpoints(builder => builder.MapCarter());

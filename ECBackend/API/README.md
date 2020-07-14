@@ -21,6 +21,11 @@ This is the bulk of the logic in the application. Also, this will start the expo
 
 API documentation is available in [OpenAPI format](https://swagger.io/docs/specification/about/) at `http://localhost:8090/api/v1/openapi/ui` after starting the server.
 
+However, there are some limitations to using OpenAPI right now:
+
+- Response schema in many cases can not be given. Instead, make a request to get the schema in the response informally.
+- The `?ugly=true` query parameter does work, but Swagger UI displays all json pretty anyway.
+
 ## Folder Breakdown
 
 - `source/LibraryScripts/` a collection of common logic.

@@ -1,11 +1,5 @@
 namespace Carter.App.MetaData.Tags
 {
-    using System;
-
-    using System.Collections.Generic;
-
-    using Carter.App.Route.Sessions;
-
     using Carter.OpenApi;
 
     using static Microsoft.AspNetCore.Http.StatusCodes;
@@ -21,8 +15,8 @@ namespace Carter.App.MetaData.Tags
 
         public override RouteMetaDataResponse[] Responses { get; } =
         {
-            new RouteMetaDataResponse { Code = Status200OK, Description = "OK" },
-            new RouteMetaDataResponse { Code = Status404NotFound, Description = "Session is NOT FOUND." },
+            new RouteMetaDataResponse { Code = Status200OK, Description = "Ok." },
+            new RouteMetaDataResponse { Code = Status404NotFound, Description = "Session is not found." },
         };
 
         public override string OperationId { get; } = "Sessions_PostTags";
@@ -40,8 +34,8 @@ namespace Carter.App.MetaData.Tags
 
         public override RouteMetaDataResponse[] Responses { get; } =
         {
-            new RouteMetaDataResponse { Code = Status200OK, Description = "OK" },
-            new RouteMetaDataResponse { Code = Status404NotFound, Description = "Session is NOT FOUND." },
+            new RouteMetaDataResponse { Code = Status200OK, Description = "Ok." },
+            new RouteMetaDataResponse { Code = Status404NotFound, Description = "Session is not found." },
         };
 
         public override string OperationId { get; } = "Sessions_DeleteTags";

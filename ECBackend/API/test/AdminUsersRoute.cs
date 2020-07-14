@@ -8,7 +8,6 @@ namespace Carter.Tests.Route.AdminUserRoutes
 
     using Carter.App.Lib.Repository;
     using Carter.App.Route.AdminUsers;
-    using Carter.App.Route.ProtectedUsersAndAuthentication;
     using Carter.App.Route.UsersAndAuthentication;
 
     using Carter.Tests.HostingExtra;
@@ -28,7 +27,7 @@ namespace Carter.Tests.Route.AdminUserRoutes
         {
             var client = CustomHost.Create();
 
-            var request = CustomRequest.Create(HttpMethod.Get, "/users", false);
+            var request = CustomRequest.Create(HttpMethod.Get, "/allUsers", false);
             var response = await client.SendAsync(request);
 
             Assert.True(
@@ -41,7 +40,7 @@ namespace Carter.Tests.Route.AdminUserRoutes
         {
             var client = CustomHost.Create();
 
-            var request = CustomRequest.Create(HttpMethod.Get, "/users");
+            var request = CustomRequest.Create(HttpMethod.Get, "/allUsers");
             var response = await client.SendAsync(request);
 
             Assert.True(
@@ -95,7 +94,7 @@ namespace Carter.Tests.Route.AdminUserRoutes
                 .Verifiable("Persons are never searched for.");
 
             var client = CustomHost.Create(accessMock: accessMock, personMock: personMock);
-            var request = CustomRequest.Create(HttpMethod.Get, "/users");
+            var request = CustomRequest.Create(HttpMethod.Get, "/allUsers");
             var response = await client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
@@ -154,7 +153,7 @@ namespace Carter.Tests.Route.AdminUserRoutes
                 .Verifiable("Persons are never searched for.");
 
             var client = CustomHost.Create(accessMock: accessMock, personMock: personMock);
-            var request = CustomRequest.Create(HttpMethod.Get, "/users?bson=true");
+            var request = CustomRequest.Create(HttpMethod.Get, "/allUsers?bson=true");
             var response = await client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();
@@ -207,7 +206,7 @@ namespace Carter.Tests.Route.AdminUserRoutes
                 .Verifiable("Persons are never searched for.");
 
             var client = CustomHost.Create(accessMock: accessMock, personMock: personMock);
-            var request = CustomRequest.Create(HttpMethod.Get, $"/users{input}");
+            var request = CustomRequest.Create(HttpMethod.Get, $"/allUsers{input}");
             var response = await client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();

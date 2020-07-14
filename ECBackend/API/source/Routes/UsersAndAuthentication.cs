@@ -11,6 +11,8 @@ namespace Carter.App.Route.UsersAndAuthentication
     using Carter.App.Lib.Repository;
     using Carter.App.Lib.Timer;
 
+    using Carter.App.MetaData.UsersAndAuthentication;
+
     using Carter.App.Route.ProtectedUsersAndAuthentication;
 
     using Carter.App.Validation.AccessTokenRequest;
@@ -49,7 +51,7 @@ namespace Carter.App.Route.UsersAndAuthentication
             IDateExtra date)
             : base("/")
         {
-            this.Post("users/", async (req, res) =>
+            this.Post<PostUsers>("users", async (req, res) =>
             {
                 var newPerson = await req.BindAndValidate<PersonRequest>();
 
@@ -133,7 +135,7 @@ namespace Carter.App.Route.UsersAndAuthentication
                 await res.FromString();
             });
 
-            this.Post("users/{id}/tokens/", async (req, res) =>
+            this.Post<PostAccessToken>("users/{id}/tokens/", async (req, res) =>
             {
                 string userID = req.RouteValues.As<string>("id");
                 var userDoc = await personRepo.FindById(userID);
@@ -227,7 +229,7 @@ namespace Carter.App.Route.UsersAndAuthentication
                 }
             });
 
-            this.Post("authentication/claims/", async (req, res) =>
+            this.Post<PostClaims>("authentication/claims/", async (req, res) =>
             {
                 string newToken = Generate.GetRandomToken();
                 string newHash = PasswordHasher.Hash(newToken);
@@ -257,7 +259,7 @@ namespace Carter.App.Route.UsersAndAuthentication
                 await res.FromBson(responce.ToBsonDocument());
             });
 
-            this.Get("authentication/claims/", async (req, res) =>
+            this.Get<GetClaims>("authentication/claims/", async (req, res) =>
             {
                 string claimToken = req.Cookies["ExperienceCapture-Claim-Token"];
                 if (claimToken == null)
@@ -315,7 +317,7 @@ namespace Carter.App.Route.UsersAndAuthentication
                 await res.FromBson(responce.ToBsonDocument());
             });
 
-            this.Post("authentication/admins/", async (req, res) =>
+            this.Post<PostAdmin>("authentication/admins/", async (req, res) =>
             {
                 var newAdmin = await req.BindAndValidate<AdminPasswordRequest>();
                 if (!newAdmin.ValidationResult.IsValid)
