@@ -8,6 +8,9 @@ describe('Claim Page', () => {
       .then(() => {
         cy.get('[data-cy=go-root]')
           .click();
-      });
+      })
+      .then(() => {
+        cy.get('[data-cy=go-home]');
+      })
   });
 });

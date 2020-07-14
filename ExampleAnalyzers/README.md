@@ -25,5 +25,3 @@ How to use:
 - File > Save a copy in Drive.
 - Press 'play' on the first code block, and select the `EGN4.onlyCaptures.json` file to upload.
 - Press 'play' on the second code block.
-
-[comment2]: <> (TODO: Update to latest exporter format)
