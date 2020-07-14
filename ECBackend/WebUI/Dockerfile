@@ -10,7 +10,7 @@ RUN npm install --silent
 
 # Saving the arg for later, so both dev and prod can have the same environment
 ARG REACT_APP_GOOGLE_CLIENT_ID
-ENV REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID
+ENV REACT_APP_GOOGLE_CLIENT_ID=$REACT_APP_GOOGLE_CLIENT_ID EXTEND_ESLINT=true
 
 # Start app
 ENTRYPOINT []

@@ -23,9 +23,35 @@
     "lint": "eslint \"**/*.js\" --max-warnings=0"
   },
   "eslintConfig": {
+    "plugins": [
+      "jsdoc"
+    ],
     "extends": [
       "react-app"
-    ]
+    ],
+    "rules": {
+      "jsdoc/check-alignment": "warning",
+      "jsdoc/check-indentation": "warning",
+      "jsdoc/check-param-names": "warning",
+      "jsdoc/check-syntax": "warning",
+      "jsdoc/check-tag-names": "warning",
+      "jsdoc/check-types": "warning",
+      "jsdoc/match-description": "warning",
+      "jsdoc/newline-after-description": "warning",
+      "jsdoc/no-undefined-types": "warning",
+      "jsdoc/require-description": "warning",
+      "jsdoc/require-description-complete-sentence": "warning",
+      "jsdoc/require-jsdoc": "warning",
+      "jsdoc/require-param": "warning",
+      "jsdoc/require-param-description": "warning",
+      "jsdoc/require-param-name": "warning",
+      "jsdoc/require-param-type": "warning",
+      "jsdoc/require-returns": "warning",
+      "jsdoc/require-returns-check": "warning",
+      "jsdoc/require-returns-description": "warning",
+      "jsdoc/require-returns-type": "warning",
+      "jsdoc/valid-types": "warning"
+    }
   },
   "jest": {
     "transformIgnorePatterns": [
@@ -54,6 +80,7 @@
     "eslint-config-react-app": "^5.1.0",
     "eslint-plugin-flowtype": "^3.13.0",
     "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsdoc": "^29.2.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^1.7.0",
