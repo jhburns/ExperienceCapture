@@ -43,7 +43,7 @@ To start using the API locally, open the OpenAPI documentation as described abov
 
 - With the `POST /users/` route, copy the sign up token into the `signUpToken` property, like so:
 
-```plain
+```text
 {
   "idToken": "string",
   "signUpToken": "NDi2lOoY7rlxxH7iKlqKinOa3yOc5PCotZXWZAX9UaA="
@@ -53,7 +53,6 @@ To start using the API locally, open the OpenAPI documentation as described abov
 - With the `POST /users/{id}/tokens` route, change the id to: `123456789109876543210`, and delete the `claimToken` property in the request body. Next, copy the `accessToken` value.
 
 - At the top of the page, click on 'Authorize' and paste the token into the 'Value' field. Then select 'Authorize' and close.
-
 
 ## Folder Breakdown
 
