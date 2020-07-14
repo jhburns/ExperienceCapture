@@ -10,6 +10,8 @@ namespace Carter.App.Route.Export
     using Carter.App.Export.Main;
     using Carter.App.Hosting;
 
+    using Carter.App.MetaData.Export;
+
     using Carter.App.Lib.ExporterExtra;
     using Carter.App.Lib.MinioExtra;
     using Carter.App.Lib.Network;
@@ -50,7 +52,7 @@ namespace Carter.App.Route.Export
         {
             this.Before += PreSecurity.CheckAccess(accessRepo, date);
 
-            this.Post("/", async (req, res) =>
+            this.Post<PostExport>("/", async (req, res) =>
             {
                 string id = req.RouteValues.As<string>("id");
 
@@ -91,7 +93,7 @@ namespace Carter.App.Route.Export
                 await res.FromString();
             });
 
-            this.Get("/", async (req, res) =>
+            this.Get<GetExport>("/", async (req, res) =>
             {
                 string id = req.RouteValues.As<string>("id");
                 var sessionDoc = await sessionRepo.FindById(id);
