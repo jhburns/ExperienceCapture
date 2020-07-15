@@ -16,7 +16,7 @@ it('exists', () => {
   expect(wrapper.find('a').exists()).toBeTruthy();
 });
 
-it('has valid link', () => {
+it('has valid links', () => {
   const wrapper = mount(<Footer />);
 
   wrapper.find('a').forEach((node) => {
