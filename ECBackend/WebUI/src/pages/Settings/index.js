@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import Menu from 'components/Menu';
-import SignOutButton from 'components/SignOutButton';
 import GetSignUpLink from 'components/GetSignUpLink';
 
 import { signOutUser } from 'libs/userManagement';
@@ -96,7 +95,13 @@ class SettingsPage extends Component {
           </Row>
           <Row className="m-0 justify-content-center mb-3">
             <Col xs={7} md={4} xl={3}>
-              <SignOutButton onClickCallback={this.onSignOut} />
+                <Button
+                  onClick={this.onSignOut}
+                  className="btn btn-outline-dark btn-block"
+                  data-cy="sign-out"
+                >
+                  Sign Out
+                </Button>
             </Col>
           </Row>
           <Row className="m-0 justify-content-center">
