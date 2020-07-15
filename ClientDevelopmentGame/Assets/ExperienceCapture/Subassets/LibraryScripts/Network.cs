@@ -134,8 +134,16 @@ namespace Capture.Internal.Network
         }
     }
 
+    /// <summary>
+    /// Helpers for serializing objects.
+    /// </summary>
     class Serial
     {
+        /// <summary>
+        /// Serialize an object.
+        /// </summary>
+        /// <param name="obj">An object to be serialized</param>
+        /// <returns>An object, BSON encoded.</returns>
         public static byte[] toBSON(object obj)
         {
             MemoryStream memStream = new MemoryStream();
@@ -147,22 +155,42 @@ namespace Capture.Internal.Network
             return memStream.ToArray();
         }
 
-        public static T fromBSON<T>(MemoryStream memStream)
+        /// <summary>
+        /// Deserialize to an object.
+        /// </summary>
+        /// <typeparam name="T">Of the returned object, required.</typeparam>
+        /// <param name="data">BSON encoded.</param>
+        /// <returns>Deserialized data.</returns>
+        public static T fromBSON<T>(byte[] data)
         {
             T obj;
+            MemoryStream memStream = new MemoryStream(data);
+
             using (BsonReader reader = new BsonReader(memStream))
             {
                 JsonSerializer serializer = new JsonSerializer();
 
                 obj = serializer.Deserialize<T>(reader);
             }
+ 
             return obj;
         }
     }
 
+    /// <summary>
+    /// A wrapper to make secrets easier to store.
+    /// </summary>
     public class SecretStorage
     {
+        /// <summary>
+        /// A token needed to authenticate with the server.
+        /// </summary>
         public string accessToken { get; private set; }
+
+        /// <summary>
+        /// Construct a SecretStorage.
+        /// </summary>
+        /// <param name="a">An access token</param>
         public SecretStorage(string a)
         {
             accessToken = a;

@@ -151,8 +151,7 @@
 
                     try
                     {
-                        MemoryStream memStream = new MemoryStream(data);
-                        ClaimData responce = Serial.fromBSON<ClaimData>(memStream);
+                        ClaimData responce = Serial.fromBSON<ClaimData>(data);
 
                         StartCoroutine(WaitThenOpen(responce));
                     }
@@ -201,8 +200,7 @@
                 {
                     try
                     {
-                        MemoryStream memStream = new MemoryStream(data);
-                        AccessData responce = Serial.fromBSON<AccessData>(memStream);
+                        AccessData responce = Serial.fromBSON<AccessData>(data);
 
                         store = new SecretStorage(responce.accessToken);
                         createSession();
@@ -236,8 +234,7 @@
 
                     try
                     {
-                        MemoryStream memStream = new MemoryStream(data);
-                        SessionData responce = Serial.fromBSON<SessionData>(memStream);
+                        SessionData responce = Serial.fromBSON<SessionData>(data);
 
                         sessionInfo.text = sessionInfoSave + responce.id;
                         sessionID = responce.id;

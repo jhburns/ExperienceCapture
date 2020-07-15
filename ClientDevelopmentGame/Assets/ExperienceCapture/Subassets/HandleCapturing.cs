@@ -10,7 +10,6 @@
     using System.Linq;
 
     using Newtonsoft.Json;
-    using UnityEngine.Networking;
     using Capture.Internal.Network;
 
     using Capture.Internal.InputStructure;
