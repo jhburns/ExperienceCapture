@@ -13,16 +13,16 @@ describe('Settings Page', () => {
       .click()
       .then(() => {
         cy.get('[data-cy=cancel-delete]')
-          .click()
+          .click();
       })
       .then(() => {
         cy.get('[data-cy=delete-account]')
-          .click()
+          .click();
       })
       .then(() => {
         cy.get('[data-cy=confirm-delete]')
-          .click()
-      })
+          .click();
+      });
   });
 
   it('Deletes other user\'s account.', () => {
