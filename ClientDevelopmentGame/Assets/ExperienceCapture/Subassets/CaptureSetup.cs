@@ -138,10 +138,12 @@
             connectionInfo.gameObject.SetActive(true);
 
             // Content of the body is ignored
-            string emptyBody = new { }.ToString();
+            byte[] emptyBody = Serial.toBSON(new { });
             url = urlInput.text.Trim('/');
 
-            StartCoroutine(HTTPHelpers.post(url + "/api/v1/authentication/claims?bson=true", emptyBody,
+            StartCoroutine(HTTPHelpers.post(url + "/api/v1/authentication/claims?bson=true",
+                emptyBody,
+                store.accessToken,
                 (data) =>
                 {
                     openingInfo.gameObject.SetActive(true);

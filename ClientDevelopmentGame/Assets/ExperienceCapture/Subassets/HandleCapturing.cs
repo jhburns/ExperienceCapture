@@ -382,24 +382,17 @@
 
         private IEnumerator deleteSession()
         {
-            using (UnityWebRequest request = UnityWebRequest.Delete(url + sessionPath + id))
-            {
-                request.method = UnityWebRequest.kHttpVerbDELETE;
-                request.SetRequestHeader("Cookie", "ExperienceCapture-Access-Token=" + store.accessToken);
-
-                yield return request.SendWebRequest();
-
-                if (request.isNetworkError || request.isHttpError)
-                {
-                    Debug.Log(request.error);
-                }
-                else
+            return HTTPHelpers.delete(url + sessionPath + id, store.accessToken,
+                (data) =>
                 {
                     Debug.Log("Finished cleanup, exiting for you.");
-                }
 
-                quit();
-            }
+                    quit();
+                },
+                (error) =>
+                {
+                    Debug.Log(error);
+                });
         }
 
         private void quit()
