@@ -382,7 +382,7 @@
         private IEnumerator deleteSession()
         {
             return HTTPHelpers.delete(url + sessionPath + id, store.accessToken,
-                (data) =>
+                () =>
                 {
                     Debug.Log("Finished cleanup, exiting for you.");
 

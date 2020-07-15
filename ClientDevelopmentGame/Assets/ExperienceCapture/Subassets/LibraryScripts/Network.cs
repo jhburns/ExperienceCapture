@@ -109,7 +109,7 @@ namespace Capture.Internal.Network
         /// <returns>An IEnumerator.</returns>
         static public IEnumerator delete(string url,
             string token,
-            Action<byte[]> onSuccess,
+            Action onSuccess,
             Action<string> onError)
         {
             using (UnityWebRequest request = UnityWebRequest.Delete(url))
@@ -128,7 +128,7 @@ namespace Capture.Internal.Network
                 }
                 else
                 {
-                    onSuccess(request.downloadHandler.data);
+                    onSuccess();
                 }
             }
         }

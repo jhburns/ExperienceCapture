@@ -10,9 +10,6 @@
         /// </summary>
         public float Value { get; private set; }
 
-        /// <summary>
-        /// When true, find the minimum value. False maximum.
-        /// </summary>
         private bool isMinimum;
 
         /// <summary>

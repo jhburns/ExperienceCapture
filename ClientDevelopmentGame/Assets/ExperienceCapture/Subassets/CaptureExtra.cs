@@ -81,9 +81,6 @@ namespace Capture
     /// </summary>
     public class CaptureConfig
     {
-        /// <summary>
-        /// Default cleanup key of 'q'.
-        /// </summary>
         private static KeyCode cleanupKey = KeyCode.Q;
 
         // Basic getters/setters because default values means no { get; set; }

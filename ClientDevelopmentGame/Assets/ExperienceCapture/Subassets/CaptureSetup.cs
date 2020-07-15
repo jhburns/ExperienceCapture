@@ -8,8 +8,6 @@
 
     using UnityEngine.UI;
 
-    using System.IO;
-
     using Capture.Internal.Network;
 
     public class CaptureSetup : MonoBehaviour
@@ -114,7 +112,7 @@
             clientVersion = clientVersionLocked;
         }
 
-        public void validateArguments()
+        private void validateArguments()
         {
             if (captureRate <= 0)
             {
@@ -143,7 +141,7 @@
 
             StartCoroutine(HTTPHelpers.post(url + "/api/v1/authentication/claims?bson=true",
                 emptyBody,
-                store.accessToken,
+                string.Empty,
                 (data) =>
                 {
                     openingInfo.gameObject.SetActive(true);
