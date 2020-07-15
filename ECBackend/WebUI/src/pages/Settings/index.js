@@ -13,7 +13,7 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter
+  ModalFooter,
 } from '@bootstrap-styled/v4';
 
 import { Wrapper } from 'components/SingleSession/style';

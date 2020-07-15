@@ -4,7 +4,6 @@ const Wrapper = styled.section`
 
 `;
 
-
 const Google = styled.button`
     background-color: Transparent;
     background-repeat: no-repeat;
