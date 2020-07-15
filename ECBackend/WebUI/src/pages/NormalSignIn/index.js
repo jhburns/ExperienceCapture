@@ -30,8 +30,8 @@ class NormalSignInPage extends Component {
               <GoogleSignIn clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID} />
             </Col>
           </Row>
+          </Container>
           <Footer />
-        </Container>
       </Wrapper>
     );
   }
