@@ -6,7 +6,16 @@ import GetSignUpLink from 'components/GetSignUpLink';
 
 import { signOutUser } from 'libs/userManagement';
 
-import { Container, Row, Col, Button, } from '@bootstrap-styled/v4';
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
+} from '@bootstrap-styled/v4';
 
 import { Wrapper } from 'components/SingleSession/style';
 
@@ -23,10 +32,12 @@ class SettingsPage extends Component {
     
     this.state = {
       user: null,
+      isOpen: false,
     };
 
     this.onSignOut = this.onSignOut.bind(this);
     this.onDelete = this.onDelete.bind(this);
+    this.toggle = this.toggle.bind(this);
   }
 
   async onSignOut() {
@@ -43,6 +54,12 @@ class SettingsPage extends Component {
     }
 
     this.props.history.push('/');
+  }
+
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
   }
 
   async componentDidMount() {
@@ -82,14 +99,27 @@ class SettingsPage extends Component {
               <SignOutButton onClickCallback={this.onSignOut} />
             </Col>
           </Row>
-          {/* TODO: add pop-up asking for confirmation */}
           <Row className="m-0 justify-content-center">
             <Col xs={7} md={4} xl={3}>
               <Button
                 className="btn btn-danger btn-block"
-                onClick={this.onDelete}
+                onClick={this.toggle}
                 data-cy="delete-account"
-              >Delete Account</Button>
+              >
+                Delete Account
+              </Button>
+              <div>
+                <Modal isOpen={this.state.isOpen} toggle={this.toggle}>
+                  <ModalHeader toggle={this.toggle}>Delete Confirmation</ModalHeader>
+                  <ModalBody>
+                    Are you sure you want to delete your account?
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="primary" onClick={this.onDelete}>Delete</Button>
+                    <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                  </ModalFooter>
+                </Modal>
+              </div>
             </Col>
           </Row>
           {isAdmin && <UserList />}
