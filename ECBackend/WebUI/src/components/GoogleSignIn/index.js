@@ -3,16 +3,15 @@
 import React, { Component } from 'react';
 
 import { submitUser, signOutUser, } from "libs/userManagement";
-import SignOutButton from "components/SignOutButton"
 import ClaimNotify from "components/ClaimNotify";
-
-import HomeButton from 'components/HomeButton';
 
 import { Wrapper, Google, } from 'components/GoogleSignIn/style';
 
-import { Row, Col, } from '@bootstrap-styled/v4';
+import { Row, Col, Button } from '@bootstrap-styled/v4';
 
 import LoginBox from 'components/LoginBox';
+
+import { Link } from "react-router-dom";
 
 class SignIn extends Component {
   constructor(props) {
@@ -22,7 +21,7 @@ class SignIn extends Component {
 	    isSignedOut: false, 
 	    isMock: false,
       isUnableToSignIn: false,
-	    isDuplicateSignIn: false,
+	    isDuplicateSignUp: false,
     }
 
     this.onSuccess = this.onSuccess.bind(this);
@@ -38,14 +37,22 @@ class SignIn extends Component {
     const signOutRow =
       <Row className="justify-content-center">
         <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
-          <SignOutButton onClickCallback={this.onSignOut} />
+          <Button
+            onClick={this.onSignOut}
+            className="btn btn-outline-dark btn-block"
+            data-cy="sign-out"
+          >
+            Sign Out
+          </Button>
         </Col>
       </Row>;
 
     const homeRow =
       <Row className="justify-content-center">
         <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
-          <HomeButton />
+          <Link to="/home/start" className="btn btn-dark btn-block" data-cy="go-home">
+            Go Home
+          </Link>
         </Col>
       </Row>;
 
@@ -66,7 +73,7 @@ class SignIn extends Component {
           {signOutRow}
         </Wrapper>
       )
-    } else if (this.state.isDuplicateSignIn) {
+    } else if (this.state.isDuplicateSignUp) {
       return (
         <Wrapper data-cy="already-notify">
           <LoginBox>
@@ -130,7 +137,7 @@ class SignIn extends Component {
 
   onDuplicate() {
     this.setState({
-      isDuplicateSignIn: true,
+      isDuplicateSignUp: true,
       isSignedIn: true,
     });
   }
@@ -142,7 +149,7 @@ class SignIn extends Component {
     this.setState({
 	    isSignedIn: false,
       isSignedOut: true,
-      isDuplicateSignIn: false,
+      isDuplicateSignUp: false,
       isUnableToSignIn: false,
     }, () => gapi.load('signin2', this.renderLogin(isMock)));
   }

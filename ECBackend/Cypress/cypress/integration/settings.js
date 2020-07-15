@@ -10,7 +10,19 @@ describe('Settings Page', () => {
     cy.visit("/home/settings");
 
     cy.get('[data-cy=delete-account]')
-      .click();
+      .click()
+      .then(() => {
+        cy.get('[data-cy=cancel-delete]')
+          .click();
+      })
+      .then(() => {
+        cy.get('[data-cy=delete-account]')
+          .click();
+      })
+      .then(() => {
+        cy.get('[data-cy=confirm-delete]')
+          .click();
+      });
   });
 
   it('Deletes other user\'s account.', () => {
