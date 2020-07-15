@@ -8,8 +8,6 @@
 
     using UnityEngine.UI;
 
-    using System.IO;
-
     using Capture.Internal.Network;
 
     public class CaptureSetup : MonoBehaviour
@@ -114,7 +112,7 @@
             clientVersion = clientVersionLocked;
         }
 
-        public void validateArguments()
+        private void validateArguments()
         {
             if (captureRate <= 0)
             {
@@ -138,10 +136,12 @@
             connectionInfo.gameObject.SetActive(true);
 
             // Content of the body is ignored
-            string emptyBody = new { }.ToString();
+            byte[] emptyBody = Serial.toBSON(new { });
             url = urlInput.text.Trim('/');
 
-            StartCoroutine(HTTPHelpers.post(url + "/api/v1/authentication/claims?bson=true", emptyBody,
+            StartCoroutine(HTTPHelpers.post(url + "/api/v1/authentication/claims?bson=true",
+                emptyBody,
+                string.Empty,
                 (data) =>
                 {
                     openingInfo.gameObject.SetActive(true);
@@ -149,8 +149,7 @@
 
                     try
                     {
-                        MemoryStream memStream = new MemoryStream(data);
-                        ClaimData responce = Serial.fromBSON<ClaimData>(memStream);
+                        ClaimData responce = Serial.fromBSON<ClaimData>(data);
 
                         StartCoroutine(WaitThenOpen(responce));
                     }
@@ -199,8 +198,7 @@
                 {
                     try
                     {
-                        MemoryStream memStream = new MemoryStream(data);
-                        AccessData responce = Serial.fromBSON<AccessData>(memStream);
+                        AccessData responce = Serial.fromBSON<AccessData>(data);
 
                         store = new SecretStorage(responce.accessToken);
                         createSession();
@@ -234,8 +232,7 @@
 
                     try
                     {
-                        MemoryStream memStream = new MemoryStream(data);
-                        SessionData responce = Serial.fromBSON<SessionData>(memStream);
+                        SessionData responce = Serial.fromBSON<SessionData>(data);
 
                         sessionInfo.text = sessionInfoSave + responce.id;
                         sessionID = responce.id;

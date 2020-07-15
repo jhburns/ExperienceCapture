@@ -2,11 +2,26 @@ namespace Capture.Internal.InputStructure
 {
     using System;
 
+    /// <summary>
+    /// Structure for the Limit Output list.
+    /// </summary>
     public class SpecificPair
     {
+        /// <summary>
+        /// How to identify and value.
+        /// </summary>
         public string key {  get; private set; }
+        
+        /// <summary>
+        /// A value.
+        /// </summary>
         public string value { get; private set; }
 
+        /// <summary>
+        /// Construct a SpecificPair
+        /// </summary>
+        /// <param name="k">A key.</param>
+        /// <param name="v">A value.</param>
         public SpecificPair(string k, string v)
         {
             this.key = k;
@@ -14,6 +29,9 @@ namespace Capture.Internal.InputStructure
         }
     }
 
+    /// <summary>
+    /// Should be used whenever a pair fails parsing.
+    /// </summary>
     public class SpecificPairsParsingException : Exception
     {
         public SpecificPairsParsingException()
@@ -31,28 +49,6 @@ namespace Capture.Internal.InputStructure
         }
 
         public SpecificPairsParsingException(string message, Exception inner)
-            : base(message, inner)
-        {
-        }
-    }
-
-    public class SpecificPairsNotFoundException : Exception
-    {
-        public SpecificPairsNotFoundException()
-        {
-        }
-
-        public SpecificPairsNotFoundException(string message)
-            : base(message)
-        {
-        }
-
-        public SpecificPairsNotFoundException(string message, string objectName, string keyName)
-            : base(string.Format("{0}: of {1}.{2}", message, objectName, keyName))
-        {
-        }
-
-        public SpecificPairsNotFoundException(string message, Exception inner)
             : base(message, inner)
         {
         }
