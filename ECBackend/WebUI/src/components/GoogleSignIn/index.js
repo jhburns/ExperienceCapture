@@ -22,7 +22,7 @@ class SignIn extends Component {
 	    isSignedOut: false, 
 	    isMock: false,
       isUnableToSignIn: false,
-	    isDuplicateSignIn: false,
+	    isDuplicateSignUp: false,
     }
 
     this.onSuccess = this.onSuccess.bind(this);
@@ -66,7 +66,7 @@ class SignIn extends Component {
           {signOutRow}
         </Wrapper>
       )
-    } else if (this.state.isDuplicateSignIn) {
+    } else if (this.state.isDuplicateSignUp) {
       return (
         <Wrapper data-cy="already-notify">
           <LoginBox>
@@ -130,7 +130,7 @@ class SignIn extends Component {
 
   onDuplicate() {
     this.setState({
-      isDuplicateSignIn: true,
+      isDuplicateSignUp: true,
       isSignedIn: true,
     });
   }
@@ -142,7 +142,7 @@ class SignIn extends Component {
     this.setState({
 	    isSignedIn: false,
       isSignedOut: true,
-      isDuplicateSignIn: false,
+      isDuplicateSignUp: false,
       isUnableToSignIn: false,
     }, () => gapi.load('signin2', this.renderLogin(isMock)));
   }
