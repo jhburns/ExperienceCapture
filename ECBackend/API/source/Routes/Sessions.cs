@@ -55,7 +55,7 @@ namespace Carter.App.Route.Sessions
         {
             this.Before += PreSecurity.CheckAccess(accessRepo, date);
 
-            this.Post("/", async (req, res) =>
+            this.Post<PostSessions>("/", async (req, res) =>
             {
                 string uniqueID = Generate.GetRandomId(4);
 
@@ -115,7 +115,7 @@ namespace Carter.App.Route.Sessions
                 await res.FromBson(sessionDoc);
             });
 
-            this.Get<GetSessionsMetaData>("/", async (req, res) =>
+            this.Get<GetSessions>("/", async (req, res) =>
             {
                 var builder = Builders<SessionSchema>.Filter;
 
@@ -243,7 +243,7 @@ namespace Carter.App.Route.Sessions
                 await res.FromBson(clientValues);
             });
 
-            this.Post("/{id}", async (req, res) =>
+            this.Post<PostSession>("/{id}", async (req, res) =>
             {
                 string uniqueID = req.RouteValues.As<string>("id");
 
@@ -324,7 +324,7 @@ namespace Carter.App.Route.Sessions
                 await res.FromString();
             });
 
-            this.Get("/{id}", async (req, res) =>
+            this.Get<GetSession>("/{id}", async (req, res) =>
             {
                 string uniqueID = req.RouteValues.As<string>("id");
 
@@ -374,7 +374,7 @@ namespace Carter.App.Route.Sessions
                 await res.FromBson(sessionDoc);
             });
 
-            this.Delete("/{id}", async (req, res) =>
+            this.Delete<DeleteSession>("/{id}", async (req, res) =>
             {
                 string uniqueID = req.RouteValues.As<string>("id");
 

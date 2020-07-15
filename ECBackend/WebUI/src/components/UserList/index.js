@@ -30,7 +30,7 @@ class UserList extends Component {
   }
 
   async getUsers() {
-    const url = `/api/v1/users/`;
+    const url = `/api/v1/allUsers/`;
     const request = await getData(url);
 
     if (!request.ok) {

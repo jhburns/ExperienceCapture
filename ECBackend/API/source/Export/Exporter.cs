@@ -96,7 +96,7 @@ namespace Carter.App.Export.Main
                 await UpdateDoc(ExportOptions.Error);
             }
 
-            //Directory.Delete(prefix, true);
+            Directory.Delete(prefix, true);
         }
 
         /// <summary>

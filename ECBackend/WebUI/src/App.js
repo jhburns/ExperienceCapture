@@ -30,6 +30,11 @@ const theme = {
 
 verifyEnvironment(["REACT_APP_GOOGLE_CLIENT_ID"]);
 
+/**
+ * The entry point for the application.
+ *
+ * @returns {object} The application.
+ */
 function App() {
   return (
     <div className="App">

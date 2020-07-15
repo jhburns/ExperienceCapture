@@ -23,7 +23,5 @@ How to use:
 
 - [Open the notebook](https://colab.research.google.com/drive/1qRGDUrbBuMuix6RU0Kd4fGJs2J5lowXo).
 - File > Save a copy in Drive.
-- Press 'play' on the first code block, and select the `FHEB.onlyCaptures.json` file to upload.
+- Press 'play' on the first code block, and select the `EGN4.onlyCaptures.json` file to upload.
 - Press 'play' on the second code block.
-
-[comment2]: <> (TODO: Update to latest exporter format)
