@@ -15,7 +15,7 @@ class Footer extends Component {
               href="https://github.com/jhburns/ExperienceCapture/tree/master/Documentation#documentation"
               target="_blank" rel="noopener noreferrer"
             >
-              HELP
+              Help
           </Item>
           </Col>
           <Col className="text-center">
@@ -31,7 +31,7 @@ class Footer extends Component {
               href="https://github.com/jhburns/ExperienceCapture/"
               target="_blank" rel="noopener noreferrer"
             >
-              GITHUB
+              GitHub
           </Item>
           </Col>
           <Col>
