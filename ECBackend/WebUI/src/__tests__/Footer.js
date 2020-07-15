@@ -16,14 +16,10 @@ it('exists', () => {
   expect(wrapper.find('a').exists()).toBeTruthy();
 });
 
-it('has uppercase text', () => {
+it('has valid links', () => {
   const wrapper = mount(<Footer />);
 
-  expect(validator.isUppercase(wrapper.find('a').text())).toBeTruthy();
-});
-
-it('has valid link', () => {
-  const wrapper = mount(<Footer />);
-
-  expect(validator.isURL(wrapper.find('a').props().href)).toBeTruthy();
+  wrapper.find('a').forEach((node) => {
+    expect(validator.isURL(node.props().href, { require_host: false, })).toBeTruthy();
+  });
 });
