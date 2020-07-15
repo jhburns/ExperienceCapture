@@ -115,8 +115,8 @@ class SettingsPage extends Component {
                     Are you sure you want to delete your account?
                   </ModalBody>
                   <ModalFooter>
-                    <Button color="primary" onClick={this.onDelete}>Delete</Button>
-                    <Button color="secondary" onClick={this.toggle}>Cancel</Button>
+                    <Button color="primary" data-cy="confirm-delete" onClick={this.onDelete}>Delete</Button>
+                    <Button color="secondary" data-cy="cancel-delete" onClick={this.toggle}>Cancel</Button>
                   </ModalFooter>
                 </Modal>
               </div>
