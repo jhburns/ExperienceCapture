@@ -56,8 +56,6 @@ namespace Carter.App.Route.ProtectedUsersAndAuthentication
                     return;
                 }
 
-                person.InternalId = null;
-
                 // Has to exit due to pre-security check
                 string token = req.Cookies["ExperienceCapture-Access-Token"];
                 var accessToken = await accessRepo.FindOne(
@@ -78,6 +76,8 @@ namespace Carter.App.Route.ProtectedUsersAndAuthentication
                     return;
                 }
 
+                person.InternalId = null;
+
                 await res.FromBson(person);
             });
 
@@ -91,8 +91,6 @@ namespace Carter.App.Route.ProtectedUsersAndAuthentication
                     res.StatusCode = Status404NotFound;
                     return;
                 }
-
-                person.InternalId = null;
 
                 // Has to exit due to pre-security check
                 string token = req.Cookies["ExperienceCapture-Access-Token"];
