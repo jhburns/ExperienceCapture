@@ -19,7 +19,7 @@ class OptionSelector extends Component {
       items.push(
         <DropdownItem
           key={index}
-          onClick={() => { 
+          onClick={() => {
             this.props.onClick(value)
             this.setState({ isOpen: false });
           }}

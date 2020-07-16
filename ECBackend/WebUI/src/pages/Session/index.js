@@ -64,7 +64,7 @@ class SessionPage extends Component {
       if (!exportRequest.ok) {
         throw Error(exportRequest.status);
       }
-      
+
       const currentSession = await this.getSession();
       this.setState({
         session: currentSession,

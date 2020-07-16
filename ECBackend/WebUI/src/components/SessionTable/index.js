@@ -78,7 +78,7 @@ class SessionTable extends Component {
 
     const url = `/api/v1/sessions?${query}`;
     const request = await getData(url);
-    
+
     if (!request.ok) {
       throw new Error(request.status);
     }
@@ -116,17 +116,17 @@ class SessionTable extends Component {
     let mappedOption = null;
 
     switch (option) {
-      case "Alphabetically":
-        mappedOption = "alphabetical";
-        break;
-      case "Oldest First":
-        mappedOption = "oldestFirst";
-        break;
-      case "Newest First":
-        mappedOption = "newestFirst";
-        break;
-      default:
-        throw new Error("Returned option to Session Table is not valid.");
+    case "Alphabetically":
+      mappedOption = "alphabetical";
+      break;
+    case "Oldest First":
+      mappedOption = "oldestFirst";
+      break;
+    case "Newest First":
+      mappedOption = "newestFirst";
+      break;
+    default:
+      throw new Error("Returned option to Session Table is not valid.");
     }
 
     await this.navigatePages(1, mappedOption);
@@ -148,9 +148,9 @@ class SessionTable extends Component {
     const isEmpty = () => items.length === 0;
 
     for (const [index, value] of this.state.sessions.entries()) {
-      items.push(<SessionRow 
+      items.push(<SessionRow
         key={index}
-        sessionData={value} 
+        sessionData={value}
         buttonData={this.props.buttonData !== undefined ? {
           body: this.props.buttonData.body,
           onClick: this.onTag

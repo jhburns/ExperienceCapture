@@ -10,6 +10,8 @@ import queryString from 'query-string';
 
 import Footer from "components/Footer";
 
+import { environmentVariables } from "libs/environment";
+
 class ClaimPage extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +47,7 @@ class ClaimPage extends Component {
           <Row className="justify-content-center" noGutters={true}>
             <Col xs={10} >
               <GoogleSignIn
-                clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                clientId={environmentVariables["REACT_APP_GOOGLE_CLIENT_ID"]}
                 claimToken={this.state.claimToken}
               />
             </Col>

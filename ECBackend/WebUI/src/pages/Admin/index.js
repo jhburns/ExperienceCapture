@@ -26,7 +26,7 @@ class Admin extends Component {
       isWaiting: false
     });
   }
-  
+
   onError() {
     this.setState({
       isError: true,

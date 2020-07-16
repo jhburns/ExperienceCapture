@@ -16,7 +16,7 @@ class Footer extends Component {
               target="_blank" rel="noopener noreferrer"
             >
               Help
-          </Item>
+            </Item>
           </Col>
           <Col className="text-center">
             <Item
@@ -24,7 +24,7 @@ class Footer extends Component {
               target="_blank" rel="noopener noreferrer"
             >
               API
-          </Item>
+            </Item>
           </Col>
           <Col className="text-center">
             <Item
@@ -32,7 +32,7 @@ class Footer extends Component {
               target="_blank" rel="noopener noreferrer"
             >
               GitHub
-          </Item>
+            </Item>
           </Col>
           <Col>
             <P className="text-muted">

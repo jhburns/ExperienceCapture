@@ -28,7 +28,7 @@ import UserList from 'components/UserList';
 class SettingsPage extends Component {
   constructor(props) {
     super(props)
-    
+
     this.state = {
       user: null,
       isOpen: false,
@@ -66,7 +66,7 @@ class SettingsPage extends Component {
 
     const url = `/api/v1/users/${id}/`;
     const request = await getData(url);
-    
+
     if (!request.ok) {
       throw new Error(request.status);
     }
@@ -95,13 +95,13 @@ class SettingsPage extends Component {
           </Row>
           <Row className="m-0 justify-content-center mb-3">
             <Col xs={7} md={4} xl={3}>
-                <Button
-                  onClick={this.onSignOut}
-                  className="btn btn-outline-dark btn-block"
-                  data-cy="sign-out"
-                >
-                  Sign Out
-                </Button>
+              <Button
+                onClick={this.onSignOut}
+                className="btn btn-outline-dark btn-block"
+                data-cy="sign-out"
+              >
+                Sign Out
+              </Button>
             </Col>
           </Row>
           <Row className="m-0 justify-content-center">

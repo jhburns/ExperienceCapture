@@ -12,7 +12,7 @@ import About from "components/About";
 
 class SingleSession extends Component {
   render() {
-    const isExportDisabled = this.props.sessionData.exportState === "Pending" 
+    const isExportDisabled = this.props.sessionData.exportState === "Pending"
       || this.props.sessionData.isOngoing;
 
     const isNotExported = !(this.props.sessionData.exportState === "Done");
@@ -32,12 +32,12 @@ class SingleSession extends Component {
             <h5 className="mb-4">Status: {
               !this.props.sessionData.isOpen ?
                 "Completed"
-              :
+                :
                 this.props.sessionData.isOngoing ?
                   "Ongoing"
-                :
+                  :
                   "Closed Unexpectedly"
-              }
+            }
             </h5>
             {isNotExported ?
               <div>
@@ -51,7 +51,7 @@ class SingleSession extends Component {
                 </button>
                 <About message={about} />
               </div>
-            :
+              :
               <Link
                 to={`/api/v1/sessions/${this.props.sessionData.id}/export/`}
                 target="_blank"

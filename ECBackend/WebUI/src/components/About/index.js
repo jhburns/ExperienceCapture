@@ -24,7 +24,7 @@ class About extends Component {
         >
           ?
         </Prompt>
-        <Tooltip 
+        <Tooltip
           placement="right"
           target="about-tooltip"
           isOpen={this.state.isOpen}

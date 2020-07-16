@@ -18,7 +18,7 @@ class SignIn extends Component {
     super(props);
     this.state = {
       isSignedIn: false,
-	    isSignedOut: false, 
+	    isSignedOut: false,
 	    isMock: false,
       isUnableToSignIn: false,
 	    isDuplicateSignUp: false,
@@ -118,7 +118,7 @@ class SignIn extends Component {
           {googleRow}
         </Wrapper>
       )
-    }   
+    }
   }
 
   renderLogin(isMock) {
@@ -129,7 +129,7 @@ class SignIn extends Component {
       onsuccess: this.onSuccess,
       onfailure: this.onFailure
     }
-    
+
 	  if (!isMock) {
       gapi.signin2.render('loginButton', opts);
     }
@@ -180,12 +180,12 @@ class SignIn extends Component {
       claimToken: this.props.claimToken,
     };
     await submitUser(true, null, this.onFailure, options, this.onDuplicate);
-    
+
   	this.setState({
 	    isSignedIn: true,
 	    isMock: true,
     });
-    
+
     console.log(err);
   }
 
