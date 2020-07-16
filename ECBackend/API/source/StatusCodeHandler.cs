@@ -25,7 +25,8 @@ namespace Carter.App.StatusCodeHandler
         public Task Handle(HttpContext ctx)
         {
             string seperator = Path.DirectorySeparatorChar.ToString();
-            var source = File.ReadAllText($"Templates{seperator}ErrorPage.html.handlebars");
+            var filepath = $"{seperator}app{seperator}source{seperator}Templates{seperator}ErrorPage.html.handlebars";
+            var source = File.ReadAllText(filepath);
 
             var template = Handlebars.Compile(source);
 
