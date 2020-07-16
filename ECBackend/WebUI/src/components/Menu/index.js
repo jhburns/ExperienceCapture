@@ -37,7 +37,9 @@ class Menu extends Component {
               onClick={() => this.setState({ isOpen: !this.state.isOpen })}
               className="ml-auto"
               data-cy="menu-hamburger"
-            />
+              aria-label="Navbar toggle"
+            >
+            </NavbarToggler>
             <Collapse navbar isOpen={this.state.isOpen} data-cy="menu-collapse">
               <Nav navbar className="mr-auto">
                 <MenuLink locationPath={location.pathname} to="/home/start" linkText="Home" />
