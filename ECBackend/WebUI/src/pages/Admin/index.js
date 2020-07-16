@@ -9,12 +9,12 @@ import { Wrapper } from 'pages/Admin/style';
 class Admin extends Component {
 
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       isError: false,
       isWaiting: true,
       accessToken: null,
-    }
+    };
 
     this.onSuccess = this.onSuccess.bind(this);
     this.onError = this.onError.bind(this);
@@ -26,7 +26,7 @@ class Admin extends Component {
       isWaiting: false
     });
   }
-  
+
   onError() {
     this.setState({
       isError: true,
@@ -62,14 +62,14 @@ class Admin extends Component {
         <Wrapper>
           <p>One sec...</p>
         </Wrapper>
-      )
+      );
     } else if (this.state.isError) {
       return (
         <Wrapper>
           <p>Password is Invalid</p>
           <p>Check console</p>
         </Wrapper>
-      )
+      );
     } else {
       return (
         <Wrapper>
@@ -81,7 +81,7 @@ class Admin extends Component {
             }}
           />
         </Wrapper>
-      )
+      );
     }
   }
 }

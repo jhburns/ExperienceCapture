@@ -22,7 +22,7 @@ class Menu extends Component {
     super(props);
     this.state = {
       isOpen: false,
-    }
+    };
   }
 
   render() {
@@ -48,7 +48,7 @@ class Menu extends Component {
           </Container>
         </Navbar>
       </Wrapper>
-    )
+    );
   }
 }
 

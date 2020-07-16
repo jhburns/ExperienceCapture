@@ -1,3 +1,5 @@
+/*eslint no-process-env: "off"*/
+
 const htmlWebpackInjectAttributesPlugin = require('html-webpack-inject-attributes-plugin');
 
 // This override is needed to allow cypress to report
@@ -10,6 +12,6 @@ module.exports = function override(config, env) {
       })
     );
   }
-  
+
   return config;
-}
+};

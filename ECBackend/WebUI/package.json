@@ -51,7 +51,27 @@
       "jsdoc/require-returns-check": 1,
       "jsdoc/require-returns-description": 1,
       "jsdoc/require-returns-type": 1,
-      "jsdoc/valid-types": 1
+      "jsdoc/valid-types": 1,
+      "dot-location": [
+        "warn",
+        "object"
+      ],
+      "jsx-quotes": "warn",
+      "no-multiple-empty-lines": "warn",
+      "no-process-env": "warn",
+      "semi-style": [
+        "warn",
+        "last"
+      ],
+      "no-trailing-spaces": "warn",
+      "indent": [
+        "warn",
+        2
+      ],
+      "semi": [
+        "warn",
+        "always"
+      ]
     }
   },
   "jest": {

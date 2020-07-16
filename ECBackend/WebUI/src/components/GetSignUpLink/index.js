@@ -4,7 +4,7 @@ import queryString from 'query-string';
 
 import { postData } from 'libs/fetchExtra';
 
-import { Text, Wrapper, } from "components/GetSignUpLink/style"
+import { Text, Wrapper, } from "components/GetSignUpLink/style";
 
 class GetSignUpLink extends Component {
   constructor(props) {

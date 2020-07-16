@@ -32,7 +32,7 @@ class Tutorial extends Component {
           </ol>
         </Info>
       </Wrapper>
-    )
+    );
   }
 }
 

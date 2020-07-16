@@ -10,6 +10,8 @@ import queryString from 'query-string';
 
 import Footer from "components/Footer";
 
+import { environmentVariables } from "libs/environment";
+
 class SignUpPage extends Component {
   constructor(props) {
     super(props);
@@ -45,7 +47,7 @@ class SignUpPage extends Component {
           <Row className="justify-content-center" noGutters={true}>
             <Col xs={10} >
               <GoogleSignIn
-                clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                clientId={environmentVariables["REACT_APP_GOOGLE_CLIENT_ID"]}
                 signUpToken={this.state.signUpToken}
               />
             </Col>
@@ -53,7 +55,7 @@ class SignUpPage extends Component {
           <Footer />
         </Container>
       </Wrapper>
-    )
+    );
   }
 }
 

@@ -16,9 +16,9 @@ function config(customizations = {}) {
     referrerPolicy: 'no-referrer',
   };
 
-  const merged = Object.assign(base, customizations) 
+  const merged = Object.assign(base, customizations);
 
-  return merged
+  return merged;
 }
 
 /**
@@ -52,7 +52,7 @@ async function getData(url) {
   const response = await fetch(url, config({
     method: 'GET',
   }));
-  
+
   const responseFinished = await response;
   if (responseFinished.status === 401) {
     throw new Error("Response says unauthorized.");
