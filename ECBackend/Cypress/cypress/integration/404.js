@@ -3,7 +3,7 @@ describe('404 page', () => {
     cy.visit('/this/should/never/exist/')
       .then(() => {
         cy.get('[data-cy=sign-in-link]')
-          .click()
+          .click();
       });
   });
 });

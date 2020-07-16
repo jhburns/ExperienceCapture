@@ -38,7 +38,7 @@ describe('Settings Page', () => {
     cy.get('[data-cy=new-sign-up]')
       .click()
       .then(() => {
-        cy.get('[data-cy=sign-up-link]')
+        cy.get('[data-cy=sign-up-link]');
       })
       .then((link) => {
         const url = link.text();

@@ -6,9 +6,9 @@ describe('Root Page', () => {
       .click()
       .then(() => {
         cy.url()
-        .should((u) => {
-          assert.include(u, "/home/start", "The home button goes to the wrong url.");
-        });
+          .should((u) => {
+            assert.include(u, "/home/start", "The home button goes to the wrong url.");
+          });
       });
   });
 
@@ -22,4 +22,4 @@ describe('Root Page', () => {
         cy.get('[data-cy=go-home]').should('not.exist');
       });
   });
-})
+});
