@@ -3,7 +3,7 @@ describe('Claim Page', () => {
     cy.request({ method: 'POST', url: '/api/v1/authentication/claims', failOnStatusCode: true })
       .then((response) => {
         const encodedClaim = encodeURIComponent(response.body.claimToken);
-        cy.visit(`/signInFor?claimToken=${encodedClaim}`)
+        cy.visit(`/signInFor?claimToken=${encodedClaim}`);
       })
       .then(() => {
         cy.get('[data-cy=go-root]')
@@ -11,6 +11,6 @@ describe('Claim Page', () => {
       })
       .then(() => {
         cy.get('[data-cy=go-home]');
-      })
+      });
   });
 });

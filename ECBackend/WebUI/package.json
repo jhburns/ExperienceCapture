@@ -52,10 +52,6 @@
       "jsdoc/require-returns-description": 1,
       "jsdoc/require-returns-type": 1,
       "jsdoc/valid-types": 1,
-      "dot-location": [
-        "warn",
-        "object"
-      ],
       "jsx-quotes": "warn",
       "no-multiple-empty-lines": "warn",
       "no-process-env": "warn",

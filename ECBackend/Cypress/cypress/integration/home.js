@@ -2,7 +2,7 @@ describe('Home page', () => {
   it('Displays ongoing sessions.', () => {
     cy.request({ method: 'POST', url: '/api/v1/sessions', failOnStatusCode: true })
       .then(() => {
-        cy.visit('/home/start')
+        cy.visit('/home/start');
       })
       .then(() => {
         cy.get('[data-cy=session-row]');

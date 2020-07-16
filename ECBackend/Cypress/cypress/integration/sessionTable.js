@@ -2,14 +2,14 @@ describe('Session Table', () => {
   it('Is empty when there are no sessions.', () => {
     cy.visit("/home/sessions")
       .then(() => {
-        cy.get('[data-cy=session-row]').should('not.exist')
+        cy.get('[data-cy=session-row]').should('not.exist');
       })
       .then(() => {
-        cy.get('[data-cy=sessions-empty]')
+        cy.get('[data-cy=sessions-empty]');
       })
       .then((message) => {
         assert.isNotNull(message, 'Empty sessions table does not display a message.');
-      });      
+      });
   });
 
   it('Displays a session.', () => {

@@ -24,7 +24,7 @@ describe('Navbar', () => {
     cy.get('[data-cy=menu-hamburger]')
       .click()
       .then(() => {
-        cy.get('[data-cy=menu-link]')  
+        cy.get('[data-cy=menu-link]');
       })
       .then((links) => {
         assert.strictEqual(links.length, 3, "There aren't the correct number of menu links.");

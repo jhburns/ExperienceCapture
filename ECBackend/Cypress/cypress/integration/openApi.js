@@ -13,4 +13,11 @@ describe('OpenAPI', () => {
         cy.get('[data-cy=go-home]');
       });
   });
+
+  it('Is linked to from status error pages.', () => {
+    cy.visit('/api/v1/sessions/does-no-exist', { failOnStatusCode: false })
+      .then(() => {
+        cy.get('[data-cy=openapi-link]');
+      });
+  });
 });

@@ -6,14 +6,14 @@ describe('Session page', () => {
       })
       .then(() => {
         cy.get('[data-cy=session-link]')
-          .click()
+          .click();
       })
       .then(() => {
         cy.get('[data-cy=session-export]')
           .click();
       })
       .then(() => {
-        cy.get('[data-cy=session-download]')
+        cy.get('[data-cy=session-download]');
       })
       .then((button) => {
         assert.isNotNull(button, 'After exporting, there is no download button.');
@@ -27,21 +27,21 @@ describe('Session page', () => {
       })
       .then(() => {
         cy.get('[data-cy=session-link]')
-          .click()
+          .click();
       })
       .then(() => {
         cy.get('[data-cy=about-prompt]')
-          .trigger('mouseover')
+          .trigger('mouseover');
       })
       .then(() => {
         cy.get('[data-cy=about-tooltip]').should('be.visible');
       })
       .then(() => {
         cy.get('[data-cy=about-prompt]')
-          .trigger('mouseout')
+          .trigger('mouseout');
       })
       .then(() => {
         cy.get('[data-cy=about-tooltip]').should('be.not.visible');
-      })
+      });
   });
 });

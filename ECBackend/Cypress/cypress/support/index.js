@@ -39,6 +39,6 @@ beforeEach(() => {
     .then(() => {
       // Wait until it can sign In
       cy.get('[data-cy=go-home]');
-    })    
+    });
 });
 

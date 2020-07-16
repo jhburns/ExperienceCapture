@@ -15,7 +15,7 @@ describe('Session Table', () => {
           .click();
       })
       .then(() => {
-        cy.get('[data-cy=session-date]')
+        cy.get('[data-cy=session-date]');
       })
       .then((dateElements) => {
         const dates = dateElements.toArray().map((date) => moment(date.text));
@@ -34,7 +34,7 @@ describe('Session Table', () => {
         cy.visit("/home/sessions");
       })
       .then(() => {
-        cy.get('[data-cy=session-date]')
+        cy.get('[data-cy=session-date]');
       })
       .then((dateElements) => {
         const dates = dateElements.toArray().map((date) => moment(date.text));
@@ -61,7 +61,7 @@ describe('Session Table', () => {
           .click();
       })
       .then(() => {
-        cy.get('[data-cy=session-link]')
+        cy.get('[data-cy=session-link]');
       })
       .then((idElements) => {
         const ids = idElements.toArray().map((id) => id.text);
