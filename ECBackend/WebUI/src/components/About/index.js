@@ -6,11 +6,11 @@ import { Tooltip } from '@bootstrap-styled/v4';
 
 class About extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       isOpen: false,
-    }
+    };
 
   }
 
@@ -38,7 +38,7 @@ class About extends Component {
           {this.props.message}
         </Tooltip>
       </Wrapper>
-    )
+    );
   }
 }
 export default About;

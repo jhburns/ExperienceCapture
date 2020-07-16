@@ -55,7 +55,7 @@ class SignUpPage extends Component {
           <Footer />
         </Container>
       </Wrapper>
-    )
+    );
   }
 }
 

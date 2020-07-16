@@ -17,7 +17,7 @@ class ClaimPage extends Component {
     super(props);
     this.state = {
       claimToken: null,
-    }
+    };
   }
 
   componentDidMount() {
@@ -55,7 +55,7 @@ class ClaimPage extends Component {
           <Footer />
         </Container>
       </Wrapper>
-    )
+    );
   }
 }
 

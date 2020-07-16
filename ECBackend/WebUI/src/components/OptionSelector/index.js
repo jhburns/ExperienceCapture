@@ -5,11 +5,11 @@ import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, } from '@bootstra
 
 class OptionSelector extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       isOpen: false
-    }
+    };
   }
 
   render() {
@@ -20,7 +20,7 @@ class OptionSelector extends Component {
         <DropdownItem
           key={index}
           onClick={() => {
-            this.props.onClick(value)
+            this.props.onClick(value);
             this.setState({ isOpen: false });
           }}
           data-cy={`session-sort-${value.replace(' ', '-')}`}
@@ -43,7 +43,7 @@ class OptionSelector extends Component {
           </DropdownMenu>
         </Dropdown>
       </Wrapper>
-    )
+    );
   }
 }
 

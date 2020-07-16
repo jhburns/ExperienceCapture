@@ -8,7 +8,7 @@ import { Row, Col, } from '@bootstrap-styled/v4';
 // This component can only be used by admins
 class UserList extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       users: [],
@@ -85,7 +85,7 @@ class UserList extends Component {
         </Row>
         {items}
       </Wrapper>
-    )
+    );
   }
 }
 

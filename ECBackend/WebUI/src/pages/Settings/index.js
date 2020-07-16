@@ -27,7 +27,7 @@ import UserList from 'components/UserList';
 
 class SettingsPage extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       user: null,

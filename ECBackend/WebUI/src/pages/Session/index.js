@@ -13,11 +13,11 @@ import Footer from "components/Footer";
 
 class SessionPage extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       session: null,
-    }
+    };
 
     this.onExport = this.onExport.bind(this);
     this.getSession = this.getSession.bind(this);
@@ -40,7 +40,7 @@ class SessionPage extends Component {
       exportState: sessionsData.exportState,
       isOpen: sessionsData.isOpen,
       isOngoing: sessionsData.isOngoing
-    }
+    };
 
     // Poll based on session state
     if (["Done", "NotStarted", "Error"].includes(cleanedSession.exportState)) {
@@ -128,7 +128,7 @@ class SessionPage extends Component {
           <Footer />
         </Container>
       </Wrapper>
-    )
+    );
   }
 }
 

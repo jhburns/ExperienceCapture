@@ -16,9 +16,9 @@ function config(customizations = {}) {
     referrerPolicy: 'no-referrer',
   };
 
-  const merged = Object.assign(base, customizations)
+  const merged = Object.assign(base, customizations);
 
-  return merged
+  return merged;
 }
 
 /**

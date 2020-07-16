@@ -35,7 +35,7 @@ class SessionRow extends Component {
           </td>
         }
       </Wrapper>
-    )
+    );
   }
 }
 

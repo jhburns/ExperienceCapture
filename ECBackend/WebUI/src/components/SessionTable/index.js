@@ -14,7 +14,7 @@ import queryString from 'query-string';
 
 class SessionTable extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       sessions: [],
@@ -22,7 +22,7 @@ class SessionTable extends Component {
       pageNumber: 1,
       pageTotal: 0,
       sort: 'newestFirst'
-    }
+    };
 
     this.onTag = this.onTag.bind(this);
     this.getSessions = this.getSessions.bind(this);
@@ -92,7 +92,7 @@ class SessionTable extends Component {
         id: s.id,
         fullname: s.user.fullname,
         createdAt: s.createdAt.$date
-      }
+      };
     });
 
     return {
@@ -156,7 +156,7 @@ class SessionTable extends Component {
           onClick: this.onTag
         } : undefined}
         isRenderingDate={this.props.isRenderingDate}
-      />)
+      />);
     }
 
     return (
@@ -217,7 +217,7 @@ class SessionTable extends Component {
           </Col>
         </Row>
       </Wrapper>
-    )
+    );
   }
 }
 

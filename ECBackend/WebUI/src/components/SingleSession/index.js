@@ -66,7 +66,7 @@ class SingleSession extends Component {
           </Col>
         </Row>
       </Wrapper>
-    )
+    );
   }
 }
 

@@ -18,7 +18,7 @@ class MenuLink extends Component {
           </NavLink>
         </NavItem>
       </Wrapper>
-    )
+    );
   }
 }
 

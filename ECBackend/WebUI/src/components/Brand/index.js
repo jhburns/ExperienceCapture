@@ -16,7 +16,7 @@ class Brand extends Component {
         />
         Experience Capture
       </Link>
-    )
+    );
   }
 }
 

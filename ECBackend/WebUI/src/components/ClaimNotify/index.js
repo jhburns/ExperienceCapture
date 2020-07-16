@@ -18,7 +18,7 @@ class ClaimNotify extends Component {
           </Col>
         </Row>
       </Wrapper>
-    )
+    );
   }
 }
 

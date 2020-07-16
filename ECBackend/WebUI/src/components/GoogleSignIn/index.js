@@ -22,7 +22,7 @@ class SignIn extends Component {
 	    isMock: false,
       isUnableToSignIn: false,
 	    isDuplicateSignUp: false,
-    }
+    };
 
     this.onSuccess = this.onSuccess.bind(this);
     this.onFailure = this.onFailure.bind(this);
@@ -72,7 +72,7 @@ class SignIn extends Component {
           </LoginBox>
           {signOutRow}
         </Wrapper>
-      )
+      );
     } else if (this.state.isDuplicateSignUp) {
       return (
         <Wrapper data-cy="already-notify">
@@ -82,7 +82,7 @@ class SignIn extends Component {
           {homeRow}
           {signOutRow}
         </Wrapper>
-	    )
+	    );
     } else if (this.state.isSignedIn) {
       if (this.props.claimToken === undefined) {
         return (
@@ -93,11 +93,11 @@ class SignIn extends Component {
             {homeRow}
             {signOutRow}
           </Wrapper>
-        )
+        );
       } else {
         return (
           <ClaimNotify />
-        )
+        );
       }
 	  } else if (this.state.isSignedOut) {
 	    return (
@@ -108,7 +108,7 @@ class SignIn extends Component {
           </LoginBox>
           {googleRow}
         </Wrapper>
-	    )
+	    );
     } else {
       return (
         <Wrapper>
@@ -117,7 +117,7 @@ class SignIn extends Component {
           </LoginBox>
           {googleRow}
         </Wrapper>
-      )
+      );
     }
   }
 
@@ -128,7 +128,7 @@ class SignIn extends Component {
 	    longtitle: true,
       onsuccess: this.onSuccess,
       onfailure: this.onFailure
-    }
+    };
 
 	  if (!isMock) {
       gapi.signin2.render('loginButton', opts);
@@ -204,7 +204,7 @@ class SignIn extends Component {
 	    <div className="SignIn">
 		    {this.getContent()}
       </div>
-    )
+    );
   }
 }
 

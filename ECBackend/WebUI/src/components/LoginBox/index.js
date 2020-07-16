@@ -18,7 +18,7 @@ class LoginBox extends Component {
           </Col>
         </Row>
       </Wrapper>
-    )
+    );
   }
 }
 
