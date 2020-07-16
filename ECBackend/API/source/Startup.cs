@@ -46,8 +46,8 @@ namespace Carter.App.Hosting
                 options.OpenApi.ServerUrls = new[]
                 {
                     "http://localhost:8090/api/v1",
-                    "https://expcap.xyz",
-                    "https://expcap2.xyz",
+                    "https://expcap.xyz/api/v1",
+                    "https://expcap2.xyz/api/v1",
                 };
 
                 options.OpenApi.Securities = new Dictionary<string, OpenApiSecurity>
