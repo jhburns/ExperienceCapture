@@ -20,14 +20,18 @@ class UserList extends Component {
   }
 
   async onDelete(id) {
-    const url = `/api/v1/users/${id}`;
-    const request = await deleteData(url);
+    try {
+      const url = `/api/v1/users/${id}`;
+      const request = await deleteData(url);
 
-    if (!request.ok) {
-      this.setState({ error: new Error(request.status)});
+      if (!request.ok) {
+        this.setState({ error: new Error(request.status) });
+      }
+
+      await this.getUsers();
+    } catch (err) {
+      this.setState({ error: err });
     }
-
-    await this.getUsers();
   }
 
   async getUsers() {
