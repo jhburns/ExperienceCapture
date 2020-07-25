@@ -38,7 +38,12 @@ class UserList extends Component {
     const url = `/api/v1/allUsers/`;
     const request = await getData(url);
 
-    this.setState({ error: new Error(request.status) });
+    if (this.isCurrentlyMounted)
+    {
+      if (!request.ok) {
+        this.setState({ error: new Error(request.status) });
+      }
+    }
 
     const usersData = await request.json();
 
