@@ -25,6 +25,8 @@ import { getData, deleteData } from 'libs/fetchExtra';
 
 import UserList from 'components/UserList';
 
+import { withRouter } from "react-router";
+
 class SettingsPage extends Component {
   constructor(props) {
     super(props);
@@ -40,8 +42,12 @@ class SettingsPage extends Component {
   }
 
   async onSignOut() {
+    // throws
+    // TODO: check this still works in production
     await signOutUser(undefined); // Whether this is mock is unknown because that state is in a different component
-    this.props.history.push('/');
+
+    const { history } = this.props;
+    history.push('/');
   }
 
   async onDelete() {
@@ -52,7 +58,8 @@ class SettingsPage extends Component {
       throw new Error(request.status);
     }
 
-    this.props.history.push('/');
+    const { history } = this.props;
+    history.push('/');
   }
 
   toggle() {
@@ -135,4 +142,6 @@ class SettingsPage extends Component {
   }
 }
 
-export default SettingsPage;
+const SettingsPageWithRouter = withRouter(SettingsPage);
+
+export default SettingsPageWithRouter;

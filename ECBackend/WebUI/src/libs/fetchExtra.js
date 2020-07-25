@@ -35,10 +35,6 @@ async function postData(url, data = {}) {
   }));
 
   const responseFinished = await response;
-  if (responseFinished.status === 401){
-    throw new Error("Posting data is unauthorized.");
-  }
-
   return responseFinished;
 }
 
@@ -54,10 +50,6 @@ async function getData(url) {
   }));
 
   const responseFinished = await response;
-  if (responseFinished.status === 401) {
-    throw new Error("Response says unauthorized.");
-  }
-
   return responseFinished;
 }
 
@@ -73,9 +65,6 @@ async function deleteData(url) {
   }));
 
   const responseFinished = await response;
-  if (responseFinished.status === 401) {
-    throw new Error("Response says unauthorized.");
-  }
 
   return responseFinished;
 }

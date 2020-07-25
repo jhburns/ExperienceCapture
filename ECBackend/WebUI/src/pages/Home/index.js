@@ -12,6 +12,8 @@ import Footer from "components/Footer";
 
 class HomePage extends Component {
   render() {
+    if (0 < 1) throw new Error("test");
+
     return (
       <Wrapper>
         <Container className="p-0">
