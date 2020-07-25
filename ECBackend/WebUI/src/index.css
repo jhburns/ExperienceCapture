@@ -18,3 +18,11 @@ html {
   position: relative;
   min-height: 100%;
 }
+
+/*
+  Fixing an issue with style components/bootstrap that causes 
+  Centered Modals to have white backgrounds.
+*/
+.modal-dialog {
+  background-color: #fff0 !important;
+}

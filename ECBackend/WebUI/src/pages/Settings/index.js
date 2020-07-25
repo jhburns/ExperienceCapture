@@ -25,6 +25,8 @@ import { getData, deleteData } from 'libs/fetchExtra';
 
 import UserList from 'components/UserList';
 
+import { withRouter } from "react-router";
+
 class SettingsPage extends Component {
   constructor(props) {
     super(props);
@@ -32,6 +34,7 @@ class SettingsPage extends Component {
     this.state = {
       user: null,
       isOpen: false,
+      error: null,
     };
 
     this.onSignOut = this.onSignOut.bind(this);
@@ -40,8 +43,14 @@ class SettingsPage extends Component {
   }
 
   async onSignOut() {
-    await signOutUser(undefined); // Whether this is mock is unknown because that state is in a different component
-    this.props.history.push('/');
+    try {
+      await signOutUser(undefined); // Whether this is mock is unknown because that state is in a different component
+
+      const { history } = this.props;
+      history.push('/');
+    } catch (err) {
+      this.setState({ error: err });
+    }
   }
 
   async onDelete() {
@@ -49,10 +58,11 @@ class SettingsPage extends Component {
     const request = await deleteData(url);
 
     if (!request.ok) {
-      throw new Error(request.status);
+      this.setState({ error: new Error(request.status) });
     }
 
-    this.props.history.push('/');
+    const { history } = this.props;
+    history.push('/');
   }
 
   toggle() {
@@ -68,7 +78,7 @@ class SettingsPage extends Component {
     const request = await getData(url);
 
     if (!request.ok) {
-      throw new Error(request.status);
+      this.setState({ error: new Error(request.status) });
     }
 
     const userData = await request.json();
@@ -79,6 +89,10 @@ class SettingsPage extends Component {
   }
 
   render() {
+    if (this.state.error) {
+      throw this.state.error;
+    }
+
     let isAdmin = false;
     if (this.state.user !== null) {
       isAdmin = this.state.user.role === "Admin";
@@ -135,4 +149,6 @@ class SettingsPage extends Component {
   }
 }
 
-export default SettingsPage;
+const SettingsPageWithRouter = withRouter(SettingsPage);
+
+export default SettingsPageWithRouter;

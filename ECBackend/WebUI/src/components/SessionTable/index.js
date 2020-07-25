@@ -21,7 +21,8 @@ class SessionTable extends Component {
       isAllowedToPoll: true,
       pageNumber: 1,
       pageTotal: 0,
-      sort: 'newestFirst'
+      sort: 'newestFirst',
+      error: null,
     };
 
     this.onTag = this.onTag.bind(this);
@@ -44,12 +45,12 @@ class SessionTable extends Component {
       }
 
       if (!archiveRequest.ok) {
-        throw Error(archiveRequest.status);
+        this.setState({ error: Error(archiveRequest.status) });
       }
 
       await this.updateSessions();
     } catch (err) {
-      console.error(err);
+      this.setState({ error: err });
     }
   }
 
@@ -80,7 +81,7 @@ class SessionTable extends Component {
     const request = await getData(url);
 
     if (!request.ok) {
-      throw new Error(request.status);
+      this.setState({ error: Error(request.status) });
     }
 
     const sessionsData = await request.json();
@@ -126,7 +127,7 @@ class SessionTable extends Component {
       mappedOption = "newestFirst";
       break;
     default:
-      throw new Error("Returned option to Session Table is not valid.");
+      this.setState({ error: new Error("Returned option to Session Table is not valid.") });
     }
 
     await this.navigatePages(1, mappedOption);
@@ -144,6 +145,10 @@ class SessionTable extends Component {
   }
 
   render() {
+    if (this.state.error) {
+      throw this.state.error;
+    }
+
     const items = [];
     const isEmpty = () => items.length === 0;
 

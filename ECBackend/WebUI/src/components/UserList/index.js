@@ -12,6 +12,7 @@ class UserList extends Component {
 
     this.state = {
       users: [],
+      error: null,
     };
 
     this.onDelete = this.onDelete.bind(this);
@@ -19,22 +20,29 @@ class UserList extends Component {
   }
 
   async onDelete(id) {
-    const url = `/api/v1/users/${id}`;
-    const request = await deleteData(url);
+    try {
+      const url = `/api/v1/users/${id}`;
+      const request = await deleteData(url);
 
-    if (!request.ok) {
-      throw new Error(request.status);
+      if (!request.ok) {
+        this.setState({ error: new Error(request.status) });
+      }
+
+      await this.getUsers();
+    } catch (err) {
+      this.setState({ error: err });
     }
-
-    await this.getUsers();
   }
 
   async getUsers() {
     const url = `/api/v1/allUsers/`;
     const request = await getData(url);
 
-    if (!request.ok) {
-      throw new Error(request.status);
+    if (this.isCurrentlyMounted)
+    {
+      if (!request.ok) {
+        this.setState({ error: new Error(request.status) });
+      }
     }
 
     const usersData = await request.json();
@@ -59,6 +67,10 @@ class UserList extends Component {
   }
 
   render() {
+    if (this.state.error) {
+      throw this.state.error;
+    }
+
     const items = [];
 
     for (const [index, value] of this.state.users.entries()) {

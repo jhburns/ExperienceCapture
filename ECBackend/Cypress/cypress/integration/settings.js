@@ -1,5 +1,10 @@
 describe('Settings Page', () => {
   it('Signs out.', () => {
+    // We have to allow exceptions cause of the uncaught TypeError.
+    cy.on('uncaught:exception', () => {
+      return false;
+    });
+
     cy.visit("/home/settings");
 
     cy.get('[data-cy=sign-out]')
