@@ -11,7 +11,8 @@ class GetSignUpLink extends Component {
     super(props);
 
     this.state = {
-      link: ""
+      link: "",
+      error: null,
     };
 
     this.onButtonCLick = this.onButtonCLick.bind(this);
@@ -21,7 +22,7 @@ class GetSignUpLink extends Component {
     const signUpRequest = await postData("/api/v1/authentication/signUps/", {});
 
     if (!signUpRequest.ok) {
-      throw new Error(signUpRequest.status);
+      this.setState({ error: new Error(signUpRequest.status) });
     }
 
     const request = await signUpRequest.json();
@@ -34,6 +35,10 @@ class GetSignUpLink extends Component {
   }
 
   render() {
+    if (this.state.error) {
+      throw this.state.error;
+    }
+
     return (
       <Wrapper>
         {this.state.link !== "" &&

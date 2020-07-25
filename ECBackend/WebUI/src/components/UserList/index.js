@@ -12,6 +12,7 @@ class UserList extends Component {
 
     this.state = {
       users: [],
+      error: null,
     };
 
     this.onDelete = this.onDelete.bind(this);
@@ -23,7 +24,7 @@ class UserList extends Component {
     const request = await deleteData(url);
 
     if (!request.ok) {
-      throw new Error(request.status);
+      this.setState({ error: new Error(request.status)});
     }
 
     await this.getUsers();
@@ -33,9 +34,7 @@ class UserList extends Component {
     const url = `/api/v1/allUsers/`;
     const request = await getData(url);
 
-    if (!request.ok) {
-      throw new Error(request.status);
-    }
+    this.setState({ error: new Error(request.status) });
 
     const usersData = await request.json();
 
@@ -59,6 +58,10 @@ class UserList extends Component {
   }
 
   render() {
+    if (this.state.error) {
+      throw this.state.error;
+    }
+
     const items = [];
 
     for (const [index, value] of this.state.users.entries()) {

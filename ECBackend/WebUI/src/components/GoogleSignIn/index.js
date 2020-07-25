@@ -21,7 +21,8 @@ class SignIn extends Component {
 	    isSignedOut: false,
 	    isMock: false,
       isUnableToSignIn: false,
-	    isDuplicateSignUp: false,
+      isDuplicateSignUp: false,
+      error: null,
     };
 
     this.onSuccess = this.onSuccess.bind(this);
@@ -34,6 +35,10 @@ class SignIn extends Component {
   }
 
   getContent() {
+    if (this.state.error) {
+      throw this.state.error;
+    }
+
     const signOutRow =
       <Row className="justify-content-center">
         <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
@@ -145,13 +150,18 @@ class SignIn extends Component {
   async onSignOut() {
     const isMock = this.state.isMock;
 
-    await signOutUser(isMock);
-    this.setState({
-	    isSignedIn: false,
-      isSignedOut: true,
-      isDuplicateSignUp: false,
-      isUnableToSignIn: false,
-    }, () => gapi.load('signin2', this.renderLogin(isMock)));
+    try {
+      await signOutUser(isMock);
+
+      this.setState({
+        isSignedIn: false,
+        isSignedOut: true,
+        isDuplicateSignUp: false,
+        isUnableToSignIn: false,
+      }, () => gapi.load('signin2', this.renderLogin(isMock)));
+    } catch (err) {
+      this.setState({ error: err });
+    }
   }
 
   async onSuccess(user) {
@@ -159,11 +169,16 @@ class SignIn extends Component {
       signUpToken: this.props.signUpToken,
       claimToken: this.props.claimToken,
     };
-	  await submitUser(undefined, user, this.onFailure, options, this.onDuplicate);
 
-    this.setState({
-      isSignedIn: true,
-    });
+    try {
+      await submitUser(undefined, user, this.onFailure, options, this.onDuplicate);
+
+      this.setState({
+        isSignedIn: true,
+      });
+    } catch (err) {
+      this.setState({ error: err });
+    }
   }
 
   onFailure() {

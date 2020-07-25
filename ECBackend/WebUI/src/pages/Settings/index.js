@@ -34,6 +34,7 @@ class SettingsPage extends Component {
     this.state = {
       user: null,
       isOpen: false,
+      error: null,
     };
 
     this.onSignOut = this.onSignOut.bind(this);
@@ -42,12 +43,14 @@ class SettingsPage extends Component {
   }
 
   async onSignOut() {
-    // throws
-    // TODO: check this still works in production
-    await signOutUser(undefined); // Whether this is mock is unknown because that state is in a different component
+    try {
+      await signOutUser(undefined); // Whether this is mock is unknown because that state is in a different component
 
-    const { history } = this.props;
-    history.push('/');
+      const { history } = this.props;
+      history.push('/');
+    } catch (err) {
+      this.setState({ error: err });
+    }
   }
 
   async onDelete() {
@@ -55,7 +58,7 @@ class SettingsPage extends Component {
     const request = await deleteData(url);
 
     if (!request.ok) {
-      throw new Error(request.status);
+      this.setState({ error: new Error(request.status) });
     }
 
     const { history } = this.props;
@@ -75,7 +78,7 @@ class SettingsPage extends Component {
     const request = await getData(url);
 
     if (!request.ok) {
-      throw new Error(request.status);
+      this.setState({ error: new Error(request.status) });
     }
 
     const userData = await request.json();
@@ -86,6 +89,10 @@ class SettingsPage extends Component {
   }
 
   render() {
+    if (this.state.error) {
+      throw this.state.error;
+    }
+
     let isAdmin = false;
     if (this.state.user !== null) {
       isAdmin = this.state.user.role === "Admin";

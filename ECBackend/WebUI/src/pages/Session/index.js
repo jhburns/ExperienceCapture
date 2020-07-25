@@ -17,6 +17,7 @@ class SessionPage extends Component {
 
     this.state = {
       session: null,
+      error: null,
     };
 
     this.onExport = this.onExport.bind(this);
@@ -62,7 +63,7 @@ class SessionPage extends Component {
       const exportRequest = await postData(url);
 
       if (!exportRequest.ok) {
-        throw Error(exportRequest.status);
+        this.setState({ error: new Error(exportRequest.status) });
       }
 
       const currentSession = await this.getSession();
@@ -70,7 +71,7 @@ class SessionPage extends Component {
         session: currentSession,
       });
     } catch (err) {
-      throw Error(err);
+      this.setState({ error: err });
     }
   }
 
@@ -101,8 +102,7 @@ class SessionPage extends Component {
   }
 
   render() {
-    if (this.state.session === null)
-    {
+    if (this.state.session === null) {
       return null;
     }
 

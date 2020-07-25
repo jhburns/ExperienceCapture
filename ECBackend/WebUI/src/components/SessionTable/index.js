@@ -127,7 +127,7 @@ class SessionTable extends Component {
       mappedOption = "newestFirst";
       break;
     default:
-      throw new Error("Returned option to Session Table is not valid.");
+      this.setState({ error: new Error("Returned option to Session Table is not valid.") });
     }
 
     await this.navigatePages(1, mappedOption);
