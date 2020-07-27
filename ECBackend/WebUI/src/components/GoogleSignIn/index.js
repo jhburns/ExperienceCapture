@@ -13,6 +13,8 @@ import LoginBox from 'components/LoginBox';
 
 import { Link } from "react-router-dom";
 
+import { environmentVariables } from "libs/environment";
+
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -132,7 +134,7 @@ class SignIn extends Component {
       height: 50,
 	    longtitle: true,
       onsuccess: this.onSuccess,
-      onfailure: this.onFailure
+      onfailure: this.onFailure,
     };
 
 	  if (!isMock) {
@@ -207,7 +209,7 @@ class SignIn extends Component {
   componentDidMount() {
     gapi.load('auth2', () => {
       this.auth2 = gapi.auth2.init({
-        client_id: this.props.clientId,
+        client_id: environmentVariables["REACT_APP_GOOGLE_CLIENT_ID"],
       });
 
       this.auth2.then(() => gapi.load('signin2', this.renderLogin), this.onInvalidRequest);

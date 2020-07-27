@@ -8,8 +8,6 @@ import { Wrapper, Logo, } from 'pages/NormalSignIn/style';
 
 import Footer from "components/Footer";
 
-import { environmentVariables } from "libs/environment";
-
 class NormalSignInPage extends Component {
   render() {
     return (
@@ -29,7 +27,7 @@ class NormalSignInPage extends Component {
           </Row>
           <Row className="justify-content-center" noGutters={true}>
             <Col xs={10} >
-              <GoogleSignIn clientId={environmentVariables["REACT_APP_GOOGLE_CLIENT_ID"]} />
+              <GoogleSignIn />
             </Col>
           </Row>
           <Footer />
