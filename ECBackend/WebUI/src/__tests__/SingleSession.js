@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount, } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import SingleSession from 'components/SingleSession';
 
 import { StaticRouter as Router } from "react-router-dom";

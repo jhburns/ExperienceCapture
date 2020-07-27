@@ -3,8 +3,8 @@ import logo from 'logo.svg';
 
 import GoogleSignIn from "components/GoogleSignIn";
 
-import { Container, Row, Col, } from '@bootstrap-styled/v4';
-import { Wrapper, Logo, } from 'pages/NormalSignIn/style';
+import { Container, Row, Col } from '@bootstrap-styled/v4';
+import { Wrapper, Logo } from 'pages/NormalSignIn/style';
 
 import queryString from 'query-string';
 
@@ -22,7 +22,7 @@ class ClaimPage extends Component {
     const query = queryString.parse(this.props.location.search);
 
     this.setState({
-      claimToken: query.claimToken
+      claimToken: query.claimToken,
     });
   }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Wrapper, Item } from 'components/Footer/style';
-import { Row, Col, P, } from '@bootstrap-styled/v4';
+import { Row, Col, P } from '@bootstrap-styled/v4';
 
 class Footer extends Component {
   render() {

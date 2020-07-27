@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Wrapper, Prompt, } from 'components/About/style';
+import { Wrapper, Prompt } from 'components/About/style';
 
 import { Tooltip } from '@bootstrap-styled/v4';
 
@@ -30,7 +30,7 @@ class About extends Component {
           isOpen={this.state.isOpen}
           toggle={() => {
             this.setState({
-              isOpen: !this.state.isOpen
+              isOpen: !this.state.isOpen,
             });
           }}
           data-cy="about-tooltip"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount, } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import ClaimNotify from 'components/ClaimNotify';
 
 import { StaticRouter as Router } from "react-router-dom";

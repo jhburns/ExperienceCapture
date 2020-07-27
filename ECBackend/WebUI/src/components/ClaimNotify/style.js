@@ -8,4 +8,4 @@ const Message = styled.p`
   font-size: 1.3rem;
 `;
 
-export { Wrapper, Message, };
+export { Wrapper, Message };

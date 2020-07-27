@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 import { Wrapper } from 'pages/ArchivedSessions/style';
 
-import { Container, Row, Col, } from '@bootstrap-styled/v4';
+import { Container, Row, Col } from '@bootstrap-styled/v4';
 
 import Footer from "components/Footer";
 
@@ -24,7 +24,7 @@ class ArchivedSessionsPage extends Component {
                 buttonData={{
                   isAdd: false,
                   body: "Unarchive",
-                  header: ""
+                  header: "",
                 }}
                 isRenderingDate={true}
                 emptyMessage="No archived sessions."

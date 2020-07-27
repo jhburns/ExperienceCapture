@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount, } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import GetSignUpLink from 'components/GetSignUpLink';
 
 it('has non-empty content', () => {

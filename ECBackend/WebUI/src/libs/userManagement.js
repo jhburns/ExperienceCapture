@@ -49,13 +49,13 @@ async function submitUser(
 async function signUpUser(isMock = true, user, signUpToken, onError, onDuplicate) {
   let userData = {
     idToken: mockToken,
-    signUpToken: signUpToken
+    signUpToken: signUpToken,
   };
 
   if (!isMock) {
     userData = {
       idToken: user.getAuthResponse().id_token,
-      signUpToken: signUpToken
+      signUpToken: signUpToken,
     };
   }
 
@@ -88,7 +88,7 @@ async function signUpUser(isMock = true, user, signUpToken, onError, onDuplicate
 async function fulfillClaim(isMock = true, user, claimToken, onError) {
   let userData = {
     idToken: mockToken,
-    claimToken: claimToken
+    claimToken: claimToken,
   };
 
   let userId = mockId;
@@ -96,7 +96,7 @@ async function fulfillClaim(isMock = true, user, claimToken, onError) {
   if (!isMock) {
     userData = {
       idToken: user.getAuthResponse().id_token,
-      claimToken: claimToken
+      claimToken: claimToken,
     };
 
     userId = user.getId();
@@ -196,4 +196,4 @@ function getUserId() {
   }
 }
 
-export { submitUser, signOutUser, getUserId, };
+export { submitUser, signOutUser, getUserId };

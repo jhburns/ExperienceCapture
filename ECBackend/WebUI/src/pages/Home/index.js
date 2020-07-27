@@ -4,7 +4,7 @@ import Menu from 'components/Menu';
 import SessionTable from 'components/SessionTable';
 import Tutorial from 'components/Tutorial';
 
-import { Container, Row, Col, } from '@bootstrap-styled/v4';
+import { Container, Row, Col } from '@bootstrap-styled/v4';
 
 import { Wrapper } from 'pages/Home/style';
 

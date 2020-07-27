@@ -9,4 +9,4 @@ const Info = styled.section`
   padding: 1rem 1rem 1rem 1rem;
 `;
 
-export { Wrapper, Info, };
+export { Wrapper, Info };

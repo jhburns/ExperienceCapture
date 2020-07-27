@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount, } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import Menu from 'components/Menu';
 
 import { StaticRouter as Router } from "react-router-dom";
@@ -20,14 +20,14 @@ it('exists', () => {
 it('has a valid link for brand', () => {
   const wrapper = mount(<Router><Menu /></Router>);
 
-  expect(validator.isURL(wrapper.find('a.navbar-brand').props().href, { require_host: false, })).toBeTruthy();
+  expect(validator.isURL(wrapper.find('a.navbar-brand').props().href, { require_host: false })).toBeTruthy();
 });
 
 it('has valid paths', () => {
   const wrapper = mount(<Router><Menu /></Router>);
 
   wrapper.find('a.nav-link').forEach((node) => {
-    expect(validator.isURL(node.props().href, { require_host: false, })).toBeTruthy();
+    expect(validator.isURL(node.props().href, { require_host: false })).toBeTruthy();
   });
 });
 

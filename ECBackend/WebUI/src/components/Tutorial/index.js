@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Wrapper, Info, } from 'components/Tutorial/style';
+import { Wrapper, Info } from 'components/Tutorial/style';
 
 class Tutorial extends Component {
   render() {

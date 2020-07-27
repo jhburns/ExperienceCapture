@@ -12,4 +12,4 @@ const Prompt = styled.a`
   }
 `;
 
-export { Wrapper, Prompt, };
+export { Wrapper, Prompt };

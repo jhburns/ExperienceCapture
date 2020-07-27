@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Link } from 'react-router-dom';
-import { NavLink, NavItem, } from "@bootstrap-styled/v4";
+import { NavLink, NavItem } from "@bootstrap-styled/v4";
 
 import { Wrapper } from 'components/MenuLink/style';
 

@@ -2,10 +2,10 @@
 
 import React, { Component } from 'react';
 
-import { submitUser, signOutUser, } from "libs/userManagement";
+import { submitUser, signOutUser } from "libs/userManagement";
 import ClaimNotify from "components/ClaimNotify";
 
-import { Wrapper, Google, } from 'components/GoogleSignIn/style';
+import { Wrapper, Google } from 'components/GoogleSignIn/style';
 
 import { Row, Col, Button } from '@bootstrap-styled/v4';
 
@@ -185,7 +185,7 @@ class SignIn extends Component {
 
   onFailure() {
     this.setState({
-	    isUnableToSignIn: true
+	    isUnableToSignIn: true,
     });
   }
 

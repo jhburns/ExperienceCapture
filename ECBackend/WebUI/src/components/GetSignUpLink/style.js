@@ -8,4 +8,4 @@ const Text = styled.p`
   overflow-wrap: break-word;
 `;
 
-export { Text, Wrapper, };
+export { Text, Wrapper };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount, } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import UserList from 'components/UserList';
 
 it('has non-empty content', () => {
@@ -22,7 +22,7 @@ it('has row when there are some users', () => {
 
   const sampleUser = {
     fullname: 'Smitty Jensens',
-    id: '1234'
+    id: '1234',
   };
 
   wrapper.setState({ users: [sampleUser, sampleUser] });
@@ -36,7 +36,7 @@ it('has clickable buttons', () => {
 
   const sampleUser = {
     fullname: 'Smitty Jensens',
-    id: '1234'
+    id: '1234',
   };
 
   wrapper.setState({ users: [sampleUser] });

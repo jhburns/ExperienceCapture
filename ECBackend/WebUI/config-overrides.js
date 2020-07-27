@@ -9,7 +9,7 @@ module.exports = function override(config, env) {
     config.plugins.push(
       new htmlWebpackInjectAttributesPlugin({
         crossorigin: "anonymous",
-      })
+      }),
     );
   }
 

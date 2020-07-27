@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount, } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import Footer from 'components/Footer';
 
 import validator from 'validator';
@@ -20,6 +20,6 @@ it('has valid links', () => {
   const wrapper = mount(<Footer />);
 
   wrapper.find('a').forEach((node) => {
-    expect(validator.isURL(node.props().href, { require_host: false, })).toBeTruthy();
+    expect(validator.isURL(node.props().href, { require_host: false })).toBeTruthy();
   });
 });
