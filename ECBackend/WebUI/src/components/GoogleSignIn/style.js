@@ -12,4 +12,4 @@ const Google = styled.button`
     outline: none;
 `;
 
-export { Wrapper, Google, };
+export { Wrapper, Google };

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Wrapper } from 'pages/NotFound/style';
 import { Link } from 'react-router-dom';
 
-import { Container, Row, Col, } from '@bootstrap-styled/v4';
+import { Container, Row, Col } from '@bootstrap-styled/v4';
 
 import Menu from 'components/Menu';
 

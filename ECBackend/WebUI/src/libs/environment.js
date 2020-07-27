@@ -18,4 +18,4 @@ function verifyEnvironment(expectedVars)
   }
 }
 
-export { verifyEnvironment, environmentVariables, };
+export { verifyEnvironment, environmentVariables };

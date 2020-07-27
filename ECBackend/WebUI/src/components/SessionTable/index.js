@@ -5,10 +5,10 @@ import { getData } from 'libs/fetchExtra';
 import SessionRow from 'components/SessionRow';
 import OptionSelector from 'components/OptionSelector';
 
-import { P, Row, Col, Button, } from '@bootstrap-styled/v4';
-import { Wrapper, } from 'components/SessionTable/style';
+import { P, Row, Col, Button } from '@bootstrap-styled/v4';
+import { Wrapper } from 'components/SessionTable/style';
 
-import { postData, deleteData, } from 'libs/fetchExtra';
+import { postData, deleteData } from 'libs/fetchExtra';
 
 import queryString from 'query-string';
 
@@ -92,14 +92,14 @@ class SessionTable extends Component {
       return {
         id: s.id,
         fullname: s.user.fullname,
-        createdAt: s.createdAt.$date
+        createdAt: s.createdAt.$date,
       };
     });
 
     return {
       sessions: sessionsConverted,
       pageTotal: sessionsData.pageTotal,
-      sort: nextSort
+      sort: nextSort,
     };
   }
 
@@ -158,7 +158,7 @@ class SessionTable extends Component {
         sessionData={value}
         buttonData={this.props.buttonData !== undefined ? {
           body: this.props.buttonData.body,
-          onClick: this.onTag
+          onClick: this.onTag,
         } : undefined}
         isRenderingDate={this.props.isRenderingDate}
       />);

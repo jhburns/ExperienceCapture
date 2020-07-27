@@ -10,7 +10,7 @@ function config(customizations = {}) {
     cache: 'no-cache',
     credentials: 'same-origin',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     redirect: 'follow',
     referrerPolicy: 'no-referrer',
@@ -31,7 +31,7 @@ function config(customizations = {}) {
 async function postData(url, data = {}) {
   const response = await fetch(url, config({
     method: 'POST',
-    body: JSON.stringify(data) // body data type must match "Content-Type" header
+    body: JSON.stringify(data), // body data type must match "Content-Type" header
   }));
 
   const responseFinished = await response;
@@ -69,4 +69,4 @@ async function deleteData(url) {
   return responseFinished;
 }
 
-export { postData, getData, deleteData, };
+export { postData, getData, deleteData };

@@ -5,7 +5,7 @@ import SessionTable from 'components/SessionTable';
 
 import { Link } from 'react-router-dom';
 
-import { Container, Row, Col, } from '@bootstrap-styled/v4';
+import { Container, Row, Col } from '@bootstrap-styled/v4';
 
 import { Wrapper } from 'pages/Sessions/style';
 
@@ -24,7 +24,7 @@ class SessionsPage extends Component {
                 buttonData={{
                   isAdd: true,
                   body: "Archive",
-                  header: ""
+                  header: "",
                 }}
                 isRenderingDate={true}
                 emptyMessage="No complete sessions."

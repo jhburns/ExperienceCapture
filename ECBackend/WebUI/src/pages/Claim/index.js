@@ -3,14 +3,12 @@ import logo from 'logo.svg';
 
 import GoogleSignIn from "components/GoogleSignIn";
 
-import { Container, Row, Col, } from '@bootstrap-styled/v4';
-import { Wrapper, Logo, } from 'pages/NormalSignIn/style';
+import { Container, Row, Col } from '@bootstrap-styled/v4';
+import { Wrapper, Logo } from 'pages/NormalSignIn/style';
 
 import queryString from 'query-string';
 
 import Footer from "components/Footer";
-
-import { environmentVariables } from "libs/environment";
 
 class ClaimPage extends Component {
   constructor(props) {
@@ -24,7 +22,7 @@ class ClaimPage extends Component {
     const query = queryString.parse(this.props.location.search);
 
     this.setState({
-      claimToken: query.claimToken
+      claimToken: query.claimToken,
     });
   }
 
@@ -47,7 +45,6 @@ class ClaimPage extends Component {
           <Row className="justify-content-center" noGutters={true}>
             <Col xs={10} >
               <GoogleSignIn
-                clientId={environmentVariables["REACT_APP_GOOGLE_CLIENT_ID"]}
                 claimToken={this.state.claimToken}
               />
             </Col>

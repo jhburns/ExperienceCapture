@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Wrapper, Message } from 'components/ClaimNotify/style';
 
-import { Row, Col, } from '@bootstrap-styled/v4';
+import { Row, Col } from '@bootstrap-styled/v4';
 
 class ClaimNotify extends Component {
   render() {

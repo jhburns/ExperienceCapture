@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount, } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import SessionTable from 'components/SessionTable';
 
 it('has non-empty content', () => {

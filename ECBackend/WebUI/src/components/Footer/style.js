@@ -21,4 +21,4 @@ const Item = styled.a`
   }
 `;
 
-export { Wrapper, Item, };
+export { Wrapper, Item };

@@ -10,4 +10,4 @@ const Disabled = styled.button`
   }
 `;
 
-export { Wrapper, Disabled, };
+export { Wrapper, Disabled };

@@ -18,7 +18,7 @@ import Footer from "components/Footer";
 
 import { signOutUser } from 'libs/userManagement';
 
-import { withRouter, Switch, Route, } from "react-router";
+import { withRouter, Switch, Route } from "react-router";
 
 import NormalSignInPage from "pages/NormalSignIn";
 
@@ -27,7 +27,7 @@ class ErrorBoundary extends Component {
     super(props);
 
     this.state = {
-      isHandling: false
+      isHandling: false,
     };
 
     this.onSignOut = this.onSignOut.bind(this);

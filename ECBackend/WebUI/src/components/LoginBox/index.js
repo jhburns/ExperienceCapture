@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import { Wrapper, Info, } from 'components/LoginBox/style';
+import { Wrapper, Info } from 'components/LoginBox/style';
 
-import { Row, Col, } from '@bootstrap-styled/v4';
+import { Row, Col } from '@bootstrap-styled/v4';
 
 class LoginBox extends Component {
   render() {

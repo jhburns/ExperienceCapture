@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 
 import { Wrapper } from 'components/OptionSelector/style';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem, } from '@bootstrap-styled/v4';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from '@bootstrap-styled/v4';
 
 class OptionSelector extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      isOpen: false
+      isOpen: false,
     };
   }
 

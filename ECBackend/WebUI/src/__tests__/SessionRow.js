@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow, mount, } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import SessionRow from 'components/SessionRow';
 
 import { StaticRouter as Router } from "react-router-dom";
@@ -23,7 +23,7 @@ it('has valid link', () => {
 
   const wrapper = mount(jsx);
 
-  expect(validator.isURL(wrapper.find('a').props().href, { require_host: false, })).toBeTruthy();
+  expect(validator.isURL(wrapper.find('a').props().href, { require_host: false })).toBeTruthy();
 });
 
 it('has valid link when complex', () => {
@@ -38,7 +38,7 @@ it('has valid link when complex', () => {
 
   const wrapper = mount(jsx);
 
-  expect(validator.isURL(wrapper.find('a').props().href, { require_host: false, })).toBeTruthy();
+  expect(validator.isURL(wrapper.find('a').props().href, { require_host: false })).toBeTruthy();
 });
 
 it('does not have button when undefined', () => {
@@ -46,7 +46,7 @@ it('does not have button when undefined', () => {
     <Router>
       <table>
         <tbody>
-          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", }} />
+          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens" }} />
         </tbody>
       </table>
     </Router>;
@@ -61,7 +61,7 @@ it('does have button when defined', () => {
     <Router>
       <table>
         <tbody>
-          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", }} buttonData={{ body: "example" }} />
+          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens" }} buttonData={{ body: "example" }} />
         </tbody>
       </table>
     </Router>;
@@ -78,7 +78,7 @@ it('calls on click', () => {
     <Router>
       <table>
         <tbody>
-          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", }} buttonData={{ body: "example", onClick: callback }} />
+          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens" }} buttonData={{ body: "example", onClick: callback }} />
         </tbody>
       </table>
     </Router>;

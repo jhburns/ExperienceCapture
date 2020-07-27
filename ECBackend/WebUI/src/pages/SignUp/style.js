@@ -11,4 +11,4 @@ const Logo = styled.img`
   display: block;
 `;
 
-export { Wrapper, Logo, };
+export { Wrapper, Logo };

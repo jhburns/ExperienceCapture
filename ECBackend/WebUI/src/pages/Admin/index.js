@@ -23,14 +23,14 @@ class Admin extends Component {
   onSuccess(response) {
     this.setState({
       accessToken: response.signUpToken,
-      isWaiting: false
+      isWaiting: false,
     });
   }
 
   onError() {
     this.setState({
       isError: true,
-      isWaiting: false
+      isWaiting: false,
     });
   }
 
@@ -39,7 +39,7 @@ class Admin extends Component {
 
     try {
       const data = {
-        password: query.password
+        password: query.password,
       };
 
       const reply = await postData("/api/v1/authentication/admins/", data);

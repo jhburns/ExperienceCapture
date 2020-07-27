@@ -67,6 +67,10 @@
       "semi": [
         "warn",
         "always"
+      ],
+      "comma-dangle": [
+        "warn",
+        "always-multiline"
       ]
     }
   },

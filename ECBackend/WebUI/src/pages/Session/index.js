@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import Menu from 'components/Menu';
 import SingleSession from "components/SingleSession";
 
-import { getData, postData, } from "libs/fetchExtra";
+import { getData, postData } from "libs/fetchExtra";
 
-import { Container, Row, Col, } from '@bootstrap-styled/v4';
+import { Container, Row, Col } from '@bootstrap-styled/v4';
 
 import { Wrapper } from 'pages/Session/style';
 
@@ -40,7 +40,7 @@ class SessionPage extends Component {
       createdAt: sessionsData.createdAt.$date,
       exportState: sessionsData.exportState,
       isOpen: sessionsData.isOpen,
-      isOngoing: sessionsData.isOngoing
+      isOngoing: sessionsData.isOngoing,
     };
 
     // Poll based on session state
@@ -82,7 +82,7 @@ class SessionPage extends Component {
     // Very hacky, but easiest way to do abstract comparisons
     if (JSON.stringify(currentSession) !== JSON.stringify(this.state.session)) {
       this.setState({
-        session: currentSession
+        session: currentSession,
       });
     }
   }

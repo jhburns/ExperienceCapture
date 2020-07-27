@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 
 import { Wrapper } from 'components/UserList/style';
 
-import { getData, deleteData, } from 'libs/fetchExtra';
-import { Row, Col, } from '@bootstrap-styled/v4';
+import { getData, deleteData } from 'libs/fetchExtra';
+import { Row, Col } from '@bootstrap-styled/v4';
 
 // This component can only be used by admins
 class UserList extends Component {
