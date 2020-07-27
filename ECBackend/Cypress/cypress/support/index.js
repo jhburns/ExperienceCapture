@@ -22,7 +22,7 @@ import './commands';
 // Disable screenshots for all tests
 // This can only be configured in code, not cypres.json
 Cypress.Screenshot.defaults({
-  screenshotOnRunFailure: false
+  screenshotOnRunFailure: false,
 });
 
 beforeEach(() => {
