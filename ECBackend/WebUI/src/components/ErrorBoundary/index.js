@@ -40,8 +40,9 @@ class ErrorBoundary extends Component {
 
       this.setState({ isHandling: false });
     };
+
     try {
-      signOutUser(undefined, () => { goToRoot() }, () => { goToRoot() });
+      signOutUser(undefined, () => { goToRoot(); }, () => { goToRoot(); });
     } catch (ignore) {
       // Ignore because we are already handling another error.
     }

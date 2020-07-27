@@ -157,10 +157,24 @@ async function signInUser(user, onError) {
 }
 
 /**
+ * Wraps the Google platform API client.
+ *
+ * @param {Function} onSuccess - Callback for when the user is signed in.
+ * @param {Function} onError - Callback for when there is an issue with authorization.
+ */
+async function gapiSetup(onSuccess, onError) {
+  gapi.load('auth2', () => {
+    gapi.auth2.init({
+      client_id: environmentVariables["REACT_APP_GOOGLE_CLIENT_ID"],
+    }).then(onSuccess, onError);
+  });
+}
+
+/**
  * Sign out a user.
  *
- * @param {Function} onSuccess - Callback when the user is signed out.
- * @param {Function} onError - Callback when there is an issue with authorization.
+ * @param {Function} onSuccess - Callback for when the user is signed in.
+ * @param {Function} onError - Callback for when there is an issue with authorization.
  */
 async function signOutUser(onSuccess, onError) {
   if (isMockFromRoot) {
@@ -168,12 +182,11 @@ async function signOutUser(onSuccess, onError) {
     return;
   }
 
-  gapi.auth2.init({
-    client_id: environmentVariables["REACT_APP_GOOGLE_CLIENT_ID"],
-  }).then(async () => {
+  gapiSetup(async () => {
     try {
       const auth2 = gapi.auth2.getAuthInstance();
       await auth2.signOut();
+      onSuccess();
     } catch (err) {
       onError(err);
     }
@@ -186,8 +199,8 @@ async function signOutUser(onSuccess, onError) {
 /**
  * Get the signed in user's id.
  *
- * @param {Function} onId - Callback when an id can successfully be found.
- * @param {Function} onError - Callback when there is an issue with authorization.
+ * @param {Function} onId - Callback for when an id can successfully be found.
+ * @param {Function} onError - Callback for when there is an issue with authorization.
  */
 function getUserId(onId, onError) {
   if (isMockFromRoot) {
@@ -195,9 +208,7 @@ function getUserId(onId, onError) {
     return;
   }
 
-  gapi.auth2.init({
-    client_id: environmentVariables["REACT_APP_GOOGLE_CLIENT_ID"],
-  }).then(() => {
+  gapiSetup(() => {
     try {
       const auth2 = gapi.auth2.getAuthInstance();
 
@@ -212,4 +223,4 @@ function getUserId(onId, onError) {
   });
 }
 
-export { submitUser, signOutUser, getUserId };
+export { submitUser, signOutUser, getUserId, gapiSetup };
