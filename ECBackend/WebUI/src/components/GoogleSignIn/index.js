@@ -150,17 +150,15 @@ class SignIn extends Component {
   }
 
   async onSignOut() {
-    const isMock = this.state.isMock;
-
     try {
-      await signOutUser(isMock);
+      signOutUser(() => {}, (err) => this.setState({ error: err }));
 
       this.setState({
         isSignedIn: false,
         isSignedOut: true,
         isDuplicateSignUp: false,
         isUnableToSignIn: false,
-      }, () => gapi.load('signin2', this.renderLogin(isMock)));
+      }, () => gapi.load('signin2', this.renderLogin(this.state.isMock)));
     } catch (err) {
       this.setState({ error: err });
     }

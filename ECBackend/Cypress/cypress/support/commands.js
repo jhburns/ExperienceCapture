@@ -35,3 +35,26 @@ Cypress.Commands.add('createClosedSessions', (count) => {
       });
   });
 });
+
+// This is replaces 'cy.visit("/home/settings")'
+// Because doing that instead will cause the sign in mock
+// State to be wiped from the root page.
+Cypress.Commands.add('toSettings', () => {
+  cy.visit('/')
+    .then(() => {
+      cy.get('[data-cy=go-home]')
+        .click();
+    })
+    .then(() => {
+      cy.get('[data-cy=menu-hamburger]')
+        .click();
+    })
+    .then(() => {
+      cy.get('[data-cy=menu-link]');
+    })
+    .then((links) => {
+      // Settings page link
+      cy.wrap(links[2])
+        .click();
+    });
+});

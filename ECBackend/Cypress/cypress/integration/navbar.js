@@ -19,10 +19,15 @@ describe('Navbar', () => {
   });
 
   it('Navigates between links.', () => {
-    cy.visit("/home/start");
-
-    cy.get('[data-cy=menu-hamburger]')
-      .click()
+    cy.visit('/')
+      .then(() => {
+        cy.get('[data-cy=go-home]')
+          .click();
+      })
+      .then(() => {
+        cy.get('[data-cy=menu-hamburger]')
+          .click();
+      })
       .then(() => {
         cy.get('[data-cy=menu-link]');
       })

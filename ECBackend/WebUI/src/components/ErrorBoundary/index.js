@@ -35,7 +35,7 @@ class ErrorBoundary extends Component {
 
   async onSignOut() {
     try {
-      await signOutUser(undefined);
+      await signOutUser(undefined, () => {}, () => {});
     } catch (ignore) {
       // Ignore because we are already handling another error.
     }
