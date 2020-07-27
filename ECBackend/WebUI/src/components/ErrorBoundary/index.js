@@ -34,16 +34,17 @@ class ErrorBoundary extends Component {
   }
 
   async onSignOut() {
+    const goToRoot = () => {
+      const { history } = this.props;
+      history.push('/');
+
+      this.setState({ isHandling: false });
+    };
     try {
-      await signOutUser(undefined, () => {}, () => {});
+      signOutUser(undefined, () => { goToRoot() }, () => { goToRoot() });
     } catch (ignore) {
       // Ignore because we are already handling another error.
     }
-
-    const { history } = this.props;
-    history.push('/');
-
-    this.setState({ isHandling: false });
   }
 
   componentDidCatch(error, info) {

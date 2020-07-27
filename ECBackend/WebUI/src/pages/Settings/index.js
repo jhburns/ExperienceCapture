@@ -45,10 +45,10 @@ class SettingsPage extends Component {
   async onSignOut() {
     try {
       // Whether this is mock is unknown because that state is in a different component
-      await signOutUser(() => {}, (err) => this.setState({ error: err }));
-
-      const { history } = this.props;
-      history.push('/');
+      signOutUser(() => {
+        const { history } = this.props;
+        history.push('/');
+      }, (err) => this.setState({ error: err }));
     } catch (err) {
       this.setState({ error: err });
     }
