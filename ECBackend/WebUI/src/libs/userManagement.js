@@ -3,11 +3,17 @@
 import { postData } from 'libs/fetchExtra';
 import { createCookie } from 'libs/cookieExtra';
 
+import { environmentVariables } from "libs/environment";
+
 // Has to be the same as the backend shim
 // Long to match the length of real subjects
 const mockId = "123456789109876543210";
 
 const mockToken = "This.is.not.a.real.id.token";
+
+// Load the website from root in order to set it
+// As running in mock mode.
+let isMockFromRoot = false;
 
 /**
  * Decides whether to sign up a user, fulfil a claim, or sign in a user.
@@ -24,35 +30,36 @@ async function submitUser(
   onError,
   options = { signUpToken: undefined, claimToken: undefined },
   onDuplicate) {
+  isMockFromRoot = isMock;
+
   if (options.signUpToken !== undefined) {
-    await signUpUser(isMock, user, options.signUpToken, onError, onDuplicate);
+    await signUpUser(user, options.signUpToken, onError, onDuplicate);
     return;
   }
 
   if (options.claimToken !== undefined) {
-    await fulfillClaim(isMock, user, options.claimToken, onError);
+    await fulfillClaim(user, options.claimToken, onError);
     return;
   }
 
-  await signInUser(isMock, user, onError);
+  await signInUser(user, onError);
 }
 
 /**
  * Sign up a user.
  *
- * @param {boolean} isMock - When true the site is mocking Google Sign-in.
  * @param {object} user - A user to sign up.
  * @param {string} signUpToken - Base64 token that is passed to the back-end to sign up.
  * @param {Function} onError - Callback if an error occurs.
  * @param {Function} onDuplicate - Callback if the user already exists.
  */
-async function signUpUser(isMock = true, user, signUpToken, onError, onDuplicate) {
+async function signUpUser(user, signUpToken, onError, onDuplicate) {
   let userData = {
     idToken: mockToken,
     signUpToken: signUpToken,
   };
 
-  if (!isMock) {
+  if (!isMockFromRoot) {
     userData = {
       idToken: user.getAuthResponse().id_token,
       signUpToken: signUpToken,
@@ -70,7 +77,7 @@ async function signUpUser(isMock = true, user, signUpToken, onError, onDuplicate
       }
     }
 
-    await signInUser(isMock, user, onError);
+    await signInUser(user, onError);
   } catch (error) {
     console.error(error);
     onError();
@@ -80,12 +87,11 @@ async function signUpUser(isMock = true, user, signUpToken, onError, onDuplicate
 /**
  * Fulfills a claim.
  *
- * @param {boolean} isMock - When true the site is mocking Google Sign-in.
  * @param {object} user - A user to fulfill a claim for.
  * @param {string} claimToken - Base64 token that is passed to the back-end.
  * @param {Function} onError - Callback if an error occurs.
  */
-async function fulfillClaim(isMock = true, user, claimToken, onError) {
+async function fulfillClaim(user, claimToken, onError) {
   let userData = {
     idToken: mockToken,
     claimToken: claimToken,
@@ -93,7 +99,7 @@ async function fulfillClaim(isMock = true, user, claimToken, onError) {
 
   let userId = mockId;
 
-  if (!isMock) {
+  if (!isMockFromRoot) {
     userData = {
       idToken: user.getAuthResponse().id_token,
       claimToken: claimToken,
@@ -117,18 +123,17 @@ async function fulfillClaim(isMock = true, user, claimToken, onError) {
 /**
  * Sign in a user.
  *
- * @param {boolean} isMock - When true the site is mocking Google Sign-in.
  * @param {object} user - A user to submit.
  * @param {Function} onError - Callback if an error occurs.
  */
-async function signInUser(isMock = true, user, onError) {
+async function signInUser(user, onError) {
   let userData = {
     idToken: mockToken,
   };
 
   let userId = mockId;
 
-  if (!isMock) {
+  if (!isMockFromRoot) {
     userData = {
       idToken: user.getAuthResponse().id_token,
     };
@@ -152,48 +157,70 @@ async function signInUser(isMock = true, user, onError) {
 }
 
 /**
+ * Wraps the Google platform API client.
+ *
+ * @param {Function} onSuccess - Callback for when the user is signed in.
+ * @param {Function} onError - Callback for when there is an issue with authorization.
+ */
+async function gapiSetup(onSuccess, onError) {
+  gapi.load('auth2', () => {
+    gapi.auth2.init({
+      client_id: environmentVariables["REACT_APP_GOOGLE_CLIENT_ID"],
+    }).then(onSuccess, onError);
+  });
+}
+
+/**
  * Sign out a user.
  *
- * @param {boolean} isMock - When true the site is mocking Google Sign-in.
+ * @param {Function} onSuccess - Callback for when the user is signed in.
+ * @param {Function} onError - Callback for when there is an issue with authorization.
  */
-async function signOutUser(isMock = false) {
-  if (isMock) {
+async function signOutUser(onSuccess, onError) {
+  if (isMockFromRoot) {
+    onSuccess();
     return;
   }
 
-  try {
-    const auth2 = gapi.auth2.getAuthInstance();
-    await auth2.signOut();
-  } catch (err) {
-    console.error(err);
-
-    if (!isMock) {
-      throw err;
+  gapiSetup(async () => {
+    try {
+      const auth2 = gapi.auth2.getAuthInstance();
+      await auth2.signOut();
+      onSuccess();
+    } catch (err) {
+      onError(err);
     }
-  }
+  },
+  () => {
+    onError(new Error("User is not signed-in when loading the settings page."));
+  });
 }
 
 /**
  * Get the signed in user's id.
  *
- * @returns {string} A user id, from Google.
+ * @param {Function} onId - Callback for when an id can successfully be found.
+ * @param {Function} onError - Callback for when there is an issue with authorization.
  */
-function getUserId() {
-  try {
-    const auth2 = gapi.auth2.getAuthInstance();
-
-    if (auth2.isSignedIn.get()) {
-      var profile = auth2.currentUser.get().getBasicProfile();
-      return profile.getId();
-    } else {
-      throw new Error("User is not signed-in when loading the settings page.");
-    }
-  } catch (err) {
-    console.log("Application is running using mock data.");
-    console.log(err);
-
-    return mockId;
+function getUserId(onId, onError) {
+  if (isMockFromRoot) {
+    onId(mockId);
+    return;
   }
+
+  gapiSetup(() => {
+    try {
+      const auth2 = gapi.auth2.getAuthInstance();
+
+      var profile = auth2.currentUser.get().getBasicProfile();
+      onId(profile.getId());
+    } catch (err) {
+      onError(err);
+    }
+  },
+  () => {
+    onError(new Error("User is not signed-in when loading the settings page."));
+  });
 }
 
-export { submitUser, signOutUser, getUserId };
+export { submitUser, signOutUser, getUserId, gapiSetup };

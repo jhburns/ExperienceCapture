@@ -44,10 +44,11 @@ class SettingsPage extends Component {
 
   async onSignOut() {
     try {
-      await signOutUser(undefined); // Whether this is mock is unknown because that state is in a different component
-
-      const { history } = this.props;
-      history.push('/');
+      // Whether this is mock is unknown because that state is in a different component
+      signOutUser(() => {
+        const { history } = this.props;
+        history.push('/');
+      }, (err) => this.setState({ error: err }));
     } catch (err) {
       this.setState({ error: err });
     }
@@ -72,19 +73,23 @@ class SettingsPage extends Component {
   }
 
   async componentDidMount() {
-    const id = getUserId();
+    // eslint-disable-next-line
+    const id = getUserId(async (id) => {
+      const url = `/api/v1/users/${id}/`;
+      const request = await getData(url);
 
-    const url = `/api/v1/users/${id}/`;
-    const request = await getData(url);
+      if (!request.ok) {
+        this.setState({ error: new Error(request.status) });
+        return;
+      }
 
-    if (!request.ok) {
-      this.setState({ error: new Error(request.status) });
-    }
+      const userData = await request.json();
 
-    const userData = await request.json();
-
-    this.setState({
-      user: userData,
+      this.setState({
+        user: userData,
+      });
+    }, (err) => {
+      this.setState({ error: err });
     });
   }
 

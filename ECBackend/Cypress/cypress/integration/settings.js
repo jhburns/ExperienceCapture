@@ -1,21 +1,18 @@
 describe('Settings Page', () => {
   it('Signs out.', () => {
-    // We have to allow exceptions cause of the uncaught TypeError.
-    cy.on('uncaught:exception', () => {
-      return false;
-    });
-
-    cy.visit("/home/settings");
-
-    cy.get('[data-cy=sign-out]')
-      .click();
+    cy.toSettings()
+      .then(() => {
+        cy.get('[data-cy=sign-out]')
+          .click();
+      });
   });
 
   it('Deletes the account.', () => {
-    cy.visit("/home/settings");
-
-    cy.get('[data-cy=delete-account]')
-      .click()
+    cy.toSettings()
+      .then(() => {
+        cy.get('[data-cy=delete-account]')
+          .click();
+      })
       .then(() => {
         cy.get('[data-cy=cancel-delete]')
           .click();
@@ -31,17 +28,19 @@ describe('Settings Page', () => {
   });
 
   it('Deletes other user\'s account.', () => {
-    cy.visit("/home/settings");
-
-    cy.get('[data-cy=delete-others]')
-      .click();
+    cy.toSettings()
+      .then(() => {
+        cy.get('[data-cy=delete-others]')
+          .click();
+      });
   });
 
   it('Gets a new sign-up link.', () => {
-    cy.visit("/home/settings");
-
-    cy.get('[data-cy=new-sign-up]')
-      .click()
+    cy.toSettings()
+      .then(() => {
+        cy.get('[data-cy=new-sign-up]')
+          .click();
+      })
       .then(() => {
         cy.get('[data-cy=sign-up-link]');
       })

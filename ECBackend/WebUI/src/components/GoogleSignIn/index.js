@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 
-import { submitUser, signOutUser } from "libs/userManagement";
+import { submitUser, signOutUser, gapiSetup } from "libs/userManagement";
 import ClaimNotify from "components/ClaimNotify";
 
 import { Wrapper, Google } from 'components/GoogleSignIn/style';
@@ -12,8 +12,6 @@ import { Row, Col, Button } from '@bootstrap-styled/v4';
 import LoginBox from 'components/LoginBox';
 
 import { Link } from "react-router-dom";
-
-import { environmentVariables } from "libs/environment";
 
 class SignIn extends Component {
   constructor(props) {
@@ -150,20 +148,14 @@ class SignIn extends Component {
   }
 
   async onSignOut() {
-    const isMock = this.state.isMock;
-
-    try {
-      await signOutUser(isMock);
-
+    signOutUser(() => {
       this.setState({
         isSignedIn: false,
         isSignedOut: true,
         isDuplicateSignUp: false,
         isUnableToSignIn: false,
-      }, () => gapi.load('signin2', this.renderLogin(isMock)));
-    } catch (err) {
-      this.setState({ error: err });
-    }
+      }, () => gapi.load('signin2', this.renderLogin(this.state.isMock)));
+    }, (err) => this.setState({ error: err }));
   }
 
   async onSuccess(user) {
@@ -207,21 +199,11 @@ class SignIn extends Component {
   }
 
   componentDidMount() {
-    gapi.load('auth2', () => {
-      this.auth2 = gapi.auth2.init({
-        client_id: environmentVariables["REACT_APP_GOOGLE_CLIENT_ID"],
-      });
-
-      this.auth2.then(() => gapi.load('signin2', this.renderLogin), this.onInvalidRequest);
-    });
+    gapiSetup(() => gapi.load('signin2', this.renderLogin), this.onInvalidRequest);
   }
 
   render() {
-    return (
-	    <div className="SignIn">
-		    {this.getContent()}
-      </div>
-    );
+    return this.getContent();
   }
 }
 
