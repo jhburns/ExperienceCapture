@@ -8,7 +8,7 @@ class Footer extends Component {
     // Only component that gets top spacing besides Menu
     // Because adding consistent bottom spacing would be harder to maintain
     return (
-      <Wrapper >
+      <Wrapper>
         <Row>
           <Col className="text-center">
             <Item

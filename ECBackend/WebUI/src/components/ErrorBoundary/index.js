@@ -50,8 +50,6 @@ class ErrorBoundary extends Component {
 
   componentDidCatch(error, info) {
     this.setState({ isHandling: true });
-
-    console.error(`The following error is handled by the ErrorBoundary component: ${error}\n ${info}`);
   }
 
   render() {
