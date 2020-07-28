@@ -145,8 +145,6 @@ class SessionTable extends Component {
   }
 
   render() {
-    throw Error("waa");
-
     if (this.state.error) {
       throw this.state.error;
     }
