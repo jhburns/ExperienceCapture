@@ -10,7 +10,7 @@ it('passes content through itself', () => {
       <ErrorBoundary>
         <p>test</p>
       </ErrorBoundary>
-    </Router>
+    </Router>;
 
   const wrapper = mount(jsx);
 
