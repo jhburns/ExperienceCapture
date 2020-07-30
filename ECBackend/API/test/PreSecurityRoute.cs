@@ -6,7 +6,7 @@ namespace Carter.Tests.Route.PreSecurity
     using System.Text;
     using System.Threading.Tasks;
 
-    using Carter.App.Lib.Repository;
+    using Carter.App.Libs.Repository;
     using Carter.App.Route.UsersAndAuthentication;
 
     using Carter.Tests.HostingExtra;

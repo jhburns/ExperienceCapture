@@ -7,9 +7,9 @@ namespace Carter.Tests.Route.UsersAndAuthentication
     using System.Text;
     using System.Threading.Tasks;
 
-    using Carter.App.Lib.Environment;
-    using Carter.App.Lib.Repository;
-    using Carter.App.Lib.Timer;
+    using Carter.App.Libs.Environment;
+    using Carter.App.Libs.Repository;
+    using Carter.App.Libs.Timer;
     using Carter.App.Route.ProtectedUsersAndAuthentication;
     using Carter.App.Route.UsersAndAuthentication;
 

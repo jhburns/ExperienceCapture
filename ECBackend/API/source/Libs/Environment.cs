@@ -1,4 +1,4 @@
-namespace Carter.App.Lib.Environment
+namespace Carter.App.Libs.Environment
 {
     using System;
 

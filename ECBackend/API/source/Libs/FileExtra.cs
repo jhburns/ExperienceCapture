@@ -1,4 +1,4 @@
-namespace Carter.App.Lib.FileExtra
+namespace Carter.App.Libs.FileExtra
 {
     using System.IO;
 

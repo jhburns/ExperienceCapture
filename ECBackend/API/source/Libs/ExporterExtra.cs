@@ -1,4 +1,4 @@
-namespace Carter.App.Lib.ExporterExtra
+namespace Carter.App.Libs.ExporterExtra
 {
     using System.Threading;
 

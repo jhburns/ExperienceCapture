@@ -3,9 +3,9 @@ namespace Carter.App.Route.PreSecurity
     using System;
     using System.Threading.Tasks;
 
-    using Carter.App.Lib.Authentication;
-    using Carter.App.Lib.Repository;
-    using Carter.App.Lib.Timer;
+    using Carter.App.Libs.Authentication;
+    using Carter.App.Libs.Repository;
+    using Carter.App.Libs.Timer;
 
     using Carter.App.Route.UsersAndAuthentication;
 

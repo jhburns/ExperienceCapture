@@ -8,9 +8,9 @@ namespace Carter.Tests.Route.Export
     using System.Threading.Tasks;
 
     using Carter.App.Hosting;
-    using Carter.App.Lib.ExporterExtra;
-    using Carter.App.Lib.MinioExtra;
-    using Carter.App.Lib.Repository;
+    using Carter.App.Libs.ExporterExtra;
+    using Carter.App.Libs.MinioExtra;
+    using Carter.App.Libs.Repository;
     using Carter.App.Route.Sessions;
 
     using Carter.Tests.HostingExtra;

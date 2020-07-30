@@ -3,8 +3,8 @@
     using System;
     using System.Linq;
 
-    using Carter.App.Lib.Authentication;
-    using Carter.App.Lib.Environment;
+    using Carter.App.Libs.Authentication;
+    using Carter.App.Libs.Environment;
 
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;

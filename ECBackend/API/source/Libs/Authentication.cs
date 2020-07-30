@@ -1,4 +1,4 @@
-namespace Carter.App.Lib.Authentication
+namespace Carter.App.Libs.Authentication
 {
     using System;
     using System.Linq;
@@ -7,8 +7,8 @@ namespace Carter.App.Lib.Authentication
 
     using System.Threading.Tasks;
 
-    using Carter.App.Lib.Environment;
-    using Carter.App.Lib.Generate;
+    using Carter.App.Libs.Environment;
+    using Carter.App.Libs.Generate;
 
     using Google.Apis.Auth;
 

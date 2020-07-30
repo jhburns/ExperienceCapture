@@ -1,4 +1,4 @@
-namespace Carter.App.Lib.Repository
+namespace Carter.App.Libs.Repository
 {
     using System;
     using System.Collections.Generic;

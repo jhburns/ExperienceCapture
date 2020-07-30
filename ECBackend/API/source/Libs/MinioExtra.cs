@@ -1,4 +1,4 @@
-namespace Carter.App.Lib.MinioExtra
+namespace Carter.App.Libs.MinioExtra
 {
     using System;
     using System.Collections.Generic;
