@@ -5,6 +5,8 @@ namespace Carter.App.StatusCodeHandler
 
     using Carter;
 
+    using Carter.App.Lib.FileExtra;
+
     using HandlebarsDotNet;
 
     using Microsoft.AspNetCore.Http;
@@ -25,8 +27,7 @@ namespace Carter.App.StatusCodeHandler
         public Task Handle(HttpContext ctx)
         {
             string seperator = Path.DirectorySeparatorChar.ToString();
-            var filepath = $"{seperator}app{seperator}source{seperator}Templates{seperator}ErrorPage.html.handlebars";
-            var source = File.ReadAllText(filepath);
+            var source = FileExtra.GetEmbeddedFile($"Templates{seperator}ErrorPage.html.handlebars");
 
             var template = Handlebars.Compile(source);
 

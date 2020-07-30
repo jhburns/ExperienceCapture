@@ -18,7 +18,7 @@
     <None Include="appsettings.json" CopyToPublishDirectory="Always" />
     <None Include="Templates/README.txt.handlebars" CopyToPublishDirectory="Always" />
     <None Include="Templates/OpenApiHeader.html" CopyToPublishDirectory="Always" />
-    <None Include="Templates/ErrorPage.html.handlebars" CopyToPublishDirectory="Always" />
+    <EmbeddedResource Include="Templates/ErrorPage.html.handlebars" />
   </ItemGroup>
   
   <ItemGroup>
@@ -27,6 +27,9 @@
     <PackageReference Include="FluentValidation" Version="8.6.0" />
     <PackageReference Include="Google.Apis.Auth" Version="1.42.0" />
     <PackageReference Include="Handlebars.Net" Version="1.10.1" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.6" />
+    <PackageReference Include="Minio" Version="3.1.8" />
+    <PackageReference Include="MongoDB.Driver" Version="2.10.0" />
     <PackageReference Include="Minio" Version="3.1.13" />
     <PackageReference Include="MongoDB.Driver" Version="2.10.4" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
