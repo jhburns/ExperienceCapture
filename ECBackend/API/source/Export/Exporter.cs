@@ -13,6 +13,7 @@ namespace Carter.App.Export.Main
     using Carter.App.Export.Hosting;
     using Carter.App.Export.JsonExtra;
     using Carter.App.Hosting;
+    using Carter.App.Libs.FileExtra;
     using Carter.App.Libs.MinioExtra;
     using Carter.App.Route.Sessions;
 
@@ -583,7 +584,7 @@ namespace Carter.App.Export.Main
         /// </returns>
         protected static string CreateReadme()
         {
-            string source = System.IO.File.ReadAllText($".{Seperator}Templates{Seperator}README.txt.handlebars");
+            string source = FileExtra.GetEmbeddedFile($"Templates{Seperator}README.txt.handlebars");
             var template = Handlebars.Compile(source);
 
             var data = new
