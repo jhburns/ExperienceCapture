@@ -1,5 +1,7 @@
 namespace Carter.App.Route.UsersAndAuthentication
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using Carter;
@@ -13,6 +15,7 @@ namespace Carter.App.Route.UsersAndAuthentication
 
     using Carter.App.MetaData.UsersAndAuthentication;
 
+    using Carter.App.Route.PreSecurity;
     using Carter.App.Route.ProtectedUsersAndAuthentication;
 
     using Carter.App.Validation.AccessTokenRequest;
@@ -133,6 +136,46 @@ namespace Carter.App.Route.UsersAndAuthentication
                 await signUpRepo.Update(filter, update);
 
                 await res.FromString();
+            });
+
+            // Due to a bug with adding multiple routes of the same path
+            // Path in different modules, we manual auth here
+            this.Get<GetUsers>("users", async (req, res) =>
+            {
+                var isAllowed = await PreSecurity.CheckAccessDirectly(req, res, accessRepo, date, RoleOptions.Admin);
+
+                if (!isAllowed)
+                {
+                    return;
+                }
+
+                var filter = Builders<PersonSchema>.Filter
+                    .Where(p => p.IsExisting == true);
+
+                var sorter = Builders<PersonSchema>.Sort
+                    .Descending(p => p.Fullname);
+
+                var persons = await personRepo.FindAll(filter, sorter);
+
+                var personsWithoutId = persons.Select((p) =>
+                {
+                    p.InternalId = null;
+                    return p;
+                });
+
+                var responceBody = new PersonsResponce
+                {
+                    ContentList = new List<PersonSchema>(personsWithoutId),
+                };
+
+                string json = JsonQuery.FulfilEncoding(req.Query, responceBody);
+                if (json != null)
+                {
+                    await res.FromJson(json);
+                    return;
+                }
+
+                await res.FromBson(responceBody);
             });
 
             this.Post<PostAccessToken>("users/{id}/tokens/", async (req, res) =>
@@ -444,6 +487,19 @@ namespace Carter.App.Route.UsersAndAuthentication
                     .Where(p => p.Id == id))
                     .FirstOrDefaultAsync();
         }
+    }
+
+    /// <summary>
+    /// Responce schema for a list of users.
+    /// </summary>
+    public class PersonsResponce
+    {
+        #pragma warning disable SA1516
+
+        /// <summary>A list of users.</summary>
+        [BsonElement("contentList")]
+        public List<PersonSchema> ContentList { get; set; }
+        #pragma warning restore SA1516
     }
 
     /// <summary>
