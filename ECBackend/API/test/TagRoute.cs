@@ -6,7 +6,7 @@ namespace Carter.Tests.Route.Tags
     using System.Net.Http;
     using System.Threading.Tasks;
 
-    using Carter.App.Lib.Repository;
+    using Carter.App.Libs.Repository;
     using Carter.App.Route.Sessions;
 
     using Carter.Tests.HostingExtra;

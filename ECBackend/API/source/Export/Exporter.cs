@@ -13,7 +13,7 @@ namespace Carter.App.Export.Main
     using Carter.App.Export.Hosting;
     using Carter.App.Export.JsonExtra;
     using Carter.App.Hosting;
-    using Carter.App.Lib.MinioExtra;
+    using Carter.App.Libs.MinioExtra;
     using Carter.App.Route.Sessions;
 
     using CsvHelper;

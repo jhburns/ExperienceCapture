@@ -1,4 +1,4 @@
-namespace Carter.Tests.LibraryScripts
+namespace Carter.Tests.Libs
 {
     using System;
     using System.Collections.Generic;
@@ -6,11 +6,11 @@ namespace Carter.Tests.LibraryScripts
     using System.Net.Http;
     using System.Threading.Tasks;
 
-    using Carter.App.Lib.Authentication;
-    using Carter.App.Lib.Environment;
-    using Carter.App.Lib.Generate;
-    using Carter.App.Lib.Repository;
-    using Carter.App.Lib.Timer;
+    using Carter.App.Libs.Authentication;
+    using Carter.App.Libs.Environment;
+    using Carter.App.Libs.Generate;
+    using Carter.App.Libs.Repository;
+    using Carter.App.Libs.Timer;
 
     using Carter.App.Route.Sessions;
     using Carter.App.Route.UsersAndAuthentication;

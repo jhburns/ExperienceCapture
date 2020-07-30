@@ -2,7 +2,7 @@ namespace Carter.App.Route.Health
 {
     using Carter;
 
-    using Carter.App.Lib.Network;
+    using Carter.App.Libs.Network;
     using Carter.App.MetaData.Health;
 
     using Microsoft.Extensions.Logging;

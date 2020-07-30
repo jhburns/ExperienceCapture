@@ -7,8 +7,8 @@ namespace Carter.Tests.Route.Sessions
     using System.Text;
     using System.Threading.Tasks;
 
-    using Carter.App.Lib.Repository;
-    using Carter.App.Lib.Timer;
+    using Carter.App.Libs.Repository;
+    using Carter.App.Libs.Timer;
     using Carter.App.Route.Sessions;
     using Carter.App.Route.UsersAndAuthentication;
 

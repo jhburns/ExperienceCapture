@@ -1,4 +1,4 @@
-namespace Carter.App.Lib.Timer
+namespace Carter.App.Libs.Timer
 {
     using System;
     using MongoDB.Bson;

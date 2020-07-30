@@ -5,7 +5,7 @@ namespace Carter.Tests.Route.ProtectedUsersAndAuthentication
     using System.Net.Http;
     using System.Threading.Tasks;
 
-    using Carter.App.Lib.Repository;
+    using Carter.App.Libs.Repository;
     using Carter.App.Route.ProtectedUsersAndAuthentication;
     using Carter.App.Route.UsersAndAuthentication;
 

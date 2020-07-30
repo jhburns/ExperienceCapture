@@ -1,4 +1,4 @@
-namespace Carter.App.Lib.Generate
+namespace Carter.App.Libs.Generate
 {
     using System;
     using System.Linq;

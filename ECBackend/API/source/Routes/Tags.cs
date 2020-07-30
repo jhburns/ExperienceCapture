@@ -2,9 +2,9 @@ namespace Carter.App.Route.Tags
 {
     using Carter;
 
-    using Carter.App.Lib.Network;
-    using Carter.App.Lib.Repository;
-    using Carter.App.Lib.Timer;
+    using Carter.App.Libs.Network;
+    using Carter.App.Libs.Repository;
+    using Carter.App.Libs.Timer;
 
     using Carter.App.MetaData.Tags;
 
