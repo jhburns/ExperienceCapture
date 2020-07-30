@@ -7,6 +7,7 @@ namespace Carter.App.Hosting
 
     using Carter.App.Libs.Environment;
     using Carter.App.Libs.ExporterExtra;
+    using Carter.App.Libs.FileExtra;
     using Carter.App.Libs.MinioExtra;
     using Carter.App.Libs.Repository;
     using Carter.App.Libs.Timer;
@@ -132,7 +133,7 @@ namespace Carter.App.Hosting
                 options.DocumentTitle = "Experience Capture API";
 
                 string seperator = Path.DirectorySeparatorChar.ToString();
-                options.HeadContent = File.ReadAllText($"Templates{seperator}OpenApiHeader.html");
+                options.HeadContent = FileExtra.GetEmbeddedFile($"Templates{seperator}OpenApiHeader.html");
             });
 
             app.UseEndpoints(builder => builder.MapCarter());

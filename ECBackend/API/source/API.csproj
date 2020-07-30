@@ -16,8 +16,8 @@
 
   <ItemGroup>
     <None Include="appsettings.json" CopyToPublishDirectory="Always" />
-    <None Include="Templates/README.txt.handlebars" CopyToPublishDirectory="Always" />
-    <None Include="Templates/OpenApiHeader.html" CopyToPublishDirectory="Always" />
+    <EmbeddedResource Include="Templates/README.txt.handlebars" />
+    <EmbeddedResource Include="Templates/OpenApiHeader.html" />
     <EmbeddedResource Include="Templates/ErrorPage.html.handlebars" />
   </ItemGroup>
   
