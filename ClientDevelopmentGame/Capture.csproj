@@ -67,6 +67,7 @@
     <Compile Include="Assets\ExperienceCapture\Subassets\HandleCapturing.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\InputStructure.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\Libs\Debug.cs" />
+    <Compile Include="Assets\ExperienceCapture\Subassets\Libs\LoadingCircle.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\Libs\Network.cs" />
     <None Include="Assets\ExperienceCapture\Subassets\Art\Rubik\OFL.txt" />
     <Reference Include="UnityEngine.AIModule">

@@ -49,6 +49,7 @@
         public InputField urlInput;
         public Text openingInfo;
         public Text connectionInfo;
+        public Image loadingCircle;
         public Text warningInfo;
 
         public Text sessionInfo;
@@ -61,6 +62,9 @@
         private string sessionID;
         private string url;
         private SecretStorage store;
+
+        public Image errorModal;
+        public Text errorBody;
 
         private void Start()
         {
@@ -134,6 +138,7 @@
             newSession.gameObject.SetActive(false);
 
             connectionInfo.gameObject.SetActive(true);
+            loadingCircle.gameObject.SetActive(true);
 
             // Content of the body is ignored
             byte[] emptyBody = Serial.toBSON(new { });
@@ -161,20 +166,7 @@
                     }
                 }, (error) =>
                 {
-                    Debug.Log(error);
-
-                    sessionInfo.text = error;
-
-                    connectionInfo.gameObject.SetActive(false);
-
-                    sessionInfo.gameObject.SetActive(true);
-                    sessionBackground.gameObject.SetActive(true);
-
-                    urlTitle.gameObject.SetActive(true);
-                    urlInput.gameObject.SetActive(true);
-                    warningInfo.gameObject.SetActive(true);
-
-                    newSession.gameObject.SetActive(true);
+                    showError(error);
                 })
             );
         }
@@ -211,7 +203,7 @@
                     }
                 }, (error) =>
                 {
-                    Debug.Log(error);
+                    showError(error);
                 })
             );
         }
@@ -226,6 +218,7 @@
                     sessionInfo.gameObject.SetActive(true);
                     sessionBackground.gameObject.SetActive(true);
                     openingInfo.gameObject.SetActive(false);
+                    loadingCircle.gameObject.SetActive(false);
 
                     nameTitle.gameObject.SetActive(true);
                     nameInput.gameObject.SetActive(true);
@@ -241,19 +234,11 @@
                     }
                     catch (Exception e)
                     {
-                        sessionInfo.text = "Error deserializing BSON response: " + e;
-                        Debug.Log(e);
-                        newSession.gameObject.SetActive(true);
+                        showError(e.ToString());
                     }
                 }, (error) =>
                 {
-                    sessionInfo.text = error;
-
-                    sessionInfo.gameObject.SetActive(true);
-                    sessionBackground.gameObject.SetActive(true);
-                    newSession.gameObject.SetActive(true);
-
-                    Debug.Log(error);
+                    showError(error);
                 })
             );
         }
@@ -265,27 +250,51 @@
             try
             {
                 pairs = parseSpecific();
+
+                if (offlineMode)
+                {
+                    createHandler("no URL", "NoSessionID", nameInput.text, pairs);
+                }
+                else
+                {
+                    createHandler(url, sessionID, nameInput.text, pairs);
+                }
             }
             catch (Exception e)
             {
-                Debug.Log(e);
-
-                sessionInfo.text = e.ToString();
-                sessionInfo.gameObject.SetActive(true);
-                sessionBackground.gameObject.SetActive(true);
-                start.gameObject.SetActive(true);
-
-                return;
+                showError(e.ToString());
             }
+        }
+ 
+        private void showError(string error)
+        {
+            Debug.Log(error);
 
-            if (offlineMode)
-            {
-                createHandler("no URL", "NoSessionID", nameInput.text, pairs);
-            }
-            else
-            {
-                createHandler(url, sessionID, nameInput.text, pairs);
-            }
+            errorBody.text = error;
+            errorModal.gameObject.SetActive(true);
+
+            connectionInfo.gameObject.SetActive(false);
+            loadingCircle.gameObject.SetActive(false);
+            sessionInfo.gameObject.SetActive(false);
+            sessionBackground.gameObject.SetActive(false);
+
+            urlTitle.gameObject.SetActive(true);
+            urlInput.gameObject.SetActive(true);
+            warningInfo.gameObject.SetActive(true);
+            newSession.gameObject.SetActive(true);
+
+            nameTitle.gameObject.SetActive(false);
+            nameInput.gameObject.SetActive(false);
+            start.gameObject.SetActive(false);
+            dataInfo.gameObject.SetActive(false);
+
+            sessionInfo.gameObject.SetActive(false);
+            sessionBackground.gameObject.SetActive(false);
+        }
+
+        public void onCloseError()
+        {
+            errorModal.gameObject.SetActive(false);
         }
 
         // All of this is since Unity only supports 1D arrays in the editor
