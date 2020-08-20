@@ -80,12 +80,6 @@
 
         private void setup()
         {
-            // In case an event system doesn't exist in client
-            if (GameObject.Find("EventSystem") == null)
-            {
-                Instantiate(eventSystem);
-            }
-
             newSession.gameObject.SetActive(!offlineMode);
             urlTitle.gameObject.SetActive(!offlineMode);
             urlInput.gameObject.SetActive(!offlineMode);
@@ -96,16 +90,13 @@
             start.gameObject.SetActive(offlineMode);
             dataInfo.gameObject.SetActive(offlineMode);
 
-
             urlInput.text = defaultUrl;
 
-            // Just too coincidental 
-            nameInput.text = "Boyd";
-
-            sessionInfo.gameObject.SetActive(false);
+            // Save the text of session so it can be appended
+            // In front of each session id
             sessionInfoSave = sessionInfo.text;
+            sessionInfo.gameObject.SetActive(false);
             sessionBackground.gameObject.SetActive(false);
-
             openingInfo.gameObject.SetActive(false);
             connectionInfo.gameObject.SetActive(false);
 
@@ -292,7 +283,7 @@
             sessionBackground.gameObject.SetActive(false);
         }
 
-        public void onCloseError()
+        public void OnCloseError()
         {
             errorModal.gameObject.SetActive(false);
         }
