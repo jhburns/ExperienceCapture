@@ -66,8 +66,11 @@
     <Compile Include="Assets\ExperienceCapture\Subassets\CaptureSetup.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\HandleCapturing.cs" />
     <Compile Include="Assets\ExperienceCapture\Subassets\InputStructure.cs" />
-    <Compile Include="Assets\ExperienceCapture\Subassets\LibraryScripts\Debug.cs" />
-    <Compile Include="Assets\ExperienceCapture\Subassets\LibraryScripts\Network.cs" />
+    <Compile Include="Assets\ExperienceCapture\Subassets\Libs\Debug.cs" />
+    <Compile Include="Assets\ExperienceCapture\Subassets\Libs\LoadingCircle.cs" />
+    <Compile Include="Assets\ExperienceCapture\Subassets\Libs\Network.cs" />
+    <Compile Include="Assets\ExperienceCapture\Subassets\Libs\OpenLink.cs" />
+    <None Include="Assets\ExperienceCapture\Subassets\Art\Rubik\OFL.txt" />
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.2.11f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
     </Reference>
@@ -307,9 +310,6 @@
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>C:/Users/Hat/source/repos/jhburns/ExperienceCapture/ClientDevelopmentGame/Assets/ExperienceCapture/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.Advertisements">
-      <HintPath>C:/Users/Hat/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Analytics">
       <HintPath>C:/Users/Hat/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/UnityEngine.Analytics.dll</HintPath>
