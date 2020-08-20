@@ -30,14 +30,14 @@
         [Tooltip("Only capture certain properties. Increase the size and add an entry like: [GameObject]:[Property]. Disabled outside the Editor.")]
         public string[] limitOutputToSpecified;
 
-        [Tooltip("If checked, print data to console and don't attempt to connect to a server. Disabled outside the Editor.")]
+        [Tooltip("If checked, print data to console and don't attempt to connect to a server. Disabled in builds.")]
         public bool offlineMode;
 
         [Tooltip("Extra debugging data.")]
-        public bool printAdditionalCaptureInfo;
+        public bool printDebuggingData;
 
-        [Tooltip("Still capture data, but don't print it.")]
-        public bool doNotPrintToConsole;
+        [Tooltip("Still capture data, but don't print it to the console.")]
+        public bool doNotPrintCaptures;
 
         public HandleCapturing handler;
 
@@ -89,14 +89,19 @@
             nameInput.gameObject.SetActive(offlineMode);
             start.gameObject.SetActive(offlineMode);
             dataInfo.gameObject.SetActive(offlineMode);
+            sessionInfo.gameObject.SetActive(offlineMode);
+            sessionBackground.gameObject.SetActive(offlineMode);
+
+            if (offlineMode)
+            {
+                sessionInfo.text = "Running offline.";
+            }
 
             urlInput.text = defaultUrl;
 
             // Save the text of session so it can be appended
             // In front of each session id
             sessionInfoSave = sessionInfo.text;
-            sessionInfo.gameObject.SetActive(false);
-            sessionBackground.gameObject.SetActive(false);
             openingInfo.gameObject.SetActive(false);
             connectionInfo.gameObject.SetActive(false);
 
@@ -332,8 +337,8 @@
 
             newHandler.isCapturing = false;
 
-            newHandler.isVerbose = printAdditionalCaptureInfo;
-            newHandler.isSilent = doNotPrintToConsole;
+            newHandler.isVerbose = printDebuggingData;
+            newHandler.isSilent = doNotPrintCaptures;
 
             newHandler.store = store;
 
