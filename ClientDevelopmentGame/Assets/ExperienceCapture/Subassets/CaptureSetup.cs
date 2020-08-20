@@ -173,7 +173,7 @@
 
         private IEnumerator WaitThenOpen(ClaimData responce)
         {
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(0.5f);
 
             string claimSanitized = UnityWebRequest.EscapeURL(responce.claimToken);
             string openUrl = url + "/signInFor?claimToken=" + claimSanitized;
