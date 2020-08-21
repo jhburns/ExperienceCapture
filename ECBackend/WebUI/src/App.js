@@ -19,8 +19,6 @@ import BootstrapProvider from '@bootstrap-styled/provider/lib/BootstrapProvider'
 
 import { verifyEnvironment } from "libs/environment";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-
 import theme from 'libs/theme';
 
 verifyEnvironment(["REACT_APP_GOOGLE_CLIENT_ID"]);
