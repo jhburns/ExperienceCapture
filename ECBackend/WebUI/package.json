@@ -5,7 +5,6 @@
   "dependencies": {
     "@bootstrap-styled/provider": "^2.0.2",
     "@bootstrap-styled/v4": "^3.3.0",
-    "bootstrap": "^4.4.1",
     "bootstrap-styled": "^2.7.2",
     "moment": "^2.24.0",
     "query-string": "^6.9.0",
