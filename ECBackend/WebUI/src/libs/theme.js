@@ -1,24 +1,31 @@
 import { makeTheme } from 'bootstrap-styled/lib/theme';
 
+const primary = '#6E2EEE';
+const warning = '#D50000';
+const background = '#F3F0F5';
+const content = '#161617';
+
 const theme = makeTheme({
   // Colors
-  '$primary': '#6E2EEE',
-  '$warning': '#D50000',
+  '$primary': `${primary}`,
+  '$warning': `${warning}`,
+  '$background': `${background}`,
+  '$content': `${content}`,
 
   // Base
   '$font-family-base': 'Rubik, sans-serif',
-  'body-bg': '#F3F0F5',
-  'body-color': '#161617',
+  '$body-bg': `${background}`,
+  '$body-color': `${content}`,
 
   // Buttons
-  '$btn-primary-bg': '#6E2EEE',
-  '$btn-primary-color': '#F3F0F5',
+  '$btn-primary-bg': `${primary}`,
+  '$btn-primary-color': `${background}`,
   '$btn-border-radius': '0.20rem',
-  '$btn-danger-bg': '#D50000',
-  '$btn-danger-color': '#FFF',
+  '$btn-danger-bg': `${warning}`,
+  '$btn-danger-color': '$white',
 
   // Links
-  '$link-color': '#6E2EEE',
+  '$link-color': `${primary}`,
   '$link-decoration': 'underline',
 });
 
