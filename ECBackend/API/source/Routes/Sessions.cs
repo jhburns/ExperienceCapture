@@ -57,15 +57,6 @@ namespace Carter.App.Route.Sessions
 
             this.Post<PostSessions>("/", async (req, res) =>
             {
-                string uniqueID = Generate.GetRandomId(4);
-
-                // Will loop until a unique id is found
-                // Needed because the ids that are generated are from a small number of combinations
-                while ((await sessionRepo.FindById(uniqueID)) != null)
-                {
-                    uniqueID = Generate.GetRandomId(4);
-                }
-
                 // Has to exist due to PreSecurity Check
                 string token = req.Cookies["ExperienceCapture-Access-Token"];
 
@@ -79,23 +70,47 @@ namespace Carter.App.Route.Sessions
                 var user = await personRepo
                     .FindOne(filterUser);
 
+                string shortID = Generate.GetRandomId(4);
+
                 var sessionDoc = new SessionSchema
                 {
                     InternalId = ObjectId.GenerateNewId(),
-                    Id = uniqueID,
+                    Id = shortID,
                     User = user, // Copying user data instead of referencing so it can never change in the session
                     CreatedAt = new BsonDateTime(date.UtcNow),
                     Tags = new List<string>(),
                 };
 
-                await sessionRepo.Add(sessionDoc);
+                // Retry generating a short id until it is unique
+                bool isUnique = true;
+                do
+                {
+                    try
+                    {
+                        sessionDoc.Id = shortID;
+                        await sessionRepo.Add(sessionDoc);
+                        isUnique = true;
+                    }
+                    catch (MongoWriteException e)
+                    {
+                        // Re-throw any other type of exception except non-unique keys
+                        if (e.WriteError.Code != 11000)
+                        {
+                            throw e;
+                        }
+
+                        shortID = Generate.GetRandomId(4);
+                        isUnique = false;
+                    }
+                }
+                while (!isUnique);
 
                 // isOngoing is a proxy variable and will always start out as true
                 sessionDoc.IsOngoing = true;
                 sessionDoc.InternalId = null;
                 sessionDoc.User.InternalId = null;
 
-                captureRepo.Configure($"sessions.{uniqueID}");
+                captureRepo.Configure($"sessions.{shortID}");
 
                 // Secondary index or else Mongo will fail on large queries
                 // It has a limit for max number of documents on properties
@@ -245,10 +260,10 @@ namespace Carter.App.Route.Sessions
 
             this.Post<PostSession>("/{id}", async (req, res) =>
             {
-                string uniqueID = req.RouteValues.As<string>("id");
+                string shortID = req.RouteValues.As<string>("id");
 
                 var sessionDoc = await sessionRepo
-                    .FindById(uniqueID);
+                    .FindById(shortID);
 
                 if (sessionDoc == null)
                 {
@@ -308,10 +323,10 @@ namespace Carter.App.Route.Sessions
                     return;
                 }
 
-                captureRepo.Configure($"sessions.{uniqueID}");
+                captureRepo.Configure($"sessions.{shortID}");
                 await captureRepo.Add(document);
 
-                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
+                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == shortID);
 
                 // This lastCaptureAt is undefined on the session document until the first call of this endpoint
                 // Export flags are reset so the session can be re-exported
@@ -326,10 +341,10 @@ namespace Carter.App.Route.Sessions
 
             this.Get<GetSession>("/{id}", async (req, res) =>
             {
-                string uniqueID = req.RouteValues.As<string>("id");
+                string shortID = req.RouteValues.As<string>("id");
 
                 var sessionDoc = await sessionRepo
-                    .FindById(uniqueID);
+                    .FindById(shortID);
 
                 if (sessionDoc == null)
                 {
@@ -376,11 +391,11 @@ namespace Carter.App.Route.Sessions
 
             this.Delete<DeleteSession>("/{id}", async (req, res) =>
             {
-                string uniqueID = req.RouteValues.As<string>("id");
+                string shortID = req.RouteValues.As<string>("id");
 
-                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == uniqueID);
+                var filter = Builders<SessionSchema>.Filter.Where(s => s.Id == shortID);
                 var sessionDoc = await sessionRepo
-                    .FindById(uniqueID);
+                    .FindById(shortID);
 
                 if (sessionDoc == null)
                 {
@@ -521,13 +536,15 @@ namespace Carter.App.Route.Sessions
             : base(database, "sessions")
         {
             var index = Builders<SessionSchema>.IndexKeys;
-            var keyCreated = index.Ascending(s => s.CreatedAt);
 
+            var keyCreated = index.Ascending(s => s.CreatedAt);
             _ = this.Index(keyCreated);
 
             var keyId = index.Ascending(s => s.Id);
-
-            _ = this.Index(keyId);
+            _ = this.Index(keyId, new CreateIndexOptions<SessionSchema>
+            {
+                Unique = true,
+            });
         }
 
         /// <inheritdoc />
