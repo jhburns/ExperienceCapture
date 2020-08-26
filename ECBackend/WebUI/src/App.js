@@ -19,7 +19,7 @@ import BootstrapProvider from '@bootstrap-styled/provider/lib/BootstrapProvider'
 
 import { verifyEnvironment } from "libs/environment";
 
-import theme from 'libs/theme';
+import { theme } from 'libs/theme';
 
 verifyEnvironment(["REACT_APP_GOOGLE_CLIENT_ID"]);
 

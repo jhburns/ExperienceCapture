@@ -29,4 +29,4 @@ const theme = makeTheme({
   '$link-decoration': 'underline',
 });
 
-export default theme;
+export { theme };
