@@ -4,24 +4,24 @@ updates:
   - directory: "/ECBackend/Cypress"
     package-ecosystem: "npm"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
 
   # Enable version updates for WebUI
   - directory: "/ECBackend/WebUI"
     package-ecosystem: "npm"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
 
   # Enable version updates for API
   - directory: "/ECBackend/API"
     package-ecosystem: "nuget"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
 
   # Enable version updates for Pulumi
   - directory: "/Deploy/Pulumi"
     package-ecosystem: "nuget"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
 
 version: 2
