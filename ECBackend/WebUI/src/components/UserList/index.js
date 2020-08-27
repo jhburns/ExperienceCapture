@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Wrapper } from 'components/UserList/style';
 
 import { getData, deleteData } from 'libs/fetchExtra';
-import { Row, Col } from '@bootstrap-styled/v4';
+import { Row, Col, Button } from '@bootstrap-styled/v4';
 
 // This component can only be used by admins
 class UserList extends Component {
@@ -77,13 +77,13 @@ class UserList extends Component {
       items.push(<Row key={index}>
         <Col className="d-inline-block">
           <p className="d-inline-block mr-3">{value.fullname}</p>
-          <button
+          <Button
             className="btn btn-outline-dark"
             onClick={() => this.onDelete(value.id)}
             data-cy="delete-others"
           >
             Delete
-          </button>
+          </Button>
         </Col>
       </Row>);
     }

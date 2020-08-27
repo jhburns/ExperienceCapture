@@ -11,7 +11,7 @@ import { Row, Col, Button } from '@bootstrap-styled/v4';
 
 import LoginBox from 'components/LoginBox';
 
-import { Link } from "react-router-dom";
+import { LinkContainer } from 'react-router-bootstrap';
 
 class SignIn extends Component {
   constructor(props) {
@@ -39,6 +39,17 @@ class SignIn extends Component {
       throw this.state.error;
     }
 
+    const homeRow =
+      <Row className="justify-content-center">
+        <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
+          <LinkContainer to="/home/start" >
+            <Button data-cy="go-home">
+              Go Home
+            </Button>
+          </LinkContainer>
+        </Col>
+      </Row>;
+
     const signOutRow =
       <Row className="justify-content-center">
         <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
@@ -49,15 +60,6 @@ class SignIn extends Component {
           >
             Sign Out
           </Button>
-        </Col>
-      </Row>;
-
-    const homeRow =
-      <Row className="justify-content-center">
-        <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
-          <Link to="/home/start" className="btn btn-dark btn-block" data-cy="go-home">
-            Go Home
-          </Link>
         </Col>
       </Row>;
 
