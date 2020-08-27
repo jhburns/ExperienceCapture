@@ -10,6 +10,8 @@ import Footer from "components/Footer";
 
 import queryString from 'query-string';
 
+import allTheData from 'img/all_the_data.svg';
+
 class SignInPage extends Component {
   constructor(props) {
     super(props);
@@ -50,6 +52,11 @@ class SignInPage extends Component {
                 claimToken={this.state.claimToken}
                 signUpToken={this.state.signUpToken}
               />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <img src={allTheData} alt="All of the data." />
             </Col>
           </Row>
           <Footer />
