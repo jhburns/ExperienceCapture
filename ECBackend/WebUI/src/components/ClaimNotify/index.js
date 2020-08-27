@@ -14,7 +14,7 @@ class ClaimNotify extends Component {
             <h3>
               <span role="img" aria-label="confirmation">✔️</span> You've authenticated the session
             </h3>
-            <Message>Return to the game, or <Link to="/" data-cy="go-root">sign in.</Link></Message>
+            <Message>Return to the game, or <Link to="/#" data-cy="go-root">sign in.</Link></Message>
           </Col>
         </Row>
       </Wrapper>

@@ -30,7 +30,7 @@ class GetSignUpLink extends Component {
     const source = window.location.origin;
 
     this.setState({
-      link: `${source}/signUp?${query}`,
+      link: `${source}/?${query}`,
     });
   }
 

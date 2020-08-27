@@ -1,14 +1,33 @@
 import React, { Component } from 'react';
-import logo from 'logo.svg';
+import logo from 'img/logo.svg';
 
 import GoogleSignIn from "components/GoogleSignIn";
 
 import { Container, Row, Col } from '@bootstrap-styled/v4';
-import { Wrapper, Logo } from 'pages/NormalSignIn/style';
+import { Wrapper, Logo } from 'pages/SignIn/style';
 
 import Footer from "components/Footer";
 
-class NormalSignInPage extends Component {
+import queryString from 'query-string';
+
+class SignInPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      signUpToken: null,
+      claimToken: null,
+    };
+  }
+
+  componentDidMount() {
+    const query = queryString.parse(this.props.location.search);
+
+    this.setState({
+      signUpToken: query.signUpToken,
+      claimToken: query.claimToken,
+    });
+  }
+
   render() {
     return (
       <Wrapper>
@@ -27,7 +46,10 @@ class NormalSignInPage extends Component {
           </Row>
           <Row className="justify-content-center" noGutters={true}>
             <Col xs={10} >
-              <GoogleSignIn />
+              <GoogleSignIn
+                claimToken={this.state.claimToken}
+                signUpToken={this.state.signUpToken}
+              />
             </Col>
           </Row>
           <Footer />
@@ -37,4 +59,4 @@ class NormalSignInPage extends Component {
   }
 }
 
-export default NormalSignInPage;
+export default SignInPage;
