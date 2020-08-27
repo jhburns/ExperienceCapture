@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
-import logo from 'logo.svg';
+import logo from 'img/logo.svg';
 
 import GoogleSignIn from "components/GoogleSignIn";
 
 import { Container, Row, Col } from '@bootstrap-styled/v4';
-import { Wrapper, Logo } from 'pages/NormalSignIn/style';
-
-import queryString from 'query-string';
+import { Wrapper, Logo } from 'pages/SignIn/style';
 
 import Footer from "components/Footer";
 
-class ClaimPage extends Component {
+import queryString from 'query-string';
+
+import allTheData from 'img/all_the_data.svg';
+
+class SignInPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      signUpToken: null,
       claimToken: null,
     };
   }
@@ -22,6 +25,7 @@ class ClaimPage extends Component {
     const query = queryString.parse(this.props.location.search);
 
     this.setState({
+      signUpToken: query.signUpToken,
       claimToken: query.claimToken,
     });
   }
@@ -46,7 +50,13 @@ class ClaimPage extends Component {
             <Col xs={10} >
               <GoogleSignIn
                 claimToken={this.state.claimToken}
+                signUpToken={this.state.signUpToken}
               />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <img src={allTheData} alt="All of the data." />
             </Col>
           </Row>
           <Footer />
@@ -56,4 +66,4 @@ class ClaimPage extends Component {
   }
 }
 
-export default ClaimPage;
+export default SignInPage;

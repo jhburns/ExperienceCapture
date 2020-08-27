@@ -2,10 +2,8 @@ import React from 'react';
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import SignUpPage from "pages/SignUp";
 import AdminPage from "pages/Admin";
-import ClaimPage from "pages/Claim";
-import NormalSignInPage from "pages/NormalSignIn";
+import NormalSignInPage from "pages/SignIn";
 import HomePage from 'pages/Home';
 import SessionsPage from 'pages/Sessions';
 import SettingsPage from 'pages/Settings';
@@ -36,8 +34,6 @@ function App() {
           <ErrorBoundary>
             <Switch>
               <Route exact path="/" component={NormalSignInPage} />
-              <Route exact path="/signUp" component={SignUpPage} />
-              <Route exact path="/signInFor" component={ClaimPage} />
               <Route exact path="/home/start" component={HomePage} />
               <Route exact path="/home/sessions" component={SessionsPage} />
               <Route exact path="/home/sessions/id/:id" component={SessionPage} />

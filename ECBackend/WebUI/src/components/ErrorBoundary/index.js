@@ -20,7 +20,7 @@ import { signOutUser } from 'libs/userManagement';
 
 import { withRouter, Switch, Route } from "react-router";
 
-import NormalSignInPage from "pages/NormalSignIn";
+import NormalSignInPage from "pages/SignIn";
 
 class ErrorBoundary extends Component {
   constructor(props) {

@@ -76,7 +76,7 @@ class Admin extends Component {
           <p>Redirecting...</p>
           <Redirect
             to={{
-              pathname: "/signUp",
+              pathname: "/",
               search: queryString.stringify({signUpToken: this.state.accessToken}),
             }}
           />

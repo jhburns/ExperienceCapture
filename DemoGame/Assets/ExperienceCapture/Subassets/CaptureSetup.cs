@@ -185,7 +185,7 @@
             yield return new WaitForSeconds(1.5f);
 
             string claimSanitized = UnityWebRequest.EscapeURL(responce.claimToken);
-            string openUrl = url + "/signInFor?claimToken=" + claimSanitized;
+            string openUrl = url + "/?claimToken=" + claimSanitized;
 
             Application.OpenURL(openUrl);
 
