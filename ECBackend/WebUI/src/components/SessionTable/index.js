@@ -213,6 +213,10 @@ class SessionTable extends Component {
             </Button>
             <Button
               color="white"
+              /*
+                TODO: Fix this being active even when there are not sessions
+                Also fix tests so it doesn't happen again.
+              */
               disabled={this.state.pageNumber >= this.state.pageTotal}
               onClick={async () => this.navigatePages(this.state.pageNumber + 1)}
               data-cy="sessions-next"

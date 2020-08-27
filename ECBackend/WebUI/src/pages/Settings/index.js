@@ -116,7 +116,7 @@ class SettingsPage extends Component {
             <Col xs={7} md={4} xl={3}>
               <Button
                 onClick={this.onSignOut}
-                className="btn btn-outline-dark btn-block"
+                className="btn-block"
                 data-cy="sign-out"
               >
                 Sign Out
@@ -126,7 +126,7 @@ class SettingsPage extends Component {
           <Row className="m-0 justify-content-center">
             <Col xs={7} md={4} xl={3}>
               <Button
-                className="btn btn-danger btn-block"
+                className="btn-block"
                 onClick={this.toggle}
                 data-cy="delete-account"
               >
