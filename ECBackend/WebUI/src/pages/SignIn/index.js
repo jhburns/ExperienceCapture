@@ -33,7 +33,7 @@ class SignInPage extends Component {
   render() {
     return (
       <Wrapper>
-        <Container noGutters={true}>
+        <Container noGutters={true} className="p-0">
           <Row className="mt-5">
             <Col className="d-flex align-items" xs="5" lg="2">
               <Logo src={logo} alt="logo" />
