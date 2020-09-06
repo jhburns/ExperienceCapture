@@ -3,7 +3,7 @@ import logo from 'img/logo.svg';
 
 import GoogleSignIn from "components/GoogleSignIn";
 
-import { Container, Row, Col } from '@bootstrap-styled/v4';
+import { Container, Row, Col, H1 } from '@bootstrap-styled/v4';
 import { Wrapper, Logo } from 'pages/SignIn/style';
 
 import Footer from "components/Footer";
@@ -34,18 +34,17 @@ class SignInPage extends Component {
     return (
       <Wrapper>
         <Container>
-          <Row className="justify-content-center mb-4 pb-2" noGutters={true}>
-            <Col>
+          <Row className="mt-5" noGutters={true}>
+            <Col className="d-flex align-items" xs="5">
               <Logo src={logo} alt="logo" />
             </Col>
-          </Row>
-          <Row noGutters={true} className="mb-5">
             <Col>
-              <h1 className="text-center">
-                Experience <br /> Capture
-              </h1>
+              <H1>
+                Experience Capture
+              </H1>
             </Col>
           </Row>
+          {/*
           <Row className="justify-content-center" noGutters={true}>
             <Col xs={10} >
               <GoogleSignIn
@@ -60,6 +59,7 @@ class SignInPage extends Component {
             </Col>
           </Row>
           <Footer />
+          */}
         </Container>
       </Wrapper>
     );
