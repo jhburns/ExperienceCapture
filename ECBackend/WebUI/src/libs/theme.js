@@ -31,7 +31,7 @@ const theme = makeTheme({
   '$link-decoration': 'underline',
 
   // Header
-  '$font-size-h1': `2rem`,
+  '$font-size-h1': `1.9rem`,
   '$headings-font-family': `${fonts}`,
   '$headings-font-weight': '700',
 });
