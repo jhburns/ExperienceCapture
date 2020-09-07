@@ -5,6 +5,8 @@ const warning = '#D50000';
 const background = '#F3F0F5';
 const content = '#161617';
 
+const fonts = 'Rubik, sans-serif';
+
 const theme = makeTheme({
   // Colors
   '$primary': `${primary}`,
@@ -13,7 +15,7 @@ const theme = makeTheme({
   '$content': `${content}`,
 
   // Base
-  '$font-family-base': 'Rubik, sans-serif',
+  '$font-family-base': `${fonts}`,
   '$body-bg': `${background}`,
   '$body-color': `${content}`,
 
@@ -27,6 +29,10 @@ const theme = makeTheme({
   // Links
   '$link-color': `${primary}`,
   '$link-decoration': 'underline',
+
+  // Header
+  '$font-size-h1': `1.9rem`,
+  '$headings-font-family': `${fonts}`,
 });
 
 export { theme };

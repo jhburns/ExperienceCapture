@@ -3,8 +3,8 @@ import logo from 'img/logo.svg';
 
 import GoogleSignIn from "components/GoogleSignIn";
 
-import { Container, Row, Col } from '@bootstrap-styled/v4';
-import { Wrapper, Logo } from 'pages/SignIn/style';
+import { Container, Row, Col, H1 } from '@bootstrap-styled/v4';
+import { Wrapper, Logo, Illustration } from 'pages/SignIn/style';
 
 import Footer from "components/Footer";
 
@@ -33,17 +33,20 @@ class SignInPage extends Component {
   render() {
     return (
       <Wrapper>
-        <Container>
-          <Row className="justify-content-center mb-4 pb-2" noGutters={true}>
-            <Col>
-              <Logo src={logo} alt="logo" />
+        <Container className="p-0">
+          <Row className="mt-5 mb-5 pb-5" noGutters={true}>
+            <Col className="d-flex align-items-center pr-0" xs="5" sm="4" lg="2">
+              <Logo src={logo} alt="logo"/>
+            </Col>
+            <Col className="d-flex align-items-center pl-0">
+              <H1 className="mb-0 font-weight-bold">
+                Experience Capture
+              </H1>
             </Col>
           </Row>
-          <Row noGutters={true} className="mb-5">
+          <Row className="mb-5 pb-3" noGutters={true}>
             <Col>
-              <h1 className="text-center">
-                Experience <br /> Capture
-              </h1>
+              <Illustration className="pl-2" src={allTheData} alt="All of the data." />
             </Col>
           </Row>
           <Row className="justify-content-center" noGutters={true}>
@@ -52,11 +55,6 @@ class SignInPage extends Component {
                 claimToken={this.state.claimToken}
                 signUpToken={this.state.signUpToken}
               />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <img src={allTheData} alt="All of the data." />
             </Col>
           </Row>
           <Footer />

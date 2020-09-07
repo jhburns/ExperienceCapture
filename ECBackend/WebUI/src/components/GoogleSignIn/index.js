@@ -41,10 +41,15 @@ class SignIn extends Component {
 
     const homeRow =
       <Row className="justify-content-center">
-        <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
+        <Col xs={8} sm={5} md={4} lg={3} className="mb-2">
           <LinkContainer to="/home/start" >
-            <Button data-cy="go-home">
-              Go Home
+            <Button
+              data-cy="go-home"
+              block={true}
+              className="text-decoration-none"
+              size="lg"
+            >
+              GO HOME
             </Button>
           </LinkContainer>
         </Col>
@@ -52,13 +57,15 @@ class SignIn extends Component {
 
     const signOutRow =
       <Row className="justify-content-center">
-        <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
+        <Col xs={8} sm={5} md={4} lg={3} className="mb-2">
           <Button
             onClick={this.onSignOut}
-            className="btn btn-outline-dark btn-block"
             data-cy="sign-out"
+            block={true}
+            outline={true}
+            size="lg"
           >
-            Sign Out
+            SIGN OUT
           </Button>
         </Col>
       </Row>;
@@ -75,7 +82,7 @@ class SignIn extends Component {
         <Wrapper>
           <LoginBox>
             Sorry, there was an issue signing in. <br />
-            Try a different account.
+            Try again.
           </LoginBox>
           {signOutRow}
         </Wrapper>
@@ -84,7 +91,7 @@ class SignIn extends Component {
       return (
         <Wrapper data-cy="already-notify">
           <LoginBox>
-            You're Already Signed Up.
+            You've Already Signed Up.
           </LoginBox>
           {homeRow}
           {signOutRow}
@@ -110,8 +117,7 @@ class SignIn extends Component {
 	    return (
         <Wrapper>
           <LoginBox>
-            You're Signed Out. <br />
-            Sign In Again.
+            You've Signed Out.
           </LoginBox>
           {googleRow}
         </Wrapper>
