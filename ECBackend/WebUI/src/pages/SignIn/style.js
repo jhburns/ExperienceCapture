@@ -11,4 +11,11 @@ const Logo = styled.img`
   display: block;
 `;
 
-export { Wrapper, Logo };
+const Illustration = styled.img`
+  width: 20rem;
+  height: auto;
+  margin: auto;
+  display: block;
+`;
+
+export { Wrapper, Logo, Illustration };

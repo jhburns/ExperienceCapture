@@ -4,7 +4,7 @@ import logo from 'img/logo.svg';
 import GoogleSignIn from "components/GoogleSignIn";
 
 import { Container, Row, Col, H1 } from '@bootstrap-styled/v4';
-import { Wrapper, Logo } from 'pages/SignIn/style';
+import { Wrapper, Logo, Illustration } from 'pages/SignIn/style';
 
 import Footer from "components/Footer";
 
@@ -34,17 +34,21 @@ class SignInPage extends Component {
     return (
       <Wrapper>
         <Container noGutters={true} className="p-0">
-          <Row className="mt-5">
-            <Col className="d-flex align-items" xs="5" sm="4" lg="2">
+          <Row className="mt-5 mb-5 pb-5 mr-0">
+            <Col className="d-flex align-items-center pr-0" xs="5" sm="4" lg="2">
               <Logo src={logo} alt="logo"/>
             </Col>
-            <Col className="d-flex align-items-center">
-              <H1 className="mb-0">
+            <Col className="d-flex align-items-center pl-0">
+              <H1 className="mb-0 font-weight-bold">
                 Experience Capture
               </H1>
             </Col>
           </Row>
-          {/*
+          <Row className="mb-5 pb-3 mr-0">
+            <Col>
+              <Illustration className="pl-2" src={allTheData} alt="All of the data." />
+            </Col>
+          </Row>
           <Row className="justify-content-center" noGutters={true}>
             <Col xs={10} >
               <GoogleSignIn
@@ -53,11 +57,7 @@ class SignInPage extends Component {
               />
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <img src={allTheData} alt="All of the data." />
-            </Col>
-          </Row>
+          {/*
           <Footer />
           */}
         </Container>

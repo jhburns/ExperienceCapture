@@ -33,7 +33,6 @@ const theme = makeTheme({
   // Header
   '$font-size-h1': `1.9rem`,
   '$headings-font-family': `${fonts}`,
-  '$headings-font-weight': '700',
 });
 
 export { theme };
