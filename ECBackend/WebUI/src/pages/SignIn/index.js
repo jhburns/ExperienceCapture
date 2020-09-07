@@ -35,8 +35,8 @@ class SignInPage extends Component {
       <Wrapper>
         <Container noGutters={true} className="p-0">
           <Row className="mt-5">
-            <Col className="d-flex align-items" xs="5" lg="2">
-              <Logo src={logo} alt="logo" />
+            <Col className="d-flex align-items" xs="5" sm="4" lg="2">
+              <Logo src={logo} alt="logo"/>
             </Col>
             <Col className="d-flex align-items-center">
               <H1 className="mb-0">
