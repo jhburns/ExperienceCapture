@@ -49,7 +49,7 @@ class SignInPage extends Component {
               <Illustration className="pl-2" src={allTheData} alt="All of the data." />
             </Col>
           </Row>
-          <Row className="justify-content-center" noGutters={true}>
+          <Row className="justify-content-center pb-4" noGutters={true}>
             <Col xs={10} >
               <GoogleSignIn
                 claimToken={this.state.claimToken}
