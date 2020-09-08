@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Wrapper, Item } from 'components/Footer/style';
-import { Row, Col, P } from '@bootstrap-styled/v4';
+import { Row, Col, H4 } from '@bootstrap-styled/v4';
 
 class Footer extends Component {
   render() {
@@ -9,36 +9,43 @@ class Footer extends Component {
     // Because adding consistent bottom spacing would be harder to maintain
     return (
       <Wrapper>
-        <Row>
-          <Col className="text-center">
-            <Item
+        <Row className="pt-5 pl-3 pr-3" noGutters={true}>
+          <Col className="pl-5 pb-2">
+            <H4
               href="https://github.com/jhburns/ExperienceCapture/tree/master/Documentation#documentation"
               target="_blank" rel="noopener noreferrer"
+              as={Item}
             >
               Help
-            </Item>
-          </Col>
-          <Col className="text-center">
-            <Item
-              href="/api/v1/openapi/ui/index.html"
-              target="_blank" rel="noopener noreferrer"
-            >
-              API
-            </Item>
-          </Col>
-          <Col className="text-center">
-            <Item
-              href="https://github.com/jhburns/ExperienceCapture/"
-              target="_blank" rel="noopener noreferrer"
-            >
-              GitHub
-            </Item>
+            </H4>
           </Col>
           <Col>
-            <P className="text-muted">
+            <H4 className="text-muted mb-0 pr-0">
               {`© ${new Date().getFullYear()}`}
-            </P>
+            </H4>
           </Col>
+          <div class="w-100"></div>
+          <Col className="pl-5 pb-2">
+            <H4
+              href="/api/v1/openapi/ui/index.html"
+              target="_blank" rel="noopener noreferrer"
+              as={Item}
+            >
+              API
+            </H4>
+          </Col>
+          <Col></Col>
+          <div class="w-100"></div>
+          <Col className="pl-5 pb-2">
+            <H4
+              href="https://github.com/jhburns/ExperienceCapture/"
+              target="_blank" rel="noopener noreferrer"
+              as={Item}
+            >
+              GitHub
+            </H4>
+          </Col>
+          <Col></Col>
         </Row>
       </Wrapper>
     );
