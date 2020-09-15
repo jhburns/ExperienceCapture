@@ -6,7 +6,6 @@
     "@bootstrap-styled/provider": "^2.0.2",
     "@bootstrap-styled/v4": "^3.3.0",
     "bootstrap-styled": "^2.7.2",
-    "moment": "^2.27.0",
     "query-string": "^6.9.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -107,6 +106,7 @@
     "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-react-hooks": "^2.5.1",
     "html-webpack-inject-attributes-plugin": "^1.0.3",
+    "luxon": "^1.25.0",
     "react-app-rewired": "^2.1.6",
     "validator": "^13.1.0"
   }
