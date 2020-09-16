@@ -24,7 +24,7 @@ class Footer extends Component {
               {`© ${new Date().getFullYear()}`}
             </H4>
           </Col>
-          <div class="w-100"></div>
+          <div className="w-100"></div>
           <Col className="pl-5 pb-2">
             <H4
               href="/api/v1/openapi/ui/index.html"
@@ -35,7 +35,7 @@ class Footer extends Component {
             </H4>
           </Col>
           <Col></Col>
-          <div class="w-100"></div>
+          <div className="w-100"></div>
           <Col className="pl-5 pb-2">
             <H4
               href="https://github.com/jhburns/ExperienceCapture/"
