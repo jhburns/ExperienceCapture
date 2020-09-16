@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import moment from 'moment';
+import { DateTime } from 'luxon';
 import { Link } from 'react-router-dom';
 
 import { Wrapper } from 'components/SessionRow/style';
@@ -20,8 +20,8 @@ class SessionRow extends Component {
         <td>{this.props.sessionData.fullname}</td>
         <td data-cy="session-date">{
           this.props.isRenderingDate ?
-            moment(this.props.sessionData.createdAt).format("MMM Do, YYYY, h:mm A") :
-            moment(this.props.sessionData.createdAt).fromNow()
+            DateTime.fromMillis(this.props.sessionData.createdAt).toLocaleString(DateTime.DATETIME_MED) :
+            DateTime.fromMillis(this.props.sessionData.createdAt).toRelative()
         }</td>
         {this.props.buttonData !== undefined &&
           <td>

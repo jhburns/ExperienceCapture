@@ -13,7 +13,6 @@
   "devDependencies": {
     "cypress": "^5.0.0",
     "eslint": "^7.8.1",
-    "eslint-plugin-cypress": "^2.11.1",
-    "moment": "^2.27.0"
+    "eslint-plugin-cypress": "^2.11.1"
   }
 }

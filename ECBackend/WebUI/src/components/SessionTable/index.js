@@ -92,7 +92,7 @@ class SessionTable extends Component {
       return {
         id: s.id,
         fullname: s.user.fullname,
-        createdAt: s.createdAt.$date,
+        createdAt: parseInt(s.createdAt.$date.$numberLong),
       };
     });
 

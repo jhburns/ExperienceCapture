@@ -37,7 +37,7 @@ class SessionPage extends Component {
     const cleanedSession = {
       id: sessionsData.id,
       fullname: sessionsData.user.fullname,
-      createdAt: sessionsData.createdAt.$date,
+      createdAt: parseInt(sessionsData.createdAt.$date.$numberLong),
       exportState: sessionsData.exportState,
       isOpen: sessionsData.isOpen,
       isOngoing: sessionsData.isOngoing,

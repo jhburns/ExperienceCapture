@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import moment from 'moment';
+import { DateTime } from 'luxon';
 
 import { Link } from 'react-router-dom';
 
@@ -27,7 +27,7 @@ class SingleSession extends Component {
             <h2>Session: {this.props.sessionData.id}</h2>
             <h5>Captured By: {this.props.sessionData.fullname}</h5>
             <h5 className="mb-4">
-              {moment(this.props.sessionData.createdAt).format("MMM Do YY hh:mm a")}
+              {DateTime.fromMillis(this.props.sessionData.createdAt).toLocaleString(DateTime.DATETIME_MED)}
             </h5>
             <h5 className="mb-4">Status: {
               !this.props.sessionData.isOpen ?
