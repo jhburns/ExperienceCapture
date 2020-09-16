@@ -46,7 +46,7 @@ it('does not have button when undefined', () => {
     <Router>
       <table>
         <tbody>
-          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens" }} />
+          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871 }} />
         </tbody>
       </table>
     </Router>;
@@ -61,7 +61,10 @@ it('does have button when defined', () => {
     <Router>
       <table>
         <tbody>
-          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens" }} buttonData={{ body: "example" }} />
+          <SessionRow
+            sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871 }}
+            buttonData={{ body: "example" }}
+          />
         </tbody>
       </table>
     </Router>;
@@ -78,7 +81,9 @@ it('calls on click', () => {
     <Router>
       <table>
         <tbody>
-          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens" }} buttonData={{ body: "example", onClick: callback }} />
+          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871 }}
+            buttonData={{ body: "example", onClick: callback }}
+          />
         </tbody>
       </table>
     </Router>;
