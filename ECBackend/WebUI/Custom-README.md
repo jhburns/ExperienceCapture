@@ -8,7 +8,7 @@ Written in [Node.js](https://nodejs.org/en/) with the following dependencies:
 - [React Router](https://reacttraining.com/react-router/)
 - [Bootstrap 4](https://getbootstrap.com/)
 - [Bootstrap Styled](https://bootstrap-styled.github.io/bootstrap-styled/)
-- [Moment](https://momentjs.com/)
+- [Luxon](https://moment.github.io/luxon/)
 - [Query String](https://www.npmjs.com/package/query-string)
 
 Additionally, in production the site is built as a static files and served by Caddy.
