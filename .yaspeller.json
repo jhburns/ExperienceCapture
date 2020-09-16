@@ -120,7 +120,8 @@
     "Cypress",
     "ECBackend",
     "OpenAPI",
-    "UI"
+    "UI",
+    "Luxon"
   ],
   "findRepeatWords": true,
   "ignoreUrls": true
