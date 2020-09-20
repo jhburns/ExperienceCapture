@@ -77,6 +77,7 @@ class SignIn extends Component {
             id="signInButton"
             block={true}
             size="lg"
+            data-cy="sign-in"
           >
             GOOGLE SIGN IN
           </Button>
@@ -140,7 +141,7 @@ class SignIn extends Component {
     }
   }
 
-  attachLogin(isMock) {
+  attachLogin(isMock = false) {
     const signInButton = document.getElementById('signInButton');
 
     if (isMock) {
