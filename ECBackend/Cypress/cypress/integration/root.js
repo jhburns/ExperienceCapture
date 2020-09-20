@@ -20,6 +20,11 @@ describe('Root Page', () => {
       .then(() => {
         cy.get('[data-cy=sign-out]').should('not.exist');
         cy.get('[data-cy=go-home]').should('not.exist');
+      })
+      .then(() => {
+        // This does nothing, but is still good to check
+        cy.get('[data-cy=sign-in]')
+          .click();
       });
   });
 });
