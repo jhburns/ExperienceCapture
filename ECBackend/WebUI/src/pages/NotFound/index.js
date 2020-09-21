@@ -25,7 +25,7 @@ class NotFound extends Component {
             <Col className="text-center">
               <P>Page not found,&nbsp;
                 <LinkContainer to="/">
-                  <A to="/">
+                  <A to="/" data-cy="sign-in-link">
                       leave and sign in.
                   </A>
                 </LinkContainer>
