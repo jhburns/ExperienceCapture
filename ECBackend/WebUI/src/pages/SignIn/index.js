@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import GoogleSignIn from "components/GoogleSignIn";
 
-import { Container, Row, Col } from '@bootstrap-styled/v4';
+import { Container, Row, Col, H2, P } from '@bootstrap-styled/v4';
 import { Wrapper, Illustration } from 'pages/SignIn/style';
 
 import Footer from "components/Footer";
@@ -38,6 +38,21 @@ class SignInPage extends Component {
           <Row className="mb-5 pb-3" noGutters={true}>
             <Col>
               <Illustration className="pl-2" src={allTheData} alt="All of the data." />
+            </Col>
+          </Row>
+          <Row>
+            <Col className="d-none d-lg-block">
+              <H2>
+                Data collection you deserve
+              </H2>
+            </Col>
+          </Row>
+          <Row className="d-none d-lg-block">
+            <Col>
+              <P>
+                Experience Capture is a research oriented data analytics platform for Unity games.
+                Capture any data you want, and analyze it using whatever tools you prefer.
+              </P>
             </Col>
           </Row>
           <Row className="justify-content-center pb-4" noGutters={true}>
