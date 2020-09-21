@@ -40,49 +40,43 @@ class SignIn extends Component {
     }
 
     const homeRow =
-      <Row className="justify-content-center">
-        <Col xs={8} sm={5} md={4} lg={3} className="mb-2">
-          <LinkContainer to="/home/start" >
-            <Button
-              data-cy="go-home"
-              block={true}
-              className="text-decoration-none"
-              size="lg"
-            >
-              GO HOME
-            </Button>
-          </LinkContainer>
-        </Col>
-      </Row>;
+      <Col xs={8} lg={6} className="mb-2 lb-lg-0">
+        <LinkContainer to="/home/start" >
+          <Button
+            data-cy="go-home"
+            block={true}
+            className="text-decoration-none"
+            size="lg"
+          >
+            GO HOME
+          </Button>
+        </LinkContainer>
+      </Col>
 
     const signOutRow =
-      <Row className="justify-content-center">
-        <Col xs={8} sm={5} md={4} lg={3} className="mb-2">
-          <Button
-            onClick={this.onSignOut}
-            data-cy="sign-out"
-            block={true}
-            outline={true}
-            size="lg"
-          >
-            SIGN OUT
-          </Button>
-        </Col>
-      </Row>;
+      <Col xs={8} lg={6} className="mb-2 mb-lg-0">
+        <Button
+          onClick={this.onSignOut}
+          data-cy="sign-out"
+          block={true}
+          outline={true}
+          size="lg"
+        >
+          SIGN OUT
+        </Button>
+      </Col>
 
     const googleRow =
-      <Row className="justify-content-center">
-        <Col xs={8} sm={5} md={4} lg={3} className="mb-2">
-          <Button
-            id="signInButton"
-            block={true}
-            size="lg"
-            data-cy="sign-in"
-          >
-            GOOGLE SIGN IN
-          </Button>
-        </Col>
-      </Row>;
+      <Col xs={8} lg={6} className="mb-2 mb-lg-0">
+        <Button
+          id="signInButton"
+          block={true}
+          size="lg"
+          data-cy="sign-in"
+        >
+          GOOGLE SIGN IN
+        </Button>
+      </Col>
 
   	if (this.state.isUnableToSignIn) {
       return (
@@ -91,7 +85,9 @@ class SignIn extends Component {
             Sorry, there was an issue signing in. <br />
             Try again.
           </LoginBox>
+          <Row className="justify-content-center">
           {signOutRow}
+          </Row>
         </Wrapper>
       );
     } else if (this.state.isDuplicateSignUp) {
@@ -100,8 +96,10 @@ class SignIn extends Component {
           <LoginBox>
             You've Already Signed Up.
           </LoginBox>
-          {homeRow}
-          {signOutRow}
+          <Row className="justify-content-center">
+            {homeRow}
+            {signOutRow}
+          </Row>
         </Wrapper>
 	    );
     } else if (this.state.isSignedIn) {
@@ -111,8 +109,10 @@ class SignIn extends Component {
             <LoginBox>
               You're Signed In.
             </LoginBox>
-            {homeRow}
-            {signOutRow}
+            <Row className="justify-content-center">
+              {homeRow}
+              {signOutRow}
+            </Row>
           </Wrapper>
         );
       } else {
@@ -126,16 +126,17 @@ class SignIn extends Component {
           <LoginBox>
             You've Signed Out.
           </LoginBox>
-          {googleRow}
+          <Row className="justify-content-center">
+            {googleRow}
+          </Row>
         </Wrapper>
 	    );
     } else {
       return (
         <Wrapper>
-          <LoginBox>
-            Please Sign In.
-          </LoginBox>
-          {googleRow}
+          <Row className="justify-content-center">
+            {googleRow}
+          </Row>
         </Wrapper>
       );
     }

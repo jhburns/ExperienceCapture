@@ -9,7 +9,7 @@ class LoginBox extends Component {
     return (
       <Wrapper>
         <Row className="justify-content-center">
-          <Col xs={10} sm={8} md={6} lg={4} className="mb-4">
+          <Col xs={10} className="mb-4">
             <Info className="align-middle p-3">
               <H5 className="text-center mb-0">
                 {this.props.children}

@@ -9,6 +9,17 @@ const Illustration = styled.img`
   height: auto;
   margin: auto;
   display: block;
+
+  @media (min-width: 992px) { 
+    width: 35rem;
+  };
+
 `;
 
-export { Wrapper, Illustration };
+const PromoTitle = styled.h2`
+  margin: 0;
+  font-size: 2.8rem;
+  line-height: 1.4;
+`;
+
+export { Wrapper, Illustration, PromoTitle };
