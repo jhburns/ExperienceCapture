@@ -8,7 +8,7 @@ const Wrapper = styled.section`
 
   height: 7rem; /* Set the fixed height of the footer here */
   @media (min-width: 992px) {
-    height: 3.75rem;
+    height: 3rem;
     width: 80%;
   }
 `;

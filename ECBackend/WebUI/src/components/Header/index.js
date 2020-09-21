@@ -7,19 +7,10 @@ import { Wrapper, Logo, Title } from 'components/Header/style.js';
 import logo from 'img/logo.svg';
 
 class Header extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isOpen: false,
-    };
-
-  }
-
   render() {
     return (
       <Wrapper>
-        <Row className="pt-3 mb-4 pb-5" noGutters={true}>
+        <Row className="pt-4 mb-4 pb-5" noGutters={true}>
           <Col className="d-flex align-items-center pr-0" xs="5" sm="4" lg="2">
             <Logo src={logo} alt="logo" />
           </Col>
@@ -33,4 +24,5 @@ class Header extends Component {
     );
   }
 }
+
 export default Header;
