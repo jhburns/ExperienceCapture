@@ -20,7 +20,7 @@ class Footer extends Component {
                     target="_blank" rel="noopener noreferrer"
                   >
                     Help
-                </Item>
+                  </Item>
                 </Col>
                 <Col xs={12} lg="auto" className="pl-3 pb-2">
                   <Item
@@ -28,7 +28,7 @@ class Footer extends Component {
                     target="_blank" rel="noopener noreferrer"
                   >
                     API
-                </Item>
+                  </Item>
                 </Col>
                 <Col xs={12} lg="auto" className="pl-3 pb-2">
                   <Item
@@ -36,7 +36,7 @@ class Footer extends Component {
                     target="_blank" rel="noopener noreferrer"
                   >
                     GitHub
-                </Item>
+                  </Item>
                 </Col>
               </Row>
             </Col>
