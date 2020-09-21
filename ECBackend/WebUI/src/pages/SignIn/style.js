@@ -7,8 +7,6 @@ const Wrapper = styled.section`
 const Illustration = styled.img`
   width: 20rem;
   height: auto;
-  margin: auto;
-  display: block;
 
   @media (min-width: 992px) { 
     width: 35rem;

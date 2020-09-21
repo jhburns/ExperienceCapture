@@ -37,7 +37,7 @@ class SignInPage extends Component {
           <Header/>
           <Row noGutters={true}>
             <Col xs={12} lg={4}>
-              <PromoTitle className="mb-5 d-none d-lg-block mt-2">
+              <PromoTitle className="mb-3 d-none d-lg-block mt-2">
                 Data collection you deserve
               </PromoTitle>
               <Row>
@@ -47,8 +47,8 @@ class SignInPage extends Component {
                     Capture any data you want, and analyze it using whatever tools you prefer.
                   </P>
                 </Col>
-                <Col xs={12} lg={8} className="mb-5 mb-lg-0 d-lg-none">
-                  <Illustration className="pl-2" src={allTheData} alt="All of the data." />
+                <Col lg={12} className="mb-5 mb-lg-0 d-lg-none text-center">
+                  <Illustration src={allTheData} alt="All of the data." />
                 </Col>
                 <Col xs={12} className="justify-content-center mb-5" noGutters={true}>
                   <GoogleSignIn
@@ -58,12 +58,13 @@ class SignInPage extends Component {
                 </Col>
               </Row>
             </Col>
-            <Col xs={12} lg={8} className="mb-5 mb-lg-0 d-none d-lg-block">
-              <Illustration className="pl-2" src={allTheData} alt="All of the data." />
+            <Col lg={8} className="mb-5 mb-lg-0 d-none d-lg-block text-center">
+              <Illustration src={allTheData} alt="All of the data." />
             </Col>
           </Row>
-          <Footer/>
         </Container>
+        {/* TODO: move all footers out of container like this */}
+        <Footer />
       </Wrapper>
     );
   }
