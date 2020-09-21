@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import { Wrapper, GiantText } from 'pages/NotFound/style';
-import { Link } from 'react-router-dom';
 
 import { Container, Row, Col, P, A } from '@bootstrap-styled/v4';
 
