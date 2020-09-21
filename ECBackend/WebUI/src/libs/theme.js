@@ -31,6 +31,7 @@ const theme = makeTheme({
 
   // Links
   '$link-color': `${colors.primary}`,
+  '$link-hover-color': `${colors.primary}`,
   '$link-decoration': 'underline',
 
   // Header

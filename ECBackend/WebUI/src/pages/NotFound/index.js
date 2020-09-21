@@ -1,35 +1,36 @@
 import React, { Component } from 'react';
 
-import { Wrapper } from 'pages/NotFound/style';
+import { Wrapper, GiantText } from 'pages/NotFound/style';
 import { Link } from 'react-router-dom';
 
-import { Container, Row, Col } from '@bootstrap-styled/v4';
+import { Container, Row, Col, P, A } from '@bootstrap-styled/v4';
 
-import Menu from 'components/Menu';
+import Header from 'components/Header';
 
 import Footer from "components/Footer";
+
+import { LinkContainer } from 'react-router-bootstrap';
 
 class NotFound extends Component {
   render() {
     return (
       <Wrapper>
         <Container className="p-0">
-          <Menu />
-          <Row className="mt-5 mb-3">
-            <Col>
-              <h1>Page Not Found</h1>
-              <h3>Error: 404</h3>
+          <Header/>
+          <Row className="mt-2 mb-5 pb-5">
+            <Col className="text-center">
+              <GiantText className="font-weight-bold m-0">404</GiantText>
             </Col>
           </Row>
-          <Row className="justify-content-center">
-            <Col xs={6} md={5} xl={3}>
-              <Link
-                to="/"
-                className="btn btn-outline-dark btn-block"
-                data-cy="sign-in-link"
-              >
-                Try Signing In
-              </Link>
+          <Row>
+            <Col className="text-center">
+              <P>Page not found,&nbsp;
+                <LinkContainer to="/">
+                  <A to="/">
+                      leave and sign in.
+                  </A>
+                </LinkContainer>
+              </P>
             </Col>
           </Row>
           <Footer />

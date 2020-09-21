@@ -1,0 +1,36 @@
+import React, { Component } from 'react';
+
+import { Row, Col, H1 } from '@bootstrap-styled/v4';
+
+import { Wrapper, Logo } from 'components/Header/style.js';
+
+import logo from 'img/logo.svg';
+
+class Header extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isOpen: false,
+    };
+
+  }
+
+  render() {
+    return (
+      <Wrapper className="">
+        <Row className="mt-5 mb-5 pb-5" noGutters={true}>
+          <Col className="d-flex align-items-center pr-0" xs="5" sm="4" lg="2">
+            <Logo src={logo} alt="logo" />
+          </Col>
+          <Col className="d-flex align-items-center pl-0">
+            <H1 className="mb-0 font-weight-bold">
+              Experience Capture
+            </H1>
+          </Col>
+        </Row>
+      </Wrapper>
+    );
+  }
+}
+export default Header;
