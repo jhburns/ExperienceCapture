@@ -14,6 +14,6 @@ const Logo = styled.img`
 const Title = styled.h1`
   font-size: 1.5rem;
   margin: 0;
-`
+`;
 
 export { Wrapper, Logo, Title };

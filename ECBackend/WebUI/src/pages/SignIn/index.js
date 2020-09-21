@@ -35,7 +35,7 @@ class SignInPage extends Component {
       <Wrapper>
         <Container className="p-0">
           <Header/>
-          <Row className="mb-5 pb-3" noGutters={true}>
+          <Row className="mb-5" noGutters={true}>
             <Col xs={12} lg={4}>
               <PromoTitle className="mb-5 d-none d-lg-block mt-2">
                 Data collection you deserve

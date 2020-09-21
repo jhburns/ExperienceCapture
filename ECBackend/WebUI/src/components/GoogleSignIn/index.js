@@ -51,7 +51,7 @@ class SignIn extends Component {
             GO HOME
           </Button>
         </LinkContainer>
-      </Col>
+      </Col>;
 
     const signOutRow =
       <Col xs={8} lg={6} className="mb-2 mb-lg-0">
@@ -64,10 +64,10 @@ class SignIn extends Component {
         >
           SIGN OUT
         </Button>
-      </Col>
+      </Col>;
 
     const googleRow =
-      <Col xs={8} lg={6} className="mb-2 mb-lg-0">
+      <Col xs={8} lg={7} className="mb-2 mb-lg-0">
         <Button
           id="signInButton"
           block={true}
@@ -76,7 +76,7 @@ class SignIn extends Component {
         >
           GOOGLE SIGN IN
         </Button>
-      </Col>
+      </Col>;
 
   	if (this.state.isUnableToSignIn) {
       return (
@@ -86,7 +86,7 @@ class SignIn extends Component {
             Try again.
           </LoginBox>
           <Row className="justify-content-center">
-          {signOutRow}
+            {signOutRow}
           </Row>
         </Wrapper>
       );
