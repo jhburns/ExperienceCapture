@@ -35,7 +35,7 @@ class SignInPage extends Component {
       <Wrapper>
         <Container className="p-0">
           <Header/>
-          <Row className="mb-5" noGutters={true}>
+          <Row noGutters={true}>
             <Col xs={12} lg={4}>
               <PromoTitle className="mb-5 d-none d-lg-block mt-2">
                 Data collection you deserve
@@ -50,7 +50,7 @@ class SignInPage extends Component {
                 <Col xs={12} lg={8} className="mb-5 mb-lg-0 d-lg-none">
                   <Illustration className="pl-2" src={allTheData} alt="All of the data." />
                 </Col>
-                <Col xs={12} className="justify-content-center pb-4" noGutters={true}>
+                <Col xs={12} className="justify-content-center mb-5" noGutters={true}>
                   <GoogleSignIn
                     claimToken={this.state.claimToken}
                     signUpToken={this.state.signUpToken}

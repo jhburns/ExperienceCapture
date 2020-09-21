@@ -15,9 +15,3 @@ it('displays the correct message when the user can\'t sign in', () => {
 
   expect(wrapper.text().includes('Sorry, there was an issue signing in.')).toBeTruthy();
 });
-
-it('displays the correct message when the user needs to sign in', () => {
-  const wrapper = mount(<GoogleSignIn />);
-
-  expect(wrapper.text().includes('Please Sign In.')).toBeTruthy();
-});

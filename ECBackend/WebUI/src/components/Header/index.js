@@ -18,8 +18,8 @@ class Header extends Component {
 
   render() {
     return (
-      <Wrapper className="">
-        <Row className="mt-4 mb-4 pb-5" noGutters={true}>
+      <Wrapper>
+        <Row className="pt-3 mb-4 pb-5" noGutters={true}>
           <Col className="d-flex align-items-center pr-0" xs="5" sm="4" lg="2">
             <Logo src={logo} alt="logo" />
           </Col>
