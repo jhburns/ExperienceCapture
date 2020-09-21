@@ -4,9 +4,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  margin-bottom: 10rem !important; /* Margin bottom by footer height */
-  @media (min-width: 992px) {
-      margin-bottom: 3.75rem !important; /* Margin bottom by footer height */
+  margin-bottom: 7rem !important; /* Margin bottom by footer height */
+}
+
+@media (min-width: 992px) {
+  body {
+    margin-bottom: 3rem !important; /* Margin bottom by footer height */
   }
 }
 
