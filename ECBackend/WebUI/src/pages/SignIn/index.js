@@ -50,7 +50,7 @@ class SignInPage extends Component {
                 <Col lg={12} className="mb-5 mb-lg-0 d-lg-none text-center">
                   <Illustration src={allTheData} alt="All of the data." />
                 </Col>
-                <Col xs={12} className="justify-content-center mb-5" noGutters={true}>
+                <Col xs={12} className="justify-content-center mb-5">
                   <GoogleSignIn
                     claimToken={this.state.claimToken}
                     signUpToken={this.state.signUpToken}

@@ -33,8 +33,8 @@ class ClaimPage extends Component {
       <Wrapper>
         <Container className="p-0">
           <Header />
-          <Row>
-            <Col>
+          <Row className="justify-content-center">
+            <Col xs={10} lg={4} className="mb-5">
               <GoogleSignIn claimToken={this.state.claimToken} />
             </Col>
           </Row>
