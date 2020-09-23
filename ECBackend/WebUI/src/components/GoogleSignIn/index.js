@@ -3,7 +3,6 @@
 import React, { Component } from 'react';
 
 import { submitUser, signOutUser, gapiSetup } from "libs/userManagement";
-import ClaimNotify from "components/ClaimNotify";
 
 import { Wrapper } from 'components/GoogleSignIn/style';
 
@@ -116,8 +115,9 @@ class SignIn extends Component {
           </Wrapper>
         );
       } else {
+        this.props.onSuccessfulClaim();
         return (
-          <ClaimNotify />
+          <Wrapper />
         );
       }
 	  } else if (this.state.isSignedOut) {
