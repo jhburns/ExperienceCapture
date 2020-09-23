@@ -1,14 +1,19 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.section`
-  margin-top: 15vh;
+
 `;
 
 const Logo = styled.img`
-  width: 6rem;
+  width: 3em;
   height: auto;
   margin: auto;
   display: block;
 `;
 
-export { Wrapper, Logo };
+const Title = styled.h1`
+  font-size: 1.5rem;
+  margin: 0;
+`;
+
+export { Wrapper, Logo, Title };

@@ -6,6 +6,8 @@ import { Redirect } from 'react-router-dom';
 
 import { Wrapper } from 'pages/Admin/style';
 
+import { P, Container, Row, Col } from '@bootstrap-styled/v4';
+
 class Admin extends Component {
 
   constructor(props) {
@@ -60,23 +62,35 @@ class Admin extends Component {
     if (this.state.isWaiting) {
       return (
         <Wrapper>
-          <p>One sec...</p>
+          <Container>
+            <Row className="justify-content-center">
+              <Col className="mt-5">
+                <P>Trying to use the supplied admin password to generate a sign up token.</P>
+                <P>One sec...</P>
+              </Col>
+            </Row>
+          </Container>
         </Wrapper>
       );
     } else if (this.state.isError) {
       return (
         <Wrapper>
-          <p>Password is Invalid</p>
-          <p>Check console</p>
+          <Container>
+            <Row className="justify-content-center">
+              <Col className="mt-5">
+                <P>Password is invalid.</P>
+                <P>Check the console.</P>
+              </Col>
+            </Row>
+          </Container>
         </Wrapper>
       );
     } else {
       return (
         <Wrapper>
-          <p>Redirecting...</p>
           <Redirect
             to={{
-              pathname: "/signUp",
+              pathname: "/",
               search: queryString.stringify({signUpToken: this.state.accessToken}),
             }}
           />

@@ -5,7 +5,7 @@ import SingleSession from 'components/SingleSession';
 import { StaticRouter as Router } from "react-router-dom";
 
 it('has non-empty content', () => {
-  const wrapper = shallow(<SingleSession sessionData={{ exportState: "Done" }} />);
+  const wrapper = shallow(<SingleSession sessionData={{ exportState: "Done", createdAt: 1591840213871 }} />);
 
   expect(wrapper.text().length).toBeGreaterThan(0);
 });
@@ -13,7 +13,7 @@ it('has non-empty content', () => {
 it('is completed when done', () => {
   const jsx =
     <Router>
-      <SingleSession sessionData={{ exportState: "NotStarted", isOngoing: false, isOpen:false }} />
+      <SingleSession sessionData={{ exportState: "NotStarted", isOngoing: false, isOpen: false, createdAt: 1591840213871 }} />
     </Router>;
 
   const wrapper = mount(jsx);
@@ -24,7 +24,7 @@ it('is completed when done', () => {
 it('is ongoing when ongoing', () => {
   const jsx =
     <Router>
-      <SingleSession sessionData={{ exportState: "NotStarted", isOngoing: true, isOpen: true }} />
+      <SingleSession sessionData={{ exportState: "NotStarted", isOngoing: true, isOpen: true, createdAt: 1591840213871 }} />
     </Router>;
 
   const wrapper = mount(jsx);
@@ -35,7 +35,7 @@ it('is ongoing when ongoing', () => {
 it('is closed unexpectedly when not ongoing but still open', () => {
   const jsx =
     <Router>
-      <SingleSession sessionData={{ exportState: "NotStarted", isOngoing: false, isOpen: true }} />
+      <SingleSession sessionData={{ exportState: "NotStarted", isOngoing: false, isOpen: true, createdAt: 1591840213871 }} />
     </Router>;
 
   const wrapper = mount(jsx);

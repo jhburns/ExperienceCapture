@@ -476,6 +476,12 @@ namespace Carter.App.Route.UsersAndAuthentication
         public PersonRepository(IMongoDatabase database)
             : base(database, "persons")
         {
+            var keyId = Builders<PersonSchema>.IndexKeys.Ascending(s => s.Id);
+
+            _ = this.Index(keyId, new CreateIndexOptions<PersonSchema>
+            {
+                Unique = true,
+            });
         }
 
         /// <inheritdoc />

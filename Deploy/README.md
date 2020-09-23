@@ -9,7 +9,7 @@ Follow the tutorial [here](https://github.com/jhburns/ExperienceCapture/blob/mas
 ### Initial Setup
 
 1. Run `docker-compose build`.
-1. Finally, run `docker-compose run ssh_setup` before any of the other commands. It generates SSH keys that will be used is the ssh debug key is set to true.
+1. Next, run `docker-compose run ssh_setup` before any of the other commands. It generates SSH keys that will be used is the ssh debug key is set to true.
 
 ## Usage
 

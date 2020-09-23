@@ -2,10 +2,9 @@ import React from 'react';
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import SignUpPage from "pages/SignUp";
 import AdminPage from "pages/Admin";
+import SignInPage from "pages/SignIn";
 import ClaimPage from "pages/Claim";
-import NormalSignInPage from "pages/NormalSignIn";
 import HomePage from 'pages/Home';
 import SessionsPage from 'pages/Sessions';
 import SettingsPage from 'pages/Settings';
@@ -19,9 +18,7 @@ import BootstrapProvider from '@bootstrap-styled/provider/lib/BootstrapProvider'
 
 import { verifyEnvironment } from "libs/environment";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-
-import theme from 'libs/theme';
+import { theme } from 'libs/theme';
 
 verifyEnvironment(["REACT_APP_GOOGLE_CLIENT_ID"]);
 
@@ -37,9 +34,8 @@ function App() {
         <Router>
           <ErrorBoundary>
             <Switch>
-              <Route exact path="/" component={NormalSignInPage} />
-              <Route exact path="/signUp" component={SignUpPage} />
-              <Route exact path="/signInFor" component={ClaimPage} />
+              <Route exact path="/" component={SignInPage} />
+              <Route exact path="/externalSignIn" component={ClaimPage} />
               <Route exact path="/home/start" component={HomePage} />
               <Route exact path="/home/sessions" component={SessionsPage} />
               <Route exact path="/home/sessions/id/:id" component={SessionPage} />

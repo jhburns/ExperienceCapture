@@ -3,15 +3,14 @@
 import React, { Component } from 'react';
 
 import { submitUser, signOutUser, gapiSetup } from "libs/userManagement";
-import ClaimNotify from "components/ClaimNotify";
 
-import { Wrapper, Google } from 'components/GoogleSignIn/style';
+import { Wrapper } from 'components/GoogleSignIn/style';
 
 import { Row, Col, Button } from '@bootstrap-styled/v4';
 
 import LoginBox from 'components/LoginBox';
 
-import { Link } from "react-router-dom";
+import { LinkContainer } from 'react-router-bootstrap';
 
 class SignIn extends Component {
   constructor(props) {
@@ -29,7 +28,7 @@ class SignIn extends Component {
     this.onFailure = this.onFailure.bind(this);
     this.onInvalidRequest = this.onInvalidRequest.bind(this);
     this.onSignOut = this.onSignOut.bind(this);
-    this.renderLogin = this.renderLogin.bind(this);
+    this.attachLogin = this.attachLogin.bind(this);
     this.onDuplicate = this.onDuplicate.bind(this);
     this.getContent = this.getContent.bind(this);
   }
@@ -39,53 +38,67 @@ class SignIn extends Component {
       throw this.state.error;
     }
 
-    const signOutRow =
-      <Row className="justify-content-center">
-        <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
-          <Button
-            onClick={this.onSignOut}
-            className="btn btn-outline-dark btn-block"
-            data-cy="sign-out"
-          >
-            Sign Out
-          </Button>
-        </Col>
-      </Row>;
-
     const homeRow =
-      <Row className="justify-content-center">
-        <Col xs={6} sm={5} md={4} lg={3} className="mb-2">
-          <Link to="/home/start" className="btn btn-dark btn-block" data-cy="go-home">
-            Go Home
-          </Link>
-        </Col>
-      </Row>;
+      <Col xs={8} lg={6} className="mb-2 lb-lg-0">
+        <LinkContainer to="/home/start" >
+          <Button
+            data-cy="go-home"
+            block={true}
+            className="text-decoration-none"
+            size="lg"
+          >
+            GO HOME
+          </Button>
+        </LinkContainer>
+      </Col>;
+
+    const signOutRow =
+      <Col xs={8} lg={6} className="mb-2 mb-lg-0">
+        <Button
+          onClick={this.onSignOut}
+          data-cy="sign-out"
+          block={true}
+          outline={true}
+          size="lg"
+        >
+          SIGN OUT
+        </Button>
+      </Col>;
 
     const googleRow =
-      <Row>
-        <Col className="text-center">
-          <Google id="loginButton" />
-        </Col>
-      </Row>;
+      <Col xs={8} lg={7} className="mb-2 mb-lg-0">
+        <Button
+          id="signInButton"
+          block={true}
+          size="lg"
+          data-cy="sign-in"
+        >
+          GOOGLE SIGN IN
+        </Button>
+      </Col>;
 
   	if (this.state.isUnableToSignIn) {
       return (
         <Wrapper>
           <LoginBox>
             Sorry, there was an issue signing in. <br />
-            Try a different account.
+            Try again.
           </LoginBox>
-          {signOutRow}
+          <Row className="justify-content-center">
+            {signOutRow}
+          </Row>
         </Wrapper>
       );
     } else if (this.state.isDuplicateSignUp) {
       return (
         <Wrapper data-cy="already-notify">
           <LoginBox>
-            You're Already Signed Up.
+            You've Already Signed Up.
           </LoginBox>
-          {homeRow}
-          {signOutRow}
+          <Row className="justify-content-center">
+            {homeRow}
+            {signOutRow}
+          </Row>
         </Wrapper>
 	    );
     } else if (this.state.isSignedIn) {
@@ -95,48 +108,57 @@ class SignIn extends Component {
             <LoginBox>
               You're Signed In.
             </LoginBox>
-            {homeRow}
-            {signOutRow}
+            <Row className="justify-content-center">
+              {homeRow}
+              {signOutRow}
+            </Row>
           </Wrapper>
         );
       } else {
+        this.props.onSuccessfulClaim();
         return (
-          <ClaimNotify />
+          <Wrapper />
         );
       }
 	  } else if (this.state.isSignedOut) {
 	    return (
         <Wrapper>
           <LoginBox>
-            You're Signed Out. <br />
-            Sign In Again.
+            You've Signed Out.
           </LoginBox>
-          {googleRow}
+          <Row className="justify-content-center">
+            {googleRow}
+          </Row>
         </Wrapper>
 	    );
     } else {
       return (
         <Wrapper>
-          <LoginBox>
-            Please Sign In.
-          </LoginBox>
-          {googleRow}
+          <Row className="justify-content-center">
+            {googleRow}
+          </Row>
         </Wrapper>
       );
     }
   }
 
-  renderLogin(isMock) {
-    const opts = {
-      width: 220,
-      height: 50,
-	    longtitle: true,
-      onsuccess: this.onSuccess,
-      onfailure: this.onFailure,
-    };
+  attachLogin(isMock = false) {
+    const signInButton = document.getElementById('signInButton');
 
-	  if (!isMock) {
-      gapi.signin2.render('loginButton', opts);
+    if (isMock) {
+      signInButton.onclick = () => console.log("This button does nothing when using mock data.");
+      return;
+    }
+
+    try {
+      let auth2 = gapi.auth2.getAuthInstance();
+
+      auth2.attachClickHandler(signInButton, {},
+        (user) => this.onSuccess(user),
+        (err) => this.setState({ error: err }),
+      );
+    } catch (err) {
+      this.setState({ error: err });
     }
   }
 
@@ -154,7 +176,7 @@ class SignIn extends Component {
         isSignedOut: true,
         isDuplicateSignUp: false,
         isUnableToSignIn: false,
-      }, () => gapi.load('signin2', this.renderLogin(this.state.isMock)));
+      }, () => gapi.load('signin2', this.attachLogin(this.state.isMock)));
     }, (err) => this.setState({ error: err }));
   }
 
@@ -199,7 +221,7 @@ class SignIn extends Component {
   }
 
   componentDidMount() {
-    gapiSetup(() => gapi.load('signin2', this.renderLogin), this.onInvalidRequest);
+    gapiSetup(() => gapi.load('signin2', this.attachLogin), this.onInvalidRequest);
   }
 
   render() {

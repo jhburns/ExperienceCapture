@@ -4,4 +4,9 @@ const Wrapper = styled.section`
 
 `;
 
-export { Wrapper };
+const GiantText = styled.p`
+  font-size: 7rem;
+  line-height: 0;
+`;
+
+export { Wrapper, GiantText };

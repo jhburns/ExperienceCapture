@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
-import logo from 'logo.svg';
 
 import GoogleSignIn from "components/GoogleSignIn";
 
 import { Container, Row, Col } from '@bootstrap-styled/v4';
-import { Wrapper, Logo } from 'pages/NormalSignIn/style';
-
-import queryString from 'query-string';
+import { Wrapper } from 'pages/Claim/style';
 
 import Footer from "components/Footer";
+import Header from 'components/Header';
+
+import queryString from 'query-string';
 
 class ClaimPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      signUpToken: null,
       claimToken: null,
+      isClaimRedeemed: false,
     };
   }
 
@@ -22,6 +24,7 @@ class ClaimPage extends Component {
     const query = queryString.parse(this.props.location.search);
 
     this.setState({
+      signUpToken: undefined,
       claimToken: query.claimToken,
     });
   }
@@ -29,28 +32,22 @@ class ClaimPage extends Component {
   render() {
     return (
       <Wrapper>
-        <Container>
-          <Row className="justify-content-center mb-4 pb-2" noGutters={true}>
-            <Col>
-              <Logo src={logo} alt="logo" />
-            </Col>
+        <Container className="p-0">
+          <Header />
+          <Row className="justify-content-center">
+            {this.state.isClaimRedeemed ?
+              <Col xs={10} lg={4} className="mb-5">
+                <GoogleSignIn
+                  claimToken={this.state.claimToken}
+                  onSuccessfulClaim={() => this.setState({ isClaimRedeemed: true })}
+                />
+              </Col>
+              :
+              <Col></Col>
+            }
           </Row>
-          <Row noGutters={true} className="mb-5">
-            <Col>
-              <h1 className="text-center">
-                Experience <br /> Capture
-              </h1>
-            </Col>
-          </Row>
-          <Row className="justify-content-center" noGutters={true}>
-            <Col xs={10} >
-              <GoogleSignIn
-                claimToken={this.state.claimToken}
-              />
-            </Col>
-          </Row>
-          <Footer />
         </Container>
+        <Footer />
       </Wrapper>
     );
   }

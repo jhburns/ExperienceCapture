@@ -6,6 +6,9 @@ import { postData } from 'libs/fetchExtra';
 
 import { Text, Wrapper } from "components/GetSignUpLink/style";
 
+import { Button } from '@bootstrap-styled/v4';
+
+
 class GetSignUpLink extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +33,7 @@ class GetSignUpLink extends Component {
     const source = window.location.origin;
 
     this.setState({
-      link: `${source}/signUp?${query}`,
+      link: `${source}/?${query}`,
     });
   }
 
@@ -46,13 +49,13 @@ class GetSignUpLink extends Component {
             {this.state.link}
           </Text>
         }
-        <button
+        <Button
           onClick={this.onButtonCLick}
           className="btn btn-dark btn-block"
           data-cy="new-sign-up"
         >
           New Sign Up Link
-        </button>
+        </Button>
       </Wrapper>
     );
   }
