@@ -16,6 +16,7 @@ class ClaimPage extends Component {
     this.state = {
       signUpToken: null,
       claimToken: null,
+      isClaimRedeemed: false,
     };
   }
 
@@ -34,9 +35,16 @@ class ClaimPage extends Component {
         <Container className="p-0">
           <Header />
           <Row className="justify-content-center">
-            <Col xs={10} lg={4} className="mb-5">
-              <GoogleSignIn claimToken={this.state.claimToken} />
-            </Col>
+            {this.state.isClaimRedeemed ?
+              <Col xs={10} lg={4} className="mb-5">
+                <GoogleSignIn
+                  claimToken={this.state.claimToken}
+                  onSuccessfulClaim={() => this.setState({ isClaimRedeemed: true })}
+                />
+              </Col>
+              :
+              <Col></Col>
+            }
           </Row>
         </Container>
         <Footer />
