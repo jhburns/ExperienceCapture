@@ -26,7 +26,7 @@ class SignInPage extends Component {
 
     this.setState({
       signUpToken: query.signUpToken,
-      claimToken: query.claimToken,
+      claimToken: undefined,
     });
   }
 
