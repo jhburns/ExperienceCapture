@@ -12,7 +12,7 @@ import queryString from 'query-string';
 
 import checkMark from 'img/check_sign_in.svg';
 
-import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom';
 
 class ClaimPage extends Component {
   constructor(props) {
@@ -63,11 +63,9 @@ class ClaimPage extends Component {
                 <Col xs={8} lg={4}>
                   <P>
                     Close this tab and return to your game, or go to the&nbsp;
-                    <LinkContainer to="/home/start">
-                      <A>
-                          home page.
-                      </A>
-                    </LinkContainer>
+                    <A as={Link} to="/home/start">
+                        home page.
+                    </A>
                   </P>
                 </Col>
               </Row>
