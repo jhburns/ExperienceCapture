@@ -5,35 +5,23 @@ updates:
     package-ecosystem: "npm"
     schedule:
       interval: "monthly"
-    allowed_updates:
-      - match:
-          update_type: "security"
 
   # Enable version updates for WebUI
   - directory: "/ECBackend/WebUI"
     package-ecosystem: "npm"
     schedule:
       interval: "monthly"
-    allowed_updates:
-      - match:
-          update_type: "security"
 
   # Enable version updates for API
   - directory: "/ECBackend/API"
     package-ecosystem: "nuget"
     schedule:
       interval: "monthly"
-    allowed_updates:
-      - match:
-          update_type: "security"
 
   # Enable version updates for Pulumi
   - directory: "/Deploy/Pulumi"
     package-ecosystem: "nuget"
     schedule:
       interval: "monthly"
-    allowed_updates:
-      - match:
-          update_type: "security"
 
 version: 2
