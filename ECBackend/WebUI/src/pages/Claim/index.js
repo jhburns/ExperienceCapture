@@ -39,40 +39,40 @@ class ClaimPage extends Component {
         <Container className="p-0">
           <Header />
           {this.state.isClaimRedeemed ?
-              <Row className="justify-content-center">
-                <Col xs={10} lg={4} className="mb-5">
-                  <GoogleSignIn
-                    claimToken={this.state.claimToken}
-                    onSuccessfulClaim={() => this.setState({ isClaimRedeemed: true })}
-                  />
+            <Row className="justify-content-center">
+              <Col xs={10} lg={4} className="mb-5">
+                <GoogleSignIn
+                  claimToken={this.state.claimToken}
+                  onSuccessfulClaim={() => this.setState({ isClaimRedeemed: true })}
+                />
+              </Col>
+            </Row>
+            :
+            <>
+              <Row className="mb-5 justify-content-center">
+                <Col xs="auto">
+                  <Image src={checkMark} alt="Check mark."></Image>
                 </Col>
               </Row>
-              :
-              <>
-                <Row className="mb-5 justify-content-center">
-                  <Col xs="auto">
-                    <Image src={checkMark} alt="Check mark."></Image>
-                  </Col>
-                </Row>
-                <Row className="mb-3 justify-content-center">
-                  <Col xs={12} lg="auto">
-                    <H2 className="text-center">External Sign In Successful</H2>
-                  </Col>
-                </Row>
-                <Row className="justify-content-center pb-5">
-                  <Col xs={8} lg={4}>
-                    <P>
+              <Row className="mb-3 justify-content-center">
+                <Col xs={12} lg="auto">
+                  <H2 className="text-center">External Sign In Successful</H2>
+                </Col>
+              </Row>
+              <Row className="justify-content-center pb-5">
+                <Col xs={8} lg={4}>
+                  <P>
                     Close this tab and return to your game, or go to the&nbsp;
-                      <LinkContainer to="/home/start">
-                        <A>
+                    <LinkContainer to="/home/start">
+                      <A>
                           home page.
-                        </A>
-                      </LinkContainer>
-                    </P>
-                  </Col>
-                </Row>
-              </>
-            }
+                      </A>
+                    </LinkContainer>
+                  </P>
+                </Col>
+              </Row>
+            </>
+          }
         </Container>
         <Footer />
       </Wrapper>
