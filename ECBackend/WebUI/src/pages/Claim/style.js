@@ -4,4 +4,9 @@ const Wrapper = styled.section`
 
 `;
 
-export { Wrapper };
+const Image = styled.img`
+  width: 10rem;
+  height: auto;
+`;
+
+export { Wrapper, Image };

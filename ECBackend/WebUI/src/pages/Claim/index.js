@@ -3,12 +3,14 @@ import React, { Component } from 'react';
 import GoogleSignIn from "components/GoogleSignIn";
 
 import { Container, Row, Col } from '@bootstrap-styled/v4';
-import { Wrapper } from 'pages/Claim/style';
+import { Wrapper, Image } from 'pages/Claim/style';
 
 import Footer from "components/Footer";
 import Header from 'components/Header';
 
 import queryString from 'query-string';
+
+import checkMark from 'img/check_sign_in.svg';
 
 class ClaimPage extends Component {
   constructor(props) {
@@ -43,7 +45,11 @@ class ClaimPage extends Component {
                 />
               </Col>
               :
-              <Col></Col>
+              <Row>
+                <Col>
+                  <Image src={checkMark} alt="Check mark."></Image>
+                </Col>
+              </Row>
             }
           </Row>
         </Container>
