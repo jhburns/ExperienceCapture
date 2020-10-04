@@ -5,7 +5,7 @@ const Wrapper = styled.section`
 `;
 
 const Image = styled.img`
-  width: 10rem;
+  width: 13rem;
   height: auto;
 `;
 
