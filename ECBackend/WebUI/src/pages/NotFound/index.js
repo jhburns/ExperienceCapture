@@ -32,8 +32,8 @@ class NotFound extends Component {
               </P>
             </Col>
           </Row>
-          <Footer />
         </Container>
+        <Footer />
       </Wrapper>
     );
   }

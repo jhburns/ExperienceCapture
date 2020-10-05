@@ -15,8 +15,8 @@ class ArchivedSessionsPage extends Component {
   render() {
     return (
       <Wrapper>
+        <Menu />
         <Container className="p-0">
-          <Menu />
           <Row className="justify-content-center">
             <Col lg={10} className="pr-0">
               <SessionTable
@@ -43,8 +43,8 @@ class ArchivedSessionsPage extends Component {
               </Link>
             </Col>
           </Row>
-          <Footer />
         </Container>
+        <Footer />
       </Wrapper>
     );
   }

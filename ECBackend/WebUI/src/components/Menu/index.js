@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Wrapper } from 'components/Menu/style';
+import { Wrapper, Background } from 'components/Menu/style';
 
 import {
   Nav,
@@ -31,7 +31,7 @@ class Menu extends Component {
     return (
       <Wrapper>
         <Navbar light toggleable="lg" className="mt-3 mb-3 mb-xl-4">
-          <Container>
+          <Container className="p-0">
             {/* The # prevents the brand from getting active on accident */}
             <NavbarBrand tag={Brand} to="/home/start#" />
             <NavbarToggler

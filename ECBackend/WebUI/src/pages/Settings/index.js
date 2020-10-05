@@ -105,8 +105,8 @@ class SettingsPage extends Component {
 
     return (
       <Wrapper>
+        <Menu />
         <Container className="p-0">
-          <Menu />
           <Row className="m-0 justify-content-center mb-3">
             <Col xs={7} md={4} xl={3}>
               <GetSignUpLink />
@@ -147,8 +147,8 @@ class SettingsPage extends Component {
             </Col>
           </Row>
           {isAdmin && <UserList />}
-          <Footer />
         </Container>
+        <Footer />
       </Wrapper>
     );
   }

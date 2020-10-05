@@ -1,11 +1,13 @@
 import styled from 'styled-components';
 
+import { colors } from 'libs/theme';
+
 const Wrapper = styled.section`
 
 `;
 
 const Info = styled.section`
-  background-color: #F8F8F8;
+  background-color: ${colors.highlight};
   padding: 1rem 1rem 1rem 1rem;
 `;
 

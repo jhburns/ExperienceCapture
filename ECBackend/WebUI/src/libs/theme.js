@@ -6,6 +6,7 @@ const colors = {
   warning: '#D50000',
   background: '#F3F0F5',
   copy: '#161617',
+  highlight: ' #FFFFFF',
 };
 
 const fonts = 'Rubik, sans-serif';
