@@ -10,4 +10,16 @@ const Background = styled.section`
   background-color: ${colors.highlight};
 `;
 
-export { Wrapper, Background };
+const Toggle = styled.button`
+  outline-width: ${props => props.isOpen ? '1px' : '0'};
+  outline-color: ${colors.primary};
+`;
+
+const Hamburger = styled.img`
+  width: 3.25rem;
+  height: auto;
+
+  margin-top: ${props => props.isOpen ? '3px' : '0px'};
+`;
+
+export { Wrapper, Background, Toggle, Hamburger };
