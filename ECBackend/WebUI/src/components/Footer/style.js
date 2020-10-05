@@ -16,7 +16,6 @@ const Wrapper = styled.section`
 const Item = styled.a`
   color: ${colors.copy} !important;
   font-size: 1.5rem;
-  font-weight: 500;
   line-height: 1.1;
 
   text-decoration: none;
