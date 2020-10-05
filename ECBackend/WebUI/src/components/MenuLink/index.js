@@ -1,21 +1,26 @@
 import React, { Component } from 'react';
 
-import { Link } from 'react-router-dom';
 import { NavLink, NavItem } from "@bootstrap-styled/v4";
 
-import { Wrapper } from 'components/MenuLink/style';
+import { Wrapper, NavLinkOverride, Underline } from 'components/MenuLink/style';
+
+import { LinkContainer } from 'react-router-bootstrap';
 
 class MenuLink extends Component {
   render() {
-    const sameLengthPath = this.props.locationPath.substring(0, this.props.to.length);
-    const isActive = this.props.to === sameLengthPath;
-
     return (
       <Wrapper>
         <NavItem>
-          <NavLink active={isActive} tag={Link} to={this.props.to} data-cy="menu-link">
-            {this.props.linkText}
-          </NavLink>
+          <Underline>
+            <LinkContainer to={this.props.to} data-cy={`menu-link-${this.props.suffix}`} >
+              <NavLink
+                as={NavLinkOverride}
+                className="text-decoration-none ml-4 font-weight-medium mt-3 mb-3"
+              >
+                {this.props.linkText}
+              </NavLink>
+            </LinkContainer>
+          </Underline>
         </NavItem>
       </Wrapper>
     );

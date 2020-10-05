@@ -63,7 +63,6 @@ class SignInPage extends Component {
             </Col>
           </Row>
         </Container>
-        {/* TODO: move all footers out of container like this */}
         <Footer />
       </Wrapper>
     );

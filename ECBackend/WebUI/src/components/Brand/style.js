@@ -5,4 +5,13 @@ const Image = styled.img`
   height: auto;
 `;
 
-export { Image };
+const Title = styled.a`
+  font-size: 1.9rem !important;
+  word-wrap: break-word;
+
+  @media (min-width: 992px) {
+      font-size: 1.25rem !important;
+  }
+`;
+
+export { Image, Title };

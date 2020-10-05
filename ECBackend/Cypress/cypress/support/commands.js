@@ -50,7 +50,7 @@ Cypress.Commands.add('toSettings', () => {
         .click();
     })
     .then(() => {
-      cy.get('[data-cy=menu-link]');
+      cy.get('[data-cy=menu-link-collapse]');
     })
     .then((links) => {
       // Settings page link

@@ -27,3 +27,17 @@ html {
   margin: auto !important;
   background-color: #fff0 !important;
 }
+
+.font-weight-medium {
+  font-weight: 500;
+}
+
+.active {
+  border-bottom: 1.5px solid;
+  margin-bottom: -1.5px;
+  border-color: #161617;
+}
+
+.navbar-toggler {
+  border: 0 !important;
+}

@@ -26,12 +26,15 @@ Cypress.Screenshot.defaults({
 });
 
 beforeEach(() => {
-  // Seed
-  // Wipe the database first
-  cy.exec(`docker-compose -f\
-    docker-compose.clone.yaml\
-    --project-name ecbackend \
-    exec -T db mongo ec --eval "db.dropDatabase();"`)
+  // Reset to mobile resolution by default
+  cy.viewport('iphone-x')
+    .then(() => {
+      // Wipe the database first
+      cy.exec(`docker-compose -f\
+        docker-compose.clone.yaml\
+        --project-name ecbackend \
+        exec -T db mongo ec --eval "db.dropDatabase();"`);
+    })
     .then(() => {
       // Visit the admin signup path
       cy.visit("/admin?password=validationIsTurnOff");
@@ -39,6 +42,8 @@ beforeEach(() => {
     .then(() => {
       // Wait until it can sign In
       cy.get('[data-cy=go-home]');
+    })
+    .then(() => {
     });
 });
 

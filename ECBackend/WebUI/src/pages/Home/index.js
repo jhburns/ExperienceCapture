@@ -14,8 +14,8 @@ class HomePage extends Component {
   render() {
     return (
       <Wrapper>
+        <Menu />
         <Container className="p-0">
-          <Menu />
           <Row className="mr-0 ml-0 pr-0 justify-content-center">
             <Col lg={10} className="pr-0 pl-0">
               <SessionTable
@@ -31,8 +31,8 @@ class HomePage extends Component {
               <Tutorial />
             </Col>
           </Row>
-          <Footer />
         </Container>
+        <Footer />
       </Wrapper>
     );
   }

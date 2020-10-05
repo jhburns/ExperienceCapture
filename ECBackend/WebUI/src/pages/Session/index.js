@@ -108,8 +108,8 @@ class SessionPage extends Component {
 
     return (
       <Wrapper>
+        <Menu />
         <Container className="p-0">
-          <Menu />
           <Row className="mb-3 p-5">
             <Col>
               <SingleSession
@@ -125,8 +125,8 @@ class SessionPage extends Component {
               }
             </Col>
           </Row>
-          <Footer />
         </Container>
+        <Footer />
       </Wrapper>
     );
   }

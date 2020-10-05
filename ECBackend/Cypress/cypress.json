@@ -1,4 +1,6 @@
 {
   "video": false,
-  "baseUrl": "http://localhost:8090"
+  "baseUrl": "http://localhost:8090",
+  "viewportWidth": 375,
+  "viewportHeight": 812
 }
