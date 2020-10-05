@@ -43,7 +43,7 @@ class Menu extends Component {
       <Wrapper>
         <Navbar light toggleable="md" className="mt-3 mb-3 mb-xl-4">
           <Container className="p-0">
-            <Row className="d-flex flex-wrap align-items-center"> 
+            <Row className="d-flex flex-wrap align-items-center">
               {/* The # prevents the brand from getting active on accident */}
               <Col xs={8} lg="auto">
                 <NavbarBrand className="pl-3 pl-lg-0" tag={Brand} to="/home/start#" />
