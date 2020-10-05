@@ -8,6 +8,12 @@ const Wrapper = styled.section`
 
 const NavLinkOverride = styled.a`
   color: ${colors.copy} !important;
+
+  font-size: 1.25rem;
+  @media (min-width: 992px) {
+        font-size: 1rem;
+  }
+
   &:hover {
     border-bottom: 1.5px solid;
     margin-bottom: -1.5px;
@@ -15,4 +21,8 @@ const NavLinkOverride = styled.a`
   }
 `;
 
-export { Wrapper, NavLinkOverride };
+const Underline = styled.div`
+  width: fit-content;
+`;
+
+export { Wrapper, NavLinkOverride, Underline };

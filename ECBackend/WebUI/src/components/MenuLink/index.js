@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import { NavLink, NavItem } from "@bootstrap-styled/v4";
 
-import { Wrapper, NavLinkOverride } from 'components/MenuLink/style';
+import { Wrapper, NavLinkOverride, Underline } from 'components/MenuLink/style';
 
 import { LinkContainer } from 'react-router-bootstrap';
 
@@ -11,14 +11,16 @@ class MenuLink extends Component {
     return (
       <Wrapper>
         <NavItem>
-          <LinkContainer to={this.props.to} data-cy="menu-link" >
-            <NavLink
-              as={NavLinkOverride}
-              className="text-decoration-none ml-4 font-weight-medium"
-            >
-              {this.props.linkText}
-            </NavLink>
-          </LinkContainer>
+          <Underline>
+            <LinkContainer to={this.props.to} data-cy="menu-link" >
+              <NavLink
+                as={NavLinkOverride}
+                className="text-decoration-none ml-4 font-weight-medium mt-3 mb-3"
+              >
+                {this.props.linkText}
+              </NavLink>
+            </LinkContainer>
+          </Underline>
         </NavItem>
       </Wrapper>
     );

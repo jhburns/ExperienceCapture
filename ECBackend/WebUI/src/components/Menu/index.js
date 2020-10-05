@@ -59,7 +59,7 @@ class Menu extends Component {
                   <Hamburger src={hamburgers[imageOption]} isOpen={this.state.isOpen}></Hamburger>
                 </Toggle>
               </Col>
-              <Col>
+              <Col className="p-0">
                 <Collapse navbar isOpen={this.state.isOpen} data-cy="menu-collapse">
                   <Nav navbar className="mr-auto d-none d-lg-flex">
                     <MenuLink locationPath={location.pathname} to="/home/start" linkText="Home" />
@@ -67,7 +67,7 @@ class Menu extends Component {
                     <MenuLink locationPath={location.pathname} to="/home/settings" linkText="Settings" />
                   </Nav>
                   <Nav navbar className="d-lg-none mt-4">
-                    <Background>
+                    <Background className="rounded">
                       <MenuLink locationPath={location.pathname} to="/home/start" linkText="Home" />
                       <MenuLink locationPath={location.pathname} to="/home/sessions" linkText="Sessions" />
                       <MenuLink locationPath={location.pathname} to="/home/settings" linkText="Settings" />
