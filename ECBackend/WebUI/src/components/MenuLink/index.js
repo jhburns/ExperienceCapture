@@ -12,7 +12,7 @@ class MenuLink extends Component {
       <Wrapper>
         <NavItem>
           <Underline>
-            <LinkContainer to={this.props.to} data-cy="menu-link" >
+            <LinkContainer to={this.props.to} data-cy={`menu-link-${this.props.suffix}`} >
               <NavLink
                 as={NavLinkOverride}
                 className="text-decoration-none ml-4 font-weight-medium mt-3 mb-3"

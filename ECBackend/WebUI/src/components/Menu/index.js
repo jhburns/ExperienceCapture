@@ -62,15 +62,15 @@ class Menu extends Component {
               <Col className="p-0">
                 <Collapse navbar isOpen={this.state.isOpen} data-cy="menu-collapse">
                   <Nav navbar className="mr-auto d-none d-lg-flex">
-                    <MenuLink locationPath={location.pathname} to="/home/start" linkText="Home" />
-                    <MenuLink locationPath={location.pathname} to="/home/sessions" linkText="Sessions" />
-                    <MenuLink locationPath={location.pathname} to="/home/settings" linkText="Settings" />
+                    <MenuLink locationPath={location.pathname} to="/home/start" linkText="Home" suffix="expand" />
+                    <MenuLink locationPath={location.pathname} to="/home/sessions" linkText="Sessions" suffix="expand" />
+                    <MenuLink locationPath={location.pathname} to="/home/settings" linkText="Settings" suffix="expand" />
                   </Nav>
                   <Nav navbar className="d-lg-none mt-4">
                     <Background className="rounded">
-                      <MenuLink locationPath={location.pathname} to="/home/start" linkText="Home" />
-                      <MenuLink locationPath={location.pathname} to="/home/sessions" linkText="Sessions" />
-                      <MenuLink locationPath={location.pathname} to="/home/settings" linkText="Settings" />
+                      <MenuLink locationPath={location.pathname} to="/home/start" linkText="Home" suffix="collapse"/>
+                      <MenuLink locationPath={location.pathname} to="/home/sessions" linkText="Sessions" suffix="collapse"/>
+                      <MenuLink locationPath={location.pathname} to="/home/settings" linkText="Settings" suffix="collapse" />
                     </Background>
                   </Nav>
                 </Collapse>
