@@ -1,3 +1,4 @@
+/* Needed for the sticky footer */
 body {
   margin: 0 !important;
 
@@ -19,15 +20,8 @@ html {
   background-color: #F3F0F5;
 }
 
-/*
-  Fixing an issue with style components/bootstrap that causes 
-  Centered Modals to have white backgrounds.
-*/
-.modal-dialog {
-  margin: auto !important;
-  background-color: #fff0 !important;
-}
 
+/* Fixes for style bootstrap */
 .font-weight-medium {
   font-weight: 500;
 }
@@ -40,4 +34,9 @@ html {
 
 .navbar-toggler {
   border: 0 !important;
+}
+
+.modal-dialog {
+  background-color: rgba(0, 0, 0, 0) !important;
+  margin: 10rem auto !important;
 }

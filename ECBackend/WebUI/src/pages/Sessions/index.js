@@ -16,7 +16,7 @@ class SessionsPage extends Component {
     return (
       <Wrapper>
         <Menu />
-        <Container className="p-0">
+        <Container nogutters className="pb-5">
           <Row className="mr-0 pr-0 justify-content-center">
             <Col lg={10} className="pr-0">
               <SessionTable

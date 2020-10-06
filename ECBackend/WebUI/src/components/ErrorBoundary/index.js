@@ -59,9 +59,9 @@ class ErrorBoundary extends Component {
           <Switch>
             <Route exact path="/" component={NormalSignInPage} />
           </Switch>
+          <Menu />
           <Container className="p-0">
-            <Menu />
-            <Modal isOpen={true} documentClassName="modal-dialog-centered">
+            <Modal isOpen={true}>
               <ModalHeader >Sorry, something went wrong.</ModalHeader>
               <ModalBody>
                 <P>
@@ -75,8 +75,8 @@ class ErrorBoundary extends Component {
                 <Button color="secondary" onClick={this.onSignOut}>Sign Out</Button>
               </ModalFooter>
             </Modal>
-            <Footer />
           </Container>
+          <Footer />
         </Wrapper>
       );
     }

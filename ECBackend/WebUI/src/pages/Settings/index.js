@@ -106,7 +106,7 @@ class SettingsPage extends Component {
     return (
       <Wrapper>
         <Menu />
-        <Container className="p-0">
+        <Container nogutters className="pb-5">
           <Row className="m-0 justify-content-center mb-3">
             <Col xs={7} md={4} xl={3}>
               <GetSignUpLink />
@@ -132,18 +132,16 @@ class SettingsPage extends Component {
               >
                 Delete Account
               </Button>
-              <div>
-                <Modal isOpen={this.state.isOpen} toggle={this.toggle}>
-                  <ModalHeader toggle={this.toggle}>Delete Confirmation</ModalHeader>
-                  <ModalBody>
-                    Are you sure you want to delete your account?
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="primary" data-cy="confirm-delete" onClick={this.onDelete}>Delete</Button>
-                    <Button color="secondary" data-cy="cancel-delete" onClick={this.toggle}>Cancel</Button>
-                  </ModalFooter>
-                </Modal>
-              </div>
+              <Modal isOpen={this.state.isOpen} toggle={this.toggle}>
+                <ModalHeader toggle={this.toggle}>Delete Confirmation</ModalHeader>
+                <ModalBody>
+                  Are you sure you want to delete your account? No session data associated with this account will be lost.
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="warning" data-cy="confirm-delete" onClick={this.onDelete}>Delete</Button>
+                  <Button color="secondary" data-cy="cancel-delete" onClick={this.toggle}>Cancel</Button>
+                </ModalFooter>
+              </Modal>
             </Col>
           </Row>
           {isAdmin && <UserList />}
