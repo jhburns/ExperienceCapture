@@ -11,4 +11,8 @@ const Info = styled.section`
   padding: 1rem 1rem 1rem 1rem;
 `;
 
-export { Wrapper, Info };
+const Item = styled.li`
+    padding-top: 0.5rem;
+`;
+
+export { Wrapper, Info, Item };

@@ -14,7 +14,7 @@ class NotFound extends Component {
   render() {
     return (
       <Wrapper>
-        <Container className="p-0">
+        <Container nogutters className="pb-5">
           <Header/>
           <Row className="mt-2 mb-5 pb-5">
             <Col className="text-center">
