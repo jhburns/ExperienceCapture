@@ -7,10 +7,14 @@ describe('Navbar', () => {
       .then(() => {
         cy.get('[data-cy=menu-collapse]')
           .should('have.class', 'show');
+
+        cy.injectThenCheck();
       })
       .then(() => {
         cy.get('[data-cy=menu-hamburger]')
           .click();
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=menu-collapse]')
@@ -23,10 +27,14 @@ describe('Navbar', () => {
       .then(() => {
         cy.get('[data-cy=go-home]')
           .click();
+
+        cy.injectThenCheck();
       })
       .then(() => {
         cy.get('[data-cy=menu-hamburger]')
           .click();
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=menu-link-collapse]');
@@ -37,17 +45,20 @@ describe('Navbar', () => {
         // Yes, this is messy, but its the only practical way to test each menu link
         cy.wrap(links[1])
           .click();
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=menu-hamburger]')
           .click();
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=menu-link-collapse]');
       })
       .then((links2) => {
-        cy.wrap(links2[2])
-          .click();
+        cy.wrap(links2[2]);
       })
       .then(() => {
         cy.get('[data-cy=menu-hamburger]')
@@ -80,6 +91,8 @@ describe('Navbar', () => {
         // Yes, this is messy, but its the only practical way to test each menu link
         cy.wrap(links[1])
           .click();
+
+        cy.injectThenCheck();
       })
       .then(() => {
         cy.get('[data-cy=menu-link-expand]');

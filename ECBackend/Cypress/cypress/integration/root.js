@@ -2,6 +2,8 @@ describe('Root Page', () => {
   it('Goes to the correct home.', () => {
     cy.visit("/");
 
+    cy.injectThenCheck();
+
     cy.get('[data-cy=go-home]')
       .click()
       .then(() => {
@@ -25,6 +27,8 @@ describe('Root Page', () => {
         // This does nothing, but is still good to check
         cy.get('[data-cy=sign-in]')
           .click();
+
+        cy.injectThenCheck();
       });
   });
 });

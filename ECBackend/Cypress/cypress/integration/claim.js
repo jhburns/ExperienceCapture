@@ -4,6 +4,8 @@ describe('Claim Page', () => {
       .then((response) => {
         const encodedClaim = encodeURIComponent(response.body.claimToken);
         cy.visit(`/?claimToken=${encodedClaim}`);
+
+        cy.injectThenCheck();
       });
 
     /* TODO: re-enable this or some type of navigation check

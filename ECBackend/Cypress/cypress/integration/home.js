@@ -3,6 +3,8 @@ describe('Home page', () => {
     cy.request({ method: 'POST', url: '/api/v1/sessions', failOnStatusCode: true })
       .then(() => {
         cy.visit('/home/start');
+
+        cy.injectThenCheck();
       })
       .then(() => {
         cy.get('[data-cy=session-row]');
@@ -11,6 +13,8 @@ describe('Home page', () => {
         assert.isNotNull(row, 'Home should display a session row.');
 
         cy.get('[data-cy=sessions-empty]').should('not.exist');
+
+        cy.checkA11y();
       });
   });
 });

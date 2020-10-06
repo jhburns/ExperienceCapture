@@ -9,10 +9,14 @@ describe('Sort', () => {
       .then(() => {
         cy.get('[data-cy=sort-dropdown]')
           .click();
+
+        cy.injectThenCheck();
       })
       .then(() => {
         cy.get('[data-cy=session-sort-Oldest-First]')
           .click();
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=session-date]');
@@ -43,10 +47,14 @@ describe('Sort', () => {
       .then(() => {
         cy.get('[data-cy=sort-dropdown]')
           .click();
+
+        cy.injectThenCheck();
       })
       .then(() => {
         cy.get('[data-cy=session-sort-Alphabetically]')
           .click();
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=session-link]');

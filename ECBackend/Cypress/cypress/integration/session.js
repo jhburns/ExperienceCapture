@@ -3,14 +3,20 @@ describe('Session page', () => {
     cy.createClosedSessions(1)
       .then(() => {
         cy.visit("/home/sessions");
+
+        cy.injectThenCheck();
       })
       .then(() => {
         cy.get('[data-cy=session-link]')
           .click();
+
+        cy.injectThenCheck();
       })
       .then(() => {
         cy.get('[data-cy=session-export]')
           .click();
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=session-download]');
@@ -28,10 +34,14 @@ describe('Session page', () => {
       .then(() => {
         cy.get('[data-cy=session-link]')
           .click();
+
+        cy.injectThenCheck();
       })
       .then(() => {
         cy.get('[data-cy=about-prompt]')
           .trigger('mouseover');
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=about-tooltip]').should('be.visible');
@@ -39,6 +49,8 @@ describe('Session page', () => {
       .then(() => {
         cy.get('[data-cy=about-prompt]')
           .trigger('mouseout');
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=about-tooltip]').should('be.not.visible');

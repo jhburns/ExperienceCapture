@@ -13,6 +13,8 @@ describe('Completed sessions page', () => {
 
         cy.get('[data-cy=session-button]')
           .click();
+
+        cy.injectThenCheck();
       })
       .then(() => {
         cy.get('[data-cy=session-row]').should('not.exist');
@@ -20,6 +22,8 @@ describe('Completed sessions page', () => {
       .then(() => {
         cy.get('[data-cy=archive-link]')
           .click();
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=session-row]');
@@ -30,6 +34,8 @@ describe('Completed sessions page', () => {
 
         cy.get('[data-cy=session-button]')
           .click();
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=session-row]').should('not.exist');
@@ -37,6 +43,8 @@ describe('Completed sessions page', () => {
       .then(() => {
         cy.get('[data-cy=sessions-link]')
           .click();
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=session-row]');

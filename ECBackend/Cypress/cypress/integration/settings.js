@@ -2,8 +2,12 @@ describe('Settings Page', () => {
   it('Signs out.', () => {
     cy.toSettings()
       .then(() => {
+        cy.injectThenCheck();
+
         cy.get('[data-cy=sign-out]')
           .click();
+
+        cy.injectThenCheck();
       });
   });
 
@@ -12,6 +16,8 @@ describe('Settings Page', () => {
       .then(() => {
         cy.get('[data-cy=delete-account]')
           .click();
+
+        cy.injectThenCheck();
       })
       .then(() => {
         cy.get('[data-cy=cancel-delete]')
@@ -24,6 +30,8 @@ describe('Settings Page', () => {
       .then(() => {
         cy.get('[data-cy=confirm-delete]')
           .click();
+
+        cy.checkA11y();
       });
   });
 
@@ -32,6 +40,8 @@ describe('Settings Page', () => {
       .then(() => {
         cy.get('[data-cy=delete-others]')
           .click();
+
+        cy.injectThenCheck();
       });
   });
 
@@ -40,6 +50,8 @@ describe('Settings Page', () => {
       .then(() => {
         cy.get('[data-cy=new-sign-up]')
           .click();
+
+        cy.injectThenCheck();
       })
       .then(() => {
         cy.get('[data-cy=sign-up-link]');
@@ -53,6 +65,8 @@ describe('Settings Page', () => {
       })
       .then(() => {
         cy.get('[data-cy=already-notify]');
+
+        cy.injectThenCheck();
       });
   });
 });

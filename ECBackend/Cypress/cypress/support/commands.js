@@ -23,6 +23,7 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+import 'cypress-axe';
 
 // count: the number of closed sessions to create
 Cypress.Commands.add('createClosedSessions', (count) => {
@@ -56,5 +57,13 @@ Cypress.Commands.add('toSettings', () => {
       // Settings page link
       cy.wrap(links[2])
         .click();
+    });
+});
+
+// Wrapper for cypress-axe since most pages use cy.visit(...)
+Cypress.Commands.add('injectThenCheck', () => {
+  cy.injectAxe()
+    .then(() => {
+      cy.checkA11y();
     });
 });

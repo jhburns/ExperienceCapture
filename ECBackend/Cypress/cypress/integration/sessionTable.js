@@ -9,6 +9,8 @@ describe('Session Table', () => {
       })
       .then((message) => {
         assert.isNotNull(message, 'Empty sessions table does not display a message.');
+
+        cy.injectThenCheck();
       });
   });
 
@@ -29,6 +31,8 @@ describe('Session Table', () => {
         assert.isNotNull(row, 'Session table should display a session row.');
 
         cy.get('[data-cy=sessions-empty]').should('not.exist');
+
+        cy.injectThenCheck();
       });
   });
 
@@ -40,14 +44,20 @@ describe('Session Table', () => {
       .then(() => {
         cy.get('[data-cy=sessions-next]')
           .click();
+
+        cy.injectThenCheck();
       })
       .then(() => {
         cy.get('[data-cy=sessions-next]')
           .click();
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=sessions-previous]')
           .click();
+
+        cy.checkA11y();
       })
       .then(() => {
         cy.get('[data-cy=sessions-previous]')
