@@ -33,7 +33,7 @@ class SignInPage extends Component {
   render() {
     return (
       <Wrapper>
-        <Container nogutters className="pb-5">
+        <Container nogutters className="pb-3">
           <Header/>
           <Row noGutters={true}>
             <Col xs={12} lg={4}>

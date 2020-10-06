@@ -39,6 +39,9 @@ const theme = makeTheme({
   '$font-size-h1': `1.9rem`,
   '$headings-font-family': `${fonts}`,
   '$headings-font-weight': 500,
+
+  // Modal
+
 });
 
 export { theme, colors };
