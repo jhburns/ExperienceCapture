@@ -6,12 +6,14 @@ import SessionRow from 'components/SessionRow';
 import OptionSelector from 'components/OptionSelector';
 import NotifyBox from 'components/NotifyBox';
 
-import { Row, Col, Button } from '@bootstrap-styled/v4';
+import { Row, Col, Button, H2, A } from '@bootstrap-styled/v4';
 import { Wrapper } from 'components/SessionTable/style';
 
 import { postData, deleteData } from 'libs/fetchExtra';
 
 import queryString from 'query-string';
+
+import { LinkContainer } from 'react-router-bootstrap';
 
 class SessionTable extends Component {
   constructor(props) {
@@ -161,20 +163,29 @@ class SessionTable extends Component {
           body: this.props.buttonData.body,
           onClick: this.onTag,
         } : undefined}
-        isRenderingDate={this.props.isRenderingDate}
       />);
     }
 
+    const options = ["Alphabetically", "Oldest First", "Newest First"];
+
     return (
       <Wrapper className="mb-5" ref={this.topReference}>
-        <h2 className="mb-3 pl-3 pl-lg-0">
-          {this.props.title}
-        </h2>
-        <Row className="mb-2">
-          <Col>
+        <Row className="mb-2 mt-3 mt-lg-0">
+          <Col xs={12} lg="auto" className="my-auto mb-4 mb-lg-0">
+            <H2 className="d-inline-block m-0 pr-3">
+              {this.props.title}
+            </H2>
+            <br className="d-lg-none" />
+            {this.props.link !== undefined &&
+              <LinkContainer to={this.props.link.path}>
+                <A>{this.props.link.name}</A>
+              </LinkContainer>
+            }
+          </Col>
+          <Col className="d-flex justify-content-lg-end">
             <OptionSelector
-              title="Sort By"
-              options={["Alphabetically", "Oldest First", "Newest First"]}
+              default={options[2]}
+              options={options}
               onClick={this.onSort}
             />
           </Col>

@@ -16,11 +16,10 @@ class HomePage extends Component {
       <Wrapper>
         <Menu />
         <Container className="pb-5">
-          <Row className="mr-0 ml-0 pr-0 justify-content-center">
-            <Col lg={10} className="pr-0 pl-0">
+          <Row className="justify-content-center">
+            <Col lg={10} className="pr-0">
               <SessionTable
                 queryOptions={{ isOngoing: true }}
-                isRenderingDate={false}
                 emptyMessage="There are no ongoing sessions."
                 title="Ongoing Sessions"
               />

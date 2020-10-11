@@ -18,11 +18,7 @@ class SessionRow extends Component {
           </Link>
         </th>
         <td>{this.props.sessionData.fullname}</td>
-        <td data-cy="session-date">{
-          this.props.isRenderingDate ?
-            DateTime.fromMillis(this.props.sessionData.createdAt).toLocaleString(DateTime.DATETIME_MED) :
-            DateTime.fromMillis(this.props.sessionData.createdAt).toRelative()
-        }</td>
+        <td data-cy="session-date">{DateTime.fromMillis(this.props.sessionData.createdAt).toRelative()}</td>
         {this.props.buttonData !== undefined &&
           <td>
             <button
