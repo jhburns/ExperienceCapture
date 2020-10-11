@@ -33,9 +33,9 @@ class SignInPage extends Component {
   render() {
     return (
       <Wrapper>
-        <Container nogutters className="pb-3">
+        <Container className="pb-3">
           <Header/>
-          <Row noGutters={true}>
+          <Row noGutters>
             <Col xs={12} lg={4}>
               <PromoTitle className="mb-3 d-none d-lg-block mt-2">
                 Data collection you deserve

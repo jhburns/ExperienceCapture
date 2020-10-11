@@ -106,7 +106,7 @@ class SettingsPage extends Component {
     return (
       <Wrapper>
         <Menu />
-        <Container nogutters className="pb-5">
+        <Container className="pb-5">
           <Row className="m-0 justify-content-center mb-3">
             <Col xs={7} md={4} xl={3}>
               <GetSignUpLink />

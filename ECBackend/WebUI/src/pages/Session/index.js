@@ -109,7 +109,7 @@ class SessionPage extends Component {
     return (
       <Wrapper>
         <Menu />
-        <Container nogutters className="pb-5">
+        <Container className="pb-5">
           <Row className="mb-3 p-5">
             <Col>
               <SingleSession

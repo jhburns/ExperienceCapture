@@ -8,9 +8,9 @@ import { Wrapper } from 'components/GoogleSignIn/style';
 
 import { Row, Col, Button } from '@bootstrap-styled/v4';
 
-import LoginBox from 'components/LoginBox';
-
 import { LinkContainer } from 'react-router-bootstrap';
+
+import SignInBox from 'components/SignInBox';
 
 class SignIn extends Component {
   constructor(props) {
@@ -80,10 +80,10 @@ class SignIn extends Component {
   	if (this.state.isUnableToSignIn) {
       return (
         <Wrapper>
-          <LoginBox>
+          <SignInBox>
             Sorry, there was an issue signing in. <br />
             Try again.
-          </LoginBox>
+          </SignInBox>
           <Row className="justify-content-center">
             {signOutRow}
           </Row>
@@ -92,9 +92,9 @@ class SignIn extends Component {
     } else if (this.state.isDuplicateSignUp) {
       return (
         <Wrapper data-cy="already-notify">
-          <LoginBox>
+          <SignInBox>
             You've Already Signed Up.
-          </LoginBox>
+          </SignInBox>
           <Row className="justify-content-center">
             {homeRow}
             {signOutRow}
@@ -105,9 +105,9 @@ class SignIn extends Component {
       if (this.props.claimToken === undefined) {
         return (
           <Wrapper>
-            <LoginBox>
+            <SignInBox>
               You're Signed In.
-            </LoginBox>
+            </SignInBox>
             <Row className="justify-content-center">
               {homeRow}
               {signOutRow}
@@ -123,9 +123,9 @@ class SignIn extends Component {
 	  } else if (this.state.isSignedOut) {
 	    return (
         <Wrapper>
-          <LoginBox>
+          <SignInBox>
             You've Signed Out.
-          </LoginBox>
+          </SignInBox>
           <Row className="justify-content-center">
             {googleRow}
           </Row>

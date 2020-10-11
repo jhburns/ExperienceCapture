@@ -4,13 +4,16 @@ import { getData } from 'libs/fetchExtra';
 
 import SessionRow from 'components/SessionRow';
 import OptionSelector from 'components/OptionSelector';
+import NotifyBox from 'components/NotifyBox';
 
-import { P, Row, Col, Button } from '@bootstrap-styled/v4';
+import { Row, Col, Button, H2, A } from '@bootstrap-styled/v4';
 import { Wrapper } from 'components/SessionTable/style';
 
 import { postData, deleteData } from 'libs/fetchExtra';
 
 import queryString from 'query-string';
+
+import { LinkContainer } from 'react-router-bootstrap';
 
 class SessionTable extends Component {
   constructor(props) {
@@ -160,43 +163,42 @@ class SessionTable extends Component {
           body: this.props.buttonData.body,
           onClick: this.onTag,
         } : undefined}
-        isRenderingDate={this.props.isRenderingDate}
       />);
     }
 
+    const options = ["Alphabetically", "Oldest First", "Newest First"];
+
     return (
       <Wrapper className="mb-5" ref={this.topReference}>
-        <h2 className="mb-3 pl-3 pl-lg-0">
-          {this.props.title}
-        </h2>
-        <Row className="mb-2">
-          <Col>
+        <Row className="mb-2 mt-3 mt-lg-0">
+          <Col xs={12} lg="auto" className="my-auto mb-3">
+            <H2 className="d-inline-block m-0 pr-3">
+              {this.props.title}
+            </H2>
+            <br className="d-lg-none" />
+            {this.props.link !== undefined &&
+              <LinkContainer to={this.props.link.path} data-cy="table-link">
+                <A>{this.props.link.name}</A>
+              </LinkContainer>
+            }
+          </Col>
+          <Col className="d-flex justify-content-lg-end mt-2 mt-lg-0">
             <OptionSelector
-              title="Sort By"
-              options={["Alphabetically", "Oldest First", "Newest First"]}
+              default={options[2]}
+              options={options}
               onClick={this.onSort}
             />
           </Col>
         </Row>
         <table className="table mb-4">
-          <thead className="thead-dark">
-            <tr>
-              <th scope="col m-0">ID</th>
-              <th scope="col">Captured By</th>
-              <th scope="col">{this.props.isRenderingDate ? "Date" : "Time" }</th>
-              {this.props.buttonData !== undefined &&
-                <th scope="col">{this.props.buttonData.header}</th>
-              }
-            </tr>
-          </thead>
           <tbody>
             {items}
           </tbody>
         </table>
         {isEmpty() &&
-          <Row className="m-0 justify-content-center mb-4">
-            <Col>
-              <P className="text-center" data-cy="sessions-empty">{this.props.emptyMessage}</P>
+          <Row className="m-0 justify-content-center mb-4 text-center" data-cy="sessions-empty">
+            <Col xs={12} lg={6}>
+              <NotifyBox className="ml-5 mr-5">{this.props.emptyMessage}</NotifyBox>
             </Col>
           </Row>
         }
