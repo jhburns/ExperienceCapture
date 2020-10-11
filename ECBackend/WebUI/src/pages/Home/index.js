@@ -21,7 +21,7 @@ class HomePage extends Component {
               <SessionTable
                 queryOptions={{ isOngoing: true }}
                 isRenderingDate={false}
-                emptyMessage="No active sessions right now."
+                emptyMessage="There are no ongoing sessions."
                 title="Ongoing Sessions"
               />
             </Col>

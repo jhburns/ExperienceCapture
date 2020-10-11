@@ -27,7 +27,7 @@ class ArchivedSessionsPage extends Component {
                   header: "",
                 }}
                 isRenderingDate={true}
-                emptyMessage="No archived sessions."
+                emptyMessage="There are no archived sessions."
                 title="Archived Sessions"
               />
             </Col>

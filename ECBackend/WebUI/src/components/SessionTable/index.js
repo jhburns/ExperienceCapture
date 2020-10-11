@@ -4,8 +4,9 @@ import { getData } from 'libs/fetchExtra';
 
 import SessionRow from 'components/SessionRow';
 import OptionSelector from 'components/OptionSelector';
+import NotifyBox from 'components/NotifyBox';
 
-import { P, Row, Col, Button } from '@bootstrap-styled/v4';
+import { Row, Col, Button } from '@bootstrap-styled/v4';
 import { Wrapper } from 'components/SessionTable/style';
 
 import { postData, deleteData } from 'libs/fetchExtra';
@@ -179,24 +180,14 @@ class SessionTable extends Component {
           </Col>
         </Row>
         <table className="table mb-4">
-          <thead className="thead-dark">
-            <tr>
-              <th scope="col m-0">ID</th>
-              <th scope="col">Captured By</th>
-              <th scope="col">{this.props.isRenderingDate ? "Date" : "Time" }</th>
-              {this.props.buttonData !== undefined &&
-                <th scope="col">{this.props.buttonData.header}</th>
-              }
-            </tr>
-          </thead>
           <tbody>
             {items}
           </tbody>
         </table>
         {isEmpty() &&
-          <Row className="m-0 justify-content-center mb-4">
-            <Col>
-              <P className="text-center" data-cy="sessions-empty">{this.props.emptyMessage}</P>
+          <Row className="m-0 justify-content-center mb-4 text-center" data-cy="sessions-empty">
+            <Col xs={12} lg={6}>
+              <NotifyBox className="ml-5 mr-5">{this.props.emptyMessage}</NotifyBox>
             </Col>
           </Row>
         }
