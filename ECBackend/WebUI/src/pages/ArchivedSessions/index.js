@@ -16,7 +16,7 @@ class ArchivedSessionsPage extends Component {
     return (
       <Wrapper>
         <Menu />
-        <Container nogutters className="pb-5">
+        <Container className="pb-5">
           <Row className="justify-content-center">
             <Col lg={10} className="pr-0">
               <SessionTable

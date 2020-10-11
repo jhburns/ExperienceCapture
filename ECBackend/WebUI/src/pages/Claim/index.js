@@ -36,7 +36,7 @@ class ClaimPage extends Component {
   render() {
     return (
       <Wrapper>
-        <Container nogutters className="pb-5">
+        <Container className="pb-5">
           <Header />
           {this.state.isClaimRedeemed ?
             <Row className="justify-content-center">
