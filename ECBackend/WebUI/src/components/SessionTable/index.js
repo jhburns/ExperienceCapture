@@ -171,7 +171,7 @@ class SessionTable extends Component {
     return (
       <Wrapper className="mb-5" ref={this.topReference}>
         <Row className="mb-2 mt-3 mt-lg-0">
-          <Col xs={12} lg="auto" className="my-auto mb-4 mb-lg-0">
+          <Col xs={12} lg="auto" className="my-auto mb-3">
             <H2 className="d-inline-block m-0 pr-3">
               {this.props.title}
             </H2>
@@ -182,7 +182,7 @@ class SessionTable extends Component {
               </LinkContainer>
             }
           </Col>
-          <Col className="d-flex justify-content-lg-end">
+          <Col className="d-flex justify-content-lg-end mt-2 mt-lg-0">
             <OptionSelector
               default={options[2]}
               options={options}
