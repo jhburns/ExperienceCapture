@@ -177,7 +177,7 @@ class SessionTable extends Component {
             </H2>
             <br className="d-lg-none" />
             {this.props.link !== undefined &&
-              <LinkContainer to={this.props.link.path}>
+              <LinkContainer to={this.props.link.path} data-cy="table-link">
                 <A>{this.props.link.name}</A>
               </LinkContainer>
             }

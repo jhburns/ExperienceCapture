@@ -18,7 +18,7 @@ describe('Completed sessions page', () => {
         cy.get('[data-cy=session-row]').should('not.exist');
       })
       .then(() => {
-        cy.get('[data-cy=archive-link]')
+        cy.get('[data-cy=table-link]')
           .click();
       })
       .then(() => {
@@ -35,7 +35,7 @@ describe('Completed sessions page', () => {
         cy.get('[data-cy=session-row]').should('not.exist');
       })
       .then(() => {
-        cy.get('[data-cy=sessions-link]')
+        cy.get('[data-cy=table-link]')
           .click();
       })
       .then(() => {
