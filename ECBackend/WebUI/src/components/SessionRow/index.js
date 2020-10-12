@@ -38,7 +38,7 @@ class SessionRow extends Component {
                   icon={this.props.buttonData.icon}
                   color={colors.primary}
                   onClick={() => this.props.buttonData.onClick(this.props.sessionData.id)}
-                  data-cy={`session-button`}
+                  data-cy="session-button"
                 >
                   {this.props.buttonData.body}
                 </FontAwesomeIcon>

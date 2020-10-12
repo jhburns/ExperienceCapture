@@ -5,20 +5,19 @@ import SessionRow from 'components/SessionRow';
 import { StaticRouter as Router } from "react-router-dom";
 import validator from 'validator';
 
+import { faTrashRestore } from '@fortawesome/free-solid-svg-icons';
+
 it('has non-empty content', () => {
   const wrapper = shallow(<SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871}} />);
 
+  expect(wrapper.find('th')).toHaveLength(0);
   expect(wrapper.text().length).toBeGreaterThan(0);
 });
 
 it('has valid link', () => {
   const jsx =
     <Router>
-      <table>
-        <tbody>
-          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871 }} />
-        </tbody>
-      </table>
+      <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871 }} />
     </Router>;
 
   const wrapper = mount(jsx);
@@ -29,11 +28,7 @@ it('has valid link', () => {
 it('has valid link when complex', () => {
   const jsx =
     <Router>
-      <table>
-        <tbody>
-          <SessionRow sessionData={{ id: "test/if-this/is-vaild?test=2w4r", fullname: "Smitty Jensens", createdAt: 1591840213871 }} />
-        </tbody>
-      </table>
+      <SessionRow sessionData={{ id: "test/if-this/is-vaild?test=2w4r", fullname: "Smitty Jensens", createdAt: 1591840213871 }} />
     </Router>;
 
   const wrapper = mount(jsx);
@@ -44,11 +39,7 @@ it('has valid link when complex', () => {
 it('does not have button when undefined', () => {
   const jsx =
     <Router>
-      <table>
-        <tbody>
-          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871 }} />
-        </tbody>
-      </table>
+      <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871 }} />
     </Router>;
 
   const wrapper = mount(jsx);
@@ -59,14 +50,10 @@ it('does not have button when undefined', () => {
 it('does have button when defined', () => {
   const jsx =
     <Router>
-      <table>
-        <tbody>
-          <SessionRow
-            sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871 }}
-            buttonData={{ body: "example" }}
-          />
-        </tbody>
-      </table>
+      <SessionRow
+        sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871 }}
+        buttonData={{ icon: faTrashRestore }}
+      />
     </Router>;
 
   const wrapper = mount(jsx);
@@ -79,18 +66,14 @@ it('calls on click', () => {
 
   const jsx =
     <Router>
-      <table>
-        <tbody>
-          <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871 }}
-            buttonData={{ body: "example", onClick: callback }}
-          />
-        </tbody>
-      </table>
+      <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871 }}
+        buttonData={{ onClick: callback, icon: faTrashRestore }}
+      />
     </Router>;
 
   const wrapper = mount(jsx);
 
-  wrapper.find('button').simulate('click');
+  wrapper.find('td').last().children().first().simulate('click');
 
   expect(callback).toHaveBeenCalledTimes(1);
 });
