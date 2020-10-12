@@ -161,7 +161,7 @@ class SessionTable extends Component {
           key={index}
           sessionData={value}
           buttonData={this.props.buttonData !== undefined ? {
-            body: this.props.buttonData.body,
+            ...this.props.buttonData,
             onClick: this.onTag,
           } : undefined}
         />);
@@ -172,7 +172,7 @@ class SessionTable extends Component {
 
     return (
       <Wrapper className="mb-5" ref={this.topReference}>
-        <Row className="mb-2 mt-3 mt-lg-0">
+        <Row className="mb-4 mt-3 mt-lg-0">
           <Col xs={12} lg="auto" className="my-auto mb-3">
             <H2 className="d-inline-block m-0 pr-3">
               {this.props.title}
@@ -192,11 +192,11 @@ class SessionTable extends Component {
             />
           </Col>
         </Row>
-        <Table className="table mb-4">
-          <Tbody>
+        <Row className="justify-content-center mb-3">
+          <Col xs={12} lg={10}>
             {items}
-          </Tbody>
-        </Table>
+          </Col>
+        </Row>
         {isEmpty() &&
           <Row className="m-0 justify-content-center mb-4 text-center" data-cy="sessions-empty">
             <Col xs={12} lg={6}>
@@ -204,7 +204,7 @@ class SessionTable extends Component {
             </Col>
           </Row>
         }
-        {this.state.sessions !== undefined && <Row>
+        <Row>
           <Col className="text-center">
             <Button
               className="mr-2"
@@ -228,7 +228,7 @@ class SessionTable extends Component {
               Next &gt;
             </Button>
           </Col>
-        </Row>}
+        </Row>
       </Wrapper>
     );
   }
