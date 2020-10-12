@@ -9,6 +9,8 @@ import { Container, Row, Col } from '@bootstrap-styled/v4';
 
 import Footer from "components/Footer";
 
+import { faTrashRestore } from '@fortawesome/free-solid-svg-icons';
+
 class ArchivedSessionsPage extends Component {
   render() {
     return (
@@ -21,8 +23,7 @@ class ArchivedSessionsPage extends Component {
                 queryOptions={{ isOngoing: false, hasTags: "archived" }}
                 buttonData={{
                   isAdd: false,
-                  body: "Unarchive",
-                  header: "",
+                  icon: faTrashRestore,
                 }}
                 emptyMessage="There are no archived sessions."
                 title="Archived Sessions"

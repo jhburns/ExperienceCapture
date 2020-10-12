@@ -11,5 +11,7 @@ it('has non-empty content', () => {
 it('uses empty text when items is empty', () => {
   const wrapper = mount(<SessionTable queryOptions={{}} sessions={[]} emptyMessage="example" />);
 
+  wrapper.setState({ sessions: [] });
+
   expect(wrapper.text().includes("example")).toBeTruthy();
 });

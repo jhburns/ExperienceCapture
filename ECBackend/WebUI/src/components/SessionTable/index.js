@@ -20,7 +20,7 @@ class SessionTable extends Component {
     super(props);
 
     this.state = {
-      sessions: [],
+      sessions: undefined,
       isAllowedToPoll: true,
       pageNumber: 1,
       pageTotal: 0,
@@ -101,7 +101,7 @@ class SessionTable extends Component {
 
     return {
       sessions: sessionsConverted,
-      pageTotal: sessionsData.pageTotal,
+      pageTotal: parseInt(sessionsData.pageTotal.$numberLong),
       sort: nextSort,
     };
   }
@@ -153,24 +153,26 @@ class SessionTable extends Component {
     }
 
     const items = [];
-    const isEmpty = () => items.length === 0;
+    const isEmpty = () => items.length === 0 && this.state.sessions !== undefined;
 
-    for (const [index, value] of this.state.sessions.entries()) {
-      items.push(<SessionRow
-        key={index}
-        sessionData={value}
-        buttonData={this.props.buttonData !== undefined ? {
-          body: this.props.buttonData.body,
-          onClick: this.onTag,
-        } : undefined}
-      />);
+    if (this.state.sessions !== undefined) {
+      for (const [index, value] of this.state.sessions.entries()) {
+        items.push(<SessionRow
+          key={index}
+          sessionData={value}
+          buttonData={this.props.buttonData !== undefined ? {
+            ...this.props.buttonData,
+            onClick: this.onTag,
+          } : undefined}
+        />);
+      }
     }
 
     const options = ["Alphabetically", "Oldest First", "Newest First"];
 
     return (
       <Wrapper className="mb-5" ref={this.topReference}>
-        <Row className="mb-2 mt-3 mt-lg-0">
+        <Row className="mb-4 mt-3 mt-lg-0">
           <Col xs={12} lg="auto" className="my-auto mb-3">
             <H2 className="d-inline-block m-0 pr-3">
               {this.props.title}
@@ -190,11 +192,11 @@ class SessionTable extends Component {
             />
           </Col>
         </Row>
-        <table className="table mb-4">
-          <tbody>
+        <Row className="justify-content-center mb-3">
+          <Col xs={12} lg={10}>
             {items}
-          </tbody>
-        </table>
+          </Col>
+        </Row>
         {isEmpty() &&
           <Row className="m-0 justify-content-center mb-4 text-center" data-cy="sessions-empty">
             <Col xs={12} lg={6}>
@@ -206,19 +208,13 @@ class SessionTable extends Component {
           <Col className="text-center">
             <Button
               className="mr-2"
-              color="white"
-              disabled={this.state.pageNumber === 1}
+              disabled={this.state.pageNumber <= 1}
               onClick={async () => this.navigatePages(this.state.pageNumber - 1)}
               data-cy="sessions-previous"
             >
               &lt; Previous
             </Button>
             <Button
-              color="white"
-              /*
-                TODO: Fix this being active even when there are not sessions
-                Also fix tests so it doesn't happen again.
-              */
               disabled={this.state.pageNumber >= this.state.pageTotal}
               onClick={async () => this.navigatePages(this.state.pageNumber + 1)}
               data-cy="sessions-next"

@@ -9,6 +9,8 @@ import { Wrapper } from 'pages/Sessions/style';
 
 import Footer from "components/Footer";
 
+import { faArchive } from '@fortawesome/free-solid-svg-icons';
+
 class SessionsPage extends Component {
   render() {
     return (
@@ -21,8 +23,7 @@ class SessionsPage extends Component {
                 queryOptions={{ isOngoing: false, lacksTags: "archived" }}
                 buttonData={{
                   isAdd: true,
-                  body: "Archive",
-                  header: "",
+                  icon: faArchive,
                 }}
                 emptyMessage="There are no complete sessions."
                 title="Completed Sessions"
