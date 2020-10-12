@@ -49,8 +49,3 @@ html {
 .svg-inline--fa:hover {
   cursor: pointer;
 }
-
-td {
-  border-top: 0;
-  margin-bottom: 1rem;
-}

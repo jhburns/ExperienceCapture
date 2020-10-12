@@ -54,4 +54,19 @@ describe('Session Table', () => {
           .click();
       });
   });
+
+  it('Disables navigation when there are less than 10 sessions.', () => {
+    cy.createClosedSessions(5)
+      .then(() => {
+        cy.visit("/home/sessions");
+      })
+      .then(() => {
+        cy.get('[data-cy=sessions-next]')
+          .should('have.class', 'disabled');
+      })
+      .then(() => {
+        cy.get('[data-cy=sessions-previous]')
+          .should('have.class', 'disabled');
+      });
+  });
 });

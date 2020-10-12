@@ -6,7 +6,7 @@ import SessionRow from 'components/SessionRow';
 import OptionSelector from 'components/OptionSelector';
 import NotifyBox from 'components/NotifyBox';
 
-import { Row, Col, Button, H2, A, Table, Tbody } from '@bootstrap-styled/v4';
+import { Row, Col, Button, H2, A } from '@bootstrap-styled/v4';
 import { Wrapper } from 'components/SessionTable/style';
 
 import { postData, deleteData } from 'libs/fetchExtra';
@@ -101,7 +101,7 @@ class SessionTable extends Component {
 
     return {
       sessions: sessionsConverted,
-      pageTotal: sessionsData.pageTotal,
+      pageTotal: parseInt(sessionsData.pageTotal.$numberLong),
       sort: nextSort,
     };
   }
@@ -208,19 +208,13 @@ class SessionTable extends Component {
           <Col className="text-center">
             <Button
               className="mr-2"
-              color="white"
-              disabled={this.state.pageNumber === 1}
+              disabled={this.state.pageNumber <= 1}
               onClick={async () => this.navigatePages(this.state.pageNumber - 1)}
               data-cy="sessions-previous"
             >
               &lt; Previous
             </Button>
             <Button
-              color="white"
-              /*
-                TODO: Fix this being active even when there are not sessions
-                Also fix tests so it doesn't happen again.
-              */
               disabled={this.state.pageNumber >= this.state.pageTotal}
               onClick={async () => this.navigatePages(this.state.pageNumber + 1)}
               data-cy="sessions-next"
