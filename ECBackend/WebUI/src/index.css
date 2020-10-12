@@ -40,3 +40,8 @@ html {
   background-color: rgba(0, 0, 0, 0) !important;
   margin: 10rem auto !important;
 }
+
+/* Prevents a weird animation issue */
+.dropdown-toggle {
+  margin-bottom: -1.5px !important;
+}

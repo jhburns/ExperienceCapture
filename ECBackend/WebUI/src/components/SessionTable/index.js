@@ -6,7 +6,7 @@ import SessionRow from 'components/SessionRow';
 import OptionSelector from 'components/OptionSelector';
 import NotifyBox from 'components/NotifyBox';
 
-import { Row, Col, Button, H2, A } from '@bootstrap-styled/v4';
+import { Row, Col, Button, H2, A, Table, Tbody } from '@bootstrap-styled/v4';
 import { Wrapper } from 'components/SessionTable/style';
 
 import { postData, deleteData } from 'libs/fetchExtra';
@@ -20,7 +20,7 @@ class SessionTable extends Component {
     super(props);
 
     this.state = {
-      sessions: [],
+      sessions: undefined,
       isAllowedToPoll: true,
       pageNumber: 1,
       pageTotal: 0,
@@ -153,17 +153,19 @@ class SessionTable extends Component {
     }
 
     const items = [];
-    const isEmpty = () => items.length === 0;
+    const isEmpty = () => items.length === 0 && this.state.sessions !== undefined;
 
-    for (const [index, value] of this.state.sessions.entries()) {
-      items.push(<SessionRow
-        key={index}
-        sessionData={value}
-        buttonData={this.props.buttonData !== undefined ? {
-          body: this.props.buttonData.body,
-          onClick: this.onTag,
-        } : undefined}
-      />);
+    if (this.state.sessions !== undefined) {
+      for (const [index, value] of this.state.sessions.entries()) {
+        items.push(<SessionRow
+          key={index}
+          sessionData={value}
+          buttonData={this.props.buttonData !== undefined ? {
+            body: this.props.buttonData.body,
+            onClick: this.onTag,
+          } : undefined}
+        />);
+      }
     }
 
     const options = ["Alphabetically", "Oldest First", "Newest First"];
@@ -190,11 +192,11 @@ class SessionTable extends Component {
             />
           </Col>
         </Row>
-        <table className="table mb-4">
-          <tbody>
+        <Table className="table mb-4">
+          <Tbody>
             {items}
-          </tbody>
-        </table>
+          </Tbody>
+        </Table>
         {isEmpty() &&
           <Row className="m-0 justify-content-center mb-4 text-center" data-cy="sessions-empty">
             <Col xs={12} lg={6}>
@@ -202,7 +204,7 @@ class SessionTable extends Component {
             </Col>
           </Row>
         }
-        <Row>
+        {this.state.sessions !== undefined && <Row>
           <Col className="text-center">
             <Button
               className="mr-2"
@@ -226,7 +228,7 @@ class SessionTable extends Component {
               Next &gt;
             </Button>
           </Col>
-        </Row>
+        </Row>}
       </Wrapper>
     );
   }
