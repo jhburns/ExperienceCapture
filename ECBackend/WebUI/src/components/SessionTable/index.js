@@ -192,7 +192,7 @@ class SessionTable extends Component {
             />
           </Col>
         </Row>
-        <Row className="justify-content-center mb-3">
+        <Row className="justify-content-center mb-2">
           <Col xs={12} lg={10}>
             {items}
           </Col>

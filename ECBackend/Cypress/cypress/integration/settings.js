@@ -42,7 +42,11 @@ describe('Settings Page', () => {
           .click();
       })
       .then(() => {
-        cy.get('[data-cy=sign-up-link]');
+        // Clicking this will hang cypress
+        cy.get('[data-cy=new-link-copy]');
+      })
+      .then(() => {
+        cy.get('[data-cy=new-link]');
       })
       .then((link) => {
         const url = link.text();

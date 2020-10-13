@@ -1,11 +1,15 @@
 import styled from 'styled-components';
 
+import { colors } from 'libs/theme';
+
 const Wrapper = styled.section`
 
 `;
 
-const Text = styled.p`
-  overflow-wrap: break-word;
+const CopyText = styled.section`
+  overflow-x: auto;
+  white-space: nowrap;
+  background-color: ${ colors.highlight };
 `;
 
-export { Text, Wrapper };
+export { Wrapper, CopyText };

@@ -14,6 +14,8 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  P,
+  H2,
 } from '@bootstrap-styled/v4';
 
 import { Wrapper } from 'components/SingleSession/style';
@@ -107,44 +109,58 @@ class SettingsPage extends Component {
       <Wrapper>
         <Menu />
         <Container className="pb-5">
-          <Row className="m-0 justify-content-center mb-3">
-            <Col xs={7} md={4} xl={3}>
-              <GetSignUpLink />
+          <Row className="justify-content-center">
+            <Col xs={12} lg={10}>
+              <Row className="mb-5 pt-3">
+                <Col>
+                  <H2>Settings</H2>
+                </Col>
+              </Row>
+              <Row className="mb-5 justify-content-center">
+                <Col xs={8} lg={4} className="text-center text-lg-left">
+                  <Button onClick={this.onSignOut} data-cy="sign-out" size="lg">
+                    Sign Out
+                  </Button>
+                </Col>
+                <Col xs={12} className="mb-3 mb-lg-0 d-lg-none"></Col>
+                <Col xs={10} lg={8}>
+                  Sign out to change accounts.
+                </Col>
+              </Row>
+              <Row className="mb-5 justify-content-center">
+                <Col xs={8} lg={4} className="text-center text-lg-left">
+                  <GetSignUpLink />
+                </Col>
+                <Col xs={12} className="mb-3 mb-lg-0 d-lg-none"></Col>
+                <Col xs={10} lg={8}>
+                  <P>Share the generated link with another person so they can sign up for Experience Capture.</P>
+                </Col>
+              </Row>
+              <Row className="mb-5 justify-content-center">
+                <Col xs={8} lg={4} className="text-center text-lg-left">
+                  <Button onClick={this.toggle} color="warning" data-cy="delete-account" size="lg">
+                    Delete Account
+                  </Button>
+                </Col>
+                <Col xs={12} className="mb-3 mb-lg-0 d-lg-none"></Col>
+                <Col xs={10} lg={8}>
+                  Deleting your account will not delete any data associated with it.
+                </Col>
+                <Modal isOpen={this.state.isOpen} toggle={this.toggle}>
+                  <ModalHeader toggle={this.toggle}>Delete Confirmation</ModalHeader>
+                  <ModalBody>
+                    Are you sure you want to delete your account?
+                    No session data associated with this account will be lost.
+                  </ModalBody>
+                  <ModalFooter>
+                    <Button color="warning" data-cy="confirm-delete" onClick={this.onDelete}>Delete</Button>
+                    <Button color="secondary" data-cy="cancel-delete" onClick={this.toggle}>Cancel</Button>
+                  </ModalFooter>
+                </Modal>
+              </Row>
+              {isAdmin && <UserList />}
             </Col>
           </Row>
-          <Row className="m-0 justify-content-center mb-3">
-            <Col xs={7} md={4} xl={3}>
-              <Button
-                onClick={this.onSignOut}
-                className="btn-block"
-                data-cy="sign-out"
-              >
-                Sign Out
-              </Button>
-            </Col>
-          </Row>
-          <Row className="m-0 justify-content-center">
-            <Col xs={7} md={4} xl={3}>
-              <Button
-                className="btn-block"
-                onClick={this.toggle}
-                data-cy="delete-account"
-              >
-                Delete Account
-              </Button>
-              <Modal isOpen={this.state.isOpen} toggle={this.toggle}>
-                <ModalHeader toggle={this.toggle}>Delete Confirmation</ModalHeader>
-                <ModalBody>
-                  Are you sure you want to delete your account? No session data associated with this account will be lost.
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="warning" data-cy="confirm-delete" onClick={this.onDelete}>Delete</Button>
-                  <Button color="secondary" data-cy="cancel-delete" onClick={this.toggle}>Cancel</Button>
-                </ModalFooter>
-              </Modal>
-            </Col>
-          </Row>
-          {isAdmin && <UserList />}
         </Container>
         <Footer />
       </Wrapper>

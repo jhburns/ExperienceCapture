@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Wrapper } from 'components/UserList/style';
 
 import { getData, deleteData } from 'libs/fetchExtra';
-import { Row, Col, Button } from '@bootstrap-styled/v4';
+import { Row, Col, Button, P, H3 } from '@bootstrap-styled/v4';
 
 // This component can only be used by admins
 class UserList extends Component {
@@ -76,11 +76,11 @@ class UserList extends Component {
     for (const [index, value] of this.state.users.entries()) {
       items.push(<Row key={index}>
         <Col className="d-inline-block">
-          <p className="d-inline-block mr-3">{value.fullname}</p>
+          <P className="d-inline-block mr-3">{value.fullname}</P>
           <Button
-            className="btn btn-outline-dark"
             onClick={() => this.onDelete(value.id)}
             data-cy="delete-others"
+            color="warning"
           >
             Delete
           </Button>
@@ -92,7 +92,8 @@ class UserList extends Component {
       <Wrapper className="text-center mt-5">
         <Row className="mb-3">
           <Col>
-            <h3>Admin Controls</h3>
+            <H3>Admin Controls</H3>
+            <P>(Only Admins see this)</P>
           </Col>
         </Row>
         {items}
