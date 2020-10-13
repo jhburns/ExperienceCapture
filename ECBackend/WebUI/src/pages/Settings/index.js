@@ -15,7 +15,7 @@ import {
   ModalBody,
   ModalFooter,
   P,
-  H2
+  H2,
 } from '@bootstrap-styled/v4';
 
 import { Wrapper } from 'components/SingleSession/style';
@@ -111,7 +111,7 @@ class SettingsPage extends Component {
         <Container className="pb-5">
           <Row className="justify-content-center">
             <Col xs={12} lg={10}>
-              <Row className="mb-4">
+              <Row className="mb-5 pt-3">
                 <Col>
                   <H2>Settings</H2>
                 </Col>
@@ -151,7 +151,7 @@ class SettingsPage extends Component {
                   <ModalBody>
                     Are you sure you want to delete your account?
                     No session data associated with this account will be lost.
-                    </ModalBody>
+                  </ModalBody>
                   <ModalFooter>
                     <Button color="warning" data-cy="confirm-delete" onClick={this.onDelete}>Delete</Button>
                     <Button color="secondary" data-cy="cancel-delete" onClick={this.toggle}>Cancel</Button>
