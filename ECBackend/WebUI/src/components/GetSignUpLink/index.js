@@ -27,6 +27,8 @@ class GetSignUpLink extends Component {
   }
 
   async onButtonCLick() {
+    this.setState({ link: "" });
+
     const signUpRequest = await postData("/api/v1/authentication/signUps/", {});
 
     if (!signUpRequest.ok) {
@@ -55,7 +57,7 @@ class GetSignUpLink extends Component {
         {this.state.link !== "" &&
           <Row className="mt-3">
             <Col xs={10}>
-              <CopyText className="rounded p-1">
+              <CopyText className="rounded p-1" data-cy="new-link">
                 {this.state.link}
               </CopyText>
             </Col>
