@@ -10,7 +10,6 @@ import { faTrashRestore } from '@fortawesome/free-solid-svg-icons';
 it('has non-empty content', () => {
   const wrapper = shallow(<SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871}} />);
 
-  expect(wrapper.find('th')).toHaveLength(0);
   expect(wrapper.text().length).toBeGreaterThan(0);
 });
 
@@ -25,10 +24,10 @@ it('has valid link', () => {
   expect(validator.isURL(wrapper.find('a').props().href, { require_host: false })).toBeTruthy();
 });
 
-it('has valid link when complex', () => {
+it('has valid link', () => {
   const jsx =
     <Router>
-      <SessionRow sessionData={{ id: "test/if-this/is-vaild?test=2w4r", fullname: "Smitty Jensens", createdAt: 1591840213871 }} />
+      <SessionRow sessionData={{ id: "test/link", fullname: "Smitty Jensens", createdAt: 1591840213871 }} />
     </Router>;
 
   const wrapper = mount(jsx);
@@ -36,7 +35,7 @@ it('has valid link when complex', () => {
   expect(validator.isURL(wrapper.find('a').props().href, { require_host: false })).toBeTruthy();
 });
 
-it('does not have button when undefined', () => {
+it('does not have icon when undefined', () => {
   const jsx =
     <Router>
       <SessionRow sessionData={{ id: "EXEX", fullname: "Smitty Jensens", createdAt: 1591840213871 }} />
@@ -44,10 +43,10 @@ it('does not have button when undefined', () => {
 
   const wrapper = mount(jsx);
 
-  expect(wrapper.find('td')).toHaveLength(2);
+  expect(wrapper.find('path')).toHaveLength(0);
 });
 
-it('does have button when defined', () => {
+it('does have icon when defined', () => {
   const jsx =
     <Router>
       <SessionRow
@@ -58,7 +57,7 @@ it('does have button when defined', () => {
 
   const wrapper = mount(jsx);
 
-  expect(wrapper.find('td')).toHaveLength(3);
+  expect(wrapper.find('path')).toHaveLength(1);
 });
 
 it('calls on click', () => {
@@ -73,7 +72,7 @@ it('calls on click', () => {
 
   const wrapper = mount(jsx);
 
-  wrapper.find('td').last().children().first().simulate('click');
+  wrapper.find('path').simulate('click');
 
   expect(callback).toHaveBeenCalledTimes(1);
 });

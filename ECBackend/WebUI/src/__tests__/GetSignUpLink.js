@@ -25,6 +25,6 @@ it('presents link when created', () => {
 
   wrapper.setState({ link: "something"});
 
-  expect(wrapper.find('p').exists()).toBeTruthy();
-  expect(wrapper.find('p').text()).toBe('something');
+  expect(wrapper.find('section').exists()).toBeTruthy();
+  expect(wrapper.find('section').last().text()).toBe('something');
 });
