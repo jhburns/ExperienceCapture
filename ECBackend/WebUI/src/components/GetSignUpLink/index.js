@@ -49,11 +49,7 @@ class GetSignUpLink extends Component {
             {this.state.link}
           </Text>
         }
-        <Button
-          onClick={this.onButtonCLick}
-          className="btn btn-dark btn-block"
-          data-cy="new-sign-up"
-        >
+        <Button onClick={this.onButtonCLick} data-cy="new-sign-up" size="lg">
           New Sign Up Link
         </Button>
       </Wrapper>
