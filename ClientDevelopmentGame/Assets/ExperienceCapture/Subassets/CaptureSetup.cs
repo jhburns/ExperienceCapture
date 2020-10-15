@@ -57,7 +57,6 @@
         public Image sessionBackground;
         public Button newSession;
         public Button start;
-        public GameObject eventSystem;
 
         private string sessionID;
         private string url;
@@ -273,6 +272,7 @@
             loadingCircle.gameObject.SetActive(false);
             sessionInfo.gameObject.SetActive(false);
             sessionBackground.gameObject.SetActive(false);
+            openingInfo.gameObject.SetActive(false);
 
             urlTitle.gameObject.SetActive(true);
             urlInput.gameObject.SetActive(true);

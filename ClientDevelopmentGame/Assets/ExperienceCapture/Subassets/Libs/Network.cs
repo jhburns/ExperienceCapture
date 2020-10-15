@@ -85,6 +85,7 @@ namespace Capture.Internal.Network
                         // Should continue to poll even after error
                         Debug.Log(request.responseCode);
                         onError(request.error);
+                        yield break;
                     }
                     else
                     {
@@ -92,9 +93,9 @@ namespace Capture.Internal.Network
                             onSuccess(request.downloadHandler.data);
                             isNotReady = false;
                         }
+
+                        yield return new WaitForSeconds(3);
                     }
-                    
-                    yield return new WaitForSeconds(3);
                 }
             }
         }
