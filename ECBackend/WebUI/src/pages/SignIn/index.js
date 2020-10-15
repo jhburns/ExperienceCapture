@@ -13,23 +13,6 @@ import queryString from 'query-string';
 import allTheData from 'img/all_the_data.svg';
 
 class SignInPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      signUpToken: null,
-      claimToken: null,
-    };
-  }
-
-  componentDidMount() {
-    const query = queryString.parse(this.props.location.search);
-
-    this.setState({
-      signUpToken: query.signUpToken,
-      claimToken: undefined,
-    });
-  }
-
   render() {
     return (
       <Wrapper>
@@ -52,8 +35,7 @@ class SignInPage extends Component {
                 </Col>
                 <Col xs={12} className="justify-content-center mb-5">
                   <GoogleSignIn
-                    claimToken={this.state.claimToken}
-                    signUpToken={this.state.signUpToken}
+                    signUpToken={queryString.parse(this.props.location.search).signUpToken}
                   />
                 </Col>
               </Row>

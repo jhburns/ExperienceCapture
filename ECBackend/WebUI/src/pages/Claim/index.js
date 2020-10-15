@@ -18,19 +18,8 @@ class ClaimPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      signUpToken: null,
-      claimToken: null,
       isClaimRedeemed: false,
     };
-  }
-
-  componentDidMount() {
-    const query = queryString.parse(this.props.location.search);
-
-    this.setState({
-      signUpToken: undefined,
-      claimToken: query.claimToken,
-    });
   }
 
   render() {
@@ -39,15 +28,6 @@ class ClaimPage extends Component {
         <Container className="pb-5">
           <Header />
           {this.state.isClaimRedeemed ?
-            <Row className="justify-content-center">
-              <Col xs={10} lg={4} className="mb-5">
-                <GoogleSignIn
-                  claimToken={this.state.claimToken}
-                  onSuccessfulClaim={() => this.setState({ isClaimRedeemed: true })}
-                />
-              </Col>
-            </Row>
-            :
             <>
               <Row className="mb-5 justify-content-center">
                 <Col xs="auto">
@@ -64,12 +44,21 @@ class ClaimPage extends Component {
                   <P>
                     Close this tab and return to your game, or go to the&nbsp;
                     <A as={Link} to="/home/start">
-                        home page.
+                    home page.
                     </A>
                   </P>
                 </Col>
               </Row>
             </>
+            :
+            <Row className="justify-content-center">
+              <Col xs={10} lg={4} className="mb-5">
+                <GoogleSignIn
+                  claimToken={queryString.parse(this.props.location.search).claimToken}
+                  onSuccessfulClaim={() => this.setState({ isClaimRedeemed: true })}
+                />
+              </Col>
+            </Row>
           }
         </Container>
         <Footer />
