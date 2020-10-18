@@ -6,6 +6,8 @@ errors stdout
 
 tls off
 
+gzip
+
 proxy /api/v1 api:80 {
 	without /api/v1
 	transparent

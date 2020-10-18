@@ -70,7 +70,7 @@ class SignIn extends Component {
       </Col>;
 
     const googleRow =
-      <Col xs={8} lg={7} className="mb-2 mb-lg-0">
+      <Col xs={8} lg={8} className="mb-2 mb-lg-0">
         <Button
           id="signInButton"
           block={true}
