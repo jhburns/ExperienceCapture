@@ -12,6 +12,10 @@ import { LinkContainer } from 'react-router-bootstrap';
 
 import SignInBox from 'components/SignInBox';
 
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { colors } from 'libs/theme';
+
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -47,7 +51,7 @@ class SignIn extends Component {
             className="text-decoration-none"
             size="lg"
           >
-            GO HOME
+            Go Home
           </Button>
         </LinkContainer>
       </Col>;
@@ -61,7 +65,7 @@ class SignIn extends Component {
           outline={true}
           size="lg"
         >
-          SIGN OUT
+          Sign Out
         </Button>
       </Col>;
 
@@ -73,7 +77,8 @@ class SignIn extends Component {
           size="lg"
           data-cy="sign-in"
         >
-          GOOGLE SIGN IN
+          <FontAwesomeIcon icon={faGoogle} color={colors.background} />
+          &nbsp;&nbsp;Google Sign In
         </Button>
       </Col>;
 
