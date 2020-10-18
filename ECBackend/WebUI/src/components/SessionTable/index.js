@@ -172,7 +172,7 @@ class SessionTable extends Component {
 
     return (
       <Wrapper className="mb-5" ref={this.topReference}>
-        <Row className="mb-4 mt-3 mt-lg-0">
+        <Row className="mb-4 mt-3 mt-lg-0 pr-0">
           <Col xs={12} lg="auto" className="my-auto mb-3">
             <H2 className="d-inline-block m-0 pr-3">
               {this.props.title}
