@@ -1,5 +1,3 @@
-// TODO: add a way to check date sort, only length is checked now
-
 describe('Sort', () => {
   it('Can sort by oldest first.', () => {
     cy.createClosedSessions(10)

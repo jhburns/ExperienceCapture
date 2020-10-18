@@ -43,7 +43,7 @@ class ClaimPage extends Component {
                 <Col xs={8} lg={4}>
                   <P>
                     Close this tab and return to your game, or go to the&nbsp;
-                    <A as={Link} to="/home/start">
+                    <A as={Link} to="/home/start" data-cy="go-home-from-claim">
                     home page.
                     </A>
                   </P>
