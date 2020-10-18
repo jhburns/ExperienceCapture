@@ -21,8 +21,6 @@ class SingleSession extends Component {
     const about = "Sessions have to be exported before they can be downloaded."
       + (this.props.sessionData.isOngoing ? " Ongoing sessions can't be exported/downloaded." : "");
 
-    console.log(JSON.stringify(this.props.sessionData));
-
     return (
       <Wrapper>
         <Row className="justify-content-center justify-content-lg-start">

@@ -151,6 +151,7 @@ class SignIn extends Component {
     const signInButton = document.getElementById('signInButton');
 
     if (isMock) {
+      // eslint-disable-next-line no-console
       signInButton.onclick = () => console.log("This button does nothing when using mock data.");
       return;
     }
@@ -209,6 +210,7 @@ class SignIn extends Component {
   }
 
   async onInvalidRequest(err) {
+    // eslint-disable-next-line no-console
     console.log("Site is running locally, using mock data. See printed error.");
 
     const options = {
@@ -222,6 +224,7 @@ class SignIn extends Component {
 	    isMock: true,
     });
 
+    // eslint-disable-next-line no-console
     console.log(err);
   }
 
