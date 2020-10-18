@@ -20,14 +20,6 @@
              ln --symbolic /usr/bin/python3 /usr/bin/python;
            fi
 
-    - name: Update cache before installing packages
-      apt:
-        update_cache: true
-
-    - name: Add 'fish' repository
-      apt_repository:
-        repo: ppa:fish-shell/release-3
-
     - name: Install required system packages for Docker
       apt:
         update_cache: true
@@ -38,7 +30,6 @@
         - 'curl=7.58.*'
         - 'software-properties-common=0.96.*'
         - 'rsync=3.1.*'
-        - 'fish=3.1.*'
         - 'python3=3.6.7*'
         # This works, despite the symlinking
         - 'python3-pip=9.0.*'
@@ -61,7 +52,8 @@
         src: /deploy/ECBackend/
         dest: /srv
         rsync_opts:
-          - "{% if packer_debug == 'true' %}--chmod=F666{% else %}--chmod=F444{% endif %}"
+          - "--chmod={% if packer_debug == 'true' %}F666{% else %}F444{% endif %}"
+          - "--exclude={'*Cypress', '*node_modules', '*bin', '*obj'}"
 
     - name: Start Docker Swarm
       command: docker swarm init
@@ -86,7 +78,6 @@
         name: ec-debug
         comment: Default user for debugging in production.
         group: docker
-        shell: /usr/bin/fish
         password_lock: true
       when: packer_debug == 'true'
 
@@ -129,7 +120,7 @@
       async: 600  # Ten minutes
       poll: 0
 
-    - name: Rebuild Docker images for production
+    - name: Build Docker images for production
       command: |
                docker-compose \
                -f docker-compose.yaml \
