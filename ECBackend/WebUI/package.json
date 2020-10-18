@@ -2,83 +2,12 @@
   "name": "ec-webpage",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@bootstrap-styled/provider": "^2.0.2",
-    "@bootstrap-styled/v4": "^3.3.0",
-    "bootstrap-styled": "^2.7.2",
-    "query-string": "^6.13.4",
-    "react": "^16.13.1",
-    "react-copy-to-clipboard": "^5.0.2",
-    "react-dom": "^16.12.0",
-    "react-router-bootstrap": "^0.25.0",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.3.0",
-    "styled-components": "^5.0.0",
-    "typescript": "^4.0.2"
-  },
   "scripts": {
-    "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
-    "lint": "eslint \"**/*.js\" --max-warnings=0"
-  },
-  "eslintConfig": {
-    "plugins": [
-      "jsdoc"
-    ],
-    "extends": [
-      "react-app"
-    ],
-    "rules": {
-      "jsdoc/check-alignment": 1,
-      "jsdoc/check-indentation": 1,
-      "jsdoc/check-param-names": 1,
-      "jsdoc/check-syntax": 1,
-      "jsdoc/check-tag-names": 1,
-      "jsdoc/check-types": 1,
-      "jsdoc/match-description": 1,
-      "jsdoc/newline-after-description": 1,
-      "jsdoc/no-undefined-types": 1,
-      "jsdoc/require-description": 1,
-      "jsdoc/require-description-complete-sentence": 1,
-      "jsdoc/require-jsdoc": 1,
-      "jsdoc/require-hyphen-before-param-description": 1,
-      "jsdoc/require-param": 1,
-      "jsdoc/require-param-description": 1,
-      "jsdoc/require-param-name": 1,
-      "jsdoc/require-param-type": 1,
-      "jsdoc/require-returns": 1,
-      "jsdoc/require-returns-check": 1,
-      "jsdoc/require-returns-description": 1,
-      "jsdoc/require-returns-type": 1,
-      "jsdoc/valid-types": 1,
-      "jsx-quotes": "warn",
-      "no-multiple-empty-lines": "warn",
-      "no-process-env": "warn",
-      "semi-style": [
-        "warn",
-        "last"
-      ],
-      "no-trailing-spaces": "warn",
-      "indent": [
-        "warn",
-        2
-      ],
-      "semi": [
-        "warn",
-        "always"
-      ],
-      "comma-dangle": [
-        "warn",
-        "always-multiline"
-      ]
-    }
-  },
-  "jest": {
-    "transformIgnorePatterns": [
-      "node_modules/(?!(bootstrap)/)"
-    ]
+    "lint": "eslint \"**/*.js\" --max-warnings=0",
+    "start": "react-app-rewired start",
+    "test": "react-app-rewired test"
   },
   "browserslist": {
     "production": [
@@ -92,10 +21,85 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
+  "eslintConfig": {
+    "plugins": [
+      "jsdoc"
+    ],
+    "extends": [
+      "react-app"
+    ],
+    "rules": {
+      "comma-dangle": [
+        "warn",
+        "always-multiline"
+      ],
+      "indent": [
+        "warn",
+        2
+      ],
+      "jsx-quotes": "warn",
+      "no-multiple-empty-lines": "warn",
+      "no-process-env": "warn",
+      "no-trailing-spaces": "warn",
+      "semi": [
+        "warn",
+        "always"
+      ],
+      "semi-style": [
+        "warn",
+        "last"
+      ],
+      "jsdoc/check-alignment": 1,
+      "jsdoc/check-indentation": 1,
+      "jsdoc/check-param-names": 1,
+      "jsdoc/check-syntax": 1,
+      "jsdoc/check-tag-names": 1,
+      "jsdoc/check-types": 1,
+      "jsdoc/match-description": 1,
+      "jsdoc/newline-after-description": 1,
+      "jsdoc/no-undefined-types": 1,
+      "jsdoc/require-description": 1,
+      "jsdoc/require-description-complete-sentence": 1,
+      "jsdoc/require-hyphen-before-param-description": 1,
+      "jsdoc/require-jsdoc": 1,
+      "jsdoc/require-param": 1,
+      "jsdoc/require-param-description": 1,
+      "jsdoc/require-param-name": 1,
+      "jsdoc/require-param-type": 1,
+      "jsdoc/require-returns": 1,
+      "jsdoc/require-returns-check": 1,
+      "jsdoc/require-returns-description": 1,
+      "jsdoc/require-returns-type": 1,
+      "jsdoc/valid-types": 1,
+      "no-console": "warn"
+    }
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(bootstrap)/)"
+    ]
+  },
+  "dependencies": {
+    "@bootstrap-styled/provider": "^2.0.2",
+    "@bootstrap-styled/v4": "^3.3.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.11",
+    "bootstrap-styled": "^2.7.2",
+    "luxon": "^1.25.0",
+    "query-string": "^6.13.4",
+    "react": "^16.13.1",
+    "react-app-rewired": "^2.1.6",
+    "react-copy-to-clipboard": "^5.0.2",
+    "react-dom": "^16.12.0",
+    "react-router-bootstrap": "^0.25.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.3.0",
+    "styled-components": "^5.0.0",
+    "typescript": "^4.0.2"
+  },
+  "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.7.0",
     "@typescript-eslint/parser": "^2.13.0",
     "babel-eslint": "^10.0.3",
@@ -109,9 +113,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.21.3",
     "eslint-plugin-react-hooks": "^2.5.1",
-    "html-webpack-inject-attributes-plugin": "^1.0.3",
-    "luxon": "^1.25.0",
-    "react-app-rewired": "^2.1.6",
+    "html-webpack-inject-attributes-plugin": "^1.0.5",
     "validator": "^13.1.0"
   }
 }

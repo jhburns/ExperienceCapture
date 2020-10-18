@@ -54,6 +54,7 @@ class Admin extends Component {
       }
     } catch (error) {
       this.onError();
+      // eslint-disable-next-line no-console
       console.error(error);
     }
   }

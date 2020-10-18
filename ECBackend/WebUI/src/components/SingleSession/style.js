@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
+import { colors } from 'libs/theme';
+
 const Wrapper = styled.section`
 
 `;
 
-const Disabled = styled.button`
-  &:hover {
-    cursor: not-allowed;
-  }
+const Background = styled.section`
+  background-color: ${colors.highlight};
 `;
 
-export { Wrapper, Disabled };
+export { Wrapper, Background };
