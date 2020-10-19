@@ -4,7 +4,7 @@ This is assuming the Unity game doesn't have already Experience Capture installe
 
 ## Download Asset Package
 
-Get the latest client [here](https://github.com/jhburns/ExperienceCapture/releases).
+Get the latest client [here](https://github.com/jhburns/ExperienceCapture/releases/tag/client.1.3.0).
 
 Click on the first link 'ExperienceCaptureClient.unitypackage' to download it, no extraction needed.
 
