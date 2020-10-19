@@ -20,7 +20,7 @@
 
         [Tooltip("Label the game version before releasing.")]
         public string gameVersion;
-        public const string clientVersionLocked = "1.2.1";
+        public const string clientVersionLocked = "1.3.0";
         [Tooltip("Don't edit, is read-only and only informational.")]
         public string clientVersion;
 
