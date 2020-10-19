@@ -5,7 +5,16 @@
  * @param {string} cookieValue - A value for the cookie.
  */
 function createCookie(cookieName, cookieValue) {
-  document.cookie = `${cookieName} = ${cookieValue}; SameSite = Strict; path=/`;
+  document.cookie = `${cookieName} = ${cookieValue}; SameSite=Strict; Path=/`;
 }
 
-export { createCookie };
+/**
+ * Delete a cookie from the website.
+ *
+ * @param {string} name - A key to be deleted.
+ */
+function deleteCookie(name) {
+  document.cookie = `${name} = Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+}
+
+export { createCookie, deleteCookie };

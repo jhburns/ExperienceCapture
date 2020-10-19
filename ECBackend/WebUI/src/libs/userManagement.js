@@ -1,7 +1,7 @@
 /* global gapi */
 
 import { postData } from 'libs/fetchExtra';
-import { createCookie } from 'libs/cookieExtra';
+import { createCookie, deleteCookie } from 'libs/cookieExtra';
 
 import { environmentVariables } from "libs/environment";
 
@@ -32,14 +32,13 @@ async function submitUser(
   onDuplicate) {
   isMockFromRoot = isMock;
 
+  // Clear cookie on new user
+  deleteCookie("ExperienceCapture-Access-Token");
+
   if (options.signUpToken !== undefined) {
     await signUpUser(user, options.signUpToken, onError, onDuplicate);
-    return;
-  }
-
-  if (options.claimToken !== undefined) {
+  } else if (options.claimToken !== undefined) {
     await fulfillClaim(user, options.claimToken, onError);
-    return;
   }
 
   await signInUser(user, onError);

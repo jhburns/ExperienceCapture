@@ -10,7 +10,7 @@ class Footer extends Component {
     return (
       <Wrapper>
         {/* Don't add top padding to this or stickiness will break */}
-        <Container className="p-0">
+        <Container>
           <Row className="pl-5 pr-5 justify-content-center" noGutters={true}>
             <Col xs={0} lg={4}></Col>
             <Col xs={6} lg={4}>
