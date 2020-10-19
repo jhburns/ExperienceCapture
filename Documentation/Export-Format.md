@@ -36,7 +36,7 @@ Only the non-gameObjects frames, annotated example:
 
 ```text
 [{
-  "dateTime" : "2020-01-30T21:56:41.6282480Z", // UTC time generated on the client
+  "dateTime" : "2020-01-30T21:56:41.6282480Z", // ISO 8601 timestamp generated on the client
   "description" : "Session Started",
   "captureRate" : 1, // How often a capture is taken, 1 = every frame
   "extraInfo" : {
@@ -107,22 +107,19 @@ Here is an example of this file type, with annotations:
 [{
   "_id" : { "$oid" : "5e3350fb774b120001aefa93" }, // Data base key, not important
   "isOpen" : true, // Whether the session was properly closed by the client
-  "isExported" : false,
-  "isPending" : true,
+  "exportState" : "Pending", // Values of either "NotStarted", "Pending", "Done", or "Error"
   "user" : { // The user who logged into the service, NOT the player
     "fullname" : "Smitty Jensens",
     "firstname" : "Smitty",
     "lastname" : "Jensens",
     "email" : "smitty@jenkins.com",
     "createdAt" : { "$date" : 1580169485875 },
-    "id" : "123456789109876543210"
+    "_id" : { "$oid" : "5f8cd992824af18047cfa408" },
   },
-  "createdAt" : { "$date" : 1580421371319 },
+  "createdAt" : { "$date" : "2020-10-19T02:15:58.343Z" },
   "tags" : ["archived"], // Flexible properties on the data
-  "id" : "RUE6" // Unique ID,
-  "lastCaptureAt": {
-    "$date": 1581809189357 // Timestamp of when the last capture was recorded
-  },
+  "id" : "RUE6" // Unique and human readable ID
+  "lastCaptureAt" : { "$date" : "2020-10-19T02:16:27.222Z" } // Timestamp of when the last capture was recorded
   "isOngoing": false // A proxy of isOpen and lastCaptureAt. True when data has recently been added to the session
 }]
 ```

@@ -2,7 +2,7 @@
 
 ## Download Asset Package
 
-Get the latest client [here](https://github.com/jhburns/ExperienceCapture/releases/tag/client.1.2.0).
+Get the latest client [here](https://github.com/jhburns/ExperienceCapture/releases/tag/client.1.3.0).
 
 Click on the first link 'ExperienceCaptureClient.unitypackage' to download it, no extraction needed.
 

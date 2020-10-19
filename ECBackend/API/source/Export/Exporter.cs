@@ -131,7 +131,7 @@ namespace Carter.App.Export.Main
             var ws = new JsonWriterSettings()
             {
                 Indent = false,
-                OutputMode = JsonOutputMode.CanonicalExtendedJson,
+                OutputMode = JsonOutputMode.RelaxedExtendedJson,
             };
 
             string extrasFolder = $"exported{Seperator}extras{Seperator}";
@@ -373,7 +373,7 @@ namespace Carter.App.Export.Main
             JsonWriterSettings.Defaults = new JsonWriterSettings()
             {
                 Indent = true,
-                OutputMode = JsonOutputMode.CanonicalExtendedJson,
+                OutputMode = JsonOutputMode.RelaxedExtendedJson,
             };
         }
 

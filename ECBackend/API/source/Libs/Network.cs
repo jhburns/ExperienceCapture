@@ -94,7 +94,7 @@ namespace Carter.App.Libs.Network
 
             string json;
             JsonWriterSettings settings = new JsonWriterSettings();
-            settings.OutputMode = JsonOutputMode.CanonicalExtendedJson;
+            settings.OutputMode = JsonOutputMode.RelaxedExtendedJson;
 
             if (query.As<bool>("ugly"))
             {
