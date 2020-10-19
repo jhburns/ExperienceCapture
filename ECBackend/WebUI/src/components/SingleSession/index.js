@@ -34,7 +34,7 @@ class SingleSession extends Component {
                   <P>
                     Start Time:&nbsp;
                     <Strong>
-                      {DateTime.fromMillis(this.props.sessionData.createdAt).toLocaleString(DateTime.DATETIME_FULL)}
+                      {DateTime.fromISO(this.props.sessionData.createdAt).toLocaleString(DateTime.DATETIME_FULL)}
                     </Strong>
                   </P>
                   <P className="mb-4">Status: <Strong>{

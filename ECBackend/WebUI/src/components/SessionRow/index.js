@@ -29,7 +29,7 @@ class SessionRow extends Component {
           </Col>
           <Col>{"By: " + this.props.sessionData.fullname}</Col>
           <Col data-cy="session-date" className="d-none d-lg-table-cell">
-            {"Created: " + DateTime.fromMillis(this.props.sessionData.createdAt).toRelative()}
+            {"Created: " + DateTime.fromISO(this.props.sessionData.createdAt).toRelative()}
           </Col>
           {this.props.buttonData !== undefined &&
             <Col>

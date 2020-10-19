@@ -11,6 +11,8 @@ import { Wrapper } from 'pages/Session/style';
 
 import Footer from "components/Footer";
 
+import { DateTime } from 'luxon';
+
 class SessionPage extends Component {
   constructor(props) {
     super(props);
@@ -44,7 +46,7 @@ class SessionPage extends Component {
       const cleanedSession = {
         id: sessionData.id,
         fullname: sessionData.user.fullname,
-        createdAt: parseInt(sessionData.createdAt.$date.$numberLong),
+        createdAt: DateTime.fromISO(sessionData.createdAt.$date),
         exportState: sessionData.exportState,
         isOpen: sessionData.isOpen,
         isOngoing: sessionData.isOngoing,

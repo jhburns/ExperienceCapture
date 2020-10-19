@@ -15,6 +15,8 @@ import queryString from 'query-string';
 
 import { LinkContainer } from 'react-router-bootstrap';
 
+import { DateTime } from 'luxon';
+
 class SessionTable extends Component {
   constructor(props) {
     super(props);
@@ -95,13 +97,13 @@ class SessionTable extends Component {
       return {
         id: s.id,
         fullname: s.user.fullname,
-        createdAt: parseInt(s.createdAt.$date.$numberLong),
+        createdAt: DateTime.fromISO(s.createdAt.$date),
       };
     });
 
     return {
       sessions: sessionsConverted,
-      pageTotal: parseInt(sessionsData.pageTotal.$numberLong),
+      pageTotal: sessionsData.pageTotal,
       sort: nextSort,
     };
   }
