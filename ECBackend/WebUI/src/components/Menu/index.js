@@ -56,7 +56,7 @@ class Menu extends Component {
                   aria-label="Navbar toggle"
                   isOpen={this.state.isOpen}
                 >
-                  <Hamburger src={hamburgers[imageOption]} isOpen={this.state.isOpen}></Hamburger>
+                  <Hamburger alt="Hamburger menu" src={hamburgers[imageOption]} isOpen={this.state.isOpen}></Hamburger>
                 </Toggle>
               </Col>
               <Col className="p-0">
