@@ -5,7 +5,7 @@ import SingleSession from "components/SingleSession";
 
 import { getData, postData } from "libs/fetchExtra";
 
-import { Container, Row, Col } from '@bootstrap-styled/v4';
+import { Container, Row, Col, A } from '@bootstrap-styled/v4';
 
 import { Wrapper } from 'pages/Session/style';
 
@@ -30,29 +30,40 @@ class SessionPage extends Component {
     const { id } = this.props.match.params;
 
     const url = `/api/v1/sessions/${id}?ugly=true`;
-    const getSessions = await getData(url);
-    const sessionsData = await getSessions.json();
 
-    // Flattening the structure
-    const cleanedSession = {
-      id: sessionsData.id,
-      fullname: sessionsData.user.fullname,
-      createdAt: parseInt(sessionsData.createdAt.$date.$numberLong),
-      exportState: sessionsData.exportState,
-      isOpen: sessionsData.isOpen,
-      isOngoing: sessionsData.isOngoing,
-    };
+    try {
+      const getSessions = await getData(url);
+      if (!getSessions.ok) {
+        this.setState({ error: new Error(getSessions.status) });
+        return;
+      }
 
-    // Poll based on session state
-    if (["Done", "NotStarted", "Error"].includes(cleanedSession.exportState)) {
-      clearInterval(this.poller);
-      this.poller = setInterval(() => this.poll(), 10000); // 10 seconds
-    } else {
-      clearInterval(this.poller);
-      this.poller = setInterval(() => this.poll(), 250); // 0.25 seconds
+      const sessionData = await getSessions.json();
+
+      // Flattening the structure
+      const cleanedSession = {
+        id: sessionData.id,
+        fullname: sessionData.user.fullname,
+        createdAt: parseInt(sessionData.createdAt.$date.$numberLong),
+        exportState: sessionData.exportState,
+        isOpen: sessionData.isOpen,
+        isOngoing: sessionData.isOngoing,
+      };
+
+      // Poll based on session state
+      if (["Done", "NotStarted", "Error"].includes(cleanedSession.exportState)) {
+        clearInterval(this.poller);
+        this.poller = setInterval(() => this.poll(), 10000); // 10 seconds
+      } else {
+        clearInterval(this.poller);
+        this.poller = setInterval(() => this.poll(), 250); // 0.25 seconds
+      }
+
+      return cleanedSession;
+    } catch(err) {
+      this.setState({ error: err });
+      return;
     }
-
-    return cleanedSession;
   }
 
   async onExport() {
@@ -64,6 +75,7 @@ class SessionPage extends Component {
 
       if (!exportRequest.ok) {
         this.setState({ error: new Error(exportRequest.status) });
+        return;
       }
 
       const currentSession = await this.getSession();
@@ -72,6 +84,7 @@ class SessionPage extends Component {
       });
     } catch (err) {
       this.setState({ error: err });
+      return;
     }
   }
 
@@ -102,29 +115,24 @@ class SessionPage extends Component {
   }
 
   render() {
-    if (this.state.session === null) {
-      return null;
+    if (this.state.error !== null) {
+      throw this.state.error;
     }
 
     return (
       <Wrapper>
         <Menu />
-        <Container className="pb-5">
-          <Row className="mb-3 p-5">
-            <Col>
-              <SingleSession
-                sessionData={this.state.session}
-                onExport={this.onExport}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col className="text-center">
-              {this.state.session.exportState === "Pending" &&
-                <h5>Exporting...</h5>
-              }
-            </Col>
-          </Row>
+        <Container className="pb-5 mt-5">
+          {this.state.session !== null &&
+            <>
+              <Row className="justify-content-center mb-1">
+                <Col xs={10} lg={8}>
+                  <A href="#" onClick={() => this.props.history.goBack()}>&lt; Back</A>
+                </Col>
+              </Row>
+              <SingleSession sessionData={this.state.session} onExport={this.onExport} />
+            </>
+          }
         </Container>
         <Footer />
       </Wrapper>

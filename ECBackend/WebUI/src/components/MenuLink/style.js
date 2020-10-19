@@ -2,10 +2,6 @@ import styled from 'styled-components';
 
 import { colors } from 'libs/theme';
 
-const Wrapper = styled.section`
-
-`;
-
 const NavLinkOverride = styled.a`
   color: ${colors.copy} !important;
 
@@ -25,4 +21,4 @@ const Underline = styled.div`
   width: fit-content;
 `;
 
-export { Wrapper, NavLinkOverride, Underline };
+export { NavLinkOverride, Underline };

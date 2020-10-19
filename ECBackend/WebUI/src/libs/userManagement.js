@@ -1,7 +1,7 @@
 /* global gapi */
 
 import { postData } from 'libs/fetchExtra';
-import { createCookie } from 'libs/cookieExtra';
+import { createCookie, deleteCookie } from 'libs/cookieExtra';
 
 import { environmentVariables } from "libs/environment";
 
@@ -32,14 +32,13 @@ async function submitUser(
   onDuplicate) {
   isMockFromRoot = isMock;
 
+  // Clear cookie on new user
+  deleteCookie("ExperienceCapture-Access-Token");
+
   if (options.signUpToken !== undefined) {
     await signUpUser(user, options.signUpToken, onError, onDuplicate);
-    return;
-  }
-
-  if (options.claimToken !== undefined) {
+  } else if (options.claimToken !== undefined) {
     await fulfillClaim(user, options.claimToken, onError);
-    return;
   }
 
   await signInUser(user, onError);
@@ -79,6 +78,7 @@ async function signUpUser(user, signUpToken, onError, onDuplicate) {
 
     await signInUser(user, onError);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error(error);
     onError();
   }
@@ -115,6 +115,7 @@ async function fulfillClaim(user, claimToken, onError) {
       throw Error(replyData.status);
     }
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error(error);
     onError();
   }
@@ -151,6 +152,7 @@ async function signInUser(user, onError) {
     const response = await replyData.json();
     createCookie("ExperienceCapture-Access-Token", response.accessToken);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error(error);
     onError();
   }

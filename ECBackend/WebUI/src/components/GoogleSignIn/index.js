@@ -12,6 +12,10 @@ import { LinkContainer } from 'react-router-bootstrap';
 
 import SignInBox from 'components/SignInBox';
 
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { colors } from 'libs/theme';
+
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -47,7 +51,7 @@ class SignIn extends Component {
             className="text-decoration-none"
             size="lg"
           >
-            GO HOME
+            Go Home
           </Button>
         </LinkContainer>
       </Col>;
@@ -61,19 +65,20 @@ class SignIn extends Component {
           outline={true}
           size="lg"
         >
-          SIGN OUT
+          Sign Out
         </Button>
       </Col>;
 
     const googleRow =
-      <Col xs={8} lg={7} className="mb-2 mb-lg-0">
+      <Col xs={8} lg={8} className="mb-2 mb-lg-0">
         <Button
           id="signInButton"
           block={true}
           size="lg"
           data-cy="sign-in"
         >
-          GOOGLE SIGN IN
+          <FontAwesomeIcon icon={faGoogle} color={colors.background} />
+          &nbsp;&nbsp;Google Sign In
         </Button>
       </Col>;
 
@@ -146,6 +151,7 @@ class SignIn extends Component {
     const signInButton = document.getElementById('signInButton');
 
     if (isMock) {
+      // eslint-disable-next-line no-console
       signInButton.onclick = () => console.log("This button does nothing when using mock data.");
       return;
     }
@@ -204,6 +210,7 @@ class SignIn extends Component {
   }
 
   async onInvalidRequest(err) {
+    // eslint-disable-next-line no-console
     console.log("Site is running locally, using mock data. See printed error.");
 
     const options = {
@@ -217,6 +224,7 @@ class SignIn extends Component {
 	    isMock: true,
     });
 
+    // eslint-disable-next-line no-console
     console.log(err);
   }
 

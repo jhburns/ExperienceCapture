@@ -27,6 +27,7 @@
         "comma-dangle": [
             "warn",
             "always-multiline"
-        ]
+        ],
+        "no-console": "warn"
     }
 }

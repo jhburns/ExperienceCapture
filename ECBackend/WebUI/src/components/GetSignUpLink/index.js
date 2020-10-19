@@ -62,7 +62,6 @@ class GetSignUpLink extends Component {
               </CopyText>
             </Col>
             <Col xs={2} className="align-self-center">
-              {/* TODO: add tests for this button*/}
               <CopyToClipboard text={this.state.link}>
                 <FontAwesomeIcon
                   icon={faCopy}

@@ -41,8 +41,8 @@ class Menu extends Component {
 
     return (
       <Wrapper>
-        <Navbar light toggleable="md" className="mt-3 mb-3 mb-xl-4">
-          <Container className="p-0">
+        <Container>
+          <Navbar light toggleable="md" className="mt-3 mb-3 mb-xl-4">
             <Row className="d-flex flex-wrap align-items-center">
               {/* The # prevents the brand from getting active on accident */}
               <Col xs={8} lg="auto">
@@ -56,7 +56,7 @@ class Menu extends Component {
                   aria-label="Navbar toggle"
                   isOpen={this.state.isOpen}
                 >
-                  <Hamburger src={hamburgers[imageOption]} isOpen={this.state.isOpen}></Hamburger>
+                  <Hamburger alt="Hamburger menu" src={hamburgers[imageOption]} isOpen={this.state.isOpen}></Hamburger>
                 </Toggle>
               </Col>
               <Col className="p-0">
@@ -76,8 +76,8 @@ class Menu extends Component {
                 </Collapse>
               </Col>
             </Row>
-          </Container>
-        </Navbar>
+          </Navbar>
+        </Container>
       </Wrapper>
     );
   }
