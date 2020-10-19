@@ -8,8 +8,6 @@
 
     using UnityEngine.UI;
 
-    using System.IO;
-
     using Capture.Internal.Network;
 
     public class CaptureSetup : MonoBehaviour
@@ -22,7 +20,7 @@
 
         [Tooltip("Label the game version before releasing.")]
         public string gameVersion;
-        public const string clientVersionLocked = "1.2.1";
+        public const string clientVersionLocked = "1.3.0";
         [Tooltip("Don't edit, is read-only and only informational.")]
         public string clientVersion;
 
@@ -32,14 +30,14 @@
         [Tooltip("Only capture certain properties. Increase the size and add an entry like: [GameObject]:[Property]. Disabled outside the Editor.")]
         public string[] limitOutputToSpecified;
 
-        [Tooltip("If checked, print data to console and don't attempt to connect to a server. Disabled outside the Editor.")]
+        [Tooltip("If checked, print data to console and don't attempt to connect to a server. Disabled in builds.")]
         public bool offlineMode;
 
         [Tooltip("Extra debugging data.")]
-        public bool printAdditionalCaptureInfo;
+        public bool printDebuggingData;
 
-        [Tooltip("Still capture data, but don't print it.")]
-        public bool doNotPrintToConsole;
+        [Tooltip("Still capture data, but don't print it to the console.")]
+        public bool doNotPrintCaptures;
 
         public HandleCapturing handler;
 
@@ -51,6 +49,7 @@
         public InputField urlInput;
         public Text openingInfo;
         public Text connectionInfo;
+        public Image loadingCircle;
         public Text warningInfo;
 
         public Text sessionInfo;
@@ -58,11 +57,13 @@
         public Image sessionBackground;
         public Button newSession;
         public Button start;
-        public GameObject eventSystem;
 
         private string sessionID;
         private string url;
         private SecretStorage store;
+
+        public Image errorModal;
+        public Text errorBody;
 
         private void Start()
         {
@@ -78,12 +79,6 @@
 
         private void setup()
         {
-            // In case an event system doesn't exist in client
-            if (GameObject.Find("EventSystem") == null)
-            {
-                Instantiate(eventSystem);
-            }
-
             newSession.gameObject.SetActive(!offlineMode);
             urlTitle.gameObject.SetActive(!offlineMode);
             urlInput.gameObject.SetActive(!offlineMode);
@@ -93,17 +88,19 @@
             nameInput.gameObject.SetActive(offlineMode);
             start.gameObject.SetActive(offlineMode);
             dataInfo.gameObject.SetActive(offlineMode);
+            sessionInfo.gameObject.SetActive(offlineMode);
+            sessionBackground.gameObject.SetActive(offlineMode);
 
+            if (offlineMode)
+            {
+                sessionInfo.text = "Running offline.";
+            }
 
             urlInput.text = defaultUrl;
 
-            // Just too coincidental 
-            nameInput.text = "Boyd";
-
-            sessionInfo.gameObject.SetActive(false);
+            // Save the text of session so it can be appended
+            // In front of each session id
             sessionInfoSave = sessionInfo.text;
-            sessionBackground.gameObject.SetActive(false);
-
             openingInfo.gameObject.SetActive(false);
             connectionInfo.gameObject.SetActive(false);
 
@@ -114,7 +111,7 @@
             clientVersion = clientVersionLocked;
         }
 
-        public void validateArguments()
+        private void validateArguments()
         {
             if (captureRate <= 0)
             {
@@ -136,12 +133,15 @@
             newSession.gameObject.SetActive(false);
 
             connectionInfo.gameObject.SetActive(true);
+            loadingCircle.gameObject.SetActive(true);
 
             // Content of the body is ignored
-            string emptyBody = new { }.ToString();
+            byte[] emptyBody = Serial.toBSON(new { });
             url = urlInput.text.Trim('/');
 
-            StartCoroutine(HTTPHelpers.post(url + "/api/v1/authentication/claims?bson=true", emptyBody,
+            StartCoroutine(HTTPHelpers.post(url + "/api/v1/authentication/claims?bson=true",
+                emptyBody,
+                string.Empty,
                 (data) =>
                 {
                     openingInfo.gameObject.SetActive(true);
@@ -149,8 +149,7 @@
 
                     try
                     {
-                        MemoryStream memStream = new MemoryStream(data);
-                        ClaimData responce = Serial.fromBSON<ClaimData>(memStream);
+                        ClaimData responce = Serial.fromBSON<ClaimData>(data);
 
                         StartCoroutine(WaitThenOpen(responce));
                     }
@@ -162,30 +161,17 @@
                     }
                 }, (error) =>
                 {
-                    Debug.Log(error);
-
-                    sessionInfo.text = error;
-
-                    connectionInfo.gameObject.SetActive(false);
-
-                    sessionInfo.gameObject.SetActive(true);
-                    sessionBackground.gameObject.SetActive(true);
-
-                    urlTitle.gameObject.SetActive(true);
-                    urlInput.gameObject.SetActive(true);
-                    warningInfo.gameObject.SetActive(true);
-
-                    newSession.gameObject.SetActive(true);
+                    showError(error);
                 })
             );
         }
 
         private IEnumerator WaitThenOpen(ClaimData responce)
         {
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(0.5f);
 
             string claimSanitized = UnityWebRequest.EscapeURL(responce.claimToken);
-            string openUrl = url + "/?claimToken=" + claimSanitized;
+            string openUrl = url + "/externalSignIn?claimToken=" + claimSanitized;
 
             Application.OpenURL(openUrl);
 
@@ -199,8 +185,7 @@
                 {
                     try
                     {
-                        MemoryStream memStream = new MemoryStream(data);
-                        AccessData responce = Serial.fromBSON<AccessData>(memStream);
+                        AccessData responce = Serial.fromBSON<AccessData>(data);
 
                         store = new SecretStorage(responce.accessToken);
                         createSession();
@@ -213,7 +198,7 @@
                     }
                 }, (error) =>
                 {
-                    Debug.Log(error);
+                    showError(error);
                 })
             );
         }
@@ -228,14 +213,14 @@
                     sessionInfo.gameObject.SetActive(true);
                     sessionBackground.gameObject.SetActive(true);
                     openingInfo.gameObject.SetActive(false);
+                    loadingCircle.gameObject.SetActive(false);
 
                     nameTitle.gameObject.SetActive(true);
                     nameInput.gameObject.SetActive(true);
 
                     try
                     {
-                        MemoryStream memStream = new MemoryStream(data);
-                        SessionData responce = Serial.fromBSON<SessionData>(memStream);
+                        SessionData responce = Serial.fromBSON<SessionData>(data);
 
                         sessionInfo.text = sessionInfoSave + responce.id;
                         sessionID = responce.id;
@@ -244,19 +229,11 @@
                     }
                     catch (Exception e)
                     {
-                        sessionInfo.text = "Error deserializing BSON response: " + e;
-                        Debug.Log(e);
-                        newSession.gameObject.SetActive(true);
+                        showError(e.ToString());
                     }
                 }, (error) =>
                 {
-                    sessionInfo.text = error;
-
-                    sessionInfo.gameObject.SetActive(true);
-                    sessionBackground.gameObject.SetActive(true);
-                    newSession.gameObject.SetActive(true);
-
-                    Debug.Log(error);
+                    showError(error);
                 })
             );
         }
@@ -268,27 +245,52 @@
             try
             {
                 pairs = parseSpecific();
+
+                if (offlineMode)
+                {
+                    createHandler("no URL", "NoSessionID", nameInput.text, pairs);
+                }
+                else
+                {
+                    createHandler(url, sessionID, nameInput.text, pairs);
+                }
             }
             catch (Exception e)
             {
-                Debug.Log(e);
-
-                sessionInfo.text = e.ToString();
-                sessionInfo.gameObject.SetActive(true);
-                sessionBackground.gameObject.SetActive(true);
-                start.gameObject.SetActive(true);
-
-                return;
+                showError(e.ToString());
             }
+        }
+ 
+        private void showError(string error)
+        {
+            Debug.Log(error);
 
-            if (offlineMode)
-            {
-                createHandler("no URL", "NoSessionID", nameInput.text, pairs);
-            }
-            else
-            {
-                createHandler(url, sessionID, nameInput.text, pairs);
-            }
+            errorBody.text = error;
+            errorModal.gameObject.SetActive(true);
+
+            connectionInfo.gameObject.SetActive(false);
+            loadingCircle.gameObject.SetActive(false);
+            sessionInfo.gameObject.SetActive(false);
+            sessionBackground.gameObject.SetActive(false);
+            openingInfo.gameObject.SetActive(false);
+
+            urlTitle.gameObject.SetActive(true);
+            urlInput.gameObject.SetActive(true);
+            warningInfo.gameObject.SetActive(true);
+            newSession.gameObject.SetActive(true);
+
+            nameTitle.gameObject.SetActive(false);
+            nameInput.gameObject.SetActive(false);
+            start.gameObject.SetActive(false);
+            dataInfo.gameObject.SetActive(false);
+
+            sessionInfo.gameObject.SetActive(false);
+            sessionBackground.gameObject.SetActive(false);
+        }
+
+        public void OnCloseError()
+        {
+            errorModal.gameObject.SetActive(false);
         }
 
         // All of this is since Unity only supports 1D arrays in the editor
@@ -335,8 +337,8 @@
 
             newHandler.isCapturing = false;
 
-            newHandler.isVerbose = printAdditionalCaptureInfo;
-            newHandler.isSilent = doNotPrintToConsole;
+            newHandler.isVerbose = printDebuggingData;
+            newHandler.isSilent = doNotPrintCaptures;
 
             newHandler.store = store;
 
