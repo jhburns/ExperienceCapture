@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Menu from 'components/Menu';
 import SingleSession from "components/SingleSession";
+import Camera from 'components/Camera';
 
 import { getData, postData } from "libs/fetchExtra";
 
@@ -133,6 +134,9 @@ class SessionPage extends Component {
                 </Col>
               </Row>
               <SingleSession sessionData={this.state.session} onExport={this.onExport} />
+              <Row>
+                <Camera />
+              </Row>
             </>
           }
         </Container>
